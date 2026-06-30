@@ -16,7 +16,7 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Votre destination pour des produits uniques et des projets créatifs. Qualité, originalité et passion au rendez-vous.
+              Votre partenaire digital pour le design graphique, la création de sites web et les outils numériques. Qualité, Créativité, Satisfaction.
             </p>
             <div className="flex gap-3 pt-1">
               <a href="#" className="text-muted-foreground hover:text-amber-500 transition-colors" aria-label="Instagram">
@@ -35,7 +35,7 @@ export default function Footer() {
           <div>
             <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">Navigation</h3>
             <ul className="space-y-2.5">
-              {['Accueil', 'Services', 'Offres', 'Compétences', 'Contact'].map((item) => (
+              {['Accueil', 'Services', 'Offres', 'Parrainage', 'Paiement', 'Avis', 'Contact'].map((item) => (
                 <li key={item}>
                   <a
                     href={`#${item.toLowerCase()}`}
@@ -68,11 +68,11 @@ export default function Footer() {
             <ul className="space-y-3">
               <li className="flex items-start gap-2 text-sm text-muted-foreground">
                 <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                <span>123 Rue de la Création, Bamako, Mali</span>
+                <span>Bamako, Mali</span>
               </li>
               <li className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Phone className="h-4 w-4 flex-shrink-0" />
-                <span>+223 70 00 00 00</span>
+                <span>+223 97 78 72 44</span>
               </li>
               <li className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Mail className="h-4 w-4 flex-shrink-0" />

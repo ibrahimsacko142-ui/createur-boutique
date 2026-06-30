@@ -27,6 +27,15 @@ import {
   Facebook,
   Twitter,
   X,
+  Users,
+  Gift,
+  Shield,
+  CreditCard,
+  Banknote,
+  Quote,
+  Timer,
+  Lock,
+  CircleDollarSign,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -714,6 +723,300 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ═══ AVIS CLIENTS ═══ */}
+        <section id="avis" className="py-16 sm:py-20">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <FadeIn className="text-center mb-12">
+              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+                <Star className="h-3 w-3 mr-1" /> Témoignages
+              </Badge>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Avis Clients</h2>
+              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
+                La satisfaction des clients est notre priorité. Chaque projet est réalisé avec soin, créativité et professionnalisme.
+              </p>
+            </FadeIn>
+
+            <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[
+                { text: "Travail très propre et rapide, j'ai vraiment aimé mon logo. Le résultat a dépassé mes attentes et la communication était excellente du début à la fin.", author: 'Client satisfait', note: 5 },
+                { text: "L'affiche était magnifique et professionnelle, je recommande fortement. Un vrai talent pour capturer l'essence de mon événement dans un visuel percutant.", author: 'Client événementiel', note: 5 },
+                { text: "Service sérieux et livraison rapide, très bon travail. J'ai pu utiliser le design immédiatement pour ma communication et le feedback de mes clients était très positif.", author: 'Entrepreneur', note: 5 },
+                { text: 'Mon site web est bien fait et moderne, merci beaucoup. La navigation est fluide, le design est professionnel et mes visiteurs sont impressionnés par la qualité.', author: 'Client digital', note: 5 },
+                { text: "Très bon designer, je vais revenir encore pour d'autres services. La créativité et le professionnalisme sont au rendez-vous à chaque fois.", author: 'Client fidèle', note: 5 },
+                { text: "Excellent rapport qualité-prix. Le montage vidéo était propre, les transitions étaient fluides et le rendu final était exactement ce que je voulais.", author: 'Client vidéo', note: 5 },
+              ].map((avis, i) => (
+                <motion.div key={i} variants={cardVariants}>
+                  <Card className="h-full border-0 shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <CardContent className="p-6 flex flex-col h-full">
+                      <div className="flex gap-0.5 mb-4">
+                        {Array.from({ length: avis.note }).map((_, j) => (
+                          <Star key={j} className="h-4 w-4 fill-amber-400 text-amber-400" />
+                        ))}
+                      </div>
+                      <div className="relative flex-1">
+                        <Quote className="h-8 w-8 text-amber-200 dark:text-amber-800/30 absolute -top-1 -left-1" />
+                        <p className="text-sm text-muted-foreground leading-relaxed pl-6 italic">
+                          &ldquo;{avis.text}&rdquo;
+                        </p>
+                      </div>
+                      <div className="mt-4 pt-4 border-t flex items-center gap-3">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
+                          <span className="text-xs font-bold text-amber-600">{avis.author.charAt(0)}</span>
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium">{avis.author}</p>
+                          <p className="text-xs text-muted-foreground">Client vérifié</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </StaggerContainer>
+          </div>
+        </section>
+
+        {/* ═══ PARRAINAGE ═══ */}
+        <section id="parrainage" className="py-16 sm:py-20 bg-gradient-to-br from-amber-50 via-orange-50 to-white dark:from-amber-950/10 dark:via-orange-950/5 dark:to-background">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <FadeIn className="text-center mb-12">
+              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+                <Users className="h-3 w-3 mr-1" /> Programme
+              </Badge>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Système de Parrainage</h2>
+              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
+                Récompenser les clients fidèles et faire grandir la boutique rapidement grâce au bouche-à-oreille.
+              </p>
+            </FadeIn>
+
+            {/* Comment ça marche */}
+            <FadeIn delay={0.1}>
+              <div className="rounded-2xl border bg-card p-6 sm:p-8 mb-8">
+                <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                  <Zap className="h-5 w-5 text-amber-500" /> Comment ça marche
+                </h3>
+                <div className="grid sm:grid-cols-3 gap-4">
+                  {[
+                    { step: '1', title: 'Partagez', desc: 'Donnez votre contact ou le lien de la boutique à un ami' },
+                    { step: '2', title: 'Il commande', desc: 'Votre ami achète un service dans la boutique' },
+                    { step: '3', title: 'Vous gagnez', desc: 'Recevez votre récompense après confirmation du paiement' },
+                  ].map((item) => (
+                    <div key={item.step} className="flex items-start gap-3">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-500 text-white font-bold text-sm flex-shrink-0">
+                        {item.step}
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold">{item.title}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">{item.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </FadeIn>
+
+            {/* Paliers de récompenses */}
+            <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+              {[
+                { refs: 1, reward: '500 FCFA de réduction', desc: 'sur votre prochain achat', icon: Banknote, color: 'from-emerald-500 to-teal-500' },
+                { refs: 2, reward: '1 service gratuit', desc: 'affiche ou logo offert', icon: Gift, color: 'from-amber-500 to-orange-500' },
+                { refs: 5, reward: 'Logo ou mini projet', desc: 'création entièrement gratuite', icon: Sparkles, color: 'from-purple-500 to-pink-500' },
+                { refs: 10, reward: '1 site web simple', desc: 'entièrement offert', icon: Globe, color: 'from-red-500 to-rose-500' },
+              ].map((tier) => (
+                <motion.div key={tier.refs} variants={cardVariants}>
+                  <Card className="overflow-hidden border-0 shadow-md text-center h-full">
+                    <div className={`h-2 bg-gradient-to-r ${tier.color}`} />
+                    <CardContent className="p-5 pt-6">
+                      <div className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${tier.color} text-white mx-auto mb-3`}>
+                        <tier.icon className="h-6 w-6" />
+                      </div>
+                      <div className="text-3xl font-extrabold mb-1">{tier.refs}</div>
+                      <p className="text-xs text-muted-foreground mb-3">client{tier.refs > 1 ? 's' : ''} parrainé{tier.refs > 1 ? 's' : ''}</p>
+                      <div className="h-px bg-border mb-3" />
+                      <p className="text-sm font-bold">{tier.reward}</p>
+                      <p className="text-xs text-muted-foreground mt-1">{tier.desc}</p>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </StaggerContainer>
+
+            {/* Conditions */}
+            <FadeIn delay={0.2}>
+              <Card className="border-0 shadow-md bg-card">
+                <CardContent className="p-6">
+                  <h3 className="text-sm font-bold uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <Lock className="h-4 w-4 text-amber-500" /> Conditions
+                  </h3>
+                  <div className="grid sm:grid-cols-3 gap-4">
+                    {[
+                      'Le client doit payer un service complet',
+                      'Le parrainage est valide uniquement après confirmation du paiement',
+                      'Les récompenses ne sont pas échangeables en argent',
+                    ].map((condition, i) => (
+                      <div key={i} className="flex items-start gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-amber-500 mt-0.5 flex-shrink-0" />
+                        <p className="text-xs text-muted-foreground leading-relaxed">{condition}</p>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </FadeIn>
+          </div>
+        </section>
+
+        {/* ═══ PAIEMENT & RETRAIT ═══ */}
+        <section id="paiement" className="py-16 sm:py-20">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <FadeIn className="text-center mb-12">
+              <Badge variant="secondary" className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200">
+                <CreditCard className="h-3 w-3 mr-1" /> Transactions
+              </Badge>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Paiement & Retrait</h2>
+              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
+                Paiement sécurisé via Wave uniquement. Toutes les transactions sont confirmées et sécurisées.
+              </p>
+            </FadeIn>
+
+            <div className="grid lg:grid-cols-2 gap-8">
+              {/* Paiement */}
+              <FadeIn>
+                <Card className="border-0 shadow-lg h-full">
+                  <CardContent className="p-6 sm:p-8">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-900/30">
+                        <CreditCard className="h-6 w-6 text-emerald-600" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-bold">Paiement</h3>
+                        <p className="text-xs text-muted-foreground">Contact : +223 97 78 72 44</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div>
+                        <p className="text-sm font-semibold mb-2">Mode de paiement :</p>
+                        <div className="flex flex-wrap gap-2">
+                          <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200 px-3 py-1">
+                            <CreditCard className="h-3 w-3 mr-1" /> Wave uniquement
+                          </Badge>
+                        </div>
+                      </div>
+
+                      <div className="h-px bg-border" />
+
+                      <div>
+                        <p className="text-sm font-semibold mb-2 flex items-center gap-1">
+                          <CheckCircle2 className="h-4 w-4 text-emerald-500" /> Conditions
+                        </p>
+                        <ul className="space-y-2">
+                          {[
+                            '50% à la commande et 50% à la livraison du service',
+                            'Ou paiement total avant le début du travail (selon le service)',
+                            "Aucun travail n'est livré sans confirmation de paiement",
+                          ].map((c, i) => (
+                            <li key={i} className="flex items-start gap-2">
+                              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 mt-0.5 flex-shrink-0" />
+                              <span className="text-xs text-muted-foreground leading-relaxed">{c}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <div className="h-px bg-border" />
+
+                      <div>
+                        <p className="text-sm font-semibold mb-2 flex items-center gap-1">
+                          <Timer className="h-4 w-4 text-amber-500" /> Délais de livraison
+                        </p>
+                        <div className="space-y-2">
+                          {[
+                            { label: 'Affiches et logos', time: '1 à 24 heures' },
+                            { label: 'CapCut / PicsArt', time: '1 à 24 heures' },
+                            { label: 'Sites web', time: '1 à 3 jours' },
+                            { label: 'Formations', time: 'Selon le programme' },
+                          ].map((item) => (
+                            <div key={item.label} className="flex items-center justify-between p-2 rounded-lg bg-muted/50">
+                              <span className="text-xs font-medium">{item.label}</span>
+                              <Badge variant="secondary" className="text-[10px]">{item.time}</Badge>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </FadeIn>
+
+              {/* Retrait */}
+              <FadeIn delay={0.2}>
+                <Card className="border-0 shadow-lg h-full">
+                  <CardContent className="p-6 sm:p-8">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30">
+                        <Banknote className="h-6 w-6 text-amber-600" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-bold">Retrait</h3>
+                        <p className="text-xs text-muted-foreground">Revenus & gains</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div>
+                        <p className="text-sm font-semibold mb-2 flex items-center gap-1">
+                          <CircleDollarSign className="h-4 w-4 text-amber-500" /> Moyens de retrait
+                        </p>
+                        <ul className="space-y-2">
+                          {[
+                            'Les retraits sont effectués uniquement via les mêmes moyens de paiement',
+                            'Minimum de retrait : 2 000 FCFA',
+                            'Traitement du retrait : 5 à 30 minutes après demande',
+                          ].map((c, i) => (
+                            <li key={i} className="flex items-start gap-2">
+                              <CheckCircle2 className="h-3.5 w-3.5 text-amber-500 mt-0.5 flex-shrink-0" />
+                              <span className="text-xs text-muted-foreground leading-relaxed">{c}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <div className="h-px bg-border" />
+
+                      <div>
+                        <p className="text-sm font-semibold mb-2 flex items-center gap-1">
+                          <Shield className="h-4 w-4 text-emerald-500" /> Sécurité
+                        </p>
+                        <ul className="space-y-2">
+                          {[
+                            'Paiement sécurisé via Wave uniquement',
+                            'Toutes les transactions sont confirmées',
+                            'Aucun remboursement après validation du travail',
+                          ].map((c, i) => (
+                            <li key={i} className="flex items-start gap-2">
+                              <Shield className="h-3.5 w-3.5 text-emerald-500 mt-0.5 flex-shrink-0" />
+                              <span className="text-xs text-muted-foreground leading-relaxed">{c}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <div className="mt-6 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/10 dark:to-orange-900/10 border border-amber-200 dark:border-amber-800 p-4">
+                        <p className="text-sm font-semibold text-amber-700 dark:text-amber-400 flex items-center gap-2">
+                          <Phone className="h-4 w-4" /> Pour commander
+                        </p>
+                        <p className="text-2xl font-bold text-amber-600 mt-1">+223 97 78 72 44</p>
+                        <p className="text-xs text-muted-foreground mt-1">Paiement via Wave uniquement</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </FadeIn>
+            </div>
+          </div>
+        </section>
+
         {/* ═══ CONTACT ═══ */}
         <section id="contact" className="py-16 sm:py-20 bg-muted/30">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -743,7 +1046,7 @@ export default function Home() {
                     </div>
                     <div>
                       <p className="text-sm font-medium">Téléphone</p>
-                      <p className="text-sm text-muted-foreground">Disponible sur demande</p>
+                      <p className="text-sm text-muted-foreground">+223 97 78 72 44</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-4">

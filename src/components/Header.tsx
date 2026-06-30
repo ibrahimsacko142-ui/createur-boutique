@@ -12,7 +12,8 @@ const navLinks = [
   { label: 'Accueil', href: '#accueil' },
   { label: 'Services', href: '#services' },
   { label: 'Offres', href: '#produits' },
-  { label: 'Compétences', href: '#competences' },
+  { label: 'Parrainage', href: '#parrainage' },
+  { label: 'Paiement', href: '#paiement' },
   { label: 'Contact', href: '#contact' },
 ]
 
