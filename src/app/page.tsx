@@ -45,6 +45,17 @@ import {
   FileCheck,
   Calendar,
   ArrowUpRight,
+  AlertTriangle,
+  Handshake,
+  FolderDown,
+  ArrowRightLeft,
+  GraduationCap,
+  Building2,
+  UserCheck,
+  Megaphone,
+  BadgeCheck,
+  Wrench,
+  Headphones,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -501,6 +512,41 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ═══ OFFRES LIMITÉES (URGENCE) ═══ */}
+        <section className="py-10 sm:py-14">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <FadeIn>
+              <Card className="border-2 border-red-200 dark:border-red-800 bg-gradient-to-r from-red-50 via-amber-50 to-orange-50 dark:from-red-950/20 dark:via-amber-950/10 dark:to-orange-950/20 overflow-hidden relative">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+                <CardContent className="p-6 sm:p-8 relative z-10">
+                  <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
+                    <div className="flex items-center gap-3 flex-shrink-0">
+                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-red-500 text-white animate-pulse">
+                        <AlertTriangle className="h-7 w-7" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg sm:text-xl font-extrabold text-red-600 dark:text-red-400">Offres Limitées</h3>
+                        <p className="text-xs text-muted-foreground">Ne manquez pas cette opportunité</p>
+                      </div>
+                    </div>
+                    <div className="flex-1 text-center sm:text-left">
+                      <p className="text-2xl sm:text-3xl font-extrabold">
+                        <span className="bg-gradient-to-r from-red-500 to-amber-500 bg-clip-text text-transparent">Seulement 5 commandes par jour</span>
+                      </p>
+                      <p className="text-sm text-muted-foreground mt-1">Offre valable 24h — Réservez votre place maintenant</p>
+                    </div>
+                    <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20réserver%20ma%20commande%20du%20jour." target="_blank" rel="noopener noreferrer" className="flex-shrink-0">
+                      <Button className="bg-red-500 hover:bg-red-600 text-white font-bold text-sm shadow-lg shadow-red-500/25 whitespace-nowrap">
+                        <Flame className="h-4 w-4 mr-2" /> Réserver ma place
+                      </Button>
+                    </a>
+                  </div>
+                </CardContent>
+              </Card>
+            </FadeIn>
+          </div>
+        </section>
+
         {/* ═══ SERVICES & TARIFS ═══ */}
         <section id="services" className="py-16 sm:py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -698,6 +744,104 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ═══ POUR QUI + OUTILS + LIVRAISON ═══ */}
+        <section className="py-16 sm:py-20 bg-muted/30">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            {/* Pour qui */}
+            <FadeIn className="mb-12">
+              <div className="text-center mb-8">
+                <Badge variant="secondary" className="mb-3 bg-blue-100 text-blue-700 border-blue-200">
+                  <UserCheck className="h-3 w-3 mr-1" /> Cible
+                </Badge>
+                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Pour Qui Sont Nos Services ?</h2>
+              </div>
+              <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                {[
+                  { icon: Target, title: 'Entrepreneurs', desc: 'Créez une identité visuelle forte pour votre business et attirez plus de clients avec des designs professionnels.' },
+                  { icon: GraduationCap, title: 'Étudiants', desc: 'Développez vos compétences en design et digital avec nos formations abordables et nos outils pro.' },
+                  { icon: Building2, title: 'Entreprises', desc: 'Renforcez votre image de marque avec des supports de communication professionnels et modernes.' },
+                  { icon: Sparkles, title: 'Créateurs de contenu', desc: 'Boostez votre production de contenu avec du montage vidéo pro, des visuels réseaux sociaux et des outils premium.' },
+                ].map((item) => (
+                  <motion.div key={item.title} variants={cardVariants}>
+                    <Card className="h-full border-0 shadow-md text-center hover:shadow-lg transition-shadow">
+                      <CardContent className="p-5">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100 dark:bg-blue-900/30 mx-auto mb-3">
+                          <item.icon className="h-6 w-6 text-blue-600" />
+                        </div>
+                        <h3 className="font-bold text-sm mb-2">{item.title}</h3>
+                        <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                ))}
+              </StaggerContainer>
+            </FadeIn>
+
+            <div className="grid lg:grid-cols-2 gap-8 mt-12">
+              {/* Outils utilisés */}
+              <FadeIn>
+                <Card className="border-0 shadow-lg h-full">
+                  <CardContent className="p-6 sm:p-8">
+                    <h3 className="text-lg font-bold mb-2 flex items-center gap-2">
+                      <Wrench className="h-5 w-5 text-amber-500" /> Outils Utilisés
+                    </h3>
+                    <p className="text-xs text-muted-foreground mb-5">Les outils professionnels qui garantissent la qualité de mes créations.</p>
+                    <div className="grid grid-cols-2 gap-3">
+                      {[
+                        { name: 'CapCut Pro', desc: 'Montage vidéo' },
+                        { name: 'Canva Pro', desc: 'Design rapide' },
+                        { name: 'PicsArt Pro', desc: 'Design mobile' },
+                        { name: 'Outils web pro', desc: 'Sites web' },
+                      ].map((outil) => (
+                        <div key={outil.name} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border">
+                          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 flex-shrink-0">
+                            <Wrench className="h-4 w-4 text-amber-600" />
+                          </div>
+                          <div>
+                            <p className="text-xs font-bold">{outil.name}</p>
+                            <p className="text-[10px] text-muted-foreground">{outil.desc}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </FadeIn>
+
+              {/* Livraison numérique */}
+              <FadeIn delay={0.1}>
+                <Card className="border-0 shadow-lg h-full">
+                  <CardContent className="p-6 sm:p-8">
+                    <h3 className="text-lg font-bold mb-2 flex items-center gap-2">
+                      <FolderDown className="h-5 w-5 text-emerald-500" /> Livraison Numérique
+                    </h3>
+                    <p className="text-xs text-muted-foreground mb-5">Vos fichiers livrés rapidement et en toute sécurité.</p>
+                    <div className="space-y-3">
+                      {[
+                        { icon: MessageCircle, label: 'Fichiers envoyés via WhatsApp', detail: 'Réception instantanée' },
+                        { icon: Globe, label: 'Google Drive', detail: 'Dossier partagé sécurisé' },
+                        { icon: Zap, label: 'Livraison rapide', detail: 'Selon le délai annoncé' },
+                        { icon: Shield, label: 'Fichiers haute qualité', detail: 'Format source + export' },
+                      ].map((item) => (
+                        <div key={item.label} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border">
+                          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex-shrink-0">
+                            <item.icon className="h-4 w-4 text-emerald-600" />
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-xs font-bold">{item.label}</p>
+                            <p className="text-[10px] text-muted-foreground">{item.detail}</p>
+                          </div>
+                          <CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" />
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </FadeIn>
+            </div>
+          </div>
+        </section>
+
         {/* ═══ À PROPOS ═══ */}
         <section id="apropos" className="py-16 sm:py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -757,6 +901,164 @@ export default function Home() {
                   </a>
                 </div>
               </FadeIn>
+            </div>
+          </div>
+        </section>
+
+        {/* ═══ AVANT / APRÈS + GARANTIE ═══ */}
+        <section className="py-16 sm:py-20 bg-muted/30">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="grid lg:grid-cols-2 gap-8">
+              {/* Comparaison Avant/Après */}
+              <FadeIn>
+                <div className="text-center mb-6">
+                  <Badge variant="secondary" className="mb-3 bg-purple-100 text-purple-700 border-purple-200">
+                    <ArrowRightLeft className="h-3 w-3 mr-1" /> Avant / Après
+                  </Badge>
+                  <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">La Différence est Visible</h2>
+                  <p className="text-sm text-muted-foreground mt-2">Design simple vs design professionnel — voyez la valeur ajoutée</p>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-3">
+                    <div className="text-center">
+                      <Badge variant="secondary" className="bg-red-100 text-red-600 border-red-200">Avant</Badge>
+                    </div>
+                    <Card className="border-0 shadow-md overflow-hidden">
+                      <div className="h-28 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 flex items-center justify-center">
+                        <div className="text-center p-3">
+                          <div className="w-16 h-16 bg-gray-300 dark:bg-gray-600 rounded-lg mx-auto mb-2 flex items-center justify-center">
+                            <PenTool className="h-6 w-6 text-gray-400" />
+                          </div>
+                          <p className="text-[10px] text-gray-500">Logo basique</p>
+                        </div>
+                      </div>
+                      <CardContent className="p-3">
+                        <ul className="space-y-1">
+                          {['Design basique', 'Pas d\'identité', 'Non professionnel'].map((t) => (
+                            <li key={t} className="flex items-center gap-1 text-[10px] text-red-500">
+                              <X className="h-3 w-3" /> {t}
+                            </li>
+                          ))}
+                        </ul>
+                      </CardContent>
+                    </Card>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="text-center">
+                      <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200">Après</Badge>
+                    </div>
+                    <Card className="border-0 shadow-md overflow-hidden">
+                      <div className="h-28 bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
+                        <div className="text-center p-3">
+                          <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-lg mx-auto mb-2 flex items-center justify-center">
+                            <Sparkles className="h-6 w-6 text-white" />
+                          </div>
+                          <p className="text-[10px] text-white/90">Logo pro</p>
+                        </div>
+                      </div>
+                      <CardContent className="p-3">
+                        <ul className="space-y-1">
+                          {['Design professionnel', 'Identité forte', 'Impact visuel'].map((t) => (
+                            <li key={t} className="flex items-center gap-1 text-[10px] text-emerald-600">
+                              <CheckCircle2 className="h-3 w-3" /> {t}
+                            </li>
+                          ))}
+                        </ul>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              </FadeIn>
+
+              {/* Garantie + Objectif + Partenariats + Publicité */}
+              <div className="space-y-6">
+                {/* Garantie de qualité */}
+                <FadeIn delay={0.1}>
+                  <Card className="border-2 border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-950/10">
+                    <CardContent className="p-5">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500 text-white">
+                          <BadgeCheck className="h-5 w-5" />
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-sm">Garantie de Qualité</h3>
+                          <p className="text-[10px] text-muted-foreground">Notre promesse envers vous</p>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        {[
+                          'Travail propre et professionnel garanti',
+                          'Satisfaction client assurée',
+                          'Révisions jusqu\'à satisfaction',
+                          'Support après livraison',
+                        ].map((item) => (
+                          <div key={item} className="flex items-center gap-1.5 text-xs text-emerald-700 dark:text-emerald-400">
+                            <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0" />
+                            <span className="leading-relaxed">{item}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </FadeIn>
+
+                {/* Objectif de la boutique */}
+                <FadeIn delay={0.15}>
+                  <Card className="border-0 shadow-md bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/10 dark:to-orange-950/10">
+                    <CardContent className="p-5">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500 text-white">
+                          <Trophy className="h-5 w-5" />
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-sm">Notre Objectif</h3>
+                        </div>
+                      </div>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        <strong className="text-foreground">Aider les jeunes à avoir un business professionnel en ligne.</strong> Fournir les outils, les compétences et les services nécessaires pour que chacun puisse réussir dans le digital et l&apos;entrepreneuriat.
+                      </p>
+                    </CardContent>
+                  </Card>
+                </FadeIn>
+
+                {/* Partenariats + Publicité */}
+                <FadeIn delay={0.2}>
+                  <div className="grid grid-cols-2 gap-4">
+                    <Card className="border-0 shadow-md h-full">
+                      <CardContent className="p-5">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-100 dark:bg-blue-900/30 mb-3">
+                          <Handshake className="h-5 w-5 text-blue-600" />
+                        </div>
+                        <h3 className="font-bold text-sm mb-1">Partenariats</h3>
+                        <p className="text-[10px] text-muted-foreground leading-relaxed">
+                          Ouvert aux collaborations avec entreprises et marques pour des projets communs.
+                        </p>
+                        <a href="#contact">
+                          <Button variant="link" className="text-xs text-blue-600 p-0 h-auto mt-2">
+                            Devenir partenaire <ArrowRight className="h-3 w-3 ml-1" />
+                          </Button>
+                        </a>
+                      </CardContent>
+                    </Card>
+                    <Card className="border-0 shadow-md h-full">
+                      <CardContent className="p-5">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-100 dark:bg-purple-900/30 mb-3">
+                          <Megaphone className="h-5 w-5 text-purple-600" />
+                        </div>
+                        <h3 className="font-bold text-sm mb-1">Publicité</h3>
+                        <p className="text-[10px] text-muted-foreground leading-relaxed">
+                          Faites la publicité de votre entreprise avec nous. Affiches, visuels, supports pro.
+                        </p>
+                        <a href="#contact">
+                          <Button variant="link" className="text-xs text-purple-600 p-0 h-auto mt-2">
+                            Demander un devis <ArrowRight className="h-3 w-3 ml-1" />
+                          </Button>
+                        </a>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </FadeIn>
+              </div>
             </div>
           </div>
         </section>
@@ -1449,19 +1751,50 @@ export default function Home() {
       <Footer />
 
       {/* ═══ WHATSAPP FLOTTANT ═══ */}
-      <a
-        href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20commander%20un%20service%20chez%20Cr%C3%A9ateur%20Boutique."
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500 text-white shadow-lg shadow-emerald-500/30 hover:bg-emerald-600 hover:shadow-xl hover:shadow-emerald-500/40 transition-all duration-300 hover:scale-110 group"
-        aria-label="Contacter sur WhatsApp"
-      >
-        <MessageCircle className="h-6 w-6" />
-        <span className="absolute right-full mr-3 whitespace-nowrap rounded-lg bg-gray-900 text-white px-3 py-1.5 text-xs font-medium shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-          Commandez sur WhatsApp
-          <span className="absolute top-1/2 -right-1 -translate-y-1/2 h-2 w-2 bg-gray-900 rotate-45" />
-        </span>
-      </a>
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+        {/* Chat automatique popup */}
+        <motion.div
+          initial={{ opacity: 0, y: 10, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ delay: 3, duration: 0.4 }}
+          className="bg-white dark:bg-card border shadow-xl rounded-2xl p-4 w-64 hidden sm:block"
+        >
+          <div className="flex items-center gap-2 mb-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30">
+              <Headphones className="h-4 w-4 text-emerald-600" />
+            </div>
+            <div>
+              <p className="text-xs font-bold">Écrivez-nous maintenant</p>
+              <p className="text-[10px] text-muted-foreground">sur WhatsApp — réponse rapide</p>
+            </div>
+          </div>
+          <p className="text-[11px] text-muted-foreground leading-relaxed mb-3">
+            Besoin d&apos;un service ? Une question ? Écrivez-nous directement et recevez une réponse en quelques minutes.
+          </p>
+          <a
+            href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20avoir%20des%20informations%20sur%20vos%20services."
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block w-full text-center text-xs font-semibold bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg py-2 transition-colors"
+          >
+            Démarrer la conversation
+          </a>
+        </motion.div>
+        {/* WhatsApp button */}
+        <a
+          href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20commander%20un%20service%20chez%20Cr%C3%A9ateur%20Boutique."
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500 text-white shadow-lg shadow-emerald-500/30 hover:bg-emerald-600 hover:shadow-xl hover:shadow-emerald-500/40 transition-all duration-300 hover:scale-110 group"
+          aria-label="Contacter sur WhatsApp"
+        >
+          <MessageCircle className="h-6 w-6" />
+          <span className="absolute right-full mr-3 whitespace-nowrap rounded-lg bg-gray-900 text-white px-3 py-1.5 text-xs font-medium shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+            Commandez sur WhatsApp
+            <span className="absolute top-1/2 -right-1 -translate-y-1/2 h-2 w-2 bg-gray-900 rotate-45" />
+          </span>
+        </a>
+      </div>
     </div>
   )
 }
