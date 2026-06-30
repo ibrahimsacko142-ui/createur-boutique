@@ -294,6 +294,36 @@ function PricingCard({ name, price, description, icon: Icon, delay = 0 }: { name
   )
 }
 
+/* ─── Animated Counter ─── */
+function AnimatedCounter({ target, suffix = '', prefix = '' }: { target: number; suffix?: string; prefix?: string }) {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, margin: '-30px' })
+  const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    if (!isInView) return
+    let start = 0
+    const duration = 2000
+    const step = target / (duration / 16)
+    const timer = setInterval(() => {
+      start += step
+      if (start >= target) {
+        setCount(target)
+        clearInterval(timer)
+      } else {
+        setCount(Math.floor(start))
+      }
+    }, 16)
+    return () => clearInterval(timer)
+  }, [isInView, target])
+
+  return (
+    <span ref={ref}>
+      {prefix}{count.toLocaleString('fr-FR')}{suffix}
+    </span>
+  )
+}
+
 /* ═══════════════════════════════════════════════
    MAIN PAGE
    ═══════════════════════════════════════════════ */
@@ -305,7 +335,23 @@ export default function Home() {
   const [sending, setSending] = useState(false)
   const [showBanner, setShowBanner] = useState(true)
   const [showBackToTop, setShowBackToTop] = useState(false)
+  const [countdown, setCountdown] = useState({ hours: 23, minutes: 59, seconds: 59 })
   const { toast } = useToast()
+
+  // Countdown timer
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCountdown((prev) => {
+        let { hours, minutes, seconds } = prev
+        seconds--
+        if (seconds < 0) { seconds = 59; minutes-- }
+        if (minutes < 0) { minutes = 59; hours-- }
+        if (hours < 0) { hours = 23; minutes = 59; seconds = 59 }
+        return { hours, minutes, seconds }
+      })
+    }, 1000)
+    return () => clearInterval(timer)
+  }, [])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -531,21 +577,58 @@ export default function Home() {
             </FadeIn>
             <StaggerContainer className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
               {[
-                { value: '200+', label: 'Clients Satisfaits', icon: Users, desc: 'Des entrepreneurs et créateurs qui nous font confiance au quotidien' },
-                { value: '500+', label: 'Projets Réalisés', icon: Sparkles, desc: 'Logos, affiches, sites web, montages vidéo et bien plus encore' },
-                { value: '98%', label: 'Taux de Satisfaction', icon: Heart, desc: 'La quasi-totalité de nos clients reviennent ou nous recommandent' },
-                { value: '24h', label: 'Délai Moyen', icon: Clock, desc: 'Livraison rapide sans compromis sur la qualité du travail' },
+                { value: 200, suffix: '+', label: 'Clients Satisfaits', icon: Users, desc: 'Des entrepreneurs et créateurs qui nous font confiance au quotidien' },
+                { value: 500, suffix: '+', label: 'Projets Réalisés', icon: Sparkles, desc: 'Logos, affiches, sites web, montages vidéo et bien plus encore' },
+                { value: 98, suffix: '%', label: 'Taux de Satisfaction', icon: Heart, desc: 'La quasi-totalité de nos clients reviennent ou nous recommandent' },
+                { value: 24, suffix: 'h', label: 'Délai Moyen', icon: Clock, desc: 'Livraison rapide sans compromis sur la qualité du travail' },
               ].map((stat) => (
                 <motion.div key={stat.label} variants={cardVariants} className="text-center">
                   <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mx-auto mb-3">
                     <stat.icon className="h-7 w-7 text-white" />
                   </div>
-                  <div className="text-3xl sm:text-4xl font-extrabold text-white mb-1">{stat.value}</div>
+                  <div className="text-3xl sm:text-4xl font-extrabold text-white mb-1">
+                    <AnimatedCounter target={stat.value} suffix={stat.suffix} />
+                  </div>
                   <p className="text-sm font-semibold text-white/90">{stat.label}</p>
                   <p className="text-xs text-white/60 mt-1 leading-relaxed">{stat.desc}</p>
                 </motion.div>
               ))}
             </StaggerContainer>
+          </div>
+        </section>
+
+        {/* ═══ BARRE DE CONFIANCE ═══ */}
+        <section className="py-6 border-b bg-white dark:bg-background">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10">
+              {[
+                { icon: Shield, label: 'Paiement Sécurisé' },
+                { icon: Zap, label: 'Livraison 24h' },
+                { icon: CheckCircle2, label: 'Satisfaction Garantie' },
+                { icon: CreditCard, label: 'Wave Accepté' },
+                { icon: Headphones, label: 'Support 7j/7' },
+              ].map((item) => (
+                <div key={item.label} className="flex items-center gap-2 text-muted-foreground">
+                  <item.icon className="h-4 w-4 text-amber-500" />
+                  <span className="text-xs font-medium whitespace-nowrap">{item.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ═══ OUTILS DÉFILANT ═══ */}
+        <section className="py-4 border-b overflow-hidden bg-muted/20">
+          <div className="flex animate-marquee">
+            {[...Array(2)].map((_, i) => (
+              <div key={i} className="flex items-center gap-8 px-8 min-w-max">
+                {['CapCut Pro', 'Canva Pro', 'PicsArt Pro', 'IPTV Pro', 'Google Drive', 'Next.js', 'Tailwind CSS', 'Figma', 'Photoshop', 'Premiere Pro'].map((tool) => (
+                  <span key={`${tool}-${i}`} className="text-sm font-semibold text-muted-foreground/50 whitespace-nowrap flex items-center gap-2">
+                    <Wrench className="h-3.5 w-3.5" /> {tool}
+                  </span>
+                ))}
+              </div>
+            ))}
           </div>
         </section>
 
@@ -571,6 +654,21 @@ export default function Home() {
                         <span className="bg-gradient-to-r from-red-500 to-amber-500 bg-clip-text text-transparent">Seulement 5 commandes par jour</span>
                       </p>
                       <p className="text-sm text-muted-foreground mt-1">Offre valable 24h — Réservez votre place maintenant</p>
+                      <div className="flex items-center justify-center sm:justify-start gap-2 mt-3">
+                        <span className="text-xs text-muted-foreground">Expire dans :</span>
+                        {[
+                          { val: countdown.hours, label: 'h' },
+                          { val: countdown.minutes, label: 'm' },
+                          { val: countdown.seconds, label: 's' },
+                        ].map((t, i) => (
+                          <div key={i} className="flex items-center gap-1">
+                            <span className="bg-red-500 text-white text-sm font-bold px-2 py-0.5 rounded">
+                              {String(t.val).padStart(2, '0')}
+                            </span>
+                            <span className="text-xs font-bold text-red-500">{t.label}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                     <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20réserver%20ma%20commande%20du%20jour." target="_blank" rel="noopener noreferrer" className="flex-shrink-0">
                       <Button className="bg-red-500 hover:bg-red-600 text-white font-bold text-sm shadow-lg shadow-red-500/25 whitespace-nowrap">
@@ -830,6 +928,177 @@ export default function Home() {
                   })
               }
             </StaggerContainer>
+          </div>
+        </section>
+
+        {/* ═══ PORTFOLIO / RÉALISATIONS ═══ */}
+        <section id="portfolio" className="py-16 sm:py-20">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <FadeIn className="text-center mb-12">
+              <Badge variant="secondary" className="mb-3 bg-purple-100 text-purple-700 border-purple-200">
+                <Eye className="h-3 w-3 mr-1" /> Portfolio
+              </Badge>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Nos Réalisations</h2>
+              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
+                Découvrez une sélection de nos meilleurs travaux. Chaque projet est unique et réalisé avec passion pour nos clients.
+              </p>
+            </FadeIn>
+
+            <StaggerContainer className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+              {[
+                { title: 'Logo Restaurant Le Baobab', category: 'Logo', gradient: 'from-amber-400 to-orange-500', desc: 'Identité visuelle complète pour un restaurant traditionnel malien' },
+                { title: 'Affiche Festival Bamako', category: 'Affiche', gradient: 'from-purple-500 to-pink-500', desc: 'Affiche événementielle pour un festival culturel à Bamako' },
+                { title: 'Site Web MaliTech Solutions', category: 'Site Web', gradient: 'from-emerald-500 to-teal-500', desc: 'Site vitrine professionnel pour une entreprise tech malienne' },
+                { title: 'Logo Afro Fashion Store', category: 'Logo', gradient: 'from-red-500 to-rose-500', desc: 'Logo moderne pour une boutique de mode africaine' },
+                { title: 'Montage Promo Produit', category: 'Vidéo', gradient: 'from-blue-500 to-cyan-500', desc: 'Montage vidéo promotionnel pour un lancement de produit' },
+                { title: 'Identité ESIA Business', category: 'Identité', gradient: 'from-indigo-500 to-violet-500', desc: 'Charte graphique complète pour une école de business' },
+              ].map((item) => (
+                <motion.div key={item.title} variants={cardVariants}>
+                  <Card className="overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 h-full group cursor-pointer">
+                    <div className={`relative h-48 sm:h-56 bg-gradient-to-br ${item.gradient} flex items-center justify-center overflow-hidden`}>
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
+                      <div className="relative text-center text-white p-4 z-10">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm mx-auto mb-3">
+                          <Sparkles className="h-6 w-6" />
+                        </div>
+                        <h3 className="font-bold text-sm sm:text-base">{item.title}</h3>
+                        <p className="text-white/70 text-xs mt-1">{item.desc}</p>
+                      </div>
+                      <div className="absolute top-3 left-3">
+                        <Badge className="bg-white/20 backdrop-blur-sm text-white border-0 text-[10px]">{item.category}</Badge>
+                      </div>
+                    </div>
+                  </Card>
+                </motion.div>
+              ))}
+            </StaggerContainer>
+
+            <FadeIn delay={0.3} className="mt-8 text-center">
+              <p className="text-sm text-muted-foreground">
+                Envie d&apos;un projet similaire ?{' '}
+                <a href="https://wa.me/22397787244?text=Bonjour%20!%20J%27ai%20vu%20vos%20réalisations%20et%20je%20souhaite%20un%20projet%20similaire." target="_blank" rel="noopener noreferrer" className="text-amber-600 font-semibold hover:underline">
+                  Contactez-nous
+                </a>{' '}et discutons de votre projet !
+              </p>
+            </FadeIn>
+          </div>
+        </section>
+
+        {/* ═══ POURQUOI NOUS CHOISIR ═══ */}
+        <section className="py-16 sm:py-20 bg-muted/30">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <FadeIn className="text-center mb-12">
+              <Badge variant="secondary" className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200">
+                <Trophy className="h-3 w-3 mr-1" /> Avantages
+              </Badge>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Pourquoi Nous Choisir ?</h2>
+              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
+                Ce qui nous distingue des autres et fait de Créateur Boutique le choix numéro un pour vos projets digitaux au Mali.
+              </p>
+            </FadeIn>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[
+                {
+                  icon: Zap,
+                  title: 'Livraison Ultra Rapide',
+                  desc: "Recevez vos projets en 1 à 24 heures pour les designs simples et 1 à 3 jours pour les sites web. Pas d'attente inutile, on respecte nos délais à la lettre.",
+                  highlight: 'Plus rapide',
+                },
+                {
+                  icon: CircleDollarSign,
+                  title: 'Prix Imbattables',
+                  desc: 'Des tarifs adaptés au marché malien et africain. À partir de 2 000 FCFA seulement pour une affiche professionnelle. Le meilleur rapport qualité-prix garanti.',
+                  highlight: 'Dès 2 000 FCFA',
+                },
+                {
+                  icon: MessageCircle,
+                  title: 'Communication Directe',
+                  desc: 'Contactez-nous directement sur WhatsApp pour un suivi en temps réel de votre projet. Pas d\'intermédiaire, pas de formulaire complexe. Simple et efficace.',
+                  highlight: 'WhatsApp Direct',
+                },
+                {
+                  icon: BadgeCheck,
+                  title: 'Qualité Professionnelle',
+                  desc: 'Chaque projet est réalisé avec des outils professionnels (Canva Pro, CapCut Pro, PicsArt Pro). Des résultats qui rivalisent avec les agences internationales.',
+                  highlight: 'Outils Pro',
+                },
+                {
+                  icon: Users,
+                  title: 'Parrainage Avantageux',
+                  desc: 'Gagnez des récompenses en recommandant nos services. Jusqu\'à un site web entièrement gratuit pour 10 parrainages. Le programme le plus généreux du Mali.',
+                  highlight: 'Jusqu\'à gratuit',
+                },
+                {
+                  icon: Heart,
+                  title: 'Accompagnement Personnalisé',
+                  desc: "Chaque client est unique. Nous prenons le temps de comprendre vos besoins et d'adapter nos services. Des révisions incluses jusqu'à votre satisfaction totale.",
+                  highlight: 'Sur mesure',
+                },
+              ].map((item, i) => (
+                <FadeIn key={item.title} delay={i * 0.08}>
+                  <Card className="border-0 shadow-md hover:shadow-lg transition-shadow duration-300 h-full">
+                    <CardContent className="p-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30">
+                          <item.icon className="h-6 w-6 text-amber-600" />
+                        </div>
+                        <Badge variant="secondary" className="text-amber-600 text-[10px] bg-amber-50">{item.highlight}</Badge>
+                      </div>
+                      <h3 className="font-bold text-sm mb-2">{item.title}</h3>
+                      <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
+                    </CardContent>
+                  </Card>
+                </FadeIn>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ═══ NEWSLETTER ═══ */}
+        <section className="py-16 sm:py-20">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <FadeIn>
+              <Card className="border-0 shadow-xl overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 dark:from-amber-950/10 dark:via-orange-950/10 dark:to-red-950/10">
+                <CardContent className="p-8 sm:p-12">
+                  <div className="grid lg:grid-cols-2 gap-8 items-center">
+                    <div>
+                      <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+                        <Mail className="h-3 w-3 mr-1" /> Newsletter
+                      </Badge>
+                      <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">Restez Informé</h2>
+                      <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+                        Inscrivez-vous à notre newsletter pour recevoir nos dernières offres, des conseils en design et digital, et être informé en avant-première de nos promotions exclusives. Rejoignez notre communauté de créateurs et d&apos;entrepreneurs.
+                      </p>
+                      <div className="mt-6 space-y-3">
+                        {[
+                          'Offres exclusives réservées aux abonnés',
+                          'Conseils et astuces design chaque semaine',
+                          'Accès prioritaire aux nouvelles promotions',
+                        ].map((item, i) => (
+                          <div key={i} className="flex items-center gap-2">
+                            <CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" />
+                            <span className="text-xs text-muted-foreground">{item}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Input placeholder="Votre nom" className="h-11 bg-white dark:bg-background" />
+                        <Input type="email" placeholder="Votre email" className="h-11 bg-white dark:bg-background" />
+                      </div>
+                      <Button className="w-full bg-amber-500 hover:bg-amber-600 text-white font-semibold h-11">
+                        <Send className="h-4 w-4 mr-2" /> S&apos;inscrire gratuitement
+                      </Button>
+                      <p className="text-[10px] text-muted-foreground text-center">
+                        En vous inscrivant, vous acceptez de recevoir nos communications. Désabonnement possible à tout moment.
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </FadeIn>
           </div>
         </section>
 
