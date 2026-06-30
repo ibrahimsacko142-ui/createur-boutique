@@ -304,7 +304,16 @@ export default function Home() {
   const [contactData, setContactData] = useState({ name: '', email: '', subject: '', message: '' })
   const [sending, setSending] = useState(false)
   const [showBanner, setShowBanner] = useState(true)
+  const [showBackToTop, setShowBackToTop] = useState(false)
   const { toast } = useToast()
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 500)
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   useEffect(() => {
     fetch('/api/products')
@@ -512,6 +521,34 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ═══ STATISTIQUES ═══ */}
+        <section className="py-12 sm:py-16 bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 relative overflow-hidden">
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIxIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMSkiLz48L3N2Zz4=')] opacity-50" />
+          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <FadeIn className="text-center mb-10">
+              <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">La Confiance de Nos Clients</h2>
+              <p className="mt-2 text-white/80 text-sm">Des chiffres qui parlent d&apos;eux-mêmes</p>
+            </FadeIn>
+            <StaggerContainer className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+              {[
+                { value: '200+', label: 'Clients Satisfaits', icon: Users, desc: 'Des entrepreneurs et créateurs qui nous font confiance au quotidien' },
+                { value: '500+', label: 'Projets Réalisés', icon: Sparkles, desc: 'Logos, affiches, sites web, montages vidéo et bien plus encore' },
+                { value: '98%', label: 'Taux de Satisfaction', icon: Heart, desc: 'La quasi-totalité de nos clients reviennent ou nous recommandent' },
+                { value: '24h', label: 'Délai Moyen', icon: Clock, desc: 'Livraison rapide sans compromis sur la qualité du travail' },
+              ].map((stat) => (
+                <motion.div key={stat.label} variants={cardVariants} className="text-center">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mx-auto mb-3">
+                    <stat.icon className="h-7 w-7 text-white" />
+                  </div>
+                  <div className="text-3xl sm:text-4xl font-extrabold text-white mb-1">{stat.value}</div>
+                  <p className="text-sm font-semibold text-white/90">{stat.label}</p>
+                  <p className="text-xs text-white/60 mt-1 leading-relaxed">{stat.desc}</p>
+                </motion.div>
+              ))}
+            </StaggerContainer>
+          </div>
+        </section>
+
         {/* ═══ OFFRES LIMITÉES (URGENCE) ═══ */}
         <section className="py-10 sm:py-14">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -556,7 +593,7 @@ export default function Home() {
               </Badge>
               <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Mes Services & Tarifs</h2>
               <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
-                Services rapides, modernes et professionnels. Chaque service est livré avec soin et professionnelisme.
+                Des services rapides, modernes et professionnels adaptés à tous les budgets. Que vous soyez un entrepreneur, un étudiant ou une entreprise, nous avons la solution qu&apos;il vous faut. Chaque service est livré avec soin et un accompagnement personnalisé.
               </p>
             </FadeIn>
 
@@ -564,46 +601,135 @@ export default function Home() {
               <PricingCard
                 name="Formation Designer Graphique"
                 price={20000}
-                description="Formation complète en design graphique. Apprenez les bases et techniques avancées pour créer des visuels professionnels."
+                description="Formation complète en design graphique avec pratique et accompagnement. Apprenez les bases et techniques avancées pour créer des visuels professionnels avec Canva Pro et d'autres outils."
                 icon={Palette}
                 delay={0}
               />
               <PricingCard
                 name="Affiche Professionnelle"
                 price={2000}
-                description="Création d'affiches publicitaires modernes et attractives, adaptées à votre marque et communication visuelle."
+                description="Création d'affiches publicitaires modernes, attractives et adaptées à votre marque. Design haute qualité, format personnalisé et prêt pour impression ou partage digital."
                 icon={PenTool}
                 delay={0.1}
               />
               <PricingCard
                 name="Logo Professionnel"
                 price={5000}
-                description="Création de logo unique et identité visuelle de marque. Un design mémorable qui vous démarque."
+                description="Création de logo unique avec identité visuelle de marque complète. Fichiers sources inclus, plusieurs variantes et guide d'utilisation pour une image professionnelle cohérente."
                 icon={Sparkles}
                 delay={0.2}
               />
               <PricingCard
                 name="Site Web Simple"
                 price={15000}
-                description="Site web vitrine moderne, responsive et optimisé. Parfait pour présenter votre activité en ligne."
+                description="Site web vitrine moderne, responsive et optimisé pour les moteurs de recherche. Parfait pour présenter votre activité en ligne avec un design professionnel."
                 icon={Globe}
                 delay={0.3}
               />
               <PricingCard
                 name="Site Web Professionnel"
                 price={25000}
-                description="Site web professionnel complet avec fonctionnalités avancées, design sur mesure et optimisation SEO."
+                description="Site web professionnel complet avec fonctionnalités avancées, design sur mesure, optimisation SEO et hébergement inclus. Une présence en ligne qui impressionne."
                 icon={Globe}
                 delay={0.4}
               />
               <PricingCard
                 name="Montage Vidéo Pro"
                 price={5000}
-                description="Montage vidéo professionnel avec CapCut Pro. Effets premium, transitions et export haute qualité."
+                description="Montage vidéo professionnel avec CapCut Pro. Effets premium, transitions fluides, synchronisation musicale et export en haute qualité pour réseaux sociaux ou présentations."
                 icon={MonitorPlay}
                 delay={0.5}
               />
             </div>
+          </div>
+        </section>
+
+        {/* ═══ COMMENT COMMANDER ═══ */}
+        <section className="py-16 sm:py-20 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-blue-950/10 dark:via-indigo-950/10 dark:to-purple-950/10">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <FadeIn className="text-center mb-12">
+              <Badge variant="secondary" className="mb-3 bg-blue-100 text-blue-700 border-blue-200">
+                <ArrowRight className="h-3 w-3 mr-1" /> Guide
+              </Badge>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Comment Commander ?</h2>
+              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
+                Un processus simple, rapide et transparent en seulement 4 étapes. De votre idée à la livraison finale, tout est pensé pour votre confort.
+              </p>
+            </FadeIn>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+              {/* Connecting line */}
+              <div className="hidden lg:block absolute top-16 left-[12.5%] right-[12.5%] h-0.5 bg-gradient-to-r from-blue-200 via-purple-200 to-amber-200" />
+
+              {[
+                {
+                  step: '01',
+                  icon: MessageCircle,
+                  title: 'Contactez-nous',
+                  desc: "Envoyez-nous un message sur WhatsApp ou via le formulaire de contact. Décrivez votre projet, vos besoins et le service souhaité. Notre équipe vous répondra en quelques minutes pour discuter des détails.",
+                  color: 'from-blue-500 to-cyan-500',
+                  bg: 'bg-blue-100 dark:bg-blue-900/30',
+                  iconColor: 'text-blue-600',
+                },
+                {
+                  step: '02',
+                  icon: Handshake,
+                  title: 'Validation du projet',
+                  desc: 'Nous définissons ensemble les spécifications, le délai et le tarif. Vous recevez un récapitulatif clair et détaillé de ce qui sera livré. Aucune surprise, tout est transparent dès le départ.',
+                  color: 'from-purple-500 to-pink-500',
+                  bg: 'bg-purple-100 dark:bg-purple-900/30',
+                  iconColor: 'text-purple-600',
+                },
+                {
+                  step: '03',
+                  icon: CreditCard,
+                  title: 'Paiement',
+                  desc: "Effectuez le paiement via Wave au numéro +223 97 78 72 44. Selon le service, un paiement de 50% à la commande et 50% à la livraison, ou le paiement total avant début du travail.",
+                  color: 'from-amber-500 to-orange-500',
+                  bg: 'bg-amber-100 dark:bg-amber-900/30',
+                  iconColor: 'text-amber-600',
+                },
+                {
+                  step: '04',
+                  icon: FolderDown,
+                  title: 'Livraison',
+                  desc: "Recevez votre travail livré en haute qualité via WhatsApp ou Google Drive. Vous pouvez demander des révisions pour ajuster les derniers détails. Votre satisfaction est notre priorité.",
+                  color: 'from-emerald-500 to-teal-500',
+                  bg: 'bg-emerald-100 dark:bg-emerald-900/30',
+                  iconColor: 'text-emerald-600',
+                },
+              ].map((item) => (
+                <FadeIn key={item.step} delay={parseInt(item.step) * 0.1}>
+                  <div className="relative text-center">
+                    <div className={`flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${item.color} text-white mx-auto mb-4 shadow-lg relative z-10`}>
+                      <item.icon className="h-7 w-7" />
+                    </div>
+                    <span className="text-xs font-bold text-muted-foreground mb-2 block">{`Étape ${item.step}`}</span>
+                    <h3 className="font-bold text-base mb-2">{item.title}</h3>
+                    <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
+                  </div>
+                </FadeIn>
+              ))}
+            </div>
+
+            <FadeIn delay={0.4} className="mt-10 text-center">
+              <div className="inline-flex rounded-2xl bg-white dark:bg-card border shadow-lg p-6 sm:p-8 max-w-lg">
+                <div className="flex items-center gap-4">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex-shrink-0">
+                    <Zap className="h-6 w-6 text-emerald-600" />
+                  </div>
+                  <div className="text-left">
+                    <p className="font-bold text-sm">Prêt à commencer ?</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">Commandez maintenant et recevez votre projet en 24h</p>
+                    <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20commander%20un%20service.%20Pouvez-vous%20m%27aider%20%3F" target="_blank" rel="noopener noreferrer">
+                      <Button size="sm" className="mt-2 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-semibold">
+                        <MessageCircle className="h-3.5 w-3.5 mr-1.5" /> Commander via WhatsApp
+                      </Button>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </FadeIn>
           </div>
         </section>
 
@@ -878,14 +1004,27 @@ export default function Home() {
                 <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">À Propos</h2>
                 <div className="mt-6 space-y-4 text-muted-foreground leading-relaxed">
                   <p>
-                    Je suis un créateur passionné par le design graphique et le digital. Mon objectif est de fournir des services de haute qualité qui répondent aux besoins réels de mes clients, avec un souci constant de l&apos;esthétique et de l&apos;efficacité.
+                    Je suis un créateur passionné par le design graphique et le digital, basé à Bamako, Mali. Mon objectif est de fournir des services de haute qualité qui répondent aux besoins réels de mes clients, avec un souci constant de l&apos;esthétique et de l&apos;efficacité. Chaque projet que je réalise est traité comme une opportunité de démontrer mon engagement envers l&apos;excellence créative.
                   </p>
                   <p>
-                    De la création de logos à la conception de sites web, en passant par le montage vidéo et le marketing digital, je mets mon expertise à votre service pour vous aider à vous démarquer et à atteindre vos objectifs.
+                    De la création de logos à la conception de sites web, en passant par le montage vidéo et le marketing digital, je mets mon expertise à votre service pour vous aider à vous démarquer et à atteindre vos objectifs. J&apos;utilise les meilleurs outils professionnels du marché — CapCut Pro, Canva Pro, PicsArt Pro — pour garantir des résultats qui dépassent vos attentes.
                   </p>
                   <p>
-                    Services rapides, modernes et professionnels. Qualité, Créativité, Satisfaction — ce ne sont pas juste des mots, c&apos;est ma promesse.
+                    Ma mission va au-delà de la simple création visuelle : je souhaite <strong className="text-foreground">aider les jeunes entrepreneurs du Mali et d&apos;Afrique</strong> à bâtir une image de marque forte et professionnelle. Que vous soyez étudiant, entrepreneur, entreprise ou créateur de contenu, j&apos;ai la solution adaptée à vos besoins et à votre budget.
                   </p>
+                </div>
+
+                <div className="mt-6 grid grid-cols-3 gap-3">
+                  {[
+                    { number: '500+', label: 'Projets' },
+                    { number: '200+', label: 'Clients' },
+                    { number: '98%', label: 'Satisfaction' },
+                  ].map((stat) => (
+                    <div key={stat.label} className="text-center p-3 rounded-lg bg-muted/50 border">
+                      <div className="text-lg font-bold text-amber-600">{stat.number}</div>
+                      <div className="text-[10px] text-muted-foreground">{stat.label}</div>
+                    </div>
+                  ))}
                 </div>
 
                 <div className="mt-8 flex flex-wrap gap-3">
@@ -1430,41 +1569,66 @@ export default function Home() {
               {[
                 {
                   title: '5 conseils pour créer un logo mémorable',
-                  excerpt: 'Découvrez les règles essentielles pour concevoir un logo qui marque les esprits et reste gravé dans la mémoire de votre audience.',
+                  excerpt: "Découvrez les règles essentielles pour concevoir un logo qui marque les esprits et reste gravé dans la mémoire de votre audience. Un bon logo est la base de toute identité visuelle forte et professionnelle.",
                   category: 'Design',
-                  date: '25 Juin 2026',
+                  date: '28 Juin 2026',
                   readTime: '4 min',
-                  image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=400&h=250&fit=crop',
                   color: 'bg-amber-100 text-amber-700',
+                  gradient: 'from-amber-400 to-orange-500',
                 },
                 {
                   title: 'Comment réussir en digital en 2026',
-                  excerpt: "Les stratégies clés pour se démarquer dans le monde du digital cette année. Marketing, design et présence en ligne.",
+                  excerpt: "Les stratégies clés pour se démarquer dans le monde du digital cette année. Marketing, design et présence en ligne : tout ce que vous devez savoir pour réussir votre transition numérique.",
                   category: 'Digital',
-                  date: '20 Juin 2026',
+                  date: '25 Juin 2026',
                   readTime: '6 min',
-                  image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=250&fit=crop',
                   color: 'bg-emerald-100 text-emerald-700',
+                  gradient: 'from-emerald-400 to-teal-500',
                 },
                 {
                   title: 'Les tendances design graphique à suivre',
-                  excerpt: "Minimalisme, gradients, typographies audacieuses... Tour d'horizon des tendances qui dominent le design cette année.",
+                  excerpt: "Minimalisme, gradients, typographies audacieuses... Tour d'horizon des tendances qui dominent le design cette année. Restez à la pointe et inspirez-vous des meilleures pratiques.",
                   category: 'Tendances',
-                  date: '15 Juin 2026',
+                  date: '22 Juin 2026',
                   readTime: '5 min',
-                  image: 'https://images.unsplash.com/photo-1626785774625-ddcddc3445e9?w=400&h=250&fit=crop',
                   color: 'bg-purple-100 text-purple-700',
+                  gradient: 'from-purple-400 to-pink-500',
+                },
+                {
+                  title: 'Pourquoi votre entreprise a besoin d\'un site web',
+                  excerpt: "Un site web professionnel est devenu indispensable pour toute entreprise. Découvrez pourquoi investir dans un site vitrine est la meilleure décision pour votre business et comment cela peut multiplier vos clients.",
+                  category: 'Site Web',
+                  date: '18 Juin 2026',
+                  readTime: '5 min',
+                  color: 'bg-blue-100 text-blue-700',
+                  gradient: 'from-blue-400 to-cyan-500',
+                },
+                {
+                  title: 'Les outils indispensables pour un créateur de contenu',
+                  excerpt: "CapCut Pro, PicsArt Pro, Canva... Découvrez les outils qui feront la différence dans votre production de contenu. Comparatif détaillé et conseils pour choisir les bons outils selon vos besoins.",
+                  category: 'Outils',
+                  date: '15 Juin 2026',
+                  readTime: '7 min',
+                  color: 'bg-red-100 text-red-700',
+                  gradient: 'from-red-400 to-rose-500',
+                },
+                {
+                  title: 'Comment attirer des clients avec le marketing digital',
+                  excerpt: "Réseaux sociaux, publicité en ligne, branding... Les techniques éprouvées pour développer votre clientèle grâce au marketing digital, même avec un petit budget au Mali et en Afrique de l'Ouest.",
+                  category: 'Marketing',
+                  date: '10 Juin 2026',
+                  readTime: '6 min',
+                  color: 'bg-teal-100 text-teal-700',
+                  gradient: 'from-teal-400 to-emerald-500',
                 },
               ].map((article) => (
                 <motion.div key={article.title} variants={cardVariants}>
                   <Card className="overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 h-full flex flex-col group">
-                    <div className="relative h-44 overflow-hidden">
-                      <img
-                        src={article.image}
-                        alt={article.title}
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                        loading="lazy"
-                      />
+                    <div className={`relative h-44 overflow-hidden bg-gradient-to-br ${article.gradient} flex items-center justify-center`}>
+                      <div className="text-center text-white p-4">
+                        <span className="text-xs font-medium bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full">{article.category}</span>
+                        <h3 className="text-base font-bold mt-2 leading-snug">{article.title}</h3>
+                      </div>
                       <div className="absolute top-3 left-3">
                         <Badge className={article.color}>{article.category}</Badge>
                       </div>
@@ -1507,7 +1671,7 @@ export default function Home() {
                 {
                   icon: Shield,
                   title: 'Sérieux',
-                  desc: "Chaque projet est traité avec le plus grand professionnalisme. Respect des délais, communication transparente et engagement total.",
+                  desc: "Chaque projet est traité avec le plus grand professionnalisme. Respect des délais, communication transparente et engagement total. Nous ne promettons que ce que nous pouvons tenir, et nous tenons tout ce que nous promettons.",
                   color: 'from-emerald-500 to-teal-500',
                   bgColor: 'bg-emerald-100 dark:bg-emerald-900/30',
                   iconColor: 'text-emerald-600',
@@ -1515,7 +1679,7 @@ export default function Home() {
                 {
                   icon: Sparkles,
                   title: 'Créativité',
-                  desc: "Des idées originales et des designs uniques pour chaque client. Chaque création est pensée pour se démarquer et marquer les esprits.",
+                  desc: "Des idées originales et des designs uniques pour chaque client. Chaque création est pensée pour se démarquer et marquer les esprits. Nous repoussons les limites du design pour offrir des visuels qui captivent.",
                   color: 'from-amber-500 to-orange-500',
                   bgColor: 'bg-amber-100 dark:bg-amber-900/30',
                   iconColor: 'text-amber-600',
@@ -1523,7 +1687,7 @@ export default function Home() {
                 {
                   icon: Zap,
                   title: 'Rapidité',
-                  desc: "Des délais de livraison respectés sans compromis sur la qualité. Affiches et logos en 1 à 24h, sites web en 1 à 3 jours.",
+                  desc: "Des délais de livraison respectés sans compromis sur la qualité. Affiches et logos en 1 à 24h, sites web en 1 à 3 jours. Nous comprenons que votre temps est précieux et nous y répondons.",
                   color: 'from-purple-500 to-pink-500',
                   bgColor: 'bg-purple-100 dark:bg-purple-900/30',
                   iconColor: 'text-purple-600',
@@ -1531,7 +1695,7 @@ export default function Home() {
                 {
                   icon: Heart,
                   title: 'Satisfaction Client',
-                  desc: "Votre satisfaction est notre priorité numéro un. Nous travaillons main dans la main avec vous jusqu'au résultat parfait.",
+                  desc: "Votre satisfaction est notre priorité numéro un. Nous travaillons main dans la main avec vous jusqu'au résultat parfait. Des révisions sont incluses pour garantir que chaque détail correspond à votre vision.",
                   color: 'from-red-500 to-rose-500',
                   bgColor: 'bg-red-100 dark:bg-red-900/30',
                   iconColor: 'text-red-600',
@@ -1624,6 +1788,117 @@ export default function Home() {
                 </motion.div>
               ))}
             </StaggerContainer>
+          </div>
+        </section>
+
+        {/* ═══ FAQ ═══ */}
+        <section id="faq" className="py-16 sm:py-20 bg-muted/30">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <FadeIn className="text-center mb-12">
+              <Badge variant="secondary" className="mb-3 bg-blue-100 text-blue-700 border-blue-200">
+                <Headphones className="h-3 w-3 mr-1" /> Support
+              </Badge>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Questions Fréquentes</h2>
+              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
+                Trouvez rapidement les réponses aux questions les plus posées par nos clients. Si votre question n&apos;est pas ici, contactez-nous directement.
+              </p>
+            </FadeIn>
+
+            <div className="max-w-3xl mx-auto space-y-3">
+              {[
+                {
+                  q: "Quels modes de paiement acceptez-vous ?",
+                  a: "Nous acceptons uniquement les paiements via Wave au numéro +223 97 78 72 44. C'est un moyen de paiement rapide, sécurisé et accessible à tous au Mali. Selon le service, le paiement peut se faire en deux fois (50% à la commande, 50% à la livraison) ou en une seule fois avant le début du travail."
+                },
+                {
+                  q: "Combien de temps faut-il pour recevoir mon projet ?",
+                  a: "Les délais dépendent du type de service. Pour les affiches et logos, la livraison se fait entre 1 et 24 heures. Pour les outils comme CapCut Pro et PicsArt Pro, c'est également 1 à 24 heures. Les sites web nécessitent 1 à 3 jours ouvrables, et les formations suivent un programme spécifique communiqué à l'avance."
+                },
+                {
+                  q: "Puis-je demander des révisions sur mon projet ?",
+                  a: "Oui, absolument ! Des révisions sont incluses avant la validation finale. Nous travaillons avec vous pour nous assurer que le résultat correspond parfaitement à vos attentes. Votre satisfaction est notre priorité et nous ne validons pas un projet tant que vous n'êtes pas pleinement satisfait du rendu."
+                },
+                {
+                  q: "Comment se passe la livraison de mon travail ?",
+                  a: "Les fichiers sont livrés en haute qualité via WhatsApp pour une réception instantanée, ou via Google Drive pour les fichiers volumineux. Vous recevez les fichiers sources et les exports dans les formats souhaités. Tout est fait pour que vous puissiez utiliser votre création immédiatement."
+                },
+                {
+                  q: "Y a-t-il un système de parrainage ?",
+                  a: "Oui ! Notre programme de parrainage vous permet de gagner des récompenses en recommandant nos services. Pour 1 client parrainé, recevez 500 FCFA de réduction. Pour 2 clients, un service gratuit (affiche ou logo). Pour 5 clients, un logo ou mini projet entièrement offert. Pour 10 clients, un site web simple gratuitement !"
+                },
+                {
+                  q: "Le paiement est-il sécurisé ?",
+                  a: "Oui, toutes les transactions passent par Wave, un moyen de paiement sécurisé et fiable. Chaque paiement est confirmé avant le début du travail, garantissant la sécurité des deux parties. Nous ne commençons aucun travail sans confirmation claire du paiement."
+                },
+                {
+                  q: "Quels outils numériques proposez-vous ?",
+                  a: "Nous proposons CapCut Pro pour le montage vidéo professionnel, PicsArt Pro pour le design mobile, IPTV Pro pour les chaînes TV en streaming, et des livres professionnels et éducatifs pour développer vos compétences. Tous les outils sont livrés avec leur compte activé et prêt à l'emploi."
+                },
+                {
+                  q: "Proposez-vous des formations ?",
+                  a: "Oui ! Nous proposons une formation complète en design graphique à 20 000 FCFA. Cette formation couvre les bases et techniques avancées pour créer des visuels professionnels. C'est idéal pour les étudiants, les entrepreneurs et toute personne souhaitant développer des compétences en design."
+                },
+              ].map((faq, i) => (
+                <FadeIn key={i} delay={i * 0.05}>
+                  <Card className="border-0 shadow-sm hover:shadow-md transition-shadow duration-200">
+                    <CardContent className="p-5">
+                      <div className="flex items-start gap-3">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 flex-shrink-0 mt-0.5">
+                          <span className="text-xs font-bold text-amber-600">Q</span>
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-sm mb-2">{faq.q}</h3>
+                          <p className="text-xs text-muted-foreground leading-relaxed">{faq.a}</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </FadeIn>
+              ))}
+            </div>
+
+            <FadeIn className="mt-8 text-center">
+              <p className="text-sm text-muted-foreground">
+                Vous avez d&apos;autres questions ?{' '}
+                <a href="#contact" className="text-amber-600 font-medium hover:underline">Contactez-nous</a> ou écrivez-nous directement sur{' '}
+                <a href="https://wa.me/22397787244" target="_blank" rel="noopener noreferrer" className="text-emerald-600 font-medium hover:underline">WhatsApp</a>.
+              </p>
+            </FadeIn>
+          </div>
+        </section>
+
+        {/* ═══ CTA FINAL ═══ */}
+        <section className="py-16 sm:py-20 bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 relative overflow-hidden">
+          <div className="absolute inset-0">
+            <div className="absolute top-0 left-1/4 h-64 w-64 bg-white/10 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 right-1/4 h-64 w-64 bg-white/10 rounded-full blur-3xl" />
+          </div>
+          <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
+            <FadeIn>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
+                Prêt à Donner Vie à Votre Projet ?
+              </h2>
+              <p className="mt-4 text-lg text-white/90 max-w-2xl mx-auto leading-relaxed">
+                Ne laissez pas votre idée attendre. Contactez-nous dès maintenant et transformez votre vision en réalité. Design professionnel, livraison rapide et satisfaction garantie.
+              </p>
+              <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20commander%20un%20service%20chez%20Cr%C3%A9ateur%20Boutique." target="_blank" rel="noopener noreferrer">
+                  <Button size="lg" className="bg-white text-amber-600 hover:bg-white/90 font-bold shadow-xl text-base px-8">
+                    <MessageCircle className="h-5 w-5 mr-2" /> Commander sur WhatsApp
+                  </Button>
+                </a>
+                <a href="#services">
+                  <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 font-semibold text-base px-8">
+                    Voir les services <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </a>
+              </div>
+              <div className="mt-8 flex items-center justify-center gap-6 text-white/80 text-sm">
+                <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4" /> Livraison rapide</span>
+                <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4" /> Satisfaction garantie</span>
+                <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4" /> Paiement sécurisé</span>
+              </div>
+            </FadeIn>
           </div>
         </section>
 
@@ -1750,8 +2025,23 @@ export default function Home() {
 
       <Footer />
 
-      {/* ═══ WHATSAPP FLOTTANT ═══ */}
+      {/* ═══ WHATSAPP FLOTTANT + BACK TO TOP ═══ */}
       <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+        {/* Back to top button */}
+        <AnimatePresence>
+          {showBackToTop && (
+            <motion.button
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-gray-800 dark:bg-gray-700 text-white shadow-lg hover:bg-gray-700 dark:hover:bg-gray-600 transition-all duration-300 hover:scale-110"
+              aria-label="Retour en haut"
+            >
+              <ChevronUp className="h-5 w-5" />
+            </motion.button>
+          )}
+        </AnimatePresence>
         {/* Chat automatique popup */}
         <motion.div
           initial={{ opacity: 0, y: 10, scale: 0.95 }}

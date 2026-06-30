@@ -14,19 +14,34 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Créateur Boutique — Produits & Projets Créatifs",
+  title: "Créateur Boutique — Design Graphique, Sites Web & Outils Numériques à Bamako",
   description:
-    "Découvrez notre collection exclusive de produits artisanaux et de projets créatifs. Qualité, originalité et passion au rendez-vous.",
+    "Créateur Boutique : votre partenaire digital à Bamako, Mali. Design graphique professionnel, création de logos, sites web, montage vidéo, outils numériques (CapCut Pro, PicsArt Pro, IPTV Pro). Paiement Wave. Livraison rapide 24h.",
   keywords: [
     "Créateur Boutique",
-    "produits artisanaux",
-    "projets créatifs",
-    "boutique en ligne",
+    "design graphique Bamako",
+    "création de logo Mali",
+    "site web Bamako",
+    "montage vidéo",
+    "CapCut Pro Mali",
+    "PicsArt Pro",
+    "IPTV Pro",
+    "marketing digital Mali",
+    "design professionnel",
     "Bamako",
     "Mali",
+    "freelance digital",
+    "formation design",
+    "outils numériques",
   ],
   icons: {
     icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
+  },
+  openGraph: {
+    title: "Créateur Boutique — Design & Digital à Bamako",
+    description: "Services professionnels de design graphique, sites web, montage vidéo et outils numériques. Qualité, Créativité, Satisfaction.",
+    locale: "fr_ML",
+    type: "website",
   },
 };
 
