@@ -36,6 +36,15 @@ import {
   Timer,
   Lock,
   CircleDollarSign,
+  MessageCircle,
+  Play,
+  Trophy,
+  Flame,
+  Clock,
+  Ban,
+  FileCheck,
+  Calendar,
+  ArrowUpRight,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -283,6 +292,7 @@ export default function Home() {
   const [activeFilter, setActiveFilter] = useState('all')
   const [contactData, setContactData] = useState({ name: '', email: '', subject: '', message: '' })
   const [sending, setSending] = useState(false)
+  const [showBanner, setShowBanner] = useState(true)
   const { toast } = useToast()
 
   useEffect(() => {
@@ -354,6 +364,34 @@ export default function Home() {
       <Header />
 
       <main className="flex-1">
+        {/* ═══ BANNIÈRE PROMO ═══ */}
+        <AnimatePresence>
+          {showBanner && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="overflow-hidden bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white"
+            >
+              <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-4">
+                <p className="text-xs sm:text-sm font-medium text-center sm:text-left flex-1">
+                  <Flame className="h-3.5 w-3.5 inline mr-1" />
+                  Bienvenue ! Offre spéciale pour nouveaux clients — <strong>Réduction de 10%</strong> sur votre première commande
+                </p>
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <a href="#services">
+                    <Button size="sm" variant="secondary" className="h-7 text-xs bg-white text-amber-600 hover:bg-white/90 font-semibold px-3">
+                      En profiter
+                    </Button>
+                  </a>
+                  <button onClick={() => setShowBanner(false)} className="text-white/80 hover:text-white transition-colors" aria-label="Fermer">
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
         {/* ═══ HERO ═══ */}
         <section id="accueil" className="relative overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-white dark:from-amber-950/20 dark:via-orange-950/10 dark:to-background">
           <div className="absolute top-0 -right-40 h-[500px] w-[500px] rounded-full bg-amber-200/40 dark:bg-amber-800/10 blur-3xl" />
@@ -1017,6 +1055,276 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ═══ VIDÉO DE PRÉSENTATION ═══ */}
+        <section id="video" className="py-16 sm:py-20 bg-muted/30">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <FadeIn>
+                <Badge variant="secondary" className="mb-3 bg-red-100 text-red-700 border-red-200">
+                  <Play className="h-3 w-3 mr-1" /> Vidéo
+                </Badge>
+                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Vidéo de Présentation</h2>
+                <p className="mt-4 text-muted-foreground leading-relaxed">
+                  Découvrez mes créations en action. Une courte vidéo qui vous montre la qualité de mon travail, mon processus créatif et les résultats que j&apos;obtiens pour mes clients. Rien de plus puissant pour vous convaincre.
+                </p>
+                <div className="mt-6 space-y-3">
+                  {[
+                    'Présentation de mes meilleures créations',
+                    'Processus de travail étape par étape',
+                    'Témoignages visuels de clients satisfaits',
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-center gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-amber-500 flex-shrink-0" />
+                      <span className="text-sm text-muted-foreground">{item}</span>
+                    </div>
+                  ))}
+                </div>
+                <a href="https://wa.me/22397787244?text=Bonjour%20!%20J%27ai%20vu%20votre%20vidéo%20et%20je%20souhaite%20commander%20un%20service." target="_blank" rel="noopener noreferrer">
+                  <Button className="mt-6 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold">
+                    <MessageCircle className="h-4 w-4 mr-2" /> Commander via WhatsApp
+                  </Button>
+                </a>
+              </FadeIn>
+              <FadeIn delay={0.2}>
+                <div className="relative rounded-2xl overflow-hidden shadow-2xl aspect-video bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center group cursor-pointer">
+                  <div className="absolute inset-0 bg-gradient-to-br from-amber-500/20 via-orange-500/10 to-red-500/20" />
+                  <div className="relative text-center z-10">
+                    <motion.div
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex h-20 w-20 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm border border-white/30 mx-auto mb-4 group-hover:bg-amber-500/80 transition-colors duration-300"
+                    >
+                      <Play className="h-8 w-8 text-white ml-1" fill="white" />
+                    </motion.div>
+                    <p className="text-white/80 text-sm">Vidéo de présentation</p>
+                    <p className="text-white/50 text-xs mt-1">Créateur Boutique</p>
+                  </div>
+                  {/* Decorative elements */}
+                  <div className="absolute top-4 right-4 flex gap-1.5">
+                    <div className="h-2 w-2 rounded-full bg-red-500" />
+                    <div className="h-2 w-2 rounded-full bg-yellow-500" />
+                    <div className="h-2 w-2 rounded-full bg-green-500" />
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+          </div>
+        </section>
+
+        {/* ═══ BLOG ═══ */}
+        <section id="blog" className="py-16 sm:py-20">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <FadeIn className="text-center mb-12">
+              <Badge variant="secondary" className="mb-3 bg-blue-100 text-blue-700 border-blue-200">
+                <BookOpen className="h-3 w-3 mr-1" /> Blog
+              </Badge>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Conseils & Astuces</h2>
+              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
+                Articles et conseils pour vous aider à réussir dans le design et le digital.
+              </p>
+            </FadeIn>
+
+            <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[
+                {
+                  title: '5 conseils pour créer un logo mémorable',
+                  excerpt: 'Découvrez les règles essentielles pour concevoir un logo qui marque les esprits et reste gravé dans la mémoire de votre audience.',
+                  category: 'Design',
+                  date: '25 Juin 2026',
+                  readTime: '4 min',
+                  image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=400&h=250&fit=crop',
+                  color: 'bg-amber-100 text-amber-700',
+                },
+                {
+                  title: 'Comment réussir en digital en 2026',
+                  excerpt: "Les stratégies clés pour se démarquer dans le monde du digital cette année. Marketing, design et présence en ligne.",
+                  category: 'Digital',
+                  date: '20 Juin 2026',
+                  readTime: '6 min',
+                  image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=250&fit=crop',
+                  color: 'bg-emerald-100 text-emerald-700',
+                },
+                {
+                  title: 'Les tendances design graphique à suivre',
+                  excerpt: "Minimalisme, gradients, typographies audacieuses... Tour d'horizon des tendances qui dominent le design cette année.",
+                  category: 'Tendances',
+                  date: '15 Juin 2026',
+                  readTime: '5 min',
+                  image: 'https://images.unsplash.com/photo-1626785774625-ddcddc3445e9?w=400&h=250&fit=crop',
+                  color: 'bg-purple-100 text-purple-700',
+                },
+              ].map((article) => (
+                <motion.div key={article.title} variants={cardVariants}>
+                  <Card className="overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 h-full flex flex-col group">
+                    <div className="relative h-44 overflow-hidden">
+                      <img
+                        src={article.image}
+                        alt={article.title}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        loading="lazy"
+                      />
+                      <div className="absolute top-3 left-3">
+                        <Badge className={article.color}>{article.category}</Badge>
+                      </div>
+                    </div>
+                    <CardContent className="p-5 flex flex-col flex-1">
+                      <div className="flex items-center gap-3 text-xs text-muted-foreground mb-2">
+                        <span className="flex items-center gap-1"><Calendar className="h-3 w-3" />{article.date}</span>
+                        <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{article.readTime}</span>
+                      </div>
+                      <h3 className="font-semibold leading-snug mb-2 group-hover:text-amber-600 transition-colors">{article.title}</h3>
+                      <p className="text-xs text-muted-foreground leading-relaxed flex-1 line-clamp-3">{article.excerpt}</p>
+                      <div className="mt-3 pt-3 border-t">
+                        <span className="text-xs font-medium text-amber-600 flex items-center gap-1 group-hover:gap-2 transition-all">
+                          Lire l'article <ArrowUpRight className="h-3 w-3" />
+                        </span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </StaggerContainer>
+          </div>
+        </section>
+
+        {/* ═══ NOS VALEURS ═══ */}
+        <section id="valeurs" className="py-16 sm:py-20 bg-muted/30">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <FadeIn className="text-center mb-12">
+              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+                <Trophy className="h-3 w-3 mr-1" /> Promesses
+              </Badge>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Nos Valeurs</h2>
+              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
+                Ce qui définit notre travail et notre engagement envers chaque client.
+              </p>
+            </FadeIn>
+
+            <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[
+                {
+                  icon: Shield,
+                  title: 'Sérieux',
+                  desc: "Chaque projet est traité avec le plus grand professionnalisme. Respect des délais, communication transparente et engagement total.",
+                  color: 'from-emerald-500 to-teal-500',
+                  bgColor: 'bg-emerald-100 dark:bg-emerald-900/30',
+                  iconColor: 'text-emerald-600',
+                },
+                {
+                  icon: Sparkles,
+                  title: 'Créativité',
+                  desc: "Des idées originales et des designs uniques pour chaque client. Chaque création est pensée pour se démarquer et marquer les esprits.",
+                  color: 'from-amber-500 to-orange-500',
+                  bgColor: 'bg-amber-100 dark:bg-amber-900/30',
+                  iconColor: 'text-amber-600',
+                },
+                {
+                  icon: Zap,
+                  title: 'Rapidité',
+                  desc: "Des délais de livraison respectés sans compromis sur la qualité. Affiches et logos en 1 à 24h, sites web en 1 à 3 jours.",
+                  color: 'from-purple-500 to-pink-500',
+                  bgColor: 'bg-purple-100 dark:bg-purple-900/30',
+                  iconColor: 'text-purple-600',
+                },
+                {
+                  icon: Heart,
+                  title: 'Satisfaction Client',
+                  desc: "Votre satisfaction est notre priorité numéro un. Nous travaillons main dans la main avec vous jusqu'au résultat parfait.",
+                  color: 'from-red-500 to-rose-500',
+                  bgColor: 'bg-red-100 dark:bg-red-900/30',
+                  iconColor: 'text-red-600',
+                },
+              ].map((valeur) => (
+                <motion.div key={valeur.title} variants={cardVariants}>
+                  <Card className="border-0 shadow-md hover:shadow-lg transition-shadow duration-300 h-full text-center">
+                    <CardContent className="p-6">
+                      <div className={`flex h-14 w-14 items-center justify-center rounded-2xl ${valeur.bgColor} mx-auto mb-4`}>
+                        <valeur.icon className={`h-7 w-7 ${valeur.iconColor}`} />
+                      </div>
+                      <h3 className="font-bold text-lg mb-2">{valeur.title}</h3>
+                      <p className="text-xs text-muted-foreground leading-relaxed">{valeur.desc}</p>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </StaggerContainer>
+          </div>
+        </section>
+
+        {/* ═══ POLITIQUE DE SERVICE ═══ */}
+        <section id="politique" className="py-16 sm:py-20">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <FadeIn className="text-center mb-12">
+              <Badge variant="secondary" className="mb-3 bg-gray-100 text-gray-700 border-gray-200">
+                <FileCheck className="h-3 w-3 mr-1" /> Règles
+              </Badge>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Politique de Service</h2>
+              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
+                Nos conditions transparentes pour une collaboration sereine et efficace.
+              </p>
+            </FadeIn>
+
+            <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[
+                {
+                  icon: Ban,
+                  title: 'Pas de remboursement',
+                  desc: "Aucun remboursement n'est effectué après validation et livraison du travail. Chaque création est réalisée sur mesure selon vos besoins.",
+                  color: 'text-red-500',
+                  bg: 'bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-800',
+                },
+                {
+                  icon: CreditCard,
+                  title: 'Travail livré après paiement',
+                  desc: "Le travail est livré uniquement après confirmation complète du paiement. Cela garantit la sécurité des deux parties.",
+                  color: 'text-emerald-500',
+                  bg: 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800',
+                },
+                {
+                  icon: Timer,
+                  title: 'Délais respectés',
+                  desc: "Chaque délai annoncé est respecté scrupuleusement. Affiches et logos : 1-24h. Sites web : 1-3 jours. Formations : selon programme.",
+                  color: 'text-amber-500',
+                  bg: 'bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800',
+                },
+                {
+                  icon: Shield,
+                  title: 'Paiement sécurisé',
+                  desc: "Toutes les transactions passent par Wave de manière sécurisée. Paiement 50/50 ou total selon le service convenu.",
+                  color: 'text-blue-500',
+                  bg: 'bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800',
+                },
+                {
+                  icon: Lock,
+                  title: 'Propriété intellectuelle',
+                  desc: "Après livraison finale et paiement complet, les droits de propriété intellectuelle du travail sont transférés au client.",
+                  color: 'text-purple-500',
+                  bg: 'bg-purple-50 dark:bg-purple-950/20 border-purple-200 dark:border-purple-800',
+                },
+                {
+                  icon: CheckCircle2,
+                  title: 'Révisions incluses',
+                  desc: "Des révisions sont possibles avant validation finale pour s'assurer que le résultat correspond parfaitement à vos attentes.",
+                  color: 'text-teal-500',
+                  bg: 'bg-teal-50 dark:bg-teal-950/20 border-teal-200 dark:border-teal-800',
+                },
+              ].map((rule) => (
+                <motion.div key={rule.title} variants={cardVariants}>
+                  <Card className={`h-full border ${rule.bg}`}>
+                    <CardContent className="p-5">
+                      <div className="flex items-center gap-3 mb-3">
+                        <rule.icon className={`h-5 w-5 ${rule.color}`} />
+                        <h3 className="font-bold text-sm">{rule.title}</h3>
+                      </div>
+                      <p className="text-xs text-muted-foreground leading-relaxed">{rule.desc}</p>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </StaggerContainer>
+          </div>
+        </section>
+
         {/* ═══ CONTACT ═══ */}
         <section id="contact" className="py-16 sm:py-20 bg-muted/30">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -1139,6 +1447,21 @@ export default function Home() {
       </main>
 
       <Footer />
+
+      {/* ═══ WHATSAPP FLOTTANT ═══ */}
+      <a
+        href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20commander%20un%20service%20chez%20Cr%C3%A9ateur%20Boutique."
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500 text-white shadow-lg shadow-emerald-500/30 hover:bg-emerald-600 hover:shadow-xl hover:shadow-emerald-500/40 transition-all duration-300 hover:scale-110 group"
+        aria-label="Contacter sur WhatsApp"
+      >
+        <MessageCircle className="h-6 w-6" />
+        <span className="absolute right-full mr-3 whitespace-nowrap rounded-lg bg-gray-900 text-white px-3 py-1.5 text-xs font-medium shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+          Commandez sur WhatsApp
+          <span className="absolute top-1/2 -right-1 -translate-y-1/2 h-2 w-2 bg-gray-900 rotate-45" />
+        </span>
+      </a>
     </div>
   )
 }
