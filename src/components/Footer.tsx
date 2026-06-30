@@ -35,10 +35,10 @@ export default function Footer() {
           <div>
             <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">Navigation</h3>
             <ul className="space-y-2.5">
-              {['Accueil', 'Produits', 'Projets', 'À propos', 'Contact'].map((item) => (
+              {['Accueil', 'Services', 'Offres', 'Compétences', 'Contact'].map((item) => (
                 <li key={item}>
                   <a
-                    href={`#${item === 'À propos' ? 'apropos' : item.toLowerCase()}`}
+                    href={`#${item.toLowerCase()}`}
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     {item}
@@ -48,13 +48,13 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Catégories */}
+          {/* Services */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">Catégories</h3>
+            <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">Services</h3>
             <ul className="space-y-2.5">
-              {['Produits Vedettes', 'Projets Spéciaux', 'Nouveautés', 'Promotions', 'Sur Mesure'].map((item) => (
+              {['Design Graphique', 'Création de Logo', 'Site Web', 'Montage Vidéo', 'Marketing Digital'].map((item) => (
                 <li key={item}>
-                  <a href="#produits" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  <a href="#services" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                     {item}
                   </a>
                 </li>

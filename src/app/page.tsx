@@ -6,13 +6,27 @@ import {
   ArrowRight,
   Star,
   ShoppingCart,
-  Package,
-  Lightbulb,
-  Heart,
-  Send,
+  CheckCircle2,
+  Palette,
+  Globe,
+  MonitorPlay,
+  BookOpen,
+  Tv,
+  PenTool,
   Sparkles,
   ChevronRight,
   Eye,
+  Zap,
+  Heart,
+  Target,
+  Send,
+  Mail,
+  Phone,
+  MapPin,
+  Instagram,
+  Facebook,
+  Twitter,
+  X,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -70,7 +84,7 @@ function StaggerContainer({ children, className = '' }: { children: React.ReactN
       ref={ref}
       initial="hidden"
       animate={isInView ? 'visible' : 'hidden'}
-      variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}
+      variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.08 } } }}
       className={className}
     >
       {children}
@@ -83,25 +97,30 @@ const cardVariants = {
   visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.4, ease: 'easeOut' } },
 }
 
-/* ─── Product Card ─── */
-function ProductCard({ product }: { product: Product }) {
+/* ─── Format Price ─── */
+function formatPrice(p: number) {
+  return p.toLocaleString('fr-FR', { style: 'currency', currency: 'XOF', minimumFractionDigits: 0 })
+}
+
+/* ─── Service Card ─── */
+function ServiceCard({ product, icon: Icon }: { product: Product; icon: React.ElementType }) {
   const addItem = useCartStore((s) => s.addItem)
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+  const [selected, setSelected] = useState<Product | null>(null)
   const { toast } = useToast()
 
   const handleAdd = () => {
     addItem({ id: product.id, name: product.name, price: product.price, image: product.image })
-    toast({ title: 'Ajouté au panier', description: `${product.name} a été ajouté à votre panier.` })
+    toast({ title: 'Ajouté au panier', description: `${product.name} — ${formatPrice(product.price)}` })
   }
 
-  const formatPrice = (p: number) => p.toLocaleString('fr-FR', { style: 'currency', currency: 'XOF', minimumFractionDigits: 0 })
+  const categoryLabel = product.category === 'service' ? 'Service' : product.category === 'outil' ? 'Outil' : 'Produit'
 
   return (
     <>
       <motion.div variants={cardVariants} className="group">
-        <Card className="overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 h-full flex flex-col">
+        <Card className="overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 h-full flex flex-col bg-gradient-to-b from-card to-card/80">
           {/* Image */}
-          <div className="relative aspect-square overflow-hidden bg-muted">
+          <div className="relative aspect-[4/3] overflow-hidden bg-muted">
             {product.image ? (
               <img
                 src={product.image}
@@ -111,47 +130,32 @@ function ProductCard({ product }: { product: Product }) {
               />
             ) : (
               <div className="flex h-full w-full items-center justify-center text-muted-foreground">
-                <Package className="h-12 w-12 opacity-30" />
+                <Icon className="h-12 w-12 opacity-30" />
               </div>
             )}
-            {/* Badges */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
             <div className="absolute top-3 left-3 flex flex-col gap-1.5">
-              {product.featured && (
-                <Badge className="bg-amber-500 text-white border-0 text-[10px] px-2 py-0.5">
-                  <Star className="h-3 w-3 mr-1" /> Vedette
-                </Badge>
-              )}
-              <Badge className="bg-black/60 text-white border-0 text-[10px] px-2 py-0.5 backdrop-blur-sm">
-                {product.category === 'projet' ? 'Projet' : 'Produit'}
+              <Badge className="bg-amber-500 text-white border-0 text-[10px] px-2 py-0.5">
+                {categoryLabel}
               </Badge>
             </div>
+            <div className="absolute bottom-3 right-3">
+              <span className="text-white font-bold text-lg drop-shadow-lg">{formatPrice(product.price)}</span>
+            </div>
             {/* Hover overlay */}
-            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-end justify-center pb-4 opacity-0 group-hover:opacity-100">
-              <div className="flex gap-2">
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  className="rounded-full shadow-lg"
-                  onClick={() => setSelectedProduct(product)}
-                >
-                  <Eye className="h-4 w-4 mr-1" /> Détails
-                </Button>
-                <Button
-                  size="sm"
-                  className="rounded-full shadow-lg bg-amber-500 hover:bg-amber-600 text-white"
-                  onClick={handleAdd}
-                >
-                  <ShoppingCart className="h-4 w-4 mr-1" /> Ajouter
-                </Button>
-              </div>
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100">
+              <Button size="sm" variant="secondary" className="rounded-full shadow-lg" onClick={() => setSelected(product)}>
+                <Eye className="h-4 w-4 mr-1" /> Détails
+              </Button>
+              <Button size="sm" className="rounded-full shadow-lg bg-amber-500 hover:bg-amber-600 text-white" onClick={handleAdd}>
+                <ShoppingCart className="h-4 w-4 mr-1" /> Commander
+              </Button>
             </div>
           </div>
           {/* Content */}
           <CardContent className="flex-1 p-4 flex flex-col gap-2">
-            <h3 className="font-semibold text-sm leading-snug line-clamp-1">{product.name}</h3>
-            <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed flex-1">
-              {product.description}
-            </p>
+            <h3 className="font-semibold text-sm leading-snug">{product.name}</h3>
+            <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed flex-1">{product.description}</p>
             <div className="flex items-center justify-between pt-1">
               <span className="text-base font-bold text-amber-600">{formatPrice(product.price)}</span>
               <Button
@@ -167,47 +171,35 @@ function ProductCard({ product }: { product: Product }) {
         </Card>
       </motion.div>
 
-      {/* Product Detail Dialog */}
-      <Dialog open={!!selectedProduct} onOpenChange={() => setSelectedProduct(null)}>
+      {/* Detail Dialog */}
+      <Dialog open={!!selected} onOpenChange={() => setSelected(null)}>
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle className="text-xl">{selectedProduct?.name}</DialogTitle>
-            <DialogDescription>
-              {selectedProduct?.category === 'projet' ? 'Projet Créatif' : 'Produit Créateur Boutique'}
-            </DialogDescription>
+            <DialogTitle className="text-xl flex items-center gap-2">
+              <Icon className="h-5 w-5 text-amber-500" />
+              {selected?.name}
+            </DialogTitle>
+            <DialogDescription>{selected ? categoryLabel : ''} Créateur Boutique</DialogDescription>
           </DialogHeader>
-          {selectedProduct && (
+          {selected && (
             <div className="space-y-4">
-              {selectedProduct.image && (
+              {selected.image && (
                 <div className="rounded-lg overflow-hidden aspect-video bg-muted">
-                  <img
-                    src={selectedProduct.image}
-                    alt={selectedProduct.name}
-                    className="w-full h-full object-cover"
-                  />
+                  <img src={selected.image} alt={selected.name} className="w-full h-full object-cover" />
                 </div>
               )}
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {selectedProduct.description}
-              </p>
+              <p className="text-sm text-muted-foreground leading-relaxed">{selected.description}</p>
               <div className="flex items-center justify-between pt-2">
-                <div>
-                  <span className="text-2xl font-bold text-amber-600">
-                    {formatPrice(selectedProduct.price)}
-                  </span>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Stock: {selectedProduct.stock >= 100 ? 'Illimité' : `${selectedProduct.stock} disponibles`}
-                  </p>
-                </div>
+                <span className="text-2xl font-bold text-amber-600">{formatPrice(selected.price)}</span>
                 <Button
                   className="bg-amber-500 hover:bg-amber-600 text-white font-semibold"
                   onClick={() => {
-                    addItem({ id: selectedProduct.id, name: selectedProduct.name, price: selectedProduct.price, image: selectedProduct.image })
-                    toast({ title: 'Ajouté au panier', description: `${selectedProduct.name} ajouté.` })
-                    setSelectedProduct(null)
+                    addItem({ id: selected.id, name: selected.name, price: selected.price, image: selected.image })
+                    toast({ title: 'Ajouté au panier', description: `${selected.name} ajouté.` })
+                    setSelected(null)
                   }}
                 >
-                  <ShoppingCart className="h-4 w-4 mr-2" /> Ajouter au panier
+                  <ShoppingCart className="h-4 w-4 mr-2" /> Commander
                 </Button>
               </div>
             </div>
@@ -218,22 +210,64 @@ function ProductCard({ product }: { product: Product }) {
   )
 }
 
-/* ─── Product Skeleton ─── */
-function ProductSkeleton() {
+/* ─── Competence Item ─── */
+function CompetenceItem({ text, icon: Icon, delay = 0 }: { text: string; icon: React.ElementType; delay?: number }) {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, margin: '-30px' })
   return (
-    <Card className="overflow-hidden border-0 shadow-md">
-      <Skeleton className="aspect-square w-full" />
-      <CardContent className="p-4 space-y-2">
-        <Skeleton className="h-4 w-3/4" />
-        <Skeleton className="h-3 w-full" />
-        <Skeleton className="h-3 w-1/2" />
-        <Skeleton className="h-5 w-1/3 mt-2" />
-      </CardContent>
-    </Card>
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, x: -20 }}
+      animate={isInView ? { opacity: 1, x: 0 } : {}}
+      transition={{ duration: 0.4, delay, ease: 'easeOut' }}
+      className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent/50 transition-colors"
+    >
+      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 flex-shrink-0 mt-0.5">
+        <Icon className="h-4 w-4 text-amber-600" />
+      </div>
+      <p className="text-sm leading-relaxed">{text}</p>
+    </motion.div>
   )
 }
 
-/* ─── Main Page ─── */
+/* ─── Pricing Card ─── */
+function PricingCard({ name, price, description, icon: Icon, delay = 0 }: { name: string; price: number; description: string; icon: React.ElementType; delay?: number }) {
+  const addItem = useCartStore((s) => s.addItem)
+  const { toast } = useToast()
+
+  return (
+    <FadeIn delay={delay}>
+      <Card className="relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 group">
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-400 to-orange-500" />
+        <CardContent className="p-6">
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30 group-hover:bg-amber-500 group-hover:text-white transition-colors duration-300">
+              <Icon className="h-6 w-6 text-amber-600 group-hover:text-white transition-colors duration-300" />
+            </div>
+            <Badge variant="secondary" className="text-amber-600 font-medium">
+              {formatPrice(price)}
+            </Badge>
+          </div>
+          <h3 className="font-bold text-lg mb-2">{name}</h3>
+          <p className="text-sm text-muted-foreground leading-relaxed mb-4">{description}</p>
+          <Button
+            className="w-full bg-amber-500 hover:bg-amber-600 text-white font-semibold"
+            onClick={() => {
+              // find product in store or just show toast
+              toast({ title: 'Service ajouté', description: `${name} — ${formatPrice(price)}` })
+            }}
+          >
+            <ShoppingCart className="h-4 w-4 mr-2" /> Commander
+          </Button>
+        </CardContent>
+      </Card>
+    </FadeIn>
+  )
+}
+
+/* ═══════════════════════════════════════════════
+   MAIN PAGE
+   ═══════════════════════════════════════════════ */
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
@@ -251,18 +285,38 @@ export default function Home() {
       })
       .catch(() => {
         setLoading(false)
-        toast({ title: 'Erreur', description: 'Impossible de charger les produits.', variant: 'destructive' })
+        toast({ title: 'Erreur', description: 'Impossible de charger les services.', variant: 'destructive' })
       })
   }, [])
 
   const filteredProducts = products.filter((p) => {
     if (activeFilter === 'all') return true
-    if (activeFilter === 'vedettes') return p.featured
     return p.category === activeFilter
   })
 
-  const featuredProducts = products.filter((p) => p.featured)
-  const projectProducts = products.filter((p) => p.category === 'projet')
+  const services = products.filter((p) => p.category === 'service')
+  const outils = products.filter((p) => p.category === 'outil')
+
+  const filters = [
+    { key: 'all', label: 'Tout voir' },
+    { key: 'service', label: 'Services' },
+    { key: 'outil', label: 'Outils & Ressources' },
+  ]
+
+  const competences = [
+    { text: 'Designer graphique professionnel', icon: Palette },
+    { text: "Création d'affiches publicitaires modernes et attractives", icon: PenTool },
+    { text: 'Création de logos et identité visuelle de marques', icon: Sparkles },
+    { text: 'Conception de sites web modernes (vitrine et professionnels)', icon: Globe },
+    { text: 'Développement de contenus visuels pour réseaux sociaux', icon: Target },
+    { text: 'Montage vidéo professionnel avec CapCut Pro', icon: MonitorPlay },
+    { text: "Maîtrise de Canva Pro pour la création rapide et professionnelle", icon: Palette },
+    { text: "Utilisation de PicsArt Pro pour le design mobile", icon: PenTool },
+    { text: 'Création et gestion de contenus digitaux', icon: Globe },
+    { text: 'Vente et partage de livres professionnels et éducatifs', icon: BookOpen },
+    { text: 'Connaissances en IPTV et outils numériques', icon: Tv },
+    { text: 'Marketing digital et communication visuelle', icon: Target },
+  ]
 
   const handleSubmitContact = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -277,43 +331,31 @@ export default function Home() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(contactData),
       })
-      toast({ title: 'Message envoyé !', description: 'Nous vous répondrons sous 24h.' })
+      toast({ title: 'Message envoyé !', description: 'Nous vous répondrons rapidement.' })
       setContactData({ name: '', email: '', subject: '', message: '' })
     } catch {
-      toast({ title: 'Erreur', description: 'Impossible d\'envoyer le message.', variant: 'destructive' })
+      toast({ title: 'Erreur', description: "Impossible d'envoyer le message.", variant: 'destructive' })
     } finally {
       setSending(false)
     }
   }
-
-  const filters = [
-    { key: 'all', label: 'Tout' },
-    { key: 'vedettes', label: 'Vedettes' },
-    { key: 'produit', label: 'Produits' },
-    { key: 'projet', label: 'Projets' },
-  ]
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
 
       <main className="flex-1">
-        {/* ─── HERO ─── */}
+        {/* ═══ HERO ═══ */}
         <section id="accueil" className="relative overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-white dark:from-amber-950/20 dark:via-orange-950/10 dark:to-background">
-          {/* Decorative blobs */}
           <div className="absolute top-0 -right-40 h-[500px] w-[500px] rounded-full bg-amber-200/40 dark:bg-amber-800/10 blur-3xl" />
           <div className="absolute -bottom-20 -left-40 h-[400px] w-[400px] rounded-full bg-orange-200/30 dark:bg-orange-800/10 blur-3xl" />
 
           <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5 }}
-                >
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
                   <Badge variant="secondary" className="mb-4 px-3 py-1 text-xs font-medium bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800">
-                    <Sparkles className="h-3 w-3 mr-1" /> Nouvelles créations disponibles
+                    <Zap className="h-3 w-3 mr-1" /> Services rapides, modernes et professionnels
                   </Badge>
                 </motion.div>
 
@@ -335,8 +377,7 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.2 }}
                 >
-                  Découvrez notre collection exclusive de produits artisanaux et de projets créatifs.
-                  Chaque pièce est conçue avec passion et savoir-faire pour vous offrir l&apos;excellence.
+                  Votre partenaire digital pour le design graphique, la création de sites web et les outils numériques professionnels. Qualité, Créativité, Satisfaction.
                 </motion.p>
 
                 <motion.div
@@ -345,62 +386,67 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.3 }}
                 >
-                  <a href="#produits">
+                  <a href="#services">
                     <Button size="lg" className="bg-amber-500 hover:bg-amber-600 text-white font-semibold shadow-lg shadow-amber-500/25">
-                      Explorer la boutique <ArrowRight className="ml-2 h-4 w-4" />
+                      Voir mes services <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </a>
-                  <a href="#apropos">
+                  <a href="#competences">
                     <Button size="lg" variant="outline" className="font-semibold">
-                      En savoir plus
+                      Mes compétences
                     </Button>
                   </a>
                 </motion.div>
 
                 <motion.div
-                  className="mt-10 flex items-center gap-8"
+                  className="mt-10 flex flex-wrap gap-3"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.5, delay: 0.5 }}
                 >
-                  <div className="text-center">
-                    <p className="text-2xl font-bold text-amber-600">50+</p>
-                    <p className="text-xs text-muted-foreground">Produits</p>
-                  </div>
-                  <div className="h-8 w-px bg-border" />
-                  <div className="text-center">
-                    <p className="text-2xl font-bold text-amber-600">200+</p>
-                    <p className="text-xs text-muted-foreground">Clients satisfaits</p>
-                  </div>
-                  <div className="h-8 w-px bg-border" />
-                  <div className="text-center">
-                    <p className="text-2xl font-bold text-amber-600">15+</p>
-                    <p className="text-xs text-muted-foreground">Projets réalisés</p>
-                  </div>
+                  {['Design Graphique', 'Sites Web', 'Montage Vidéo', 'Marketing Digital'].map((tag) => (
+                    <span key={tag} className="inline-flex items-center gap-1 rounded-full bg-white/80 dark:bg-white/5 border px-3 py-1 text-xs font-medium text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800">
+                      <CheckCircle2 className="h-3 w-3" /> {tag}
+                    </span>
+                  ))}
                 </motion.div>
               </div>
 
-              {/* Hero Image Grid */}
+              {/* Hero Visual */}
               <motion.div
-                className="hidden lg:grid grid-cols-2 gap-4"
+                className="hidden lg:block"
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.7, delay: 0.2 }}
               >
-                <div className="space-y-4">
-                  <div className="rounded-2xl overflow-hidden shadow-xl h-48">
-                    <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400&h=300&fit=crop" alt="Création artisanale" className="w-full h-full object-cover" />
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-4">
+                    <div className="rounded-2xl overflow-hidden shadow-xl h-48 bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
+                      <div className="text-center text-white p-4">
+                        <Palette className="h-10 w-10 mx-auto mb-2 opacity-90" />
+                        <p className="text-sm font-semibold">Design</p>
+                      </div>
+                    </div>
+                    <div className="rounded-2xl overflow-hidden shadow-xl h-64 bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                      <div className="text-center text-white p-4">
+                        <Globe className="h-10 w-10 mx-auto mb-2 opacity-90" />
+                        <p className="text-sm font-semibold">Sites Web</p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="rounded-2xl overflow-hidden shadow-xl h-64">
-                    <img src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400&h=400&fit=crop" alt="Atelier créatif" className="w-full h-full object-cover" />
-                  </div>
-                </div>
-                <div className="space-y-4 pt-8">
-                  <div className="rounded-2xl overflow-hidden shadow-xl h-64">
-                    <img src="https://images.unsplash.com/photo-1445205170230-053b83016050?w=400&h=400&fit=crop" alt="Collection" className="w-full h-full object-cover" />
-                  </div>
-                  <div className="rounded-2xl overflow-hidden shadow-xl h-48">
-                    <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400&h=300&fit=crop" alt="Bijoux" className="w-full h-full object-cover" />
+                  <div className="space-y-4 pt-8">
+                    <div className="rounded-2xl overflow-hidden shadow-xl h-64 bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center">
+                      <div className="text-center text-white p-4">
+                        <MonitorPlay className="h-10 w-10 mx-auto mb-2 opacity-90" />
+                        <p className="text-sm font-semibold">Vidéo</p>
+                      </div>
+                    </div>
+                    <div className="rounded-2xl overflow-hidden shadow-xl h-48 bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
+                      <div className="text-center text-white p-4">
+                        <Target className="h-10 w-10 mx-auto mb-2 opacity-90" />
+                        <p className="text-sm font-semibold">Marketing</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -408,14 +454,113 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ─── PRODUITS ─── */}
+        {/* ═══ SERVICES & TARIFS ═══ */}
+        <section id="services" className="py-16 sm:py-20">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <FadeIn className="text-center mb-12">
+              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+                <Sparkles className="h-3 w-3 mr-1" /> Tarifs
+              </Badge>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Mes Services & Tarifs</h2>
+              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
+                Services rapides, modernes et professionnels. Chaque service est livré avec soin et professionnelisme.
+              </p>
+            </FadeIn>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <PricingCard
+                name="Formation Designer Graphique"
+                price={20000}
+                description="Formation complète en design graphique. Apprenez les bases et techniques avancées pour créer des visuels professionnels."
+                icon={Palette}
+                delay={0}
+              />
+              <PricingCard
+                name="Affiche Professionnelle"
+                price={2000}
+                description="Création d'affiches publicitaires modernes et attractives, adaptées à votre marque et communication visuelle."
+                icon={PenTool}
+                delay={0.1}
+              />
+              <PricingCard
+                name="Logo Professionnel"
+                price={5000}
+                description="Création de logo unique et identité visuelle de marque. Un design mémorable qui vous démarque."
+                icon={Sparkles}
+                delay={0.2}
+              />
+              <PricingCard
+                name="Site Web Simple"
+                price={15000}
+                description="Site web vitrine moderne, responsive et optimisé. Parfait pour présenter votre activité en ligne."
+                icon={Globe}
+                delay={0.3}
+              />
+              <PricingCard
+                name="Site Web Professionnel"
+                price={25000}
+                description="Site web professionnel complet avec fonctionnalités avancées, design sur mesure et optimisation SEO."
+                icon={Globe}
+                delay={0.4}
+              />
+              <PricingCard
+                name="Montage Vidéo Pro"
+                price={5000}
+                description="Montage vidéo professionnel avec CapCut Pro. Effets premium, transitions et export haute qualité."
+                icon={MonitorPlay}
+                delay={0.5}
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* ═══ OUTILS & RESSOURCES ═══ */}
+        <section className="py-16 sm:py-20 bg-muted/30">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <FadeIn className="text-center mb-12">
+              <Badge variant="secondary" className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200">
+                <Zap className="h-3 w-3 mr-1" /> Disponibles
+              </Badge>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Outils & Ressources</h2>
+              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
+                Accédez aux meilleurs outils numériques et ressources professionnelles pour booster votre productivité.
+              </p>
+            </FadeIn>
+
+            <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {loading
+                ? Array.from({ length: 4 }).map((_, i) => (
+                    <Card key={i} className="overflow-hidden border-0 shadow-md">
+                      <Skeleton className="aspect-[4/3] w-full" />
+                      <CardContent className="p-4 space-y-2">
+                        <Skeleton className="h-4 w-3/4" />
+                        <Skeleton className="h-3 w-full" />
+                        <Skeleton className="h-5 w-1/3 mt-2" />
+                      </CardContent>
+                    </Card>
+                  ))
+                : outils.map((product) => {
+                    const iconMap: Record<string, React.ElementType> = {
+                      'CapCut Pro': MonitorPlay,
+                      'PicsArt Pro': PenTool,
+                      'IPTV Pro': Tv,
+                      'Livres Professionnels': BookOpen,
+                    }
+                    return <ServiceCard key={product.id} product={product} icon={iconMap[product.name] || Zap} />
+                  })
+              }
+            </StaggerContainer>
+          </div>
+        </section>
+
+        {/* ═══ TOUTES LES OFFRES ═══ */}
         <section id="produits" className="py-16 sm:py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <FadeIn className="text-center mb-10">
-              <Badge variant="secondary" className="mb-3">Catalogue</Badge>
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Nos Produits & Projets</h2>
+              <Badge variant="secondary" className="mb-3">Boutique</Badge>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Toutes Mes Offres</h2>
               <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
-                Parcourez notre sélection de créations uniques. Des produits artisanaux aux projets collaboratifs, trouvez votre bonheur.
+                Explorez l&apos;ensemble de mes services et outils disponibles. Filtez par catégorie pour trouver ce dont vous avez besoin.
               </p>
             </FadeIn>
 
@@ -438,203 +583,154 @@ export default function Home() {
               </div>
             </FadeIn>
 
-            {/* Products Grid */}
-            <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-              {loading ? (
-                Array.from({ length: 8 }).map((_, i) => <ProductSkeleton key={i} />)
-              ) : (
-                <AnimatePresence mode="wait">
-                  {filteredProducts.map((product) => (
-                    <ProductCard key={product.id} product={product} />
-                  ))}
-                </AnimatePresence>
-              )}
+            <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5">
+              {loading
+                ? Array.from({ length: 6 }).map((_, i) => (
+                    <Card key={i} className="overflow-hidden border-0 shadow-md">
+                      <Skeleton className="aspect-[4/3] w-full" />
+                      <CardContent className="p-4 space-y-2">
+                        <Skeleton className="h-4 w-3/4" />
+                        <Skeleton className="h-3 w-full" />
+                        <Skeleton className="h-5 w-1/3 mt-2" />
+                      </CardContent>
+                    </Card>
+                  ))
+                : filteredProducts.map((product) => {
+                    const iconMap: Record<string, React.ElementType> = {
+                      'Formation Designer Graphique': Palette,
+                      'Affiche Professionnelle': PenTool,
+                      'Logo Professionnel': Sparkles,
+                      'Site Web Simple': Globe,
+                      'Site Web Professionnel': Globe,
+                      'CapCut Pro': MonitorPlay,
+                      'PicsArt Pro': PenTool,
+                      'IPTV Pro': Tv,
+                      'Livres Professionnels': BookOpen,
+                    }
+                    return <ServiceCard key={product.id} product={product} icon={iconMap[product.name] || Zap} />
+                  })
+              }
             </StaggerContainer>
-
-            {!loading && filteredProducts.length === 0 && (
-              <div className="text-center py-16 text-muted-foreground">
-                <Package className="h-12 w-12 mx-auto opacity-30 mb-3" />
-                <p>Aucun produit dans cette catégorie.</p>
-              </div>
-            )}
           </div>
         </section>
 
-        {/* ─── VEDÈTTES ─── */}
-        {featuredProducts.length > 0 && (
-          <section className="py-16 sm:py-20 bg-muted/30">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              <FadeIn className="text-center mb-10">
+        {/* ═══ COMPÉTENCES ═══ */}
+        <section id="competences" className="py-16 sm:py-20 bg-muted/30">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="grid lg:grid-cols-2 gap-12 items-start">
+              <FadeIn>
                 <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
-                  <Star className="h-3 w-3 mr-1" /> Sélection
+                  <Star className="h-3 w-3 mr-1" /> Expertise
                 </Badge>
-                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Vedettes de la Boutique</h2>
-                <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
-                  Nos créations les plus populaires, plébiscitées par nos clients.
+                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Mes Compétences</h2>
+                <p className="mt-4 text-muted-foreground leading-relaxed">
+                  Spécialisé dans le domaine du design graphique et du digital avec une expérience pratique dans plusieurs outils et services numériques. Je combine créativité, technologie et stratégie pour produire des résultats modernes et professionnels adaptés aux besoins des clients.
                 </p>
+
+                <div className="mt-8 grid grid-cols-2 gap-3">
+                  {[
+                    { label: 'Qualité', icon: Star },
+                    { label: 'Créativité', icon: Sparkles },
+                    { label: 'Satisfaction', icon: Heart },
+                    { label: 'Rapidité', icon: Zap },
+                  ].map((item) => (
+                    <div key={item.label} className="flex items-center gap-2 p-3 rounded-lg bg-card border">
+                      <item.icon className="h-4 w-4 text-amber-500" />
+                      <span className="text-sm font-medium">{item.label}</span>
+                    </div>
+                  ))}
+                </div>
               </FadeIn>
 
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {featuredProducts.slice(0, 3).map((product, i) => (
-                  <FadeIn key={product.id} delay={i * 0.1}>
-                    <Card className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                      <div className="flex flex-col sm:flex-row">
-                        <div className="sm:w-2/5 aspect-square sm:aspect-auto overflow-hidden bg-muted">
-                          <img
-                            src={product.image || ''}
-                            alt={product.name}
-                            className="h-full w-full object-cover"
-                            loading="lazy"
-                          />
-                        </div>
-                        <CardContent className="p-5 flex-1 flex flex-col justify-center">
-                          <Badge variant="secondary" className="w-fit text-[10px] mb-2">
-                            {product.category === 'projet' ? 'Projet' : 'Produit'}
-                          </Badge>
-                          <h3 className="font-semibold text-lg">{product.name}</h3>
-                          <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{product.description}</p>
-                          <div className="flex items-center gap-3 mt-4">
-                            <span className="text-lg font-bold text-amber-600">
-                              {product.price.toLocaleString('fr-FR', { style: 'currency', currency: 'XOF', minimumFractionDigits: 0 })}
-                            </span>
-                            <Button size="sm" className="bg-amber-500 hover:bg-amber-600 text-white ml-auto">
-                              Voir <ChevronRight className="h-4 w-4 ml-1" />
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </div>
-                    </Card>
-                  </FadeIn>
+              <div className="space-y-1">
+                {competences.map((comp, i) => (
+                  <CompetenceItem key={i} text={comp.text} icon={comp.icon} delay={i * 0.05} />
                 ))}
               </div>
             </div>
-          </section>
-        )}
+          </div>
+        </section>
 
-        {/* ─── PROJETS ─── */}
-        {projectProducts.length > 0 && (
-          <section id="projets" className="py-16 sm:py-20">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              <FadeIn className="text-center mb-10">
-                <Badge variant="secondary" className="mb-3">
-                  <Lightbulb className="h-3 w-3 mr-1" /> Créativité
-                </Badge>
-                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Nos Projets</h2>
-                <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
-                  Des initiatives créatives et collaboratives qui repoussent les limites de l&apos;artisanat et du design.
-                </p>
-              </FadeIn>
-
-              <div className="grid md:grid-cols-2 gap-6">
-                {projectProducts.map((project, i) => (
-                  <FadeIn key={project.id} delay={i * 0.15}>
-                    <Card className="overflow-hidden border-0 shadow-lg group hover:shadow-xl transition-all duration-300">
-                      <div className="relative h-56 overflow-hidden">
-                        <img
-                          src={project.image || ''}
-                          alt={project.name}
-                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                          loading="lazy"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                        <div className="absolute bottom-4 left-4 right-4 text-white">
-                          <Badge className="bg-amber-500 text-white border-0 mb-2">Projet</Badge>
-                          <h3 className="text-xl font-bold">{project.name}</h3>
-                        </div>
-                      </div>
-                      <CardContent className="p-5">
-                        <p className="text-sm text-muted-foreground leading-relaxed">{project.description}</p>
-                        <div className="flex items-center justify-between mt-4">
-                          <span className="text-xl font-bold text-amber-600">
-                            {project.price.toLocaleString('fr-FR', { style: 'currency', currency: 'XOF', minimumFractionDigits: 0 })}
-                          </span>
-                          <Button className="bg-amber-500 hover:bg-amber-600 text-white">
-                            Participer <ArrowRight className="h-4 w-4 ml-1" />
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </FadeIn>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* ─── À PROPOS ─── */}
-        <section id="apropos" className="py-16 sm:py-20 bg-muted/30">
+        {/* ═══ À PROPOS ═══ */}
+        <section id="apropos" className="py-16 sm:py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <FadeIn>
                 <div className="relative">
-                  <div className="rounded-2xl overflow-hidden shadow-xl">
-                    <img
-                      src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600&h=500&fit=crop"
-                      alt="Notre atelier"
-                      className="w-full h-[400px] object-cover"
-                    />
+                  <div className="rounded-2xl overflow-hidden shadow-xl bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 h-[400px] flex items-center justify-center">
+                    <div className="text-center text-white p-8">
+                      <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mx-auto mb-4">
+                        <Palette className="h-10 w-10" />
+                      </div>
+                      <h3 className="text-2xl font-bold">Créateur Boutique</h3>
+                      <p className="mt-2 text-white/80">Design &bull; Digital &bull; Créativité</p>
+                    </div>
                   </div>
-                  <div className="absolute -bottom-6 -right-6 bg-amber-500 text-white rounded-2xl p-6 shadow-xl hidden sm:block">
-                    <p className="text-3xl font-bold">5+</p>
-                    <p className="text-sm opacity-90">Années d&apos;expertise</p>
+                  <div className="absolute -bottom-6 -right-6 bg-white dark:bg-card rounded-2xl p-5 shadow-xl border hidden sm:block">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
+                        <Zap className="h-5 w-5 text-amber-600" />
+                      </div>
+                      <div>
+                        <p className="text-lg font-bold">Services Rapides</p>
+                        <p className="text-xs text-muted-foreground">Livraison professionnelle</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </FadeIn>
 
               <FadeIn delay={0.2}>
                 <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
-                  <Heart className="h-3 w-3 mr-1" /> Notre Histoire
+                  <Heart className="h-3 w-3 mr-1" /> Ma Vision
                 </Badge>
-                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">À Propos de Créateur Boutique</h2>
+                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">À Propos</h2>
                 <div className="mt-6 space-y-4 text-muted-foreground leading-relaxed">
                   <p>
-                    Créateur Boutique est né d&apos;une passion profonde pour l&apos;artisanat et la création. Nous croyons que chaque produit raconte une histoire, celle de son créateur et de sa communauté. Notre mission est de mettre en valeur les talents locaux et de proposer des créations qui allient tradition et modernité.
+                    Je suis un créateur passionné par le design graphique et le digital. Mon objectif est de fournir des services de haute qualité qui répondent aux besoins réels de mes clients, avec un souci constant de l&apos;esthétique et de l&apos;efficacité.
                   </p>
                   <p>
-                    Chaque pièce de notre collection est soigneusement sélectionnée pour sa qualité, son originalité et son impact positif. Nous travaillons main dans la main avec des artisans et créateurs passionnés pour vous offrir des produits uniques qui vous ressemblent.
+                    De la création de logos à la conception de sites web, en passant par le montage vidéo et le marketing digital, je mets mon expertise à votre service pour vous aider à vous démarquer et à atteindre vos objectifs.
+                  </p>
+                  <p>
+                    Services rapides, modernes et professionnels. Qualité, Créativité, Satisfaction — ce ne sont pas juste des mots, c&apos;est ma promesse.
                   </p>
                 </div>
 
-                <div className="mt-8 grid grid-cols-2 gap-4">
-                  {[
-                    { icon: Package, title: 'Qualité Premium', desc: 'Matériaux soigneusement sélectionnés' },
-                    { icon: Heart, title: 'Fait avec Passion', desc: 'Chaque pièce est unique' },
-                    { icon: Sparkles, title: 'Design Original', desc: 'Créations exclusives' },
-                    { icon: Send, title: 'Livraison Rapide', desc: 'Partout au Mali' },
-                  ].map((item, i) => (
-                    <div key={i} className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent transition-colors">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 flex-shrink-0">
-                        <item.icon className="h-4 w-4 text-amber-600" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium">{item.title}</p>
-                        <p className="text-xs text-muted-foreground">{item.desc}</p>
-                      </div>
-                    </div>
-                  ))}
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <a href="#services">
+                    <Button className="bg-amber-500 hover:bg-amber-600 text-white font-semibold">
+                      Voir les tarifs <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </a>
+                  <a href="#contact">
+                    <Button variant="outline" className="font-semibold">
+                      Me contacter
+                    </Button>
+                  </a>
                 </div>
               </FadeIn>
             </div>
           </div>
         </section>
 
-        {/* ─── CONTACT ─── */}
-        <section id="contact" className="py-16 sm:py-20">
+        {/* ═══ CONTACT ═══ */}
+        <section id="contact" className="py-16 sm:py-20 bg-muted/30">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-12">
               <FadeIn>
                 <Badge variant="secondary" className="mb-3">
                   <Send className="h-3 w-3 mr-1" /> Contact
                 </Badge>
-                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Parlons de Votre Projet</h2>
+                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Contactez-Moi</h2>
                 <p className="mt-3 text-muted-foreground leading-relaxed max-w-md">
-                  Vous avez une idée, un projet ou une question ? N&apos;hésitez pas à nous écrire. Notre équipe vous répondra dans les plus brefs délais.
+                  Vous avez un projet, une question ou besoin d&apos;un service ? N&apos;hésitez pas à me contacter. Je réponds rapidement.
                 </p>
 
                 <div className="mt-8 space-y-6">
                   <div className="flex items-center gap-4">
                     <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30">
-                      <Send className="h-5 w-5 text-amber-600" />
+                      <Mail className="h-5 w-5 text-amber-600" />
                     </div>
                     <div>
                       <p className="text-sm font-medium">Email</p>
@@ -643,22 +739,34 @@ export default function Home() {
                   </div>
                   <div className="flex items-center gap-4">
                     <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30">
-                      <svg className="h-5 w-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
+                      <Phone className="h-5 w-5 text-amber-600" />
                     </div>
                     <div>
                       <p className="text-sm font-medium">Téléphone</p>
-                      <p className="text-sm text-muted-foreground">+223 70 00 00 00</p>
+                      <p className="text-sm text-muted-foreground">Disponible sur demande</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
                     <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30">
-                      <svg className="h-5 w-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                      <MapPin className="h-5 w-5 text-amber-600" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium">Adresse</p>
+                      <p className="text-sm font-medium">Localisation</p>
                       <p className="text-sm text-muted-foreground">Bamako, Mali</p>
                     </div>
                   </div>
+                </div>
+
+                <div className="mt-8 flex gap-3">
+                  <a href="#" className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors" aria-label="Instagram">
+                    <Instagram className="h-5 w-5 text-amber-600" />
+                  </a>
+                  <a href="#" className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors" aria-label="Facebook">
+                    <Facebook className="h-5 w-5 text-amber-600" />
+                  </a>
+                  <a href="#" className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors" aria-label="Twitter">
+                    <Twitter className="h-5 w-5 text-amber-600" />
+                  </a>
                 </div>
               </FadeIn>
 
@@ -689,7 +797,7 @@ export default function Home() {
                     <Label htmlFor="subject">Sujet</Label>
                     <Input
                       id="subject"
-                      placeholder="L'objet de votre message"
+                      placeholder="Quel service vous intéresse ?"
                       value={contactData.subject}
                       onChange={(e) => setContactData({ ...contactData, subject: e.target.value })}
                     />
