@@ -79,6 +79,7 @@ import {
   ClipboardCheck,
   MessageSquare,
   Award,
+  Plus,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -365,6 +366,50 @@ export default function Home() {
   const [walletPhone, setWalletPhone] = useState('')
   const [walletTransactions, setWalletTransactions] = useState<{type: 'depot' | 'retrait'; amount: string; date: string; status: string}[]>([])
   const { toast } = useToast()
+
+  // Referral system with localStorage
+  const REFERRAL_CODE = 'CB-IBRA-2024'
+  const REFERRAL_KEY = 'createur-boutique-referral'
+  const [referralData, setReferralData] = useState<{ referred: { name: string; date: string; status: string }[]; totalEarned: number; totalReferred: number }>({ referred: [], totalEarned: 0, totalReferred: 0 })
+  const [referralName, setReferralName] = useState('')
+
+  useEffect(() => {
+    const saved = localStorage.getItem(REFERRAL_KEY)
+    if (saved) {
+      try { setReferralData(JSON.parse(saved)) } catch {}
+    }
+  }, [])
+
+  const addReferral = () => {
+    if (!referralName.trim()) {
+      toast({ title: 'Nom requis', description: 'Entrez le nom de la personne parrainée.', variant: 'destructive' })
+      return
+    }
+    const now = new Date().toLocaleString('fr-FR')
+    const newEntry = { name: referralName.trim(), date: now, status: 'En attente' }
+    const updated = {
+      referred: [newEntry, ...referralData.referred],
+      totalEarned: referralData.totalEarned + 500,
+      totalReferred: referralData.totalReferred + 1,
+    }
+    setReferralData(updated)
+    localStorage.setItem(REFERRAL_KEY, JSON.stringify(updated))
+    setReferralName('')
+    toast({ title: 'Parrainage enregistré !', description: `${newEntry.name} a été ajouté. +500 FCFA de réduction accumulés.` })
+  }
+
+  const getNextTier = () => {
+    const tiers = [
+      { at: 1, label: '500 FCFA réduction', icon: Banknote, color: 'from-emerald-500 to-teal-500' },
+      { at: 3, label: '1 service gratuit', icon: Gift, color: 'from-amber-500 to-orange-500' },
+      { at: 5, label: 'Logo + Montage offerts', icon: Sparkles, color: 'from-purple-500 to-pink-500' },
+      { at: 10, label: '1 site web offert', icon: Globe, color: 'from-red-500 to-rose-500' },
+    ]
+    const next = tiers.find(t => referralData.totalReferred < t.at)
+    const current = [...tiers].reverse().find(t => referralData.totalReferred >= t.at)
+    return { tiers, next, current, progress: next ? (referralData.totalReferred / next.at) * 100 : 100 }
+  }
+  const { tiers, next, current, progress } = getNextTier()
 
   // Countdown timer
   useEffect(() => {
@@ -854,95 +899,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ═══ COMMENT COMMANDER ═══ */}
-        <section className="py-16 sm:py-20 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-blue-950/10 dark:via-indigo-950/10 dark:to-purple-950/10">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <FadeIn className="text-center mb-12">
-              <Badge variant="secondary" className="mb-3 bg-blue-100 text-blue-700 border-blue-200">
-                <ArrowRight className="h-3 w-3 mr-1" /> Guide
-              </Badge>
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Comment Commander ?</h2>
-              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
-                Un processus simple, rapide et transparent en seulement 4 étapes. De votre idée à la livraison finale, tout est pensé pour votre confort.
-              </p>
-            </FadeIn>
-
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
-              {/* Connecting line */}
-              <div className="hidden lg:block absolute top-16 left-[12.5%] right-[12.5%] h-0.5 bg-gradient-to-r from-blue-200 via-purple-200 to-amber-200" />
-
-              {[
-                {
-                  step: '01',
-                  icon: MessageCircle,
-                  title: 'Contactez-nous',
-                  desc: "Envoyez-nous un message sur WhatsApp ou via le formulaire de contact. Décrivez votre projet, vos besoins et le service souhaité. Notre équipe vous répondra en quelques minutes pour discuter des détails.",
-                  color: 'from-blue-500 to-cyan-500',
-                  bg: 'bg-blue-100 dark:bg-blue-900/30',
-                  iconColor: 'text-blue-600',
-                },
-                {
-                  step: '02',
-                  icon: Handshake,
-                  title: 'Validation du projet',
-                  desc: 'Nous définissons ensemble les spécifications, le délai et le tarif. Vous recevez un récapitulatif clair et détaillé de ce qui sera livré. Aucune surprise, tout est transparent dès le départ.',
-                  color: 'from-purple-500 to-pink-500',
-                  bg: 'bg-purple-100 dark:bg-purple-900/30',
-                  iconColor: 'text-purple-600',
-                },
-                {
-                  step: '03',
-                  icon: CreditCard,
-                  title: 'Paiement',
-                  desc: "Effectuez le paiement via Wave au numéro +223 97 78 72 44. Selon le service, un paiement de 50% à la commande et 50% à la livraison, ou le paiement total avant début du travail.",
-                  color: 'from-amber-500 to-orange-500',
-                  bg: 'bg-amber-100 dark:bg-amber-900/30',
-                  iconColor: 'text-amber-600',
-                },
-                {
-                  step: '04',
-                  icon: FolderDown,
-                  title: 'Livraison',
-                  desc: "Recevez votre travail livré en haute qualité via WhatsApp ou Google Drive. Vous pouvez demander des révisions pour ajuster les derniers détails. Votre satisfaction est notre priorité.",
-                  color: 'from-emerald-500 to-teal-500',
-                  bg: 'bg-emerald-100 dark:bg-emerald-900/30',
-                  iconColor: 'text-emerald-600',
-                },
-              ].map((item) => (
-                <FadeIn key={item.step} delay={parseInt(item.step) * 0.1}>
-                  <div className="relative text-center">
-                    <div className={`flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${item.color} text-white mx-auto mb-4 shadow-lg relative z-10`}>
-                      <item.icon className="h-7 w-7" />
-                    </div>
-                    <span className="text-xs font-bold text-muted-foreground mb-2 block">{`Étape ${item.step}`}</span>
-                    <h3 className="font-bold text-base mb-2">{item.title}</h3>
-                    <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
-                  </div>
-                </FadeIn>
-              ))}
-            </div>
-
-            <FadeIn delay={0.4} className="mt-10 text-center">
-              <div className="inline-flex rounded-2xl bg-white dark:bg-card border shadow-lg p-6 sm:p-8 max-w-lg">
-                <div className="flex items-center gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex-shrink-0">
-                    <Zap className="h-6 w-6 text-emerald-600" />
-                  </div>
-                  <div className="text-left">
-                    <p className="font-bold text-sm">Prêt à commencer ?</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">Commandez maintenant et recevez votre projet en 24h</p>
-                    <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20commander%20un%20service.%20Pouvez-vous%20m%27aider%20%3F" target="_blank" rel="noopener noreferrer">
-                      <Button size="sm" className="mt-2 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-semibold">
-                        <MessageCircle className="h-3.5 w-3.5 mr-1.5" /> Commander via WhatsApp
-                      </Button>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </FadeIn>
-          </div>
-        </section>
-
         {/* ═══ OUTILS & RESSOURCES ═══ */}
         <section className="py-16 sm:py-20 bg-muted/30">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -1091,77 +1047,6 @@ export default function Home() {
                 </a>{' '}et discutons de votre projet !
               </p>
             </FadeIn>
-          </div>
-        </section>
-
-        {/* ═══ POURQUOI NOUS CHOISIR ═══ */}
-        <section className="py-16 sm:py-20 bg-muted/30">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <FadeIn className="text-center mb-12">
-              <Badge variant="secondary" className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200">
-                <Trophy className="h-3 w-3 mr-1" /> Avantages
-              </Badge>
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Pourquoi Nous Choisir ?</h2>
-              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
-                Ce qui nous distingue des autres et fait de Créateur Boutique le choix numéro un pour vos projets digitaux au Mali.
-              </p>
-            </FadeIn>
-
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[
-                {
-                  icon: Zap,
-                  title: 'Livraison Ultra Rapide',
-                  desc: "Recevez vos projets en 1 à 24 heures pour les designs simples et 1 à 3 jours pour les sites web. Pas d'attente inutile, on respecte nos délais à la lettre.",
-                  highlight: 'Plus rapide',
-                },
-                {
-                  icon: CircleDollarSign,
-                  title: 'Prix Imbattables',
-                  desc: 'Des tarifs adaptés au marché malien et africain. À partir de 2 000 FCFA seulement pour une affiche professionnelle. Le meilleur rapport qualité-prix garanti.',
-                  highlight: 'Dès 2 000 FCFA',
-                },
-                {
-                  icon: MessageCircle,
-                  title: 'Communication Directe',
-                  desc: 'Contactez-nous directement sur WhatsApp pour un suivi en temps réel de votre projet. Pas d\'intermédiaire, pas de formulaire complexe. Simple et efficace.',
-                  highlight: 'WhatsApp Direct',
-                },
-                {
-                  icon: BadgeCheck,
-                  title: 'Qualité Professionnelle',
-                  desc: 'Chaque projet est réalisé avec des outils professionnels (Canva Pro, CapCut Pro, PicsArt Pro). Des résultats qui rivalisent avec les agences internationales.',
-                  highlight: 'Outils Pro',
-                },
-                {
-                  icon: Users,
-                  title: 'Parrainage Avantageux',
-                  desc: 'Gagnez des récompenses en recommandant nos services. Jusqu\'à un site web entièrement gratuit pour 10 parrainages. Le programme le plus généreux du Mali.',
-                  highlight: 'Jusqu\'à gratuit',
-                },
-                {
-                  icon: Heart,
-                  title: 'Accompagnement Personnalisé',
-                  desc: "Chaque client est unique. Nous prenons le temps de comprendre vos besoins et d'adapter nos services. Des révisions incluses jusqu'à votre satisfaction totale.",
-                  highlight: 'Sur mesure',
-                },
-              ].map((item, i) => (
-                <FadeIn key={item.title} delay={i * 0.08}>
-                  <Card className="border-0 shadow-md hover:shadow-lg transition-shadow duration-300 h-full">
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30">
-                          <item.icon className="h-6 w-6 text-amber-600" />
-                        </div>
-                        <Badge variant="secondary" className="text-amber-600 text-[10px] bg-amber-50">{item.highlight}</Badge>
-                      </div>
-                      <h3 className="font-bold text-sm mb-2">{item.title}</h3>
-                      <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
-                    </CardContent>
-                  </Card>
-                </FadeIn>
-              ))}
-            </div>
           </div>
         </section>
 
@@ -1925,298 +1810,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ═══ AVIS CLIENTS ═══ */}
-        <section id="avis" className="py-16 sm:py-20">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <FadeIn className="text-center mb-12">
-              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
-                <Star className="h-3 w-3 mr-1" /> Témoignages
-              </Badge>
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Avis Clients</h2>
-              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
-                La satisfaction des clients est notre priorité. Chaque projet est réalisé avec soin, créativité et professionnalisme.
-              </p>
-            </FadeIn>
-
-            <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[
-                { text: "Travail très propre et rapide, j'ai vraiment aimé mon logo. Le résultat a dépassé mes attentes et la communication était excellente du début à la fin.", author: 'Amadou K.', note: 5, avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face' },
-                { text: "L'affiche était magnifique et professionnelle, je recommande fortement. Un vrai talent pour capturer l'essence de mon événement dans un visuel percutant.", author: 'Fatoumata D.', note: 5, avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face' },
-                { text: "Service sérieux et livraison rapide, très bon travail. J'ai pu utiliser le design immédiatement pour ma communication et le feedback de mes clients était très positif.", author: 'Ibrahim S.', note: 5, avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face' },
-                { text: 'Mon site web est bien fait et moderne, merci beaucoup. La navigation est fluide, le design est professionnel et mes visiteurs sont impressionnés par la qualité.', author: 'Mariam T.', note: 5, avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face' },
-                { text: "Très bon designer, je vais revenir encore pour d'autres services. La créativité et le professionnalisme sont au rendez-vous à chaque fois.", author: 'Moussa C.', note: 5, avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face' },
-                { text: "Excellent rapport qualité-prix. Le montage vidéo était propre, les transitions étaient fluides et le rendu final était exactement ce que je voulais.", author: 'Awa B.', note: 5, avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face' },
-              ].map((avis, i) => (
-                <motion.div key={i} variants={cardVariants}>
-                  <Card className="h-full border-0 shadow-md hover:shadow-xl transition-all duration-300 bg-gradient-to-b from-card to-card/80">
-                    <CardContent className="p-6 flex flex-col h-full">
-                      <div className="flex gap-0.5 mb-4">
-                        {Array.from({ length: avis.note }).map((_, j) => (
-                          <Star key={j} className="h-4 w-4 fill-amber-400 text-amber-400" />
-                        ))}
-                      </div>
-                      <div className="relative flex-1">
-                        <Quote className="h-8 w-8 text-amber-200 dark:text-amber-800/30 absolute -top-1 -left-1" />
-                        <p className="text-sm text-muted-foreground leading-relaxed pl-6 italic">
-                          &ldquo;{avis.text}&rdquo;
-                        </p>
-                      </div>
-                      <div className="mt-4 pt-4 border-t flex items-center gap-3">
-                        <img src={avis.avatar} alt={avis.author} className="h-9 w-9 rounded-full object-cover ring-2 ring-amber-100 dark:ring-amber-900/30" />
-                        <div>
-                          <p className="text-sm font-medium">{avis.author}</p>
-                          <p className="text-xs text-muted-foreground">Client vérifié</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </StaggerContainer>
-          </div>
-        </section>
-
-        {/* ═══ PARRAINAGE ═══ */}
-        <section id="parrainage" className="py-16 sm:py-20 bg-gradient-to-br from-amber-50 via-orange-50 to-white dark:from-amber-950/10 dark:via-orange-950/5 dark:to-background">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <FadeIn className="text-center mb-12">
-              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
-                <Users className="h-3 w-3 mr-1" /> Programme
-              </Badge>
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Système de Parrainage</h2>
-              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
-                Récompenser les clients fidèles et faire grandir la boutique rapidement grâce au bouche-à-oreille.
-              </p>
-            </FadeIn>
-
-            {/* Comment ça marche */}
-            <FadeIn delay={0.1}>
-              <div className="rounded-2xl border bg-card p-6 sm:p-8 mb-8">
-                <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                  <Zap className="h-5 w-5 text-amber-500" /> Comment ça marche
-                </h3>
-                <div className="grid sm:grid-cols-3 gap-4">
-                  {[
-                    { step: '1', title: 'Partagez', desc: 'Donnez votre contact ou le lien de la boutique à un ami' },
-                    { step: '2', title: 'Il commande', desc: 'Votre ami achète un service dans la boutique' },
-                    { step: '3', title: 'Vous gagnez', desc: 'Recevez votre récompense après confirmation du paiement' },
-                  ].map((item) => (
-                    <div key={item.step} className="flex items-start gap-3">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-500 text-white font-bold text-sm flex-shrink-0">
-                        {item.step}
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold">{item.title}</p>
-                        <p className="text-xs text-muted-foreground mt-0.5">{item.desc}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </FadeIn>
-
-            {/* Paliers de récompenses */}
-            <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-              {[
-                { refs: 1, reward: '500 FCFA de réduction', desc: 'sur votre prochain achat', icon: Banknote, color: 'from-emerald-500 to-teal-500' },
-                { refs: 2, reward: '1 service gratuit', desc: 'affiche ou logo offert', icon: Gift, color: 'from-amber-500 to-orange-500' },
-                { refs: 5, reward: 'Logo ou mini projet', desc: 'création entièrement gratuite', icon: Sparkles, color: 'from-purple-500 to-pink-500' },
-                { refs: 10, reward: '1 site web simple', desc: 'entièrement offert', icon: Globe, color: 'from-red-500 to-rose-500' },
-              ].map((tier) => (
-                <motion.div key={tier.refs} variants={cardVariants}>
-                  <Card className="overflow-hidden border-0 shadow-md text-center h-full">
-                    <div className={`h-2 bg-gradient-to-r ${tier.color}`} />
-                    <CardContent className="p-5 pt-6">
-                      <div className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${tier.color} text-white mx-auto mb-3`}>
-                        <tier.icon className="h-6 w-6" />
-                      </div>
-                      <div className="text-3xl font-extrabold mb-1">{tier.refs}</div>
-                      <p className="text-xs text-muted-foreground mb-3">client{tier.refs > 1 ? 's' : ''} parrainé{tier.refs > 1 ? 's' : ''}</p>
-                      <div className="h-px bg-border mb-3" />
-                      <p className="text-sm font-bold">{tier.reward}</p>
-                      <p className="text-xs text-muted-foreground mt-1">{tier.desc}</p>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </StaggerContainer>
-
-            {/* Conditions */}
-            <FadeIn delay={0.2}>
-              <Card className="border-0 shadow-md bg-card">
-                <CardContent className="p-6">
-                  <h3 className="text-sm font-bold uppercase tracking-wider mb-4 flex items-center gap-2">
-                    <Lock className="h-4 w-4 text-amber-500" /> Conditions
-                  </h3>
-                  <div className="grid sm:grid-cols-3 gap-4">
-                    {[
-                      'Le client doit payer un service complet',
-                      'Le parrainage est valide uniquement après confirmation du paiement',
-                      'Les récompenses ne sont pas échangeables en argent',
-                    ].map((condition, i) => (
-                      <div key={i} className="flex items-start gap-2">
-                        <CheckCircle2 className="h-4 w-4 text-amber-500 mt-0.5 flex-shrink-0" />
-                        <p className="text-xs text-muted-foreground leading-relaxed">{condition}</p>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </FadeIn>
-          </div>
-        </section>
-
-        {/* ═══ PAIEMENT & RETRAIT ═══ */}
-        <section id="paiement" className="py-16 sm:py-20">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <FadeIn className="text-center mb-12">
-              <Badge variant="secondary" className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200">
-                <CreditCard className="h-3 w-3 mr-1" /> Transactions
-              </Badge>
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Paiement & Retrait</h2>
-              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
-                Paiement sécurisé via Wave uniquement. Toutes les transactions sont confirmées et sécurisées.
-              </p>
-            </FadeIn>
-
-            <div className="grid lg:grid-cols-2 gap-8">
-              {/* Paiement */}
-              <FadeIn>
-                <Card className="border-0 shadow-lg h-full">
-                  <CardContent className="p-6 sm:p-8">
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-900/30">
-                        <CreditCard className="h-6 w-6 text-emerald-600" />
-                      </div>
-                      <div>
-                        <h3 className="text-lg font-bold">Paiement</h3>
-                        <p className="text-xs text-muted-foreground">Contact : +223 97 78 72 44</p>
-                      </div>
-                    </div>
-
-                    <div className="space-y-4">
-                      <div>
-                        <p className="text-sm font-semibold mb-2">Mode de paiement :</p>
-                        <div className="flex flex-wrap gap-2">
-                          <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200 px-3 py-1">
-                            <CreditCard className="h-3 w-3 mr-1" /> Wave uniquement
-                          </Badge>
-                        </div>
-                      </div>
-
-                      <div className="h-px bg-border" />
-
-                      <div>
-                        <p className="text-sm font-semibold mb-2 flex items-center gap-1">
-                          <CheckCircle2 className="h-4 w-4 text-emerald-500" /> Conditions
-                        </p>
-                        <ul className="space-y-2">
-                          {[
-                            '50% à la commande et 50% à la livraison du service',
-                            'Ou paiement total avant le début du travail (selon le service)',
-                            "Aucun travail n'est livré sans confirmation de paiement",
-                          ].map((c, i) => (
-                            <li key={i} className="flex items-start gap-2">
-                              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 mt-0.5 flex-shrink-0" />
-                              <span className="text-xs text-muted-foreground leading-relaxed">{c}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      <div className="h-px bg-border" />
-
-                      <div>
-                        <p className="text-sm font-semibold mb-2 flex items-center gap-1">
-                          <Timer className="h-4 w-4 text-amber-500" /> Délais de livraison
-                        </p>
-                        <div className="space-y-2">
-                          {[
-                            { label: 'Affiches et logos', time: '1 à 24 heures' },
-                            { label: 'CapCut / PicsArt', time: '1 à 24 heures' },
-                            { label: 'Sites web', time: '1 à 3 jours' },
-                            { label: 'Formations', time: 'Selon le programme' },
-                          ].map((item) => (
-                            <div key={item.label} className="flex items-center justify-between p-2 rounded-lg bg-muted/50">
-                              <span className="text-xs font-medium">{item.label}</span>
-                              <Badge variant="secondary" className="text-[10px]">{item.time}</Badge>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </FadeIn>
-
-              {/* Retrait */}
-              <FadeIn delay={0.2}>
-                <Card className="border-0 shadow-lg h-full">
-                  <CardContent className="p-6 sm:p-8">
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30">
-                        <Banknote className="h-6 w-6 text-amber-600" />
-                      </div>
-                      <div>
-                        <h3 className="text-lg font-bold">Retrait</h3>
-                        <p className="text-xs text-muted-foreground">Revenus & gains</p>
-                      </div>
-                    </div>
-
-                    <div className="space-y-4">
-                      <div>
-                        <p className="text-sm font-semibold mb-2 flex items-center gap-1">
-                          <CircleDollarSign className="h-4 w-4 text-amber-500" /> Moyens de retrait
-                        </p>
-                        <ul className="space-y-2">
-                          {[
-                            'Les retraits sont effectués uniquement via les mêmes moyens de paiement',
-                            'Minimum de retrait : 2 000 FCFA',
-                            'Traitement du retrait : 5 à 30 minutes après demande',
-                          ].map((c, i) => (
-                            <li key={i} className="flex items-start gap-2">
-                              <CheckCircle2 className="h-3.5 w-3.5 text-amber-500 mt-0.5 flex-shrink-0" />
-                              <span className="text-xs text-muted-foreground leading-relaxed">{c}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      <div className="h-px bg-border" />
-
-                      <div>
-                        <p className="text-sm font-semibold mb-2 flex items-center gap-1">
-                          <Shield className="h-4 w-4 text-emerald-500" /> Sécurité
-                        </p>
-                        <ul className="space-y-2">
-                          {[
-                            'Paiement sécurisé via Wave uniquement',
-                            'Toutes les transactions sont confirmées',
-                            'Aucun remboursement après validation du travail',
-                          ].map((c, i) => (
-                            <li key={i} className="flex items-start gap-2">
-                              <Shield className="h-3.5 w-3.5 text-emerald-500 mt-0.5 flex-shrink-0" />
-                              <span className="text-xs text-muted-foreground leading-relaxed">{c}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      <div className="mt-6 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/10 dark:to-orange-900/10 border border-amber-200 dark:border-amber-800 p-4">
-                        <p className="text-sm font-semibold text-amber-700 dark:text-amber-400 flex items-center gap-2">
-                          <Phone className="h-4 w-4" /> Pour commander
-                        </p>
-                        <p className="text-2xl font-bold text-amber-600 mt-1">+223 97 78 72 44</p>
-                        <p className="text-xs text-muted-foreground mt-1">Paiement via Wave uniquement</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </FadeIn>
-            </div>
-          </div>
-        </section>
-
         {/* ═══ VIDÉO DE PRÉSENTATION ═══ */}
         <section id="video" className="py-16 sm:py-20 bg-muted/30">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -2328,77 +1921,229 @@ export default function Home() {
         <section id="parrainage" className="py-16 sm:py-20 bg-gradient-to-br from-purple-50 via-amber-50 to-orange-50 dark:from-purple-950/10 dark:via-amber-950/10 dark:to-orange-950/10 relative overflow-hidden">
           <div className="absolute top-10 right-10 h-64 w-64 bg-purple-200/30 dark:bg-purple-900/10 rounded-full blur-3xl" />
           <div className="absolute bottom-10 left-10 h-64 w-64 bg-amber-200/20 dark:bg-amber-900/10 rounded-full blur-3xl" />
-          <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+          <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
             <FadeIn className="text-center mb-10">
               <Badge variant="secondary" className="mb-3 bg-purple-100 text-purple-700 border-purple-200">
                 <Gift className="h-3 w-3 mr-1" /> Programme
               </Badge>
               <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Programme de Parrainage</h2>
               <p className="mt-4 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                Invitez vos amis et gagnez des récompenses ! Pour chaque personne qui commande grâce à votre code de parrainage, vous recevez une réduction sur votre prochaine commande.
+                Invitez vos amis et gagnez des récompenses ! Chaque personne qui commande avec votre code vous fait gagner des réductions cumulables. Plus vous parrainez, plus les récompenses sont importantes.
               </p>
             </FadeIn>
 
-            <FadeIn delay={0.15}>
-              <Card className="border-0 shadow-xl overflow-hidden">
-                <div className="bg-gradient-to-r from-purple-500 via-amber-500 to-orange-500 p-6 sm:p-8 text-white text-center">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mx-auto mb-4">
-                    <Share2 className="h-8 w-8" />
-                  </div>
-                  <h3 className="text-2xl font-extrabold mb-2">Votre Code de Parrainage</h3>
-                  <p className="text-white/80 text-sm mb-5">Partagez ce code avec vos amis. Ils auront 10% de réduction et vous aussi !</p>
-                  <div className="flex items-center justify-center gap-3 max-w-xs mx-auto">
-                    <div className="flex-1 bg-white/20 backdrop-blur-sm rounded-xl px-6 py-4 border border-white/30">
-                      <p className="text-2xl sm:text-3xl font-extrabold tracking-[0.2em] font-mono" id="referral-code">CB-IBRA-2024</p>
+            {/* Code de parrainage */}
+            <FadeIn delay={0.1}>
+              <Card className="border-0 shadow-xl overflow-hidden mb-6">
+                <div className="bg-gradient-to-r from-purple-500 via-amber-500 to-orange-500 p-6 sm:p-8 text-white">
+                  <div className="flex flex-col sm:flex-row items-center gap-6">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm flex-shrink-0">
+                      <Share2 className="h-8 w-8" />
                     </div>
-                    <button
-                      onClick={() => {
-                        navigator.clipboard.writeText('CB-IBRA-2024')
-                        toast({ title: 'Code copié !', description: 'Partagez-le avec vos amis.' })
-                      }}
-                      className="flex h-14 w-14 items-center justify-center rounded-xl bg-white text-purple-600 hover:bg-white/90 transition-colors shadow-lg"
-                    >
-                      <Copy className="h-6 w-6" />
-                    </button>
+                    <div className="text-center sm:text-left flex-1">
+                      <h3 className="text-xl sm:text-2xl font-extrabold mb-1">Votre Code de Parrainage</h3>
+                      <p className="text-white/80 text-sm">Partagez ce code — votre ami obtient <strong>10% de réduction</strong> et vous gagnez <strong>500 FCFA</strong> par parrainage.</p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="bg-white/20 backdrop-blur-sm rounded-xl px-5 py-3 border border-white/30">
+                        <p className="text-xl sm:text-2xl font-extrabold tracking-[0.15em] font-mono">{REFERRAL_CODE}</p>
+                      </div>
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(REFERRAL_CODE)
+                          toast({ title: 'Code copié !', description: 'Partagez-le avec vos amis.' })
+                        }}
+                        className="flex h-12 w-12 items-center justify-center rounded-xl bg-white text-purple-600 hover:bg-white/90 transition-colors shadow-lg flex-shrink-0"
+                      >
+                        <Copy className="h-5 w-5" />
+                      </button>
+                    </div>
                   </div>
                 </div>
-                <CardContent className="p-6 sm:p-8">
-                  <div className="grid sm:grid-cols-3 gap-6 text-center">
-                    <div className="space-y-2">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-100 dark:bg-purple-900/30 mx-auto">
-                        <Users className="h-6 w-6 text-purple-600" />
-                      </div>
-                      <h4 className="font-bold text-sm">1. Partagez</h4>
-                      <p className="text-xs text-muted-foreground leading-relaxed">Envoyez votre code à vos amis, famille et collègues</p>
-                    </div>
-                    <div className="space-y-2">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30 mx-auto">
-                        <ShoppingCart className="h-6 w-6 text-amber-600" />
-                      </div>
-                      <h4 className="font-bold text-sm">2. Ils commandent</h4>
-                      <p className="text-xs text-muted-foreground leading-relaxed">Votre ami utilise le code et obtient 10% de réduction</p>
-                    </div>
-                    <div className="space-y-2">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-900/30 mx-auto">
-                        <Gift className="h-6 w-6 text-emerald-600" />
-                      </div>
-                      <h4 className="font-bold text-sm">3. Vous gagnez</h4>
-                      <p className="text-xs text-muted-foreground leading-relaxed">Recevez 10% de réduction sur votre prochaine commande</p>
-                    </div>
-                  </div>
+              </Card>
+            </FadeIn>
 
-                  <div className="mt-8 p-4 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
-                    <div className="flex items-start gap-3">
-                      <Flame className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" />
-                      <div>
-                        <p className="text-sm font-bold text-amber-700 dark:text-amber-400">Offre spéciale parrainage</p>
-                        <p className="text-xs text-muted-foreground mt-1 leading-relaxed">Parrainez 5 personnes et recevez un service gratuit de votre choix (logo, affiche ou montage vidéo) ! Offre valable jusqu\'à fin du mois.</p>
+            {/* Stats + Barre de progression */}
+            <FadeIn delay={0.15}>
+              <div className="grid sm:grid-cols-3 gap-4 mb-6">
+                <Card className="border-0 shadow-md">
+                  <CardContent className="p-5 text-center">
+                    <div className="text-3xl font-extrabold text-purple-600">{referralData.totalReferred}</div>
+                    <p className="text-xs text-muted-foreground mt-1">Personnes parrainées</p>
+                  </CardContent>
+                </Card>
+                <Card className="border-0 shadow-md">
+                  <CardContent className="p-5 text-center">
+                    <div className="text-3xl font-extrabold text-amber-600">{referralData.totalEarned.toLocaleString('fr-FR')}</div>
+                    <p className="text-xs text-muted-foreground mt-1">FCFA de réductions gagnées</p>
+                  </CardContent>
+                </Card>
+                <Card className="border-0 shadow-md">
+                  <CardContent className="p-5 text-center">
+                    <div className="text-3xl font-extrabold text-emerald-600">{next ? next.at - referralData.totalReferred : 0}</div>
+                    <p className="text-xs text-muted-foreground mt-1">Avant la prochaine récompense</p>
+                  </CardContent>
+                </Card>
+              </div>
+            </FadeIn>
+
+            {/* Paliers de récompenses */}
+            <FadeIn delay={0.2}>
+              <Card className="border-0 shadow-lg overflow-hidden mb-6">
+                <CardContent className="p-6">
+                  <h3 className="font-bold text-sm mb-4 flex items-center gap-2">
+                    <Trophy className="h-4 w-4 text-amber-500" /> Paliers de récompenses
+                  </h3>
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                    {tiers.map((tier) => {
+                      const unlocked = referralData.totalReferred >= tier.at
+                      const isCurrent = current && current.at === tier.at
+                      return (
+                        <div key={tier.at} className={`relative rounded-xl p-4 border-2 transition-all ${unlocked ? 'border-emerald-300 dark:border-emerald-700 bg-emerald-50/50 dark:bg-emerald-950/20' : isCurrent ? 'border-amber-300 dark:border-amber-700 bg-amber-50/50 dark:bg-amber-950/20' : 'border-border bg-muted/30 opacity-70'}`}>
+                          {unlocked && <div className="absolute top-2 right-2"><CheckCircle2 className="h-4 w-4 text-emerald-500" /></div>}
+                          <div className={`flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${tier.color} text-white mb-2 ${!unlocked ? 'grayscale opacity-60' : ''}`}>
+                            <tier.icon className="h-5 w-5" />
+                          </div>
+                          <div className="text-xs font-extrabold">{tier.at} parrainage{tier.at > 1 ? 's' : ''}</div>
+                          <p className="text-[10px] text-muted-foreground mt-0.5">{tier.label}</p>
+                        </div>
+                      )
+                    })}
+                  </div>
+                  {/* Progress bar */}
+                  {next && (
+                    <div className="mt-5">
+                      <div className="flex items-center justify-between text-xs mb-2">
+                        <span className="font-medium">Progression vers : {next.label}</span>
+                        <span className="text-amber-600 font-bold">{Math.round(progress)}%</span>
+                      </div>
+                      <div className="h-3 bg-muted rounded-full overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          whileInView={{ width: `${progress}%` }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 1, ease: 'easeOut' }}
+                          className="h-full bg-gradient-to-r from-purple-500 via-amber-500 to-orange-500 rounded-full"
+                        />
                       </div>
                     </div>
-                  </div>
+                  )}
+                  {!next && referralData.totalReferred > 0 && (
+                    <div className="mt-4 p-3 rounded-lg bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border border-amber-200 dark:border-amber-800 text-center">
+                      <p className="text-sm font-bold text-amber-700 dark:text-amber-400">Félicitations ! Tous les paliers débloqués</p>
+                      <p className="text-xs text-muted-foreground mt-1">Contactez-nous sur WhatsApp pour récupérer votre récompense maximale.</p>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </FadeIn>
+
+            {/* Formulaire d'ajout + Historique */}
+            <div className="grid lg:grid-cols-2 gap-6">
+              <FadeIn delay={0.25}>
+                <Card className="border-0 shadow-lg h-full">
+                  <CardContent className="p-6">
+                    <h3 className="font-bold text-sm mb-4 flex items-center gap-2">
+                      <UserCheck className="h-4 w-4 text-purple-500" /> Enregistrer un parrainage
+                    </h3>
+                    <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
+                      Lorsqu&apos;une personne vous a été référé(e) et a commandé, enregistrez-la ici pour suivre vos gains. Le parrainage est validé après confirmation du paiement.
+                    </p>
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder="Nom de la personne parrainée"
+                        value={referralName}
+                        onChange={(e) => setReferralName(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && addReferral()}
+                        className="h-11"
+                      />
+                      <Button onClick={addReferral} className="bg-purple-500 hover:bg-purple-600 text-white font-semibold h-11 px-5 flex-shrink-0">
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                    </div>
+
+                    {/* Comment ça marche */}
+                    <div className="mt-6 pt-5 border-t">
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">Comment ça marche</h4>
+                      <div className="space-y-3">
+                        {[
+                          { step: '1', title: 'Partagez votre code', desc: 'Envoyez CB-IBRA-2024 à vos amis via WhatsApp, SMS ou en personne.', color: 'bg-purple-500' },
+                          { step: '2', title: 'Ils commandent', desc: "Votre ami mentionne votre code lors de sa commande et obtient 10% de réduction immédiate.", color: 'bg-amber-500' },
+                          { step: '3', title: 'Vous gagnez 500 FCFA', desc: "Chaque parrainage validé vous crédite 500 FCFA de réduction cumulable sur vos prochaines commandes.", color: 'bg-emerald-500' },
+                        ].map((item) => (
+                          <div key={item.step} className="flex items-start gap-3">
+                            <div className={`flex h-7 w-7 items-center justify-center rounded-full ${item.color} text-white text-xs font-bold flex-shrink-0 mt-0.5`}>{item.step}</div>
+                            <div>
+                              <p className="text-xs font-semibold">{item.title}</p>
+                              <p className="text-[11px] text-muted-foreground leading-relaxed mt-0.5">{item.desc}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Conditions */}
+                    <div className="mt-5 p-3 rounded-lg bg-muted/50 border">
+                      <div className="flex items-start gap-2">
+                        <Lock className="h-3.5 w-3.5 text-muted-foreground mt-0.5 flex-shrink-0" />
+                        <div className="text-[10px] text-muted-foreground leading-relaxed space-y-1">
+                          <p>Le client doit payer un service complet pour que le parrainage soit validé. Les réductions sont cumulables et applicables sur toute commande future. Les récompenses ne sont pas échangeables en argent.</p>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </FadeIn>
+
+              <FadeIn delay={0.3}>
+                <Card className="border-0 shadow-lg h-full">
+                  <CardContent className="p-6">
+                    <h3 className="font-bold text-sm mb-4 flex items-center gap-2">
+                      <History className="h-4 w-4 text-amber-500" /> Historique des parrainages
+                    </h3>
+                    {referralData.referred.length === 0 ? (
+                      <div className="flex flex-col items-center justify-center py-10 text-muted-foreground">
+                        <Users className="h-10 w-10 opacity-20 mb-3" />
+                        <p className="text-sm">Aucun parrainage encore</p>
+                        <p className="text-xs text-muted-foreground/60 mt-1">Partagez votre code pour commencer à gagner</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-2 max-h-[400px] overflow-y-auto">
+                        {referralData.referred.map((ref, i) => (
+                          <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-muted/50 border">
+                            <div className="flex items-center gap-3">
+                              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-purple-100 dark:bg-purple-900/30">
+                                <UserCheck className="h-4 w-4 text-purple-600" />
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium">{ref.name}</p>
+                                <p className="text-[10px] text-muted-foreground">{ref.date}</p>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-xs font-bold text-emerald-600">+500 FCFA</p>
+                              <Badge variant={ref.status === 'Validé' ? 'default' : 'secondary'} className="text-[9px]">
+                                {ref.status}
+                              </Badge>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {referralData.totalReferred > 0 && (
+                      <div className="mt-4 pt-4 border-t">
+                        <a href={`https://wa.me/22397787244?text=Bonjour ! J'ai parrainé ${referralData.totalReferred} personne(s) avec le code ${REFERRAL_CODE}. Mes réductions cumulées : ${referralData.totalEarned} FCFA. Je souhaite les utiliser.`} target="_blank" rel="noopener noreferrer">
+                          <Button className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold">
+                            <MessageCircle className="h-4 w-4 mr-2" /> Réclamer mes récompenses
+                          </Button>
+                        </a>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </FadeIn>
+            </div>
           </div>
         </section>
 
@@ -2574,11 +2319,11 @@ export default function Home() {
             <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {[
                 {
-                  icon: Ban,
-                  title: 'Pas de remboursement',
-                  desc: "Aucun remboursement n'est effectué après validation et livraison du travail. Chaque création est réalisée sur mesure selon vos besoins.",
-                  color: 'text-red-500',
-                  bg: 'bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-800',
+                  icon: ShieldCheck,
+                  title: 'Satisfaction ou remboursement',
+                  desc: "Si le résultat ne correspond pas à votre commande, nous reprenons le travail gratuitement ou vous remboursons via Wave sous 48h.",
+                  color: 'text-emerald-500',
+                  bg: 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800',
                 },
                 {
                   icon: CreditCard,
