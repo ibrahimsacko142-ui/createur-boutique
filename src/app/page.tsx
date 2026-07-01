@@ -160,7 +160,7 @@ function formatPrice(p: number) {
 }
 
 /* ─── Service Card ─── */
-function ServiceCard({ product, icon: Icon }: { product: Product; icon: React.ElementType }) {
+function ServiceCard({ product, icon: Icon, onWavePay }: { product: Product; icon: React.ElementType; onWavePay: (name: string, price: number) => void }) {
   const addItem = useCartStore((s) => s.addItem)
   const [selected, setSelected] = useState<Product | null>(null)
   const { toast } = useToast()
@@ -168,6 +168,10 @@ function ServiceCard({ product, icon: Icon }: { product: Product; icon: React.El
   const handleAdd = () => {
     addItem({ id: product.id, name: product.name, price: product.price, image: product.image })
     toast({ title: 'Ajouté au panier', description: `${product.name} — ${formatPrice(product.price)}` })
+  }
+
+  const handleWavePay = () => {
+    onWavePay(product.name, product.price)
   }
 
   const categoryLabel = product.category === 'service' ? 'Service' : product.category === 'outil' ? 'Outil' : 'Produit'
@@ -248,16 +252,25 @@ function ServiceCard({ product, icon: Icon }: { product: Product; icon: React.El
               <p className="text-sm text-muted-foreground leading-relaxed">{selected.description}</p>
               <div className="flex items-center justify-between pt-2">
                 <span className="text-2xl font-bold text-amber-600">{formatPrice(selected.price)}</span>
-                <Button
-                  className="bg-amber-500 hover:bg-amber-600 text-white font-semibold"
-                  onClick={() => {
-                    addItem({ id: selected.id, name: selected.name, price: selected.price, image: selected.image })
-                    toast({ title: 'Ajouté au panier', description: `${selected.name} ajouté.` })
-                    setSelected(null)
-                  }}
-                >
-                  <ShoppingCart className="h-4 w-4 mr-2" /> Commander
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    className="font-semibold border-blue-300 text-blue-600 hover:bg-blue-50"
+                    onClick={() => { handleWavePay(); setSelected(null) }}
+                  >
+                    <Wallet className="h-4 w-4 mr-1" /> Payer Wave
+                  </Button>
+                  <Button
+                    className="bg-amber-500 hover:bg-amber-600 text-white font-semibold"
+                    onClick={() => {
+                      addItem({ id: selected.id, name: selected.name, price: selected.price, image: selected.image })
+                      toast({ title: 'Ajouté au panier', description: `${selected.name} ajouté.` })
+                      setSelected(null)
+                    }}
+                  >
+                    <ShoppingCart className="h-4 w-4 mr-2" /> Panier
+                  </Button>
+                </div>
               </div>
             </div>
           )}
@@ -288,7 +301,7 @@ function CompetenceItem({ text, icon: Icon, delay = 0 }: { text: string; icon: R
 }
 
 /* ─── Pricing Card ─── */
-function PricingCard({ name, price, description, icon: Icon, delay = 0 }: { name: string; price: number; description: string; icon: React.ElementType; delay?: number }) {
+function PricingCard({ name, price, description, icon: Icon, delay = 0, onWavePay }: { name: string; price: number; description: string; icon: React.ElementType; delay?: number; onWavePay: (name: string, price: number) => void }) {
   const addItem = useCartStore((s) => s.addItem)
   const { toast } = useToast()
 
@@ -307,15 +320,23 @@ function PricingCard({ name, price, description, icon: Icon, delay = 0 }: { name
           </div>
           <h3 className="font-bold text-lg mb-2">{name}</h3>
           <p className="text-sm text-muted-foreground leading-relaxed mb-4">{description}</p>
-          <Button
-            className="w-full bg-amber-500 hover:bg-amber-600 text-white font-semibold"
-            onClick={() => {
-              // find product in store or just show toast
-              toast({ title: 'Service ajouté', description: `${name} — ${formatPrice(price)}` })
-            }}
-          >
-            <ShoppingCart className="h-4 w-4 mr-2" /> Commander
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              className="flex-1 bg-amber-500 hover:bg-amber-600 text-white font-semibold"
+              onClick={() => {
+                toast({ title: 'Service ajouté', description: `${name} — ${formatPrice(price)}` })
+              }}
+            >
+              <ShoppingCart className="h-4 w-4 mr-2" /> Panier
+            </Button>
+            <Button
+              variant="outline"
+              className="flex-1 font-semibold border-blue-300 text-blue-600 hover:bg-blue-50"
+              onClick={() => onWavePay(name, price)}
+            >
+              <Wallet className="h-4 w-4 mr-2" /> Payer Wave
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </FadeIn>
@@ -374,7 +395,85 @@ export default function Home() {
   const [serviceCategory, setServiceCategory] = useState('all')
   const [portfolioFilter, setPortfolioFilter] = useState('Tous')
   const [quickOrder, setQuickOrder] = useState({ service: '', name: '', phone: '', description: '' })
+  const [wavePayOpen, setWavePayOpen] = useState(false)
+  const [wavePayService, setWavePayService] = useState({ name: '', price: 0 })
+  const [wavePayStep, setWavePayStep] = useState(1)
+  const [waveConfirmed, setWaveConfirmed] = useState(false)
+  const [selectedArticle, setSelectedArticle] = useState<typeof blogArticles[number] | null>(null)
+  const [legalPage, setLegalPage] = useState<'mentions' | 'confidentialite' | null>(null)
   const { toast } = useToast()
+
+  // ═══ BLOG ARTICLES DATA ═══
+  const blogArticles = [
+    {
+      title: '5 conseils pour créer un logo mémorable',
+      excerpt: "Découvrez les règles essentielles pour concevoir un logo qui marque les esprits et reste gravé dans la mémoire de votre audience.",
+      category: 'Design',
+      date: '28 Juin 2026',
+      readTime: '4 min',
+      color: 'bg-amber-100 text-amber-700',
+      image: 'https://sfile.chatglm.cn/images-ppt/b90eaf7f2e0c.jpg',
+      content: `Un logo est bien plus qu'une simple image : c'est le visage de votre marque, le premier contact visuel avec votre public. Voici cinq conseils fondamentaux pour créer un logo qui reste gravé dans les mémoires.\n\n**1. La simplicité avant tout**\nLes meilleurs logos sont ceux qui sont simples et immédiatement reconnaissables. Pensez au logo d'Apple, de Nike ou de McDonald's : des formes épurées, sans surcharge visuelle. Un logo trop complexe est difficile à mémoriser et à reproduire sur différents supports. Limitez-vous à deux ou trois couleurs maximum et évitez les détails superflus qui ne seront pas visibles en petite taille.\n\n**2. Pensez à la polyvalence**\nVotre logo doit fonctionner sur tous les supports : cartes de visite, affiches, site web, réseaux sociaux, tee-shirts, et même en noir et blanc. Testez toujours votre création à différentes tailles et sur différents fonds pour vérifier sa lisibilité et son impact visuel. Un bon logo reste efficace qu'il soit affiché sur un écran géant ou imprimé sur un stylo.\n\n**3. Choisissez les bonnes couleurs**\nChaque couleur évoque une émotion différente. Le bleu inspire la confiance, le rouge l'urgence et la passion, le vert la nature et la croissance, le jaune l'optimisme. Pour une entreprise au Mali, pensez également aux couleurs qui résonnent avec votre public cible et votre secteur d'activité. La cohérence chromatique est essentielle pour renforcer l'identité de votre marque.\n\n**4. La typographie compte**\nLa police de caractère que vous choisissez pour votre logo en dit long sur votre marque. Une police serif classique évoque le prestige et la tradition, tandis qu'une police sans-serif moderne communique l'innovation et la simplicité. Évitez les polices trop décoratives qui peuvent devenir illisibles. L'idéal est d'utiliser une police unique ou d'en combiner deux au maximum.\n\n**5. Rendez-le intemporel**\nÉvitez de suivre les tendances éphémères qui datent rapidement. Un bon logo doit rester pertinent pendant des années, voire des décennies. Regardez les marques les plus prestigieuses : leur logo a peu changé depuis leur création. Concentrez-vous sur l'essence de votre marque plutôt que sur les effets de mode du moment.\n\nChez SK Designer Luxe, nous appliquons ces principes à chaque création. Chaque logo est conçu sur mesure pour refléter l'identité unique de votre entreprise et marquer les esprits de votre audience. Contactez-nous pour discuter de votre projet !`
+    },
+    {
+      title: 'Comment réussir en digital en 2026',
+      excerpt: "Les stratégies clés pour se démarquer dans le monde du digital cette année. Marketing, design et présence en ligne.",
+      category: 'Digital',
+      date: '25 Juin 2026',
+      readTime: '6 min',
+      color: 'bg-emerald-100 text-emerald-700',
+      image: 'https://sfile.chatglm.cn/images-ppt/6345c222842a.jpg',
+      content: `Le paysage digital évolue à une vitesse vertigineuse, et 2026 n'est pas une exception. Que vous soyez entrepreneur, freelancer ou créateur de contenu à Bamako, voici les stratégies essentielles pour réussir votre transition numérique et vous démarquer de la concurrence.\n\n**1. Investissez dans une identité visuelle forte**\nDans un monde saturé de contenus visuels, votre identité graphique est votre meilleur atout. Un logo professionnel, une charte graphique cohérente et des visuels de qualité sont indispensables pour inspirer confiance et attirer des clients. Les entreprises qui investissent dans leur branding voient en moyenne une augmentation de 23% de leurs revenus. Ne sous-estimez jamais le pouvoir d'un premier visuel impactant.\n\n**2. Maîtrisez les réseaux sociaux**\nLes réseaux sociaux sont le canal d'acquisition client le plus efficace au Mali en 2026. Instagram, TikTok et Facebook dominent le marché. Créez du contenu régulier, authentique et engageant. Utilisez des outils professionnels comme CapCut Pro et PicsArt Pro pour des visuels et vidéos qui sortent du lot. La constance est la clé : publiez au minimum trois fois par semaine et interagissez avec votre communauté quotidiennement.\n\n**3. Ayez un site web professionnel**\nUn site web est votre vitrine ouverte 24h/24. En 2026, ne pas avoir de site web professionnel, c'est comme avoir un magasin sans enseigne. Un site vitrine bien conçu booste votre crédibilité et vous permet de toucher des clients au-delà de Bamako, dans tout le Mali et même en Afrique de l'Ouest. Optez pour un design moderne, rapide sur mobile et optimisé pour les moteurs de recherche.\n\n**4. Le marketing digital accessible à tous**\nVous n'avez pas besoin d'un gros budget pour faire du marketing digital efficace. Commencez par optimiser vos profils sociaux, créez du contenu à valeur ajoutée, et utilisez les publicités ciblées avec un petit budget. Les stories Instagram, les reels TikTok et les publications Facebook restent les formats les plus performants pour atteindre votre audience cible au Mali.\n\n**5. Automatisez et optimisez**\nUtilisez les outils numériques pour gagner du temps : planification des publications, réponses automatiques, gestion de la relation client. Plus vous automatisez les tâches répétitives, plus vous pouvez vous concentrer sur la création de valeur et le développement de votre activité. C'est un investissement qui paie rapidement.\n\nChez SK Designer Luxe, nous vous accompagnons dans chacune de ces étapes. De la création de votre identité visuelle au développement de votre site web, nous avons les outils et l'expertise pour propulser votre présence digitale. Contactez-nous pour un diagnostic gratuit de votre présence en ligne !`
+    },
+    {
+      title: 'Les tendances design graphique à suivre',
+      excerpt: "Minimalisme, gradients, typographies audacieuses... Tour d'horizon des tendances qui dominent le design cette année.",
+      category: 'Tendances',
+      date: '22 Juin 2026',
+      readTime: '5 min',
+      color: 'bg-purple-100 text-purple-700',
+      image: 'https://sfile.chatglm.cn/images-ppt/d247ebeec9b2.jpg',
+      content: `Le design graphique est en constante évolution, et rester à jour avec les dernières tendances est essentiel pour tout créateur ou entrepreneur soucieux de l'image de sa marque. Voici les tendances qui dominent le design graphique en 2026.\n\n**1. Le néo-minimalisme**\nLe minimalisme revient en force, mais avec une touche moderne. Fini les designs trop froids et stériles : le néo-minimalisme intègre des textures subtiles, des gradients doux et des micro-animations qui apportent de la vie sans surcharger. L'idée est de communiquer un maximum d'information avec un minimum d'éléments, tout en créant une expérience visuelle agréable et mémorable.\n\n**2. Les typographies audacieuses**\nEn 2026, la typographie devient le protagoniste du design. Les polices surdimensionnées, les lettres déformées, les mots disposés verticalement ou en spirale : tout est permis tant que le message reste lisible. Cette tendance est particulièrement visible sur les affiches événementielles et les visuels pour les réseaux sociaux, où l'impact immédiat est primordial.\n\n**3. Les gradients évolués**\nLes gradients ne sont pas nouveaux, mais en 2026, ils se font plus sophistiqués. On voit des dégradés de couleurs inattendues (mélange de pastel et de néon), des mesh gradients qui simulent des effets 3D, et des transitions de couleurs fluides qui créent de la profondeur. Cette technique est parfaite pour les fonds de site web, les affiches et les identités de marque dynamiques.\n\n**4. Le design inclusif et culturel**\nUne tendance forte en Afrique et particulièrement au Mali : l'intégration d'éléments culturels dans le design moderne. Les motifs traditionnels réinterprétés, les couleurs inspirées du patrimoine local, les typographies qui rendent hommage aux langues africaines. C'est une façon de créer des designs uniques qui racontent une histoire et renforcent l'identité culturelle tout en restant contemporains et professionnels.\n\n**5. L'intelligence artificielle comme outil créatif**\nL'IA est devenue un outil incontournable pour les designers. Elle permet de générer des concepts rapides, d'explorer des directions créatives et d'accélérer les processus de production. Cependant, la touche humaine reste irremplaçable pour le raffinement, la cohérence et l'émotion. Les meilleurs designers en 2026 sont ceux qui combinent la puissance de l'IA avec leur sensibilité artistique.\n\nCes tendances inspirent chacune de nos créations chez SK Designer Luxe. Nous intégrons les meilleures pratiques actuelles tout en adaptant chaque projet au contexte local et aux besoins spécifiques de nos clients. Envie d'un design tendance et unique ? Parlons de votre projet !`
+    },
+    {
+      title: "Pourquoi votre entreprise a besoin d'un site web",
+      excerpt: "Un site web professionnel est devenu indispensable pour toute entreprise. Découvrez pourquoi investir dans un site vitrine.",
+      category: 'Site Web',
+      date: '18 Juin 2026',
+      readTime: '5 min',
+      color: 'bg-blue-100 text-blue-700',
+      image: 'https://sfile.chatglm.cn/images-ppt/1e6a7645314b.png',
+      content: `En 2026, ne pas avoir de site web professionnel équivaut à être invisible pour une grande partie de votre marché potentiel. Voici pourquoi chaque entreprise, même la plus petite, a besoin d'une présence en ligne structurée et professionnelle.\n\n**1. Une vitrine ouverte 24h/24 et 7j/7**\nVotre site web travaille pour vous même quand vous dormez. Un client potentiel peut découvrir vos services, consulter votre portfolio, lire vos tarifs et vous contacter à tout moment. Au Mali, de plus en plus de consommateurs utilisent internet pour rechercher des services locaux avant de prendre une décision d'achat. Sans site web, vous perdez ces clients au profit de concurrents qui ont compris l'importance du digital.\n\n**2. Crédibilité et professionnalisme**\nUn site web bien conçu renforce instantanément la crédibilité de votre entreprise. Lorsqu'un client potentiel recherche votre nom ou votre activité et trouve un site professionnel avec des informations claires, des témoignages et un portfolio de qualité, il est beaucoup plus enclin à faire confiance. À l'inverse, l'absence de site web peut susciter des doutes sur le sérieux de l'entreprise.\n\n**3. Atteindre au-delà de Bamako**\nUn site web vous permet de toucher des clients dans tout le Mali, en Afrique de l'Ouest et même dans le monde entier. Vos services de design, création de logos ou montage vidéo ne sont pas limités géographiquement. Un portfolio en ligne bien organisé est votre meilleur outil de vente, accessible depuis n'importe où. C'est particulièrement vrai pour les freelancers et les petites entreprises qui cherchent à élargir leur clientèle.\n\n**4. Un investissement rentable**\nContrairement à ce que beaucoup pensent, créer un site web professionnel n'est pas un luxe réservé aux grandes entreprises. Avec des solutions modernes et des créateurs talentueux à Bamako, vous pouvez avoir un site vitrine de qualité à partir de 25 000 FCFA. C'est un investissement qui se rentabilise rapidement grâce aux nouveaux clients qu'il génère et à l'image professionnelle qu'il projette.\n\n**5. Optimisation pour les réseaux sociaux**\nVotre site web est le hub central de votre présence digitale. Tous vos profils sur les réseaux sociaux (Instagram, Facebook, TikTok) doivent renvoyer vers votre site web. C'est là que les clients trouvent toutes les informations détaillées, passent commande et vous contactent directement. Un site web structuré avec des appels à l'action clairs transforme les visiteurs en clients.\n\nChez SK Designer Luxe, nous créons des sites web professionnels, modernes et optimisés pour convertir les visiteurs en clients. Chaque site est conçu sur mesure avec un design responsive, une navigation intuitive et un temps de chargement rapide. Contactez-nous pour donner à votre entreprise la présence en ligne qu'elle mérite !`
+    },
+    {
+      title: 'Les outils indispensables pour un créateur de contenu',
+      excerpt: "CapCut Pro, PicsArt Pro, Canva... Découvrez les outils qui feront la différence dans votre production de contenu.",
+      category: 'Outils',
+      date: '15 Juin 2026',
+      readTime: '7 min',
+      color: 'bg-red-100 text-red-700',
+      image: 'https://sfile.chatglm.cn/images-ppt/0dcd8f4f7dd4.jpeg',
+      content: `La création de contenu de qualité nécessite les bons outils. Que vous soyez créateur de contenu sur les réseaux sociaux, entrepreneur ou passionné de design, voici les outils indispensables qui feront la différence dans votre production.\n\n**1. CapCut Pro : le roi du montage vidéo**\nCapCut Pro est devenu l'outil de montage vidéo incontournable pour les créateurs de contenu. Sa version Pro débloque des fonctionnalités avancées : effets spéciaux premium, transitions cinématiques, suppression automatique de fond, templates professionnels et export en haute qualité. Pour les créateurs maliens qui produisent du contenu pour TikTok, Instagram Reels ou YouTube, CapCut Pro est un investissement qui transforme la qualité de vos vidéos.\n\n**2. PicsArt Pro : l'atelier de design mobile**\nPicsArt Pro offre des centaines d'outils de retouche photo, de création graphique et de montage. Avec la version Pro, vous accédez à des filtres premium, des stickers exclusifs, des outils AI de suppression d'arrière-plan et des templates professionnels. C'est l'outil parfait pour créer des visuels de qualité pour les réseaux sociaux, des affiches promotionnelles ou des stories engageantes directement depuis votre téléphone.\n\n**3. Canva : le design accessible à tous**\nCanva a révolutionné le design graphique en le rendant accessible à tous. Avec son interface intuitive et ses milliers de templates, même sans compétences en design, vous pouvez créer des visuels professionnels. La version Pro offre encore plus de possibilités : images premium, outils de branding, planification des publications et collaboration en équipe. C'est l'outil idéal pour les entrepreneurs qui veulent gérer eux-mêmes leur communication visuelle.\n\n**4. Les outils de gestion et planification**\nAu-delà de la création, la planification est essentielle. Des outils comme Buffer, Later ou Planoly vous permettent de programmer vos publications à l'avance, d'analyser vos performances et d'optimiser votre stratégie de contenu. Une bonne organisation est souvent ce qui sépare les créateurs qui réussissent de ceux qui abandonnent.\n\n**5. L'importance d'avoir les versions Pro**\nLes versions gratuites de ces outils sont utiles, mais les versions Pro font une réelle différence dans la qualité finale de votre contenu. Les effets premium, l'absence de filigrane, les exports en haute résolution et les templates exclusifs justifient largement l'investissement. Chez SK Designer Luxe, nous proposons l'activation de CapCut Pro et PicsArt Pro à des prix accessibles pour tous les créateurs au Mali.\n\nInvestir dans les bons outils, c'est investir dans la qualité de votre contenu et, ultimement, dans la croissance de votre audience et de votre entreprise. SK Designer Luxe vous aide à accéder à ces outils premium à des tarifs imbattables. Contactez-nous pour en savoir plus !`
+    },
+    {
+      title: 'Comment attirer des clients avec le marketing digital',
+      excerpt: "Réseaux sociaux, publicité en ligne, branding... Les techniques éprouvées pour développer votre clientèle.",
+      category: 'Marketing',
+      date: '10 Juin 2026',
+      readTime: '6 min',
+      color: 'bg-teal-100 text-teal-700',
+      image: 'https://sfile.chatglm.cn/images-ppt/b994c44a4327.jpg',
+      content: `Le marketing digital est le levier de croissance le plus puissant et le plus accessible pour les entreprises au Mali. Voici les techniques éprouvées pour attirer des clients et développer votre activité, même avec un petit budget.\n\n**1. Construisez une marque forte**\nTout commence par l'identité visuelle. Un logo professionnel, des couleurs cohérentes et un ton de communication défini sont les fondations de votre stratégie marketing. Les clients font confiance aux marques qui ont une identité claire et cohérente. Investissez dans un logo de qualité, créez une charte graphique et appliquez-la systématiquement sur tous vos supports de communication. C'est la base de toute stratégie digitale réussie.\n\n**2. Le contenu est roi**\nCréez du contenu qui apporte de la valeur à votre audience. Tutoriels, avant-après, coulisses de votre travail, témoignages clients, conseils professionnels : chaque publication doit donner envie à votre audience de revenir et de s'engager. Au Mali, le contenu vidéo est particulièrement efficace sur TikTok et Instagram. Montrez votre savoir-faire, partagez vos réalisations et racontez l'histoire de votre entreprise.\n\n**3. Exploitez la publicité ciblée**\nMême avec un petit budget de 5 000 à 10 000 FCFA par semaine, vous pouvez atteindre des milliers de personnes grâce à la publicité Facebook et Instagram. Ciblez votre audience par localisation (Bamako, Mali), par centres d'intérêt et par démographie. Testez différentes créations publicitaires et mesurez les résultats pour optimiser vos campagnes. Le retour sur investissement peut être spectaculaire.\n\n**4. Le bouche-à-oreille digital**\nEncouragez vos clients satisfaits à laisser des avis, à taguer votre entreprise sur leurs publications et à recommander vos services. Un système de parrainage, comme celui proposé par SK Designer Luxe, est un excellent moyen de transformer vos clients existants en ambassadeurs de votre marque. Chaque client satisfait peut vous apporter 2 à 3 nouveaux clients grâce aux recommandations.\n\n**5. Soyez présent là où vos clients sont**\nIdentifiez les plateformes où votre audience cible passe le plus de temps. Pour le marché malien, Facebook et Instagram sont incontournables, TikTok est en forte croissance, et WhatsApp reste le canal de communication directe le plus utilisé. Adaptez votre contenu à chaque plateforme et soyez régulier dans vos publications. La constance bat l'intensité : mieux vaut publier trois fois par semaine pendant un an qu'une fois par jour pendant un mois.\n\nLe marketing digital n'est pas réservé aux grandes entreprises avec des budgets importants. Avec les bonnes stratégies, les bons outils et un peu de créativité, toute entreprise au Mali peut attirer des clients et croître grâce au digital. SK Designer Luxe vous accompagne avec des outils premium, des formations pratiques et des services de qualité pour booster votre présence en ligne !`
+    },
+  ]
+
+  // ═══ WAVE PAY HANDLER ═══
+  const handleWavePay = (name: string, price: number) => {
+    setWavePayService({ name, price })
+    setWavePayStep(1)
+    setWaveConfirmed(false)
+    setWavePayOpen(true)
+  }
 
   // ═══ REAL REFERRAL SYSTEM ═══
   const REFERRAL_CODE = 'CB-IBRA-2024'
@@ -1106,7 +1205,7 @@ export default function Home() {
                     'Contenu Réseaux Sociaux': Target, 'CapCut Pro': MonitorPlay, 'PicsArt Pro': PenTool,
                     'IPTV Pro': Tv, 'Livres Professionnels': BookOpen, 'Canva Pro': Palette,
                   }
-                  return <ServiceCard key={product.id} product={product} icon={iconMap[product.name] || Zap} />
+                  return <ServiceCard key={product.id} product={product} icon={iconMap[product.name] || Zap} onWavePay={handleWavePay} />
                 })
               }
             </StaggerContainer>
@@ -1145,7 +1244,7 @@ export default function Home() {
                       'IPTV Pro': Tv,
                       'Livres Professionnels': BookOpen,
                     }
-                    return <ServiceCard key={product.id} product={product} icon={iconMap[product.name] || Zap} />
+                    return <ServiceCard key={product.id} product={product} icon={iconMap[product.name] || Zap} onWavePay={handleWavePay} />
                   })
               }
             </StaggerContainer>
@@ -1215,7 +1314,7 @@ export default function Home() {
                       'IPTV Pro': Tv,
                       'Livres Professionnels': BookOpen,
                     }
-                    return <ServiceCard key={product.id} product={product} icon={iconMap[product.name] || Zap} />
+                    return <ServiceCard key={product.id} product={product} icon={iconMap[product.name] || Zap} onWavePay={handleWavePay} />
                   })
               }
             </StaggerContainer>
@@ -1242,15 +1341,28 @@ export default function Home() {
               </p>
             </FadeIn>
 
+            {/* Filter tabs */}
+            <FadeIn delay={0.1} className="flex flex-wrap items-center justify-center gap-2 mb-8">
+              {['Tous', 'Logo', 'Affiche', 'Site Web', 'Vidéo', 'Identité'].map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setPortfolioFilter(cat)}
+                  className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${portfolioFilter === cat ? 'bg-amber-500 text-white shadow-md shadow-amber-500/25' : 'bg-muted text-muted-foreground hover:bg-accent'}`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </FadeIn>
+
             <StaggerContainer className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
               {[
-                { title: 'Logo Restaurant Le Baobab', category: 'Logo', image: 'https://images.unsplash.com/photo-1626785774625-ddcddc3445e9?w=600&h=400&fit=crop', desc: 'Identité visuelle complète pour un restaurant traditionnel malien' },
-                { title: 'Affiche Festival Bamako', category: 'Affiche', image: 'https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=600&h=400&fit=crop', desc: 'Affiche événementielle pour un festival culturel à Bamako' },
-                { title: 'Site Web MaliTech Solutions', category: 'Site Web', image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop', desc: 'Site vitrine professionnel pour une entreprise tech malienne' },
-                { title: 'Logo Afro Fashion Store', category: 'Logo', image: 'https://images.unsplash.com/photo-1558655146-d09347e92766?w=600&h=400&fit=crop', desc: 'Logo moderne pour une boutique de mode africaine' },
-                { title: 'Montage Promo Produit', category: 'Vidéo', image: 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=600&h=400&fit=crop', desc: 'Montage vidéo promotionnel pour un lancement de produit' },
-                { title: 'Identité ESIA Business', category: 'Identité', image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&h=400&fit=crop', desc: 'Charte graphique complète pour une école de business' },
-              ].map((item) => (
+                { title: 'Logo Restaurant Le Baobab', category: 'Logo', image: 'https://sfile.chatglm.cn/images-ppt/3e8dbebc34bb.jpg', desc: 'Identité visuelle complète pour un restaurant traditionnel malien' },
+                { title: 'Affiche Festival Bamako', category: 'Affiche', image: 'https://sfile.chatglm.cn/images-ppt/0c5c9b1b948b.jpg', desc: 'Affiche événementielle pour un festival culturel à Bamako' },
+                { title: 'Site Web MaliTech Solutions', category: 'Site Web', image: 'https://sfile.chatglm.cn/images-ppt/1b5dd4b88cdf.png', desc: 'Site vitrine professionnel pour une entreprise tech malienne' },
+                { title: 'Logo Afro Fashion Store', category: 'Logo', image: 'https://sfile.chatglm.cn/images-ppt/57c1b49a60ba.jpg', desc: 'Logo moderne pour une boutique de mode africaine' },
+                { title: 'Montage Promo Produit', category: 'Vidéo', image: 'https://sfile.chatglm.cn/images-ppt/190eb04b2085.jpg', desc: 'Montage vidéo promotionnel pour un lancement de produit' },
+                { title: 'Identité ESIA Business', category: 'Identité', image: 'https://sfile.chatglm.cn/images-ppt/7bfadf1e1582.jpg', desc: 'Charte graphique complète pour une école de business' },
+              ].filter((item) => portfolioFilter === 'Tous' || item.category === portfolioFilter).map((item) => (
                 <motion.div key={item.title} variants={cardVariants}>
                   <Card className="overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 h-full group cursor-pointer">
                     <div className="relative h-48 sm:h-56 overflow-hidden">
@@ -1268,6 +1380,40 @@ export default function Home() {
                 </motion.div>
               ))}
             </StaggerContainer>
+
+            {/* Avant / Après Section */}
+            <FadeIn delay={0.4} className="mt-14">
+              <h3 className="text-xl font-bold text-center mb-2">Avant / Après</h3>
+              <p className="text-sm text-muted-foreground text-center mb-8 max-w-xl mx-auto">Voici quelques exemples concrets de transformations réalisées pour nos clients. Chaque projet est unique et pensé pour maximiser l'impact visuel.</p>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[
+                  { title: 'Refonte Logo Boutique', before: 'https://sfile.chatglm.cn/images-ppt/f972157605f2.jpg', after: 'https://sfile.chatglm.cn/images-ppt/082b6f181c95.jpg', desc: 'Logo basique transformé en identité premium' },
+                  { title: 'Affiche Événement', before: 'https://sfile.chatglm.cn/images-ppt/d2c6b53ee01b.jpg', after: 'https://sfile.chatglm.cn/images-ppt/d247ebeec9b2.jpg', desc: 'Affiche simple devenue visuel professionnel' },
+                  { title: 'Identité Complète', before: 'https://sfile.chatglm.cn/images-ppt/6c9261ec8848.jpg', after: 'https://sfile.chatglm.cn/images-ppt/0c5c9b1b948b.jpg', desc: 'De l\'amateur au professionnalisme total' },
+                ].map((item, i) => (
+                  <Card key={i} className="overflow-hidden border-0 shadow-lg group hover:shadow-xl transition-all duration-300">
+                    <div className="grid grid-cols-2 h-56">
+                      <div className="relative overflow-hidden">
+                        <img src={item.before} alt="Avant" className="w-full h-full object-cover" />
+                        <div className="absolute top-2 left-2">
+                          <span className="bg-red-500/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-full backdrop-blur-sm">AVANT</span>
+                        </div>
+                      </div>
+                      <div className="relative overflow-hidden">
+                        <img src={item.after} alt="Après" className="w-full h-full object-cover" />
+                        <div className="absolute top-2 left-2">
+                          <span className="bg-emerald-500/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-full backdrop-blur-sm">APRÈS</span>
+                        </div>
+                      </div>
+                    </div>
+                    <CardContent className="p-4">
+                      <h4 className="font-bold text-sm">{item.title}</h4>
+                      <p className="text-xs text-muted-foreground mt-1">{item.desc}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </FadeIn>
 
             <FadeIn delay={0.3} className="mt-8 text-center">
               <p className="text-sm text-muted-foreground">
@@ -2717,64 +2863,9 @@ export default function Home() {
             </FadeIn>
 
             <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[
-                {
-                  title: '5 conseils pour créer un logo mémorable',
-                  excerpt: "Découvrez les règles essentielles pour concevoir un logo qui marque les esprits et reste gravé dans la mémoire de votre audience. Un bon logo est la base de toute identité visuelle forte et professionnelle.",
-                  category: 'Design',
-                  date: '28 Juin 2026',
-                  readTime: '4 min',
-                  color: 'bg-amber-100 text-amber-700',
-                  image: 'https://images.unsplash.com/photo-1626785774625-ddcddc3445e9?w=600&h=400&fit=crop',
-                },
-                {
-                  title: 'Comment réussir en digital en 2026',
-                  excerpt: "Les stratégies clés pour se démarquer dans le monde du digital cette année. Marketing, design et présence en ligne : tout ce que vous devez savoir pour réussir votre transition numérique.",
-                  category: 'Digital',
-                  date: '25 Juin 2026',
-                  readTime: '6 min',
-                  color: 'bg-emerald-100 text-emerald-700',
-                  image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop',
-                },
-                {
-                  title: 'Les tendances design graphique à suivre',
-                  excerpt: "Minimalisme, gradients, typographies audacieuses... Tour d'horizon des tendances qui dominent le design cette année. Restez à la pointe et inspirez-vous des meilleures pratiques.",
-                  category: 'Tendances',
-                  date: '22 Juin 2026',
-                  readTime: '5 min',
-                  color: 'bg-purple-100 text-purple-700',
-                  image: 'https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=600&h=400&fit=crop',
-                },
-                {
-                  title: 'Pourquoi votre entreprise a besoin d\'un site web',
-                  excerpt: "Un site web professionnel est devenu indispensable pour toute entreprise. Découvrez pourquoi investir dans un site vitrine est la meilleure décision pour votre business et comment cela peut multiplier vos clients.",
-                  category: 'Site Web',
-                  date: '18 Juin 2026',
-                  readTime: '5 min',
-                  color: 'bg-blue-100 text-blue-700',
-                  image: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?w=600&h=400&fit=crop',
-                },
-                {
-                  title: 'Les outils indispensables pour un créateur de contenu',
-                  excerpt: "CapCut Pro, PicsArt Pro, Canva... Découvrez les outils qui feront la différence dans votre production de contenu. Comparatif détaillé et conseils pour choisir les bons outils selon vos besoins.",
-                  category: 'Outils',
-                  date: '15 Juin 2026',
-                  readTime: '7 min',
-                  color: 'bg-red-100 text-red-700',
-                  image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&h=400&fit=crop',
-                },
-                {
-                  title: 'Comment attirer des clients avec le marketing digital',
-                  excerpt: "Réseaux sociaux, publicité en ligne, branding... Les techniques éprouvées pour développer votre clientèle grâce au marketing digital, même avec un petit budget au Mali et en Afrique de l'Ouest.",
-                  category: 'Marketing',
-                  date: '10 Juin 2026',
-                  readTime: '6 min',
-                  color: 'bg-teal-100 text-teal-700',
-                  image: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=600&h=400&fit=crop',
-                },
-              ].map((article) => (
+              {blogArticles.map((article) => (
                 <motion.div key={article.title} variants={cardVariants}>
-                  <Card className="overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 h-full flex flex-col group">
+                  <Card className="overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 h-full flex flex-col group cursor-pointer" onClick={() => setSelectedArticle(article)}>
                     <div className="relative h-44 overflow-hidden">
                       <img src={article.image} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
@@ -2859,77 +2950,185 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ═══ POLITIQUE DE SERVICE ═══ */}
+        {/* ═══ POLITIQUE DE SERVICE + MENTIONS LÉGALES ═══ */}
         <section id="politique" className="py-16 sm:py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <FadeIn className="text-center mb-12">
               <Badge variant="secondary" className="mb-3 bg-gray-100 text-gray-700 border-gray-200">
-                <FileCheck className="h-3 w-3 mr-1" /> Règles
+                <FileCheck className="h-3 w-3 mr-1" /> Informations Légales
               </Badge>
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Politique de Service</h2>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Mentions Légales & Politiques</h2>
               <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
-                Nos conditions transparentes pour une collaboration sereine et efficace.
+                Transparence totale sur nos conditions de service, nos mentions légales et notre politique de confidentialité.
               </p>
             </FadeIn>
 
-            <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[
-                {
-                  icon: ShieldCheck,
-                  title: 'Satisfaction ou remboursement',
-                  desc: "Si le résultat ne correspond pas à votre commande, nous reprenons le travail gratuitement ou vous remboursons via Wave sous 48h.",
-                  color: 'text-emerald-500',
-                  bg: 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800',
-                },
-                {
-                  icon: CreditCard,
-                  title: 'Travail livré après paiement',
-                  desc: "Le travail est livré uniquement après confirmation complète du paiement. Cela garantit la sécurité des deux parties.",
-                  color: 'text-emerald-500',
-                  bg: 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800',
-                },
-                {
-                  icon: Timer,
-                  title: 'Délais respectés',
-                  desc: "Chaque délai annoncé est respecté scrupuleusement. Affiches et logos : 1-24h. Sites web : 1-3 jours. Formations : selon programme.",
-                  color: 'text-amber-500',
-                  bg: 'bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800',
-                },
-                {
-                  icon: Shield,
-                  title: 'Paiement sécurisé',
-                  desc: "Toutes les transactions passent par Wave de manière sécurisée. Paiement 50/50 ou total selon le service convenu.",
-                  color: 'text-blue-500',
-                  bg: 'bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800',
-                },
-                {
-                  icon: Lock,
-                  title: 'Propriété intellectuelle',
-                  desc: "Après livraison finale et paiement complet, les droits de propriété intellectuelle du travail sont transférés au client.",
-                  color: 'text-purple-500',
-                  bg: 'bg-purple-50 dark:bg-purple-950/20 border-purple-200 dark:border-purple-800',
-                },
-                {
-                  icon: CheckCircle2,
-                  title: 'Révisions incluses',
-                  desc: "Des révisions sont possibles avant validation finale pour s'assurer que le résultat correspond parfaitement à vos attentes.",
-                  color: 'text-teal-500',
-                  bg: 'bg-teal-50 dark:bg-teal-950/20 border-teal-200 dark:border-teal-800',
-                },
-              ].map((rule) => (
-                <motion.div key={rule.title} variants={cardVariants}>
-                  <Card className={`h-full border ${rule.bg}`}>
-                    <CardContent className="p-5">
-                      <div className="flex items-center gap-3 mb-3">
-                        <rule.icon className={`h-5 w-5 ${rule.color}`} />
-                        <h3 className="font-bold text-sm">{rule.title}</h3>
+            {/* Tab navigation */}
+            <FadeIn delay={0.1} className="flex flex-wrap items-center justify-center gap-3 mb-10">
+              <button onClick={() => setLegalPage(null)} className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${!legalPage ? 'bg-amber-500 text-white shadow-md' : 'bg-muted text-muted-foreground hover:bg-accent'}`}>
+                Conditions de Service
+              </button>
+              <button onClick={() => setLegalPage('mentions')} className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${legalPage === 'mentions' ? 'bg-amber-500 text-white shadow-md' : 'bg-muted text-muted-foreground hover:bg-accent'}`}>
+                Mentions Légales
+              </button>
+              <button onClick={() => setLegalPage('confidentialite')} className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${legalPage === 'confidentialite' ? 'bg-amber-500 text-white shadow-md' : 'bg-muted text-muted-foreground hover:bg-accent'}`}>
+                Politique de Confidentialité
+              </button>
+            </FadeIn>
+
+            {legalPage === null && (
+              <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[
+                  {
+                    icon: ShieldCheck,
+                    title: 'Satisfaction ou remboursement',
+                    desc: "Si le résultat ne correspond pas à votre commande, nous reprenons le travail gratuitement ou vous remboursons via Wave sous 48h.",
+                    color: 'text-emerald-500',
+                    bg: 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800',
+                  },
+                  {
+                    icon: CreditCard,
+                    title: 'Travail livré après paiement',
+                    desc: "Le travail est livré uniquement après confirmation complète du paiement. Cela garantit la sécurité des deux parties.",
+                    color: 'text-emerald-500',
+                    bg: 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800',
+                  },
+                  {
+                    icon: Timer,
+                    title: 'Délais respectés',
+                    desc: "Chaque délai annoncé est respecté scrupuleusement. Affiches et logos : 1-24h. Sites web : 1-3 jours. Formations : selon programme.",
+                    color: 'text-amber-500',
+                    bg: 'bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800',
+                  },
+                  {
+                    icon: Shield,
+                    title: 'Paiement sécurisé',
+                    desc: "Toutes les transactions passent par Wave de manière sécurisée. Paiement 50/50 ou total selon le service convenu.",
+                    color: 'text-blue-500',
+                    bg: 'bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800',
+                  },
+                  {
+                    icon: Lock,
+                    title: 'Propriété intellectuelle',
+                    desc: "Après livraison finale et paiement complet, les droits de propriété intellectuelle du travail sont transférés au client.",
+                    color: 'text-purple-500',
+                    bg: 'bg-purple-50 dark:bg-purple-950/20 border-purple-200 dark:border-purple-800',
+                  },
+                  {
+                    icon: CheckCircle2,
+                    title: 'Révisions incluses',
+                    desc: "Des révisions sont possibles avant validation finale pour s'assurer que le résultat correspond parfaitement à vos attentes.",
+                    color: 'text-teal-500',
+                    bg: 'bg-teal-50 dark:bg-teal-950/20 border-teal-200 dark:border-teal-800',
+                  },
+                ].map((rule) => (
+                  <motion.div key={rule.title} variants={cardVariants}>
+                    <Card className={`h-full border ${rule.bg}`}>
+                      <CardContent className="p-5">
+                        <div className="flex items-center gap-3 mb-3">
+                          <rule.icon className={`h-5 w-5 ${rule.color}`} />
+                          <h3 className="font-bold text-sm">{rule.title}</h3>
+                        </div>
+                        <p className="text-xs text-muted-foreground leading-relaxed">{rule.desc}</p>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                ))}
+              </StaggerContainer>
+            )}
+
+            {legalPage === 'mentions' && (
+              <FadeIn>
+                <Card className="border-0 shadow-lg max-w-4xl mx-auto">
+                  <CardContent className="p-6 sm:p-10 space-y-6">
+                    <h3 className="text-2xl font-bold">Mentions Légales</h3>
+                    <div className="space-y-5 text-sm text-muted-foreground leading-relaxed">
+                      <div>
+                        <h4 className="font-bold text-foreground text-base mb-2">1. Éditeur du site</h4>
+                        <p>Le site Créateur Boutique (createur-boutique.vercel.app) est édité par Sacko Ibrahim, freelance exerçant sous la marque commerciale SK Designer Luxe. L'activité est enregistrée à Bamako, République du Mali. L'éditeur peut être contacté par les moyens suivants : téléphone au +223 97 78 72 44, email à contact@skdesignerluxe.com, ou via WhatsApp au même numéro. Le siège social est situé à Bamako, Mali.</p>
                       </div>
-                      <p className="text-xs text-muted-foreground leading-relaxed">{rule.desc}</p>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </StaggerContainer>
+                      <div>
+                        <h4 className="font-bold text-foreground text-base mb-2">2. Activité</h4>
+                        <p>SK Designer Luxe propose des services de design graphique (création de logos, affiches, identités visuelles), de développement web (sites vitrines, sites e-commerce), de montage vidéo, de marketing digital, et de formation aux outils numériques professionnels (CapCut Pro, PicsArt Pro). Les services sont proposés en ligne et livrés numériquement aux clients situés au Mali et à l'international.</p>
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-foreground text-base mb-2">3. Hébergement</h4>
+                        <p>Le site est hébergé par Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, États-Unis. L'hébergeur assure la disponibilité et la sécurité technique du site web conformément à ses conditions générales d'utilisation. Vercel est un fournisseur d'hébergement reconnu et respecte les normes de sécurité internationales.</p>
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-foreground text-base mb-2">4. Propriété intellectuelle</h4>
+                        <p>L'ensemble du contenu du site (textes, images, graphismes, logos, icônes, mises en page, design) est la propriété exclusive de SK Designer Luxe ou de ses partenaires, et est protégé par les lois malienes et internationales relatives à la propriété intellectuelle. Toute reproduction, représentation, modification, publication, adaptation de tout ou partie des éléments du site, quel que soit le moyen ou le procédé utilisé, est interdite sans l'autorisation écrite préalable de SK Designer Luxe. Les travaux commandés par les clients deviennent leur propriété après paiement intégral de la facture correspondante.</p>
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-foreground text-base mb-2">5. Responsabilité</h4>
+                        <p>SK Designer Luxe s'efforce de fournir des informations aussi précises que possible sur le site. Toutefois, l'éditeur ne saurait être tenu responsable des omissions, des inexactitudes et des carences dans la mise à jour de ces informations, qu'elles soient de son fait ou du fait des tiers partenaires qui lui fournissent ces informations. Les informations et services proposés sur le site le sont à titre indicatif et sont susceptibles d'évoluer. L'éditeur ne garantit pas l'exactitude, la complétude ou l'actualité des informations diffusées sur le site.</p>
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-foreground text-base mb-2">6. Prix et paiement</h4>
+                        <p>Les prix affichés sur le site sont exprimés en FCFA (Franc CFA) et incluent les taxes applicables. Le paiement s'effectue exclusivement via l'application mobile Wave au numéro +223 97 78 72 44. Les modalités de paiement (50/50 ou intégral) sont convenues avec le client avant le début de chaque commande. Aucun travail n'est entamé sans confirmation préalable du paiement par le client.</p>
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-foreground text-base mb-2">7. Droit applicable et juridiction</h4>
+                        <p>Les présentes mentions légales sont régies par le droit malien. En cas de litige, les tribunaux de Bamako, République du Mali, seront seuls compétents. Avant toute action en justice, les parties s'engagent à rechercher une solution amiable par le biais de la médiation ou de la négociation directe via WhatsApp ou email.</p>
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-foreground text-base mb-2">8. Contact</h4>
+                        <p>Pour toute question relative aux présentes mentions légales, vous pouvez contacter SK Designer Luxe par email à contact@skdesignerluxe.com, par téléphone au +223 97 78 72 44, ou via le formulaire de contact du site. Nous nous engageons à répondre dans les meilleurs délais, sous 24 heures ouvrables.</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </FadeIn>
+            )}
+
+            {legalPage === 'confidentialite' && (
+              <FadeIn>
+                <Card className="border-0 shadow-lg max-w-4xl mx-auto">
+                  <CardContent className="p-6 sm:p-10 space-y-6">
+                    <h3 className="text-2xl font-bold">Politique de Confidentialité</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">Dernière mise à jour : 1er juillet 2026</p>
+                    <div className="space-y-5 text-sm text-muted-foreground leading-relaxed">
+                      <div>
+                        <h4 className="font-bold text-foreground text-base mb-2">1. Introduction</h4>
+                        <p>SK Designer Luxe s'engage à protéger la vie privée de ses utilisateurs. La présente politique de confidentialité explique comment nous collectons, utilisons, stockons et protégeons vos données personnelles lorsque vous visitez notre site web createur-boutique.vercel.app ou que vous utilisez nos services. En utilisant notre site, vous acceptez les pratiques décrites dans cette politique.</p>
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-foreground text-base mb-2">2. Données collectées</h4>
+                        <p>Nous pouvons collecter les données personnelles suivantes : votre nom complet, votre adresse email, votre numéro de téléphone, votre numéro Wave, les messages que vous nous envoyez via le formulaire de contact ou WhatsApp, votre adresse IP (collectée automatiquement par notre hébergeur), le type de navigateur et d'appareil utilisé, les pages visitées et la durée de la visite. Ces données sont collectées uniquement lorsque vous les fournissez volontairement via nos formulaires ou lors de votre interaction avec nos services.</p>
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-foreground text-base mb-2">3. Utilisation des données</h4>
+                        <p>Vos données personnelles sont utilisées exclusivement pour les finalités suivantes : répondre à vos demandes de contact et de devis, traiter vos commandes et assurer le suivi de la livraison, vous envoyer des informations relatives à vos commandes en cours, améliorer nos services et l'expérience utilisateur sur notre site, vous envoyer notre newsletter (uniquement si vous vous êtes inscrit volontairement), gérer le programme de parrainage et le suivi des transactions de dépôt/retrait dans le portefeuille. Nous ne vendons, ne louons et ne partageons jamais vos données personnelles avec des tiers à des fins commerciales.</p>
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-foreground text-base mb-2">4. Stockage et sécurité des données</h4>
+                        <p>Vos données sont stockées localement dans votre navigateur (localStorage) pour les fonctionnalités du site telles que le panier, les préférences d'affichage et le programme de parrainage. Les données de contact et de commande sont traitées principalement via WhatsApp pour garantir une communication directe et sécurisée. Nous mettons en oeuvre des mesures de sécurité techniques et organisationnelles appropriées pour protéger vos données contre tout accès non autorisé, toute modification, divulgation ou destruction. Cependant, aucune méthode de transmission sur Internet n'est totalement sécurisée, et nous ne pouvons garantir une sécurité absolue.</p>
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-foreground text-base mb-2">5. Cookies et technologies similaires</h4>
+                        <p>Notre site utilise le stockage local du navigateur (localStorage) pour mémoriser vos préférences (mode sombre/clair), le contenu de votre panier, les données du programme de parrainage et les paramètres de navigation. Contrairement aux cookies traditionnels, le localStorage ne transmet pas de données à des serveurs externes à chaque requête. Les données stockées localement restent sur votre appareil et ne sont accessibles que par notre site web. Vous pouvez effacer ces données à tout moment via les paramètres de votre navigateur.</p>
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-foreground text-base mb-2">6. Vos droits</h4>
+                        <p>Conformément à la législation malienne en vigueur, vous disposez des droits suivants concernant vos données personnelles : droit d'accès (obtenir une copie de vos données), droit de rectification (corriger des données inexactes), droit de suppression (demander la suppression de vos données), droit d'opposition (vous opposer au traitement de vos données), droit à la portabilité (recevoir vos données dans un format structuré). Pour exercer ces droits, contactez-nous à contact@skdesignerluxe.com ou au +223 97 78 72 44. Nous répondrons à votre demande dans un délai de 30 jours.</p>
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-foreground text-base mb-2">7. Services tiers</h4>
+                        <p>Notre site peut contenir des liens vers des services tiers (WhatsApp de Meta, Instagram, Facebook, YouTube, TikTok). Ces services ont leurs propres politiques de confidentialité, que nous vous encourageons à consulter. SK Designer Luxe n'est pas responsable des pratiques de confidentialité de ces sites tiers. L'utilisation de Wave pour les paiements est soumise aux conditions générales de Wave (Wave Financial, Inc.), qui est un service de paiement tiers indépendant.</p>
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-foreground text-base mb-2">8. Modifications de la politique</h4>
+                        <p>Nous nous réservons le droit de modifier la présente politique de confidentialité à tout moment. Toute modification sera publiée sur cette page avec la date de mise à jour. Nous vous encourageons à consulter cette page régulièrement pour rester informé de tout changement. L'utilisation continue de notre site après la publication de modifications constitue votre acceptation de ces modifications.</p>
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-foreground text-base mb-2">9. Contact</h4>
+                        <p>Pour toute question concernant la présente politique de confidentialité ou pour exercer vos droits, veuillez nous contacter par email à contact@skdesignerluxe.com, par téléphone au +223 97 78 72 44, ou via le formulaire de contact disponible sur notre site. SK Designer Luxe, Bamako, République du Mali.</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </FadeIn>
+            )}
           </div>
         </section>
 
@@ -3160,14 +3359,14 @@ export default function Home() {
                 </div>
 
                 <div className="mt-8 flex gap-3">
-                  <a href="#" className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors" aria-label="Instagram">
+                  <a href="https://www.instagram.com/sk_designer_luxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors" aria-label="Instagram">
                     <Instagram className="h-5 w-5 text-amber-600" />
                   </a>
-                  <a href="#" className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors" aria-label="Facebook">
+                  <a href="https://www.facebook.com/skdesignerluxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors" aria-label="Facebook">
                     <Facebook className="h-5 w-5 text-amber-600" />
                   </a>
-                  <a href="#" className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors" aria-label="Twitter">
-                    <Twitter className="h-5 w-5 text-amber-600" />
+                  <a href="https://www.tiktok.com/@sk_designer_luxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors" aria-label="TikTok">
+                    <Youtube className="h-5 w-5 text-amber-600" />
                   </a>
                 </div>
               </FadeIn>
@@ -3318,6 +3517,157 @@ export default function Home() {
           </span>
         </a>
       </div>
+
+      {/* ═══ WAVE PAYMENT DIALOG ═══ */}
+      <Dialog open={wavePayOpen} onOpenChange={(open) => { if (!open) { setWavePayOpen(false); setWavePayStep(1); setWaveConfirmed(false) } }}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-xl">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 text-white">
+                <Wallet className="h-5 w-5" />
+              </div>
+              <span>Paiement Wave</span>
+            </DialogTitle>
+            <DialogDescription>Paiement sécurisé via Wave — Rapide et fiable</DialogDescription>
+          </DialogHeader>
+
+          {!waveConfirmed ? (
+            <div className="space-y-4">
+              {wavePayStep === 1 && (
+                <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="space-y-4">
+                  <div className="p-4 rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20 border border-blue-200 dark:border-blue-800">
+                    <h4 className="font-bold text-sm text-blue-800 dark:text-blue-300">Résumé de la commande</h4>
+                    <div className="mt-2 flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">{wavePayService.name}</span>
+                      <span className="font-bold text-blue-700 dark:text-blue-400">{wavePayService.price.toLocaleString('fr-FR')} FCFA</span>
+                    </div>
+                  </div>
+
+                  <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800">
+                    <p className="text-xs text-amber-700 dark:text-amber-400 font-semibold mb-2 flex items-center gap-1.5">
+                      <span className="flex h-6 w-6 items-center justify-center rounded-md bg-blue-500 text-white text-[10px] font-bold">W</span>
+                      Étape 1 : Envoyez le paiement
+                    </p>
+                    <div className="flex items-center justify-between mt-2">
+                      <p className="text-lg font-bold text-foreground">+223 97 78 72 44</p>
+                      <button onClick={() => { navigator.clipboard.writeText('+22397787244'); toast({ title: 'Numéro copié !' }) }} className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 font-medium">
+                        <Copy className="h-3.5 w-3.5" /> Copier
+                      </button>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-2">
+                      1. Ouvrez votre application Wave<br />
+                      2. Envoyez <strong>{wavePayService.price.toLocaleString('fr-FR')} FCFA</strong> au numéro ci-dessus<br />
+                      3. Ajoutez en note : <strong>{wavePayService.name}</strong>
+                    </p>
+                  </div>
+
+                  <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold" onClick={() => setWavePayStep(2)}>
+                    J&apos;ai effectué le paiement <ArrowRight className="h-4 w-4 ml-2" />
+                  </Button>
+                </motion.div>
+              )}
+
+              {wavePayStep === 2 && (
+                <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-4">
+                  <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800">
+                    <p className="text-xs text-emerald-700 dark:text-emerald-400 font-semibold mb-2 flex items-center gap-1.5">
+                      <CheckCircle2 className="h-4 w-4" />
+                      Étape 2 : Confirmez votre paiement
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Après avoir envoyé le paiement via Wave, confirmez en cliquant ci-dessous. Un message pré-rempli sera envoyé sur WhatsApp pour validation rapide de votre commande.
+                    </p>
+                  </div>
+
+                  <div className="p-3 rounded-lg bg-muted/50 border text-center">
+                    <p className="text-xs text-muted-foreground mb-1">Montant à envoyer</p>
+                    <p className="text-2xl font-bold text-foreground">{wavePayService.price.toLocaleString('fr-FR')} <span className="text-sm font-medium text-muted-foreground">FCFA</span></p>
+                  </div>
+
+                  <a
+                    href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! J'ai effectué un paiement Wave de ${wavePayService.price.toLocaleString('fr-FR')} FCFA pour : ${wavePayService.name}. Veuillez confirmer la réception. Merci !`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => { setWaveConfirmed(true); toast({ title: 'Paiement confirmé !', description: 'Votre commande sera traitée après vérification.' }) }}
+                  >
+                    <Button className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-5 text-base">
+                      <MessageCircle className="h-5 w-5 mr-2" /> Confirmer via WhatsApp
+                    </Button>
+                  </a>
+
+                  <button onClick={() => setWavePayStep(1)} className="w-full text-center text-xs text-muted-foreground hover:text-foreground transition-colors py-1">
+                    Retour à l&apos;étape précédente
+                  </button>
+                </motion.div>
+              )}
+            </div>
+          ) : (
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-6 space-y-4">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30 mx-auto">
+                <CheckCircle2 className="h-8 w-8 text-emerald-600" />
+              </div>
+              <h3 className="text-lg font-bold text-emerald-700 dark:text-emerald-400">Paiement envoyé !</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Votre commande de <strong>{wavePayService.name}</strong> a été envoyée pour validation. Vous recevrez une confirmation sur WhatsApp sous peu. Merci pour votre confiance !
+              </p>
+              <Button onClick={() => { setWavePayOpen(false); setWavePayStep(1); setWaveConfirmed(false) }} className="bg-emerald-500 hover:bg-emerald-600 text-white">
+                Fermer
+              </Button>
+            </motion.div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* ═══ BLOG ARTICLE DIALOG ═══ */}
+      <Dialog open={!!selectedArticle} onOpenChange={() => setSelectedArticle(null)}>
+        <DialogContent className="sm:max-w-2xl max-h-[85vh] overflow-y-auto">
+          {selectedArticle && (
+            <>
+              <div className="relative h-56 sm:h-64 -mx-6 -mt-6 mb-4 overflow-hidden rounded-t-xl">
+                <img src={selectedArticle.image} alt={selectedArticle.title} className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                <div className="absolute bottom-4 left-6 right-6">
+                  <Badge className={selectedArticle.color + ' mb-2'}>{selectedArticle.category}</Badge>
+                  <h2 className="text-xl sm:text-2xl font-bold text-white leading-tight">{selectedArticle.title}</h2>
+                  <div className="flex items-center gap-3 text-white/80 text-xs mt-2">
+                    <span className="flex items-center gap-1"><Calendar className="h-3 w-3" />{selectedArticle.date}</span>
+                    <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{selectedArticle.readTime} de lecture</span>
+                  </div>
+                </div>
+              </div>
+              <div className="prose prose-sm dark:prose-invert max-w-none">
+                {selectedArticle.content.split('\n\n').map((paragraph, i) => {
+                  if (paragraph.startsWith('**') && paragraph.endsWith('**')) {
+                    return <h3 key={i} className="text-base font-bold mt-5 mb-2 text-foreground">{paragraph.replace(/\*\*/g, '')}</h3>
+                  }
+                  const parts = paragraph.split(/(\*\*[^*]+\*\*)/g)
+                  return (
+                    <p key={i} className="text-sm text-muted-foreground leading-relaxed mb-4">
+                      {parts.map((part, j) =>
+                        part.startsWith('**') && part.endsWith('**')
+                          ? <strong key={j} className="text-foreground font-semibold">{part.replace(/\*\*/g, '')}</strong>
+                          : part
+                      )}
+                    </p>
+                  )
+                })}
+              </div>
+              <div className="mt-6 pt-4 border-t flex flex-col sm:flex-row items-center gap-3">
+                <a
+                  href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! J'ai lu l'article "${selectedArticle.title}" sur votre site et j'aimerais en savoir plus sur vos services.`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Button className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold w-full sm:w-auto">
+                    <MessageCircle className="h-4 w-4 mr-2" /> Commander un service
+                  </Button>
+                </a>
+                <Button variant="outline" onClick={() => setSelectedArticle(null)} className="w-full sm:w-auto">Fermer l&apos;article</Button>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

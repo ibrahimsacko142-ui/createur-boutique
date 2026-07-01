@@ -1,4 +1,4 @@
-import { Instagram, Facebook, Twitter, Mail, MapPin, Phone, MessageCircle, Sparkles, Heart } from 'lucide-react'
+import { Instagram, Facebook, Mail, MapPin, Phone, MessageCircle, Sparkles, Heart } from 'lucide-react'
 // TikTok SVG icon component
 function TikTokIcon({ className = 'h-4.5 w-4.5' }: { className?: string }) {
   return (
@@ -45,16 +45,13 @@ export default function Footer() {
               Votre partenaire digital de confiance à Bamako. Design graphique, création de sites web, montage vidéo et outils numériques professionnels. Qualité, Créativité, Satisfaction.
             </p>
             <div className="flex gap-2.5 pt-1">
-              <a href="#" className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted hover:bg-amber-100 dark:hover:bg-amber-900/30 hover:text-amber-500 transition-all group" aria-label="Instagram">
+              <a href="https://www.instagram.com/sk_designer_luxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted hover:bg-amber-100 dark:hover:bg-amber-900/30 hover:text-amber-500 transition-all group" aria-label="Instagram">
                 <Instagram className="h-4.5 w-4.5" />
               </a>
-              <a href="#" className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted hover:bg-amber-100 dark:hover:bg-amber-900/30 hover:text-amber-500 transition-all group" aria-label="Facebook">
+              <a href="https://www.facebook.com/skdesignerluxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted hover:bg-amber-100 dark:hover:bg-amber-900/30 hover:text-amber-500 transition-all group" aria-label="Facebook">
                 <Facebook className="h-4.5 w-4.5" />
               </a>
-              <a href="#" className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted hover:bg-amber-100 dark:hover:bg-amber-900/30 hover:text-amber-500 transition-all group" aria-label="Twitter">
-                <Twitter className="h-4.5 w-4.5" />
-              </a>
-              <a href="#" className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted hover:bg-amber-100 dark:hover:bg-amber-900/30 hover:text-amber-500 transition-all group" aria-label="TikTok">
+              <a href="https://www.tiktok.com/@sk_designer_luxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted hover:bg-amber-100 dark:hover:bg-amber-900/30 hover:text-amber-500 transition-all group" aria-label="TikTok">
                 <TikTokIcon />
               </a>
               <a href="https://wa.me/22397787244" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted hover:bg-emerald-100 dark:hover:bg-emerald-900/30 hover:text-emerald-500 transition-all group" aria-label="WhatsApp">
@@ -132,7 +129,9 @@ export default function Footer() {
             &copy; {new Date().getFullYear()} SK Designer Luxe. Tous droits réservés. Fait avec <Heart className="h-3 w-3 text-red-500 fill-red-500" /> à Bamako, Mali.
           </p>
           <div className="flex items-center gap-4 text-xs text-muted-foreground">
-            <a href="#politique" className="hover:text-amber-600 transition-colors">Politique</a>
+            <a href="#politique" className="hover:text-amber-600 transition-colors">Mentions légales</a>
+            <span className="text-border">|</span>
+            <a href="#politique" className="hover:text-amber-600 transition-colors">Confidentialité</a>
             <span className="text-border">|</span>
             <a href="#faq" className="hover:text-amber-600 transition-colors">FAQ</a>
             <span className="text-border">|</span>
