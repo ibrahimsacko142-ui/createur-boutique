@@ -373,18 +373,102 @@ export default function Home() {
   const [walletTransactions, setWalletTransactions] = useState<{type: 'depot' | 'retrait'; amount: string; date: string; status: string}[]>([])
   const { toast } = useToast()
 
-  // Referral system with localStorage
+  // ═══ REAL REFERRAL SYSTEM ═══
   const REFERRAL_CODE = 'CB-IBRA-2024'
   const REFERRAL_KEY = 'createur-boutique-referral'
-  const [referralData, setReferralData] = useState<{ referred: { name: string; date: string; status: string }[]; totalEarned: number; totalReferred: number }>({ referred: [], totalEarned: 0, totalReferred: 0 })
-  const [referralName, setReferralName] = useState('')
+  const REFERRAL_VISITOR_KEY = 'createur-boutique-referred-visit'
 
+  interface ReferredPerson {
+    name: string
+    date: string
+    status: 'En attente' | 'Validé' | 'Annulé'
+    validatedAt?: string
+  }
+  const [referralData, setReferralData] = useState<{ referred: ReferredPerson[]; totalEarned: number; totalReferred: number; totalValidated: number; totalVisits: number }>({ referred: [], totalEarned: 0, totalReferred: 0, totalValidated: 0, totalVisits: 0 })
+  const [referralName, setReferralName] = useState('')
+  const [activeReferralCode, setActiveReferralCode] = useState('')
+  const [showReferralBanner, setShowReferralBanner] = useState(false)
+  const [referralCodeInput, setReferralCodeInput] = useState('')
+
+  // Load referral data from localStorage
   useEffect(() => {
     const saved = localStorage.getItem(REFERRAL_KEY)
     if (saved) {
-      try { setReferralData(JSON.parse(saved)) } catch {}
+      try {
+        const parsed = JSON.parse(saved)
+        // Migration: ensure new fields exist
+        setReferralData({
+          referred: parsed.referred || [],
+          totalEarned: parsed.totalEarned || 0,
+          totalReferred: parsed.totalReferred || 0,
+          totalValidated: parsed.totalValidated || 0,
+          totalVisits: parsed.totalVisits || 0,
+        })
+      } catch {}
     }
   }, [])
+
+  // Detect referral code from URL (?ref=CB-IBRA-2024)
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const params = new URLSearchParams(window.location.search)
+    const refCode = params.get('ref')
+    if (refCode && refCode === REFERRAL_CODE) {
+      // Check if this visit was already counted
+      const visitData = localStorage.getItem(REFERRAL_VISITOR_KEY)
+      if (!visitData) {
+        // First visit via referral - show banner and track
+        setActiveReferralCode(refCode)
+        setShowReferralBanner(true)
+        localStorage.setItem(REFERRAL_VISITOR_KEY, JSON.stringify({
+          code: refCode,
+          firstVisit: new Date().toISOString(),
+          visitCount: 1,
+          lastVisit: new Date().toISOString(),
+        }))
+        // Update total visits for the referrer (stored separately)
+ const visitStatsKey = 'createur-boutique-visit-stats'
+        const vStats = JSON.parse(localStorage.getItem(visitStatsKey) || '{"visits":0,"conversions":0}')
+        vStats.visits++
+        localStorage.setItem(visitStatsKey, JSON.stringify(vStats))
+        // Clean URL
+        window.history.replaceState({}, document.title, window.location.pathname)
+      } else {
+        // Returning visitor
+        const parsed = JSON.parse(visitData)
+        parsed.visitCount++
+        parsed.lastVisit = new Date().toISOString()
+        localStorage.setItem(REFERRAL_VISITOR_KEY, JSON.stringify(parsed))
+        window.history.replaceState({}, document.title, window.location.pathname)
+      }
+    }
+  }, [])
+
+  // Apply a referral code manually (for visitors who got the code verbally)
+  const applyReferralCode = () => {
+    const code = referralCodeInput.trim().toUpperCase()
+    if (!code) {
+      toast({ title: 'Code requis', description: 'Entrez votre code de parrainage.', variant: 'destructive' })
+      return
+    }
+    if (code === REFERRAL_CODE) {
+      setActiveReferralCode(code)
+      setShowReferralBanner(false)
+      localStorage.setItem(REFERRAL_VISITOR_KEY, JSON.stringify({
+        code: code,
+        firstVisit: new Date().toISOString(),
+        visitCount: 1,
+        lastVisit: new Date().toISOString(),
+      }))
+      toast({
+        title: 'Code appliqué avec succès !',
+        description: 'Vous bénéficiez de 10% de réduction sur votre prochaine commande. Mentionnez le code lors de votre commande WhatsApp.',
+      })
+      setReferralCodeInput('')
+    } else {
+      toast({ title: 'Code invalide', description: 'Ce code de parrainage n\'est pas reconnu. Vérifiez et réessayez.', variant: 'destructive' })
+    }
+  }
 
   const addReferral = () => {
     if (!referralName.trim()) {
@@ -392,16 +476,43 @@ export default function Home() {
       return
     }
     const now = new Date().toLocaleString('fr-FR')
-    const newEntry = { name: referralName.trim(), date: now, status: 'En attente' }
+    const newEntry: ReferredPerson = { name: referralName.trim(), date: now, status: 'En attente' }
     const updated = {
       referred: [newEntry, ...referralData.referred],
       totalEarned: referralData.totalEarned + 500,
       totalReferred: referralData.totalReferred + 1,
+      totalValidated: referralData.totalValidated,
+      totalVisits: referralData.totalVisits,
     }
     setReferralData(updated)
     localStorage.setItem(REFERRAL_KEY, JSON.stringify(updated))
     setReferralName('')
     toast({ title: 'Parrainage enregistré !', description: `${newEntry.name} a été ajouté. +500 FCFA de réduction accumulés.` })
+  }
+
+  const validateReferral = (index: number) => {
+    const updated = { ...referralData }
+    const entry = { ...updated.referred[index] }
+    if (entry.status === 'Validé') return
+    entry.status = 'Validé'
+    entry.validatedAt = new Date().toLocaleString('fr-FR')
+    updated.referred[index] = entry
+    updated.totalValidated = (updated.totalValidated || 0) + 1
+    setReferralData(updated)
+    localStorage.setItem(REFERRAL_KEY, JSON.stringify(updated))
+    toast({ title: 'Parrainage validé !', description: `${entry.name} est maintenant validé. Vos réductions sont confirmées.` })
+  }
+
+  const cancelReferral = (index: number) => {
+    const updated = { ...referralData }
+    const entry = { ...updated.referred[index] }
+    entry.status = 'Annulé'
+    updated.referred[index] = entry
+    updated.totalReferred = Math.max(0, updated.totalReferred - 1)
+    updated.totalEarned = Math.max(0, updated.totalEarned - 500)
+    setReferralData(updated)
+    localStorage.setItem(REFERRAL_KEY, JSON.stringify(updated))
+    toast({ title: 'Parrainage annulé', description: `${entry.name} a été retiré de la liste.` })
   }
 
   const getNextTier = () => {
@@ -416,6 +527,14 @@ export default function Home() {
     return { tiers, next, current, progress: next ? (referralData.totalReferred / next.at) * 100 : 100 }
   }
   const { tiers, next, current, progress } = getNextTier()
+
+  // Check if user has an active referral code (for WhatsApp messages)
+  const getWhatsAppWithReferral = (baseMsg: string) => {
+    if (activeReferralCode) {
+      return baseMsg + `\n\nMon code de parrainage : ${activeReferralCode} (10% de réduction)`
+    }
+    return baseMsg
+  }
 
   // Countdown timer
   useEffect(() => {
@@ -561,6 +680,68 @@ export default function Home() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* ═══ BANNIÈRE PARRAINAGE RÉFÉRÉ ═══ */}
+        <AnimatePresence>
+          {showReferralBanner && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="overflow-hidden bg-gradient-to-r from-emerald-600 via-teal-500 to-cyan-500 text-white relative"
+            >
+              <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIxIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMSkiLz48L3N2Zz4=')] opacity-50" />
+              <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3 flex-1">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm flex-shrink-0">
+                    <Gift className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold flex items-center gap-1.5">
+                      <Sparkles className="h-3.5 w-3.5" /> Vous avez été invité par un ami !
+                    </p>
+                    <p className="text-xs text-white/80 mt-0.5">
+                      Code <strong className="bg-white/20 px-1.5 py-0.5 rounded font-mono text-[11px]">{activeReferralCode}</strong> appliqué automatiquement — <strong>10% de réduction</strong> sur votre commande
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <a href="#services">
+                    <Button size="sm" className="h-8 text-xs bg-white text-emerald-600 hover:bg-white/90 font-bold px-4 shadow-md">
+                      Commander avec réduction
+                    </Button>
+                  </a>
+                  <button onClick={() => setShowReferralBanner(false)} className="text-white/80 hover:text-white transition-colors ml-1" aria-label="Fermer">
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* ═══ ACTIVE REFERRAL INDICATOR (sticky below header when code is applied) ═══ */}
+        <AnimatePresence>
+          {activeReferralCode && !showReferralBanner && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="overflow-hidden bg-emerald-50 dark:bg-emerald-950/20 border-b border-emerald-200 dark:border-emerald-800"
+            >
+              <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-center gap-3">
+                <CheckCircle2 className="h-4 w-4 text-emerald-600 flex-shrink-0" />
+                <p className="text-xs text-emerald-700 dark:text-emerald-400 font-medium">
+                  Code parrainage <strong className="font-mono">{activeReferralCode}</strong> actif — <strong>10% de réduction</strong> appliquée automatiquement sur votre commande
+                </p>
+                <button onClick={() => setActiveReferralCode('')} className="text-emerald-600 hover:text-emerald-800 transition-colors" aria-label="Retirer le code">
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* ═══ HERO ═══ */}
         <section id="accueil" className="relative overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-white dark:from-amber-950/20 dark:via-orange-950/10 dark:to-background">
           <div className="absolute top-0 -right-40 h-[500px] w-[500px] rounded-full bg-amber-200/40 dark:bg-amber-800/10 blur-3xl" />
@@ -595,6 +776,11 @@ export default function Home() {
                   transition={{ duration: 0.5, delay: 0.2 }}
                 >
                   Votre partenaire digital pour le design graphique, la création de sites web et les outils numériques professionnels. Qualité, Créativité, Satisfaction.
+                  {!activeReferralCode && (
+                    <span className="block mt-2 text-emerald-600 dark:text-emerald-400 font-medium">
+                      Avez un code parrainage ? <a href="#parrainage" className="underline hover:no-underline">Appliquez-le pour 10% de réduction</a>
+                    </span>
+                  )}
                 </motion.p>
 
                 <motion.div
