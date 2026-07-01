@@ -380,16 +380,22 @@ export default function Home() {
   }, [])
 
   useEffect(() => {
-    fetch('/api/products')
-      .then((r) => r.json())
-      .then((data: Product[]) => {
-        setProducts(data)
-        setLoading(false)
-      })
-      .catch(() => {
-        setLoading(false)
-        toast({ title: 'Erreur', description: 'Impossible de charger les services.', variant: 'destructive' })
-      })
+    const hardcodedProducts: Product[] = [
+      { id: 'p1', name: 'Formation Designer Graphique', description: 'Formation complète en design graphique avec pratique et accompagnement. Apprenez les bases et techniques avancées.', price: 20000, image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&h=400&fit=crop', category: 'service', featured: true, stock: 99 },
+      { id: 'p2', name: 'Affiche Professionnelle', description: 'Création d\'affiches publicitaires modernes, attractives et adaptées à votre marque. Design haute qualité.', price: 2000, image: 'https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=600&h=400&fit=crop', category: 'service', featured: true, stock: 99 },
+      { id: 'p3', name: 'Logo Professionnel', description: 'Création de logo unique avec identité visuelle complète. Fichiers sources inclus.', price: 5000, image: 'https://images.unsplash.com/photo-1626785774625-ddcddc3445e9?w=600&h=400&fit=crop', category: 'service', featured: true, stock: 99 },
+      { id: 'p4', name: 'Site Web Simple', description: 'Site web vitrine moderne, responsive et optimisé SEO. Parfait pour présenter votre activité.', price: 15000, image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop', category: 'service', featured: false, stock: 99 },
+      { id: 'p5', name: 'Site Web Professionnel', description: 'Site web complet avec fonctionnalités avancées, design sur mesure et hébergement inclus.', price: 25000, image: 'https://images.unsplash.com/photo-1547658719-da2b51169166?w=600&h=400&fit=crop', category: 'service', featured: true, stock: 99 },
+      { id: 'p6', name: 'Montage Vidéo Pro', description: 'Montage vidéo professionnel avec effets premium et transitions fluides via CapCut Pro.', price: 5000, image: 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=600&h=400&fit=crop', category: 'service', featured: false, stock: 99 },
+      { id: 'p7', name: 'Contenu Réseaux Sociaux', description: 'Création de visuels et contenus engageants pour vos réseaux sociaux. Pack mensuel disponible.', price: 10000, image: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=600&h=400&fit=crop', category: 'service', featured: false, stock: 99 },
+      { id: 'p8', name: 'CapCut Pro', description: 'Accès premium à CapCut Pro pour un montage vidéo professionnel sans filigrane. Compte activé.', price: 3000, image: 'https://images.unsplash.com/photo-1536240478700-b869070f9279?w=600&h=400&fit=crop', category: 'outil', featured: true, stock: 50 },
+      { id: 'p9', name: 'PicsArt Pro', description: 'Accès premium à PicsArt Pro pour le design mobile professionnel. Tous les outils débloqués.', price: 3000, image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&h=400&fit=crop', category: 'outil', featured: true, stock: 50 },
+      { id: 'p10', name: 'IPTV Pro', description: 'Accès IPTV Pro avec des milliers de chaînes TV en streaming haute qualité. Abonnement complet.', price: 5000, image: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=600&h=400&fit=crop', category: 'outil', featured: true, stock: 30 },
+      { id: 'p11', name: 'Livres Professionnels', description: 'Pack de livres numériques professionnels et éducatifs pour développer vos compétences.', price: 5000, image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600&h=400&fit=crop', category: 'outil', featured: false, stock: 99 },
+      { id: 'p12', name: 'Canva Pro', description: 'Accès premium à Canva Pro pour créer des designs professionnels. Templates illimités.', price: 3000, image: 'https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=600&h=400&fit=crop', category: 'outil', featured: false, stock: 50 },
+    ]
+    setProducts(hardcodedProducts)
+    setLoading(false)
   }, [])
 
   const filteredProducts = products.filter((p) => {
@@ -443,19 +449,12 @@ export default function Home() {
       return
     }
     setSending(true)
-    try {
-      await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(contactData),
-      })
-      toast({ title: 'Message envoyé !', description: 'Nous vous répondrons rapidement.' })
-      setContactData({ name: '', email: '', subject: '', message: '' })
-    } catch {
-      toast({ title: 'Erreur', description: "Impossible d'envoyer le message.", variant: 'destructive' })
-    } finally {
-      setSending(false)
-    }
+    // Redirect to WhatsApp with the message
+    const msg = encodeURIComponent(`Bonjour ! Je suis ${contactData.name} (${contactData.email}).\n\nSujet : ${contactData.subject || 'Général'}\n\n${contactData.message}`)
+    window.open(`https://wa.me/22397787244?text=${msg}`, '_blank')
+    toast({ title: 'Redirection vers WhatsApp', description: 'Votre message sera envoyé via WhatsApp pour une réponse rapide.' })
+    setContactData({ name: '', email: '', subject: '', message: '' })
+    setSending(false)
   }
 
   return (
@@ -495,12 +494,13 @@ export default function Home() {
         <section id="accueil" className="relative overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-white dark:from-amber-950/20 dark:via-orange-950/10 dark:to-background">
           <div className="absolute top-0 -right-40 h-[500px] w-[500px] rounded-full bg-amber-200/40 dark:bg-amber-800/10 blur-3xl" />
           <div className="absolute -bottom-20 -left-40 h-[400px] w-[400px] rounded-full bg-orange-200/30 dark:bg-orange-800/10 blur-3xl" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[300px] w-[300px] rounded-full bg-red-100/30 dark:bg-red-900/10 blur-3xl" />
 
           <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div>
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-                  <Badge variant="secondary" className="mb-4 px-3 py-1 text-xs font-medium bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800">
+                  <Badge variant="secondary" className="mb-4 px-3 py-1 text-xs font-medium bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800 shadow-sm">
                     <Zap className="h-3 w-3 mr-1" /> Services rapides, modernes et professionnels
                   </Badge>
                 </motion.div>
@@ -533,12 +533,12 @@ export default function Home() {
                   transition={{ duration: 0.5, delay: 0.3 }}
                 >
                   <a href="#services">
-                    <Button size="lg" className="bg-amber-500 hover:bg-amber-600 text-white font-semibold shadow-lg shadow-amber-500/25">
+                    <Button size="lg" className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 hover:from-amber-600 hover:via-orange-600 hover:to-red-600 text-white font-semibold shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 transition-all">
                       Voir mes services <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </a>
                   <a href="#competences">
-                    <Button size="lg" variant="outline" className="font-semibold">
+                    <Button size="lg" variant="outline" className="font-semibold hover:bg-accent">
                       Mes compétences
                     </Button>
                   </a>
@@ -551,10 +551,32 @@ export default function Home() {
                   transition={{ duration: 0.5, delay: 0.5 }}
                 >
                   {['Design Graphique', 'Sites Web', 'Montage Vidéo', 'Marketing Digital'].map((tag) => (
-                    <span key={tag} className="inline-flex items-center gap-1 rounded-full bg-white/80 dark:bg-white/5 border px-3 py-1 text-xs font-medium text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800">
-                      <CheckCircle2 className="h-3 w-3" /> {tag}
+                    <span key={tag} className="inline-flex items-center gap-1.5 rounded-full bg-white/80 dark:bg-white/5 border px-3.5 py-1.5 text-xs font-medium text-amber-700 dark:text-amber-400 border-amber-200/80 dark:border-amber-800 shadow-sm">
+                      <CheckCircle2 className="h-3 w-3 text-emerald-500" /> {tag}
                     </span>
                   ))}
+                </motion.div>
+
+                {/* Trust badges */}
+                <motion.div
+                  className="mt-8 flex items-center gap-4"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.7 }}
+                >
+                  <div className="flex -space-x-2">
+                    {['from-amber-400 to-orange-500','from-emerald-400 to-teal-500','from-purple-400 to-pink-500','from-blue-400 to-cyan-500'].map((g, i) => (
+                      <div key={i} className={`h-8 w-8 rounded-full border-2 border-white bg-gradient-to-br ${g}`} />
+                    ))}
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold">200+ Clients satisfaits</p>
+                    <div className="flex gap-0.5">
+                      {[1,2,3,4,5].map((s) => (
+                        <Star key={s} className="h-3 w-3 fill-amber-400 text-amber-400" />
+                      ))}
+                    </div>
+                  </div>
                 </motion.div>
               </div>
 
@@ -568,7 +590,7 @@ export default function Home() {
                 <div className="relative">
                   <div className="absolute -inset-4 bg-gradient-to-r from-amber-400/20 via-orange-400/20 to-red-400/20 rounded-3xl blur-2xl" />
                   <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/20">
-                    <img src="https://sfile.chatglm.cn/images-ppt/ab607e582b32.jpg" alt="Design professionnel" className="w-full h-[420px] object-cover" />
+                    <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?w=800&h=500&fit=crop" alt="Design professionnel" className="w-full h-[420px] object-cover" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                     <div className="absolute bottom-0 left-0 right-0 p-6">
                       <div className="flex gap-2 flex-wrap">
@@ -578,8 +600,8 @@ export default function Home() {
                       </div>
                     </div>
                   </div>
-                  {/* Floating card */}
-                  <div className="absolute -bottom-6 -left-6 bg-white dark:bg-card rounded-xl shadow-xl p-3 border flex items-center gap-3">
+                  {/* Floating cards */}
+                  <div className="absolute -bottom-6 -left-6 bg-white dark:bg-card rounded-xl shadow-xl p-3 border flex items-center gap-3 hover:scale-105 transition-transform cursor-default">
                     <div className="flex -space-x-2">
                       {[1,2,3,4].map((i) => (
                         <div key={i} className={`h-8 w-8 rounded-full border-2 border-white bg-gradient-to-br ${['from-amber-400 to-orange-500','from-emerald-400 to-teal-500','from-purple-400 to-pink-500','from-blue-400 to-cyan-500'][i-1]}`} />
@@ -588,6 +610,17 @@ export default function Home() {
                     <div>
                       <p className="text-xs font-bold">200+ Clients</p>
                       <p className="text-[10px] text-muted-foreground">Satisfaits</p>
+                    </div>
+                  </div>
+                  <div className="absolute -top-4 -right-4 bg-white dark:bg-card rounded-xl shadow-xl p-3 border hover:scale-105 transition-transform cursor-default">
+                    <div className="flex items-center gap-2">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30">
+                        <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold">Livraison 24h</p>
+                        <p className="text-[10px] text-muted-foreground">Garantie</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -975,12 +1008,12 @@ export default function Home() {
 
             <StaggerContainer className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
               {[
-                { title: 'Logo Restaurant Le Baobab', category: 'Logo', image: 'https://sfile.chatglm.cn/images-ppt/578379168282.jpg', desc: 'Identité visuelle complète pour un restaurant traditionnel malien' },
-                { title: 'Affiche Festival Bamako', category: 'Affiche', image: 'https://sfile.chatglm.cn/images-ppt/d9ef36365f4d.jpg', desc: 'Affiche événementielle pour un festival culturel à Bamako' },
-                { title: 'Site Web MaliTech Solutions', category: 'Site Web', image: 'https://sfile.chatglm.cn/images-ppt/f1278b508122.jpg', desc: 'Site vitrine professionnel pour une entreprise tech malienne' },
-                { title: 'Logo Afro Fashion Store', category: 'Logo', image: 'https://sfile.chatglm.cn/images-ppt/3dc783490d16.jpg', desc: 'Logo moderne pour une boutique de mode africaine' },
-                { title: 'Montage Promo Produit', category: 'Vidéo', image: 'https://sfile.chatglm.cn/images-ppt/ff818456f3fe.jpg', desc: 'Montage vidéo promotionnel pour un lancement de produit' },
-                { title: 'Identité ESIA Business', category: 'Identité', image: 'https://sfile.chatglm.cn/images-ppt/f7a36d737b82.png', desc: 'Charte graphique complète pour une école de business' },
+                { title: 'Logo Restaurant Le Baobab', category: 'Logo', image: 'https://images.unsplash.com/photo-1626785774625-ddcddc3445e9?w=600&h=400&fit=crop', desc: 'Identité visuelle complète pour un restaurant traditionnel malien' },
+                { title: 'Affiche Festival Bamako', category: 'Affiche', image: 'https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=600&h=400&fit=crop', desc: 'Affiche événementielle pour un festival culturel à Bamako' },
+                { title: 'Site Web MaliTech Solutions', category: 'Site Web', image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop', desc: 'Site vitrine professionnel pour une entreprise tech malienne' },
+                { title: 'Logo Afro Fashion Store', category: 'Logo', image: 'https://images.unsplash.com/photo-1558655146-d09347e92766?w=600&h=400&fit=crop', desc: 'Logo moderne pour une boutique de mode africaine' },
+                { title: 'Montage Promo Produit', category: 'Vidéo', image: 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=600&h=400&fit=crop', desc: 'Montage vidéo promotionnel pour un lancement de produit' },
+                { title: 'Identité ESIA Business', category: 'Identité', image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&h=400&fit=crop', desc: 'Charte graphique complète pour une école de business' },
               ].map((item) => (
                 <motion.div key={item.title} variants={cardVariants}>
                   <Card className="overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 h-full group cursor-pointer">
@@ -1167,10 +1200,12 @@ export default function Home() {
         </section>
 
         {/* ═══ FORMATIONS DISPONIBLES ═══ */}
-        <section id="formations" className="py-16 sm:py-20 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white relative overflow-hidden">
+        <section id="formations" className="py-16 sm:py-20 relative overflow-hidden text-white" style={{background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)'}}>
           <div className="absolute inset-0">
-            <div className="absolute top-10 right-10 h-72 w-72 bg-amber-500/10 rounded-full blur-3xl" />
-            <div className="absolute bottom-10 left-10 h-72 w-72 bg-orange-500/10 rounded-full blur-3xl" />
+            <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1400&h=800&fit=crop" alt="" className="w-full h-full object-cover opacity-10" />
+            <div className="absolute top-10 right-10 h-72 w-72 bg-amber-500/15 rounded-full blur-3xl" />
+            <div className="absolute bottom-10 left-10 h-72 w-72 bg-orange-500/15 rounded-full blur-3xl" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-96 w-96 bg-purple-500/10 rounded-full blur-3xl" />
           </div>
           <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <FadeIn>
@@ -1193,12 +1228,12 @@ export default function Home() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: '-40px' }}
                   transition={{ duration: 0.4, delay: i * 0.04, ease: 'easeOut' }}
-                  className="group flex items-center gap-4 p-4 rounded-xl bg-white/5 backdrop-blur border border-white/10 hover:bg-white/10 hover:border-amber-500/30 transition-all duration-300"
+                  className="group flex items-center gap-4 p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-amber-500/40 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/5"
                 >
-                  <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-amber-500/20 flex-shrink-0 group-hover:bg-amber-500/30 transition-colors">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 flex-shrink-0 group-hover:from-amber-500/30 group-hover:to-orange-500/30 transition-colors">
                     <form.icon className="h-5 w-5 text-amber-400" />
                   </div>
-                  <p className="text-sm font-medium text-slate-200 leading-relaxed">{form.text}</p>
+                  <p className="text-sm font-medium text-slate-200 leading-relaxed group-hover:text-white transition-colors">{form.text}</p>
                 </motion.div>
               ))}
             </div>
@@ -1449,17 +1484,23 @@ export default function Home() {
               </div>
               <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
                 {[
-                  { icon: Target, title: 'Entrepreneurs', desc: 'Créez une identité visuelle forte pour votre business et attirez plus de clients avec des designs professionnels.' },
-                  { icon: GraduationCap, title: 'Étudiants', desc: 'Développez vos compétences en design et digital avec nos formations abordables et nos outils pro.' },
-                  { icon: Building2, title: 'Entreprises', desc: 'Renforcez votre image de marque avec des supports de communication professionnels et modernes.' },
-                  { icon: Sparkles, title: 'Créateurs de contenu', desc: 'Boostez votre production de contenu avec du montage vidéo pro, des visuels réseaux sociaux et des outils premium.' },
+                  { icon: Target, title: 'Entrepreneurs', desc: 'Créez une identité visuelle forte pour votre business et attirez plus de clients avec des designs professionnels.', image: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=300&h=200&fit=crop' },
+                  { icon: GraduationCap, title: 'Étudiants', desc: 'Développez vos compétences en design et digital avec nos formations abordables et nos outils pro.', image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=300&h=200&fit=crop' },
+                  { icon: Building2, title: 'Entreprises', desc: 'Renforcez votre image de marque avec des supports de communication professionnels et modernes.', image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=300&h=200&fit=crop' },
+                  { icon: Sparkles, title: 'Créateurs de contenu', desc: 'Boostez votre production de contenu avec du montage vidéo pro, des visuels réseaux sociaux et des outils premium.', image: 'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=300&h=200&fit=crop' },
                 ].map((item) => (
                   <motion.div key={item.title} variants={cardVariants}>
-                    <Card className="h-full border-0 shadow-md text-center hover:shadow-lg transition-shadow">
-                      <CardContent className="p-5">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100 dark:bg-blue-900/30 mx-auto mb-3">
-                          <item.icon className="h-6 w-6 text-blue-600" />
+                    <Card className="h-full border-0 shadow-md text-center hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                      <div className="relative h-32 overflow-hidden">
+                        <img src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                        <div className="absolute bottom-3 left-1/2 -translate-x-1/2">
+                          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white shadow-lg">
+                            <item.icon className="h-6 w-6 text-amber-600" />
+                          </div>
                         </div>
+                      </div>
+                      <CardContent className="p-5">
                         <h3 className="font-bold text-sm mb-2">{item.title}</h3>
                         <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
                       </CardContent>
@@ -1541,7 +1582,7 @@ export default function Home() {
               <FadeIn>
                 <div className="relative">
                   <div className="rounded-2xl overflow-hidden shadow-xl h-[400px] relative">
-                    <img src="https://sfile.chatglm.cn/images-ppt/501b27e524a5.jpg" alt="Créateur Boutique - À propos" className="w-full h-full object-cover" />
+                    <img src="https://images.unsplash.com/photo-1559028012-481c04fa702d?w=800&h=500&fit=crop" alt="Créateur Boutique - À propos" className="w-full h-full object-cover" />
                     <div className="absolute inset-0 bg-gradient-to-t from-amber-900/80 via-amber-900/30 to-transparent" />
                     <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                       <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mb-3">
@@ -1785,15 +1826,15 @@ export default function Home() {
 
             <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {[
-                { text: "Travail très propre et rapide, j'ai vraiment aimé mon logo. Le résultat a dépassé mes attentes et la communication était excellente du début à la fin.", author: 'Client satisfait', note: 5 },
-                { text: "L'affiche était magnifique et professionnelle, je recommande fortement. Un vrai talent pour capturer l'essence de mon événement dans un visuel percutant.", author: 'Client événementiel', note: 5 },
-                { text: "Service sérieux et livraison rapide, très bon travail. J'ai pu utiliser le design immédiatement pour ma communication et le feedback de mes clients était très positif.", author: 'Entrepreneur', note: 5 },
-                { text: 'Mon site web est bien fait et moderne, merci beaucoup. La navigation est fluide, le design est professionnel et mes visiteurs sont impressionnés par la qualité.', author: 'Client digital', note: 5 },
-                { text: "Très bon designer, je vais revenir encore pour d'autres services. La créativité et le professionnalisme sont au rendez-vous à chaque fois.", author: 'Client fidèle', note: 5 },
-                { text: "Excellent rapport qualité-prix. Le montage vidéo était propre, les transitions étaient fluides et le rendu final était exactement ce que je voulais.", author: 'Client vidéo', note: 5 },
+                { text: "Travail très propre et rapide, j'ai vraiment aimé mon logo. Le résultat a dépassé mes attentes et la communication était excellente du début à la fin.", author: 'Amadou K.', note: 5, avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face' },
+                { text: "L'affiche était magnifique et professionnelle, je recommande fortement. Un vrai talent pour capturer l'essence de mon événement dans un visuel percutant.", author: 'Fatoumata D.', note: 5, avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face' },
+                { text: "Service sérieux et livraison rapide, très bon travail. J'ai pu utiliser le design immédiatement pour ma communication et le feedback de mes clients était très positif.", author: 'Ibrahim S.', note: 5, avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face' },
+                { text: 'Mon site web est bien fait et moderne, merci beaucoup. La navigation est fluide, le design est professionnel et mes visiteurs sont impressionnés par la qualité.', author: 'Mariam T.', note: 5, avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face' },
+                { text: "Très bon designer, je vais revenir encore pour d'autres services. La créativité et le professionnalisme sont au rendez-vous à chaque fois.", author: 'Moussa C.', note: 5, avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face' },
+                { text: "Excellent rapport qualité-prix. Le montage vidéo était propre, les transitions étaient fluides et le rendu final était exactement ce que je voulais.", author: 'Awa B.', note: 5, avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face' },
               ].map((avis, i) => (
                 <motion.div key={i} variants={cardVariants}>
-                  <Card className="h-full border-0 shadow-md hover:shadow-lg transition-shadow duration-300">
+                  <Card className="h-full border-0 shadow-md hover:shadow-xl transition-all duration-300 bg-gradient-to-b from-card to-card/80">
                     <CardContent className="p-6 flex flex-col h-full">
                       <div className="flex gap-0.5 mb-4">
                         {Array.from({ length: avis.note }).map((_, j) => (
@@ -1807,9 +1848,7 @@ export default function Home() {
                         </p>
                       </div>
                       <div className="mt-4 pt-4 border-t flex items-center gap-3">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
-                          <span className="text-xs font-bold text-amber-600">{avis.author.charAt(0)}</span>
-                        </div>
+                        <img src={avis.avatar} alt={avis.author} className="h-9 w-9 rounded-full object-cover ring-2 ring-amber-100 dark:ring-amber-900/30" />
                         <div>
                           <p className="text-sm font-medium">{avis.author}</p>
                           <p className="text-xs text-muted-foreground">Client vérifié</p>
@@ -2142,7 +2181,7 @@ export default function Home() {
                   date: '28 Juin 2026',
                   readTime: '4 min',
                   color: 'bg-amber-100 text-amber-700',
-                  image: 'https://sfile.chatglm.cn/images-ppt/578379168282.jpg',
+                  image: 'https://images.unsplash.com/photo-1626785774625-ddcddc3445e9?w=600&h=400&fit=crop',
                 },
                 {
                   title: 'Comment réussir en digital en 2026',
@@ -2151,7 +2190,7 @@ export default function Home() {
                   date: '25 Juin 2026',
                   readTime: '6 min',
                   color: 'bg-emerald-100 text-emerald-700',
-                  image: 'https://sfile.chatglm.cn/images-ppt/f1278b508122.jpg',
+                  image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop',
                 },
                 {
                   title: 'Les tendances design graphique à suivre',
@@ -2160,7 +2199,7 @@ export default function Home() {
                   date: '22 Juin 2026',
                   readTime: '5 min',
                   color: 'bg-purple-100 text-purple-700',
-                  image: 'https://sfile.chatglm.cn/images-ppt/d9ef36365f4d.jpg',
+                  image: 'https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=600&h=400&fit=crop',
                 },
                 {
                   title: 'Pourquoi votre entreprise a besoin d\'un site web',
@@ -2169,7 +2208,7 @@ export default function Home() {
                   date: '18 Juin 2026',
                   readTime: '5 min',
                   color: 'bg-blue-100 text-blue-700',
-                  image: 'https://sfile.chatglm.cn/images-ppt/ab607e582b32.jpg',
+                  image: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?w=600&h=400&fit=crop',
                 },
                 {
                   title: 'Les outils indispensables pour un créateur de contenu',
@@ -2178,7 +2217,7 @@ export default function Home() {
                   date: '15 Juin 2026',
                   readTime: '7 min',
                   color: 'bg-red-100 text-red-700',
-                  image: 'https://sfile.chatglm.cn/images-ppt/3dc783490d16.jpg',
+                  image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&h=400&fit=crop',
                 },
                 {
                   title: 'Comment attirer des clients avec le marketing digital',
@@ -2187,7 +2226,7 @@ export default function Home() {
                   date: '10 Juin 2026',
                   readTime: '6 min',
                   color: 'bg-teal-100 text-teal-700',
-                  image: 'https://sfile.chatglm.cn/images-ppt/ff818456f3fe.jpg',
+                  image: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=600&h=400&fit=crop',
                 },
               ].map((article) => (
                 <motion.div key={article.title} variants={cardVariants}>
@@ -2238,40 +2277,33 @@ export default function Home() {
                   icon: Shield,
                   title: 'Sérieux',
                   desc: "Chaque projet est traité avec le plus grand professionnalisme. Respect des délais, communication transparente et engagement total. Nous ne promettons que ce que nous pouvons tenir, et nous tenons tout ce que nous promettons.",
-                  color: 'from-emerald-500 to-teal-500',
-                  bgColor: 'bg-emerald-100 dark:bg-emerald-900/30',
-                  iconColor: 'text-emerald-600',
+                  gradient: 'from-emerald-500 to-teal-600',
                 },
                 {
                   icon: Sparkles,
                   title: 'Créativité',
                   desc: "Des idées originales et des designs uniques pour chaque client. Chaque création est pensée pour se démarquer et marquer les esprits. Nous repoussons les limites du design pour offrir des visuels qui captivent.",
-                  color: 'from-amber-500 to-orange-500',
-                  bgColor: 'bg-amber-100 dark:bg-amber-900/30',
-                  iconColor: 'text-amber-600',
+                  gradient: 'from-amber-500 to-orange-600',
                 },
                 {
                   icon: Zap,
                   title: 'Rapidité',
                   desc: "Des délais de livraison respectés sans compromis sur la qualité. Affiches et logos en 1 à 24h, sites web en 1 à 3 jours. Nous comprenons que votre temps est précieux et nous y répondons.",
-                  color: 'from-purple-500 to-pink-500',
-                  bgColor: 'bg-purple-100 dark:bg-purple-900/30',
-                  iconColor: 'text-purple-600',
+                  gradient: 'from-purple-500 to-pink-600',
                 },
                 {
                   icon: Heart,
                   title: 'Satisfaction Client',
                   desc: "Votre satisfaction est notre priorité numéro un. Nous travaillons main dans la main avec vous jusqu'au résultat parfait. Des révisions sont incluses pour garantir que chaque détail correspond à votre vision.",
-                  color: 'from-red-500 to-rose-500',
-                  bgColor: 'bg-red-100 dark:bg-red-900/30',
-                  iconColor: 'text-red-600',
+                  gradient: 'from-red-500 to-rose-600',
                 },
               ].map((valeur) => (
                 <motion.div key={valeur.title} variants={cardVariants}>
-                  <Card className="border-0 shadow-md hover:shadow-lg transition-shadow duration-300 h-full text-center">
-                    <CardContent className="p-6">
-                      <div className={`flex h-14 w-14 items-center justify-center rounded-2xl ${valeur.bgColor} mx-auto mb-4`}>
-                        <valeur.icon className={`h-7 w-7 ${valeur.iconColor}`} />
+                  <Card className="border-0 shadow-md hover:shadow-xl transition-all duration-300 h-full overflow-hidden group">
+                    <div className={`h-2 bg-gradient-to-r ${valeur.gradient}`} />
+                    <CardContent className="p-6 pt-8 text-center">
+                      <div className={`flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${valeur.gradient} text-white mx-auto mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                        <valeur.icon className="h-7 w-7" />
                       </div>
                       <h3 className="font-bold text-lg mb-2">{valeur.title}</h3>
                       <p className="text-xs text-muted-foreground leading-relaxed">{valeur.desc}</p>
@@ -2568,7 +2600,7 @@ export default function Home() {
                   </div>
                   <Button
                     type="submit"
-                    className="w-full bg-amber-500 hover:bg-amber-600 text-white font-semibold"
+                    className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold shadow-lg shadow-amber-500/20"
                     disabled={sending}
                   >
                     {sending ? (
@@ -2578,7 +2610,7 @@ export default function Home() {
                       </span>
                     ) : (
                       <span className="flex items-center gap-2">
-                        <Send className="h-4 w-4" /> Envoyer le message
+                        <MessageCircle className="h-4 w-4" /> Envoyer via WhatsApp
                       </span>
                     )}
                   </Button>

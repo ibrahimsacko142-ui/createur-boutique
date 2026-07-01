@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { ShoppingCart, Menu, X } from 'lucide-react'
+import { ShoppingCart, Menu, X, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { useCartStore } from '@/store/cart'
@@ -24,25 +24,25 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 shadow-sm">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
-        <a href="#accueil" className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500 text-white font-bold text-lg">
+        <a href="#accueil" className="flex items-center gap-2.5 group">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 text-white font-bold text-lg shadow-lg shadow-amber-500/25 group-hover:shadow-amber-500/40 transition-shadow">
             C
           </div>
           <span className="text-xl font-bold tracking-tight">
-            Créateur <span className="text-amber-500">Boutique</span>
+            Créateur <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">Boutique</span>
           </span>
         </a>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-1">
+        <nav className="hidden lg:flex items-center gap-0.5">
           {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-accent"
+              className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-accent"
             >
               {link.label}
             </a>
@@ -51,16 +51,23 @@ export default function Header() {
 
         {/* Cart + Mobile menu */}
         <div className="flex items-center gap-2">
+          {/* CTA Button Desktop */}
+          <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20commander%20un%20service%20chez%20Cr%C3%A9ateur%20Boutique." target="_blank" rel="noopener noreferrer" className="hidden sm:block">
+            <Button size="sm" className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold shadow-md shadow-amber-500/20 h-9 px-4 text-xs">
+              <Sparkles className="h-3.5 w-3.5 mr-1.5" /> Commander
+            </Button>
+          </a>
+
           {/* Cart Sheet */}
           <Sheet open={isOpen} onOpenChange={(open) => !open && closeCart()}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="relative">
+              <Button variant="ghost" size="icon" className="relative hover:bg-accent">
                 <ShoppingCart className="h-5 w-5" />
                 {itemCount() > 0 && (
                   <motion.span
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-amber-500 text-[10px] font-bold text-white"
+                    className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-[10px] font-bold text-white shadow-sm"
                   >
                     {itemCount()}
                   </motion.span>
@@ -70,7 +77,7 @@ export default function Header() {
             <SheetContent className="w-full sm:max-w-md flex flex-col">
               <SheetHeader>
                 <SheetTitle className="flex items-center gap-2">
-                  <ShoppingCart className="h-5 w-5" />
+                  <ShoppingCart className="h-5 w-5 text-amber-500" />
                   Mon Panier ({itemCount()})
                 </SheetTitle>
               </SheetHeader>
@@ -81,6 +88,7 @@ export default function Header() {
                     <div className="flex flex-col items-center justify-center h-full text-muted-foreground gap-3">
                       <ShoppingCart className="h-12 w-12 opacity-30" />
                       <p className="text-sm">Votre panier est vide</p>
+                      <p className="text-xs text-muted-foreground/60">Ajoutez des services pour commencer</p>
                     </div>
                   ) : (
                     <div className="space-y-4">
@@ -91,9 +99,9 @@ export default function Header() {
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
                           exit={{ opacity: 0, x: 20 }}
-                          className="flex gap-3 rounded-lg border p-3"
+                          className="flex gap-3 rounded-xl border p-3 hover:shadow-sm transition-shadow"
                         >
-                          <div className="h-16 w-16 flex-shrink-0 rounded-md bg-muted overflow-hidden">
+                          <div className="h-16 w-16 flex-shrink-0 rounded-lg bg-muted overflow-hidden">
                             {item.image ? (
                               <img src={item.image} alt={item.name} className="h-full w-full object-cover" />
                             ) : (
@@ -105,7 +113,7 @@ export default function Header() {
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium truncate">{item.name}</p>
                             <p className="text-sm font-bold text-amber-600 mt-1">
-                              {item.price.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}
+                              {item.price.toLocaleString('fr-FR')} FCFA
                             </p>
                             <div className="flex items-center gap-2 mt-2">
                               <Button
@@ -147,12 +155,14 @@ export default function Header() {
                   <div className="flex items-center justify-between text-lg font-bold">
                     <span>Total</span>
                     <span className="text-amber-600">
-                      {total().toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}
+                      {total().toLocaleString('fr-FR')} FCFA
                     </span>
                   </div>
-                  <Button className="w-full bg-amber-500 hover:bg-amber-600 text-white font-semibold">
-                    Commander
-                  </Button>
+                  <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20commander%20un%20service." target="_blank" rel="noopener noreferrer">
+                    <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-semibold shadow-md shadow-emerald-500/20">
+                      Commander via WhatsApp
+                    </Button>
+                  </a>
                 </div>
               )}
             </SheetContent>
@@ -160,14 +170,17 @@ export default function Header() {
 
           {/* Mobile Menu */}
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-            <SheetTrigger asChild className="md:hidden">
-              <Button variant="ghost" size="icon">
+            <SheetTrigger asChild className="lg:hidden">
+              <Button variant="ghost" size="icon" className="hover:bg-accent">
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-72">
               <SheetHeader>
-                <SheetTitle>Menu</SheetTitle>
+                <SheetTitle className="flex items-center gap-2">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 text-white font-bold text-xs">C</div>
+                  Menu
+                </SheetTitle>
               </SheetHeader>
               <nav className="flex flex-col gap-1 mt-4">
                 {navLinks.map((link) => (
@@ -175,12 +188,19 @@ export default function Header() {
                     key={link.href}
                     href={link.href}
                     onClick={() => setMobileOpen(false)}
-                    className="px-3 py-2.5 text-sm font-medium rounded-md hover:bg-accent transition-colors"
+                    className="px-3 py-2.5 text-sm font-medium rounded-lg hover:bg-accent transition-colors"
                   >
                     {link.label}
                   </a>
                 ))}
               </nav>
+              <div className="mt-6 px-3">
+                <a href="https://wa.me/22397787244" target="_blank" rel="noopener noreferrer" onClick={() => setMobileOpen(false)}>
+                  <Button className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold text-sm">
+                    <Sparkles className="h-4 w-4 mr-2" /> Commander maintenant
+                  </Button>
+                </a>
+              </div>
             </SheetContent>
           </Sheet>
         </div>
