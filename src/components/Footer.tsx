@@ -1,4 +1,12 @@
 import { Instagram, Facebook, Twitter, Mail, MapPin, Phone, MessageCircle, Sparkles, Heart } from 'lucide-react'
+// TikTok SVG icon component
+function TikTokIcon({ className = 'h-4.5 w-4.5' }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.87a8.16 8.16 0 0 0 4.77 1.52V6.94a4.85 4.85 0 0 1-1.01-.25z" />
+    </svg>
+  )
+}
 
 export default function Footer() {
   return (
@@ -27,10 +35,10 @@ export default function Footer() {
           <div className="space-y-4">
             <div className="flex items-center gap-2.5">
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 text-white font-bold text-lg shadow-lg shadow-amber-500/20">
-                C
+                S
               </div>
               <span className="text-lg font-bold">
-                Créateur <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">Boutique</span>
+                SK <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">Designer Luxe</span>
               </span>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
@@ -45,6 +53,9 @@ export default function Footer() {
               </a>
               <a href="#" className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted hover:bg-amber-100 dark:hover:bg-amber-900/30 hover:text-amber-500 transition-all group" aria-label="Twitter">
                 <Twitter className="h-4.5 w-4.5" />
+              </a>
+              <a href="#" className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted hover:bg-amber-100 dark:hover:bg-amber-900/30 hover:text-amber-500 transition-all group" aria-label="TikTok">
+                <TikTokIcon />
               </a>
               <a href="https://wa.me/22397787244" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted hover:bg-emerald-100 dark:hover:bg-emerald-900/30 hover:text-emerald-500 transition-all group" aria-label="WhatsApp">
                 <MessageCircle className="h-4.5 w-4.5" />
@@ -97,7 +108,7 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-2.5 text-sm text-muted-foreground">
                 <Mail className="h-4 w-4 flex-shrink-0 text-amber-500" />
-                <span>contact@createurboutique.com</span>
+                <span>contact@skdesignerluxe.com</span>
               </li>
               <li className="flex items-center gap-2.5 text-sm text-muted-foreground">
                 <MessageCircle className="h-4 w-4 flex-shrink-0 text-emerald-500" />
@@ -118,7 +129,7 @@ export default function Footer() {
 
         <div className="mt-10 border-t pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-muted-foreground flex items-center gap-1">
-            &copy; {new Date().getFullYear()} Créateur Boutique. Tous droits réservés. Fait avec <Heart className="h-3 w-3 text-red-500 fill-red-500" /> à Bamako, Mali.
+            &copy; {new Date().getFullYear()} SK Designer Luxe. Tous droits réservés. Fait avec <Heart className="h-3 w-3 text-red-500 fill-red-500" /> à Bamako, Mali.
           </p>
           <div className="flex items-center gap-4 text-xs text-muted-foreground">
             <a href="#politique" className="hover:text-amber-600 transition-colors">Politique</a>

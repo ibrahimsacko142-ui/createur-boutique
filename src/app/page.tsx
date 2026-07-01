@@ -236,7 +236,7 @@ function ServiceCard({ product, icon: Icon }: { product: Product; icon: React.El
               <Icon className="h-5 w-5 text-amber-500" />
               {selected?.name}
             </DialogTitle>
-            <DialogDescription>{selected ? categoryLabel : ''} Créateur Boutique</DialogDescription>
+            <DialogDescription>{selected ? categoryLabel : ''} SK Designer Luxe</DialogDescription>
           </DialogHeader>
           {selected && (
             <div className="space-y-4">
@@ -371,6 +371,9 @@ export default function Home() {
   const [walletName, setWalletName] = useState('')
   const [walletPhone, setWalletPhone] = useState('')
   const [walletTransactions, setWalletTransactions] = useState<{type: 'depot' | 'retrait'; amount: string; date: string; status: string}[]>([])
+  const [serviceCategory, setServiceCategory] = useState('all')
+  const [portfolioFilter, setPortfolioFilter] = useState('Tous')
+  const [quickOrder, setQuickOrder] = useState({ service: '', name: '', phone: '', description: '' })
   const { toast } = useToast()
 
   // ═══ REAL REFERRAL SYSTEM ═══
@@ -579,7 +582,7 @@ export default function Home() {
     // Welcome notification after a short delay
     const timer = setTimeout(() => {
       toast({
-        title: 'Bienvenue chez Créateur Boutique !',
+        title: 'Bienvenue chez SK Designer Luxe !',
         description: 'Découvrez nos services et profitez de 10% de réduction avec le code CB-IBRA-2024.',
       })
     }, 2000)
@@ -763,10 +766,17 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.1 }}
                 >
-                  Bienvenue chez{' '}
                   <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 bg-clip-text text-transparent">
-                    Créateur Boutique
+                    SK Designer Luxe
                   </span>
+                  <motion.span
+                    className="block text-lg sm:text-xl font-medium text-muted-foreground mt-2"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.25 }}
+                  >
+                    L&apos;excellence du design digital en Afrique
+                  </motion.span>
                 </motion.h1>
 
                 <motion.p
@@ -775,7 +785,7 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.2 }}
                 >
-                  Votre partenaire digital pour le design graphique, la création de sites web et les outils numériques professionnels. Qualité, Créativité, Satisfaction.
+                  Je suis Sacko, créateur digital passionné basé à Bamako. Je transforme vos idées en réalisations digitales concrètes, efficaces et professionnelles — logos, sites web, montages vidéo et bien plus encore. Qualité, Créativité, Satisfaction.
                   {!activeReferralCode && (
                     <span className="block mt-2 text-emerald-600 dark:text-emerald-400 font-medium">
                       Avez un code parrainage ? <a href="#parrainage" className="underline hover:no-underline">Appliquez-le pour 10% de réduction</a>
@@ -947,7 +957,7 @@ export default function Home() {
               </Badge>
               <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Comment Ça Marche ?</h2>
               <p className="mt-4 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                Commander chez Créateur Boutique est simple et rapide. Suivez ces 4 étapes pour obtenir votre design, site web ou outil numérique en moins de 24 heures.
+                Commander chez SK Designer Luxe est simple et rapide. Suivez ces 4 étapes pour obtenir votre design, site web ou outil numérique en moins de 24 heures.
               </p>
             </FadeIn>
 
@@ -1041,63 +1051,65 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ═══ SERVICES & TARIFS ═══ */}
-        <section id="services" className="py-16 sm:py-20">
+        {/* ═══ SERVICES & TARIFS PAR CATÉGORIE ═══ */}
+        <section id="services" className="py-20 sm:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <FadeIn className="text-center mb-12">
+            <FadeIn className="text-center mb-10">
               <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
                 <Sparkles className="h-3 w-3 mr-1" /> Tarifs
               </Badge>
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Mes Services & Tarifs</h2>
-              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
-                Des services rapides, modernes et professionnels adaptés à tous les budgets. Que vous soyez un entrepreneur, un étudiant ou une entreprise, nous avons la solution qu&apos;il vous faut. Chaque service est livré avec soin et un accompagnement personnalisé.
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Nos Services & Tarifs</h2>
+              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                Des services premium adaptés à tous les budgets. Chaque prestation est livrée avec soin, révisions incluses et accompagnement personnalisé par Sacko.
               </p>
             </FadeIn>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              <PricingCard
-                name="Formation Designer Graphique"
-                price={20000}
-                description="Formation complète en design graphique avec pratique et accompagnement. Apprenez les bases et techniques avancées pour créer des visuels professionnels avec Canva Pro et d'autres outils."
-                icon={Palette}
-                delay={0}
-              />
-              <PricingCard
-                name="Affiche Professionnelle"
-                price={2000}
-                description="Création d'affiches publicitaires modernes, attractives et adaptées à votre marque. Design haute qualité, format personnalisé et prêt pour impression ou partage digital."
-                icon={PenTool}
-                delay={0.1}
-              />
-              <PricingCard
-                name="Logo Professionnel"
-                price={5000}
-                description="Création de logo unique avec identité visuelle de marque complète. Fichiers sources inclus, plusieurs variantes et guide d'utilisation pour une image professionnelle cohérente."
-                icon={Sparkles}
-                delay={0.2}
-              />
-              <PricingCard
-                name="Site Web Simple"
-                price={15000}
-                description="Site web vitrine moderne, responsive et optimisé pour les moteurs de recherche. Parfait pour présenter votre activité en ligne avec un design professionnel."
-                icon={Globe}
-                delay={0.3}
-              />
-              <PricingCard
-                name="Site Web Professionnel"
-                price={25000}
-                description="Site web professionnel complet avec fonctionnalités avancées, design sur mesure, optimisation SEO et hébergement inclus. Une présence en ligne qui impressionne."
-                icon={Globe}
-                delay={0.4}
-              />
-              <PricingCard
-                name="Montage Vidéo Pro"
-                price={5000}
-                description="Montage vidéo professionnel avec CapCut Pro. Effets premium, transitions fluides, synchronisation musicale et export en haute qualité pour réseaux sociaux ou présentations."
-                icon={MonitorPlay}
-                delay={0.5}
-              />
-            </div>
+            {/* Category tabs */}
+            <FadeIn delay={0.05} className="flex flex-wrap justify-center gap-2 mb-10">
+              {[
+                { key: 'all', label: 'Tous les services', icon: Layers },
+                { key: 'design', label: 'Design Graphique', icon: Palette },
+                { key: 'web', label: 'Sites Web', icon: Globe },
+                { key: 'video', label: 'Montage Vidéo', icon: MonitorPlay },
+                { key: 'outil', label: 'Outils & Ressources', icon: Wrench },
+                { key: 'formation', label: 'Formations', icon: GraduationCap },
+              ].map((cat) => (
+                <button
+                  key={cat.key}
+                  onClick={() => setServiceCategory(cat.key)}
+                  className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold transition-all duration-200 border ${
+                    serviceCategory === cat.key
+                      ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white border-transparent shadow-md shadow-amber-500/20'
+                      : 'bg-card text-muted-foreground hover:text-foreground hover:border-amber-300 dark:hover:border-amber-700'
+                  }`}
+                >
+                  <cat.icon className="h-3.5 w-3.5" /> {cat.label}
+                </button>
+              ))}
+            </FadeIn>
+
+            <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {products
+                .filter((p) => {
+                  if (serviceCategory === 'all') return true
+                  if (serviceCategory === 'design') return p.category === 'service' && ['Affiche', 'Logo', 'Contenu'].some(k => p.name.includes(k))
+                  if (serviceCategory === 'web') return p.category === 'service' && p.name.includes('Site')
+                  if (serviceCategory === 'video') return p.category === 'service' && p.name.includes('Vidéo')
+                  if (serviceCategory === 'outil') return p.category === 'outil'
+                  if (serviceCategory === 'formation') return p.name.includes('Formation')
+                  return true
+                })
+                .map((product) => {
+                  const iconMap: Record<string, React.ElementType> = {
+                    'Formation Designer Graphique': Palette, 'Affiche Professionnelle': PenTool, 'Logo Professionnel': Sparkles,
+                    'Site Web Simple': Globe, 'Site Web Professionnel': Globe, 'Montage Vidéo Pro': MonitorPlay,
+                    'Contenu Réseaux Sociaux': Target, 'CapCut Pro': MonitorPlay, 'PicsArt Pro': PenTool,
+                    'IPTV Pro': Tv, 'Livres Professionnels': BookOpen, 'Canva Pro': Palette,
+                  }
+                  return <ServiceCard key={product.id} product={product} icon={iconMap[product.name] || Zap} />
+                })
+              }
+            </StaggerContainer>
           </div>
         </section>
 
@@ -1414,7 +1426,7 @@ export default function Home() {
               </Badge>
               <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Pourquoi Nous Choisir ?</h2>
               <p className="mt-4 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                Des centaines de clients nous font confiance à Bamako et au-delà. Voici ce qui nous distingue des autres et fait de Créateur Boutique le meilleur choix pour vos projets digitaux.
+                  Des centaines de clients font confiance à Sacko et SK Designer Luxe à Bamako et au-delà. Voici ce qui nous distingue et fait de SK Designer Luxe le meilleur choix pour vos projets digitaux.
               </p>
             </FadeIn>
 
@@ -1799,14 +1811,14 @@ export default function Home() {
               <FadeIn>
                 <div className="relative">
                   <div className="rounded-2xl overflow-hidden shadow-xl h-[400px] relative">
-                    <img src="https://images.unsplash.com/photo-1559028012-481c04fa702d?w=800&h=500&fit=crop" alt="Créateur Boutique - À propos" className="w-full h-full object-cover" />
+                    <img src="https://images.unsplash.com/photo-1559028012-481c04fa702d?w=800&h=500&fit=crop" alt="SK Designer Luxe par Sacko - À propos" className="w-full h-full object-cover" />
                     <div className="absolute inset-0 bg-gradient-to-t from-amber-900/80 via-amber-900/30 to-transparent" />
                     <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                       <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mb-3">
                         <Palette className="h-7 w-7" />
                       </div>
-                      <h3 className="text-2xl font-bold">Créateur Boutique</h3>
-                      <p className="mt-1 text-white/80 text-sm">Design &bull; Digital &bull; Créativité</p>
+                      <h3 className="text-2xl font-bold">SK Designer Luxe</h3>
+                      <p className="mt-1 text-white/80 text-sm">par Sacko &bull; Design &bull; Digital &bull; Créativité</p>
                     </div>
                   </div>
                   <div className="absolute -bottom-6 -right-6 bg-white dark:bg-card rounded-2xl p-5 shadow-xl border hidden sm:block">
@@ -2070,7 +2082,7 @@ export default function Home() {
                       <Play className="h-8 w-8 text-white ml-1" fill="white" />
                     </motion.div>
                     <p className="text-white/80 text-sm">Vidéo de présentation</p>
-                    <p className="text-white/50 text-xs mt-1">Créateur Boutique</p>
+                    <p className="text-white/50 text-xs mt-1">SK Designer Luxe</p>
                   </div>
                   {/* Decorative elements */}
                   <div className="absolute top-4 right-4 flex gap-1.5">
@@ -2207,9 +2219,9 @@ export default function Home() {
 
             <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {[
-                { name: 'Amadou Diallo', role: 'Entrepreneur, Bamako', text: 'Excellent travail ! J\'ai commandé un logo et une affiche pour mon entreprise. Le résultat était professionnel et livré en moins de 24h. Je recommande vivement Créateur Boutique à tous les entrepreneurs.', rating: 5, avatar: 'AD', gradient: 'from-amber-400 to-orange-500' },
-                { name: 'Fatoumata Traoré', role: 'Étudiante, Université de Bamako', text: 'La formation en design graphique m\'a permis de développer mes compétences rapidement. Les explications sont claires et le suivi est personnalisé. Merci Créateur Boutique !', rating: 5, avatar: 'FT', gradient: 'from-emerald-400 to-teal-500' },
-                { name: 'Ibrahim Keita', role: 'Gérant de restaurant', text: 'Les visuels pour mes réseaux sociaux sont incroyables. Mon engagement a augmenté de 300% depuis que je travaille avec Créateur Boutique. Service au top !', rating: 5, avatar: 'IK', gradient: 'from-purple-400 to-pink-500' },
+                { name: 'Amadou Diallo', role: 'Entrepreneur, Bamako', text: 'Excellent travail ! J\'ai commandé un logo et une affiche pour mon entreprise. Le résultat était professionnel et livré en moins de 24h. Je recommande vivement SK Designer Luxe à tous les entrepreneurs.', rating: 5, avatar: 'AD', gradient: 'from-amber-400 to-orange-500' },
+                { name: 'Fatoumata Traoré', role: 'Étudiante, Université de Bamako', text: 'La formation en design graphique m\'a permis de développer mes compétences rapidement. Les explications sont claires et le suivi est personnalisé. Merci SK Designer Luxe !', rating: 5, avatar: 'FT', gradient: 'from-emerald-400 to-teal-500' },
+                { name: 'Ibrahim Keita', role: 'Gérant de restaurant', text: 'Les visuels pour mes réseaux sociaux sont incroyables. Mon engagement a augmenté de 300% depuis que je travaille avec SK Designer Luxe. Service au top !', rating: 5, avatar: 'IK', gradient: 'from-purple-400 to-pink-500' },
                 { name: 'Mariam Coulibaly', role: 'Blogueuse', text: 'CapCut Pro et PicsArt Pro à un prix imbattable ! L\'activation est rapide et le support est très réactif. Je ne pouvais pas rêver mieux pour mon contenu.', rating: 4, avatar: 'MC', gradient: 'from-blue-400 to-cyan-500' },
                 { name: 'Oumar Sidibé', role: 'Propriétaire de boutique', text: 'Mon site web est magnifique et professionnel. Mes clients peuvent maintenant me trouver en ligne facilement. Le meilleur investissement pour mon business.', rating: 5, avatar: 'OS', gradient: 'from-red-400 to-orange-500' },
                 { name: 'Aïssata Dembélé', role: 'Créatrice de contenu', text: 'Le montage vidéo est d\'une qualité exceptionnelle. Mes vidéos TikTok et YouTube ont beaucoup plus de vues maintenant. Merci pour votre créativité !', rating: 5, avatar: 'AD2', gradient: 'from-pink-400 to-rose-500' },
@@ -2324,7 +2336,7 @@ export default function Home() {
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     <button
                       onClick={() => {
-                        const text = encodeURIComponent(`Salut ! Profite de 10% de réduction chez Créateur Boutique avec mon code parrainage ${REFERRAL_CODE}. Design graphique, sites web, montage vidéo et outils numériques à Bamako !`)
+                        const text = encodeURIComponent(`Salut ! Profite de 10% de réduction chez SK Designer Luxe avec mon code parrainage ${REFERRAL_CODE}. Design graphique, sites web, montage vidéo et outils numériques à Bamako !`)
                         window.open(`https://wa.me/?text=${text}`, '_blank')
                       }}
                       className="flex items-center justify-center gap-2 h-12 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-semibold text-sm transition-all hover:scale-[1.02] hover:shadow-lg hover:shadow-emerald-500/20 active:scale-95"
@@ -2333,7 +2345,7 @@ export default function Home() {
                     </button>
                     <button
                       onClick={() => {
-                        const text = encodeURIComponent(`Profite de 10% de réduction chez Créateur Boutique avec le code ${REFERRAL_CODE} ! Design, sites web, montage vidéo et outils numériques professionnels à Bamako.`)
+                        const text = encodeURIComponent(`Profite de 10% de réduction chez SK Designer Luxe avec le code ${REFERRAL_CODE} ! Design, sites web, montage vidéo et outils numériques professionnels à Bamako.`)
                         window.open(`https://www.facebook.com/sharer/sharer.php?quote=${text}`, '_blank')
                       }}
                       className="flex items-center justify-center gap-2 h-12 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-all hover:scale-[1.02] hover:shadow-lg hover:shadow-blue-500/20 active:scale-95"
@@ -2351,9 +2363,9 @@ export default function Home() {
                     </button>
                     <button
                       onClick={() => {
-                        const text = `Salut ! Profite de 10% de réduction chez Créateur Boutique avec mon code parrainage ${REFERRAL_CODE}. Design graphique, sites web, montage vidéo et outils numériques professionnels.`
+                        const text = `Salut ! Profite de 10% de réduction chez SK Designer Luxe avec mon code parrainage ${REFERRAL_CODE}. Design graphique, sites web, montage vidéo et outils numériques professionnels.`
                         if (navigator.share) {
-                          navigator.share({ title: 'Créateur Boutique - 10% de réduction', text, url: `${window.location.origin}?ref=${REFERRAL_CODE}` })
+                          navigator.share({ title: 'SK Designer Luxe - 10% de réduction', text, url: `${window.location.origin}?ref=${REFERRAL_CODE}` })
                         } else {
                           navigator.clipboard.writeText(text)
                           toast({ title: 'Texte copié !', description: 'Collez-le dans votre SMS ou message.' })
@@ -2630,7 +2642,7 @@ export default function Home() {
                         <p className="text-xs text-muted-foreground/60 mt-1 mb-4">Partagez votre code pour commencer à gagner</p>
                         <button
                           onClick={() => {
-                            const text = encodeURIComponent(`Salut ! Profite de 10% de réduction chez Créateur Boutique avec mon code ${REFERRAL_CODE}.`)
+                            const text = encodeURIComponent(`Salut ! Profite de 10% de réduction chez SK Designer Luxe avec mon code ${REFERRAL_CODE}.`)
                             window.open(`https://wa.me/?text=${text}`, '_blank')
                           }}
                           className="flex items-center gap-2 text-xs font-semibold text-emerald-600 hover:text-emerald-700 transition-colors"
@@ -2997,6 +3009,78 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ═══ COMMANDE RAPIDE ═══ */}
+        <section id="commande-rapide" className="py-20 sm:py-24">
+          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+            <FadeIn>
+              <Card className="border-0 shadow-2xl overflow-hidden">
+                <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 p-1">
+                  <div className="bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 text-white p-6 sm:p-8 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIzMCIgY3k9IjMwIiByPSIxLjUiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wOCkiLz48L3N2Zz4=')] opacity-50" />
+                    <div className="relative z-10 text-center">
+                      <Zap className="h-8 w-8 mx-auto mb-2" />
+                      <h2 className="text-2xl sm:text-3xl font-extrabold">Commande Rapide</h2>
+                      <p className="mt-2 text-white/80 text-sm">Remplissez le formulaire et recevez un devis personnalisé via WhatsApp en quelques minutes.</p>
+                    </div>
+                  </div>
+                </div>
+                <CardContent className="p-6 sm:p-8 space-y-4">
+                  <div className="space-y-2">
+                    <Label className="text-sm font-semibold">Service souhaité *</Label>
+                    <select
+                      value={quickOrder.service}
+                      onChange={(e) => setQuickOrder(prev => ({ ...prev, service: e.target.value }))}
+                      className="w-full h-11 rounded-md border border-input bg-background px-3 text-sm"
+                    >
+                      <option value="">Sélectionnez un service...</option>
+                      <option value="Affiche Professionnelle - 2 000 FCFA">Affiche Professionnelle — 2 000 FCFA</option>
+                      <option value="Logo Professionnel - 5 000 FCFA">Logo Professionnel — 5 000 FCFA</option>
+                      <option value="Site Web Simple - 15 000 FCFA">Site Web Simple — 15 000 FCFA</option>
+                      <option value="Site Web Professionnel - 25 000 FCFA">Site Web Professionnel — 25 000 FCFA</option>
+                      <option value="Montage Vidéo Pro - 5 000 FCFA">Montage Vidéo Pro — 5 000 FCFA</option>
+                      <option value="Contenu Réseaux Sociaux - 10 000 FCFA">Contenu Réseaux Sociaux — 10 000 FCFA</option>
+                      <option value="Formation Designer Graphique - 20 000 FCFA">Formation Designer Graphique — 20 000 FCFA</option>
+                      <option value="CapCut Pro - 3 000 FCFA">CapCut Pro — 3 000 FCFA</option>
+                      <option value="PicsArt Pro - 3 000 FCFA">PicsArt Pro — 3 000 FCFA</option>
+                      <option value="IPTV Pro - 5 000 FCFA">IPTV Pro — 5 000 FCFA</option>
+                      <option value="Canva Pro - 3 000 FCFA">Canva Pro — 3 000 FCFA</option>
+                    </select>
+                  </div>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-sm font-semibold">Votre nom *</Label>
+                      <Input placeholder="Votre nom complet" value={quickOrder.name} onChange={(e) => setQuickOrder(prev => ({ ...prev, name: e.target.value }))} className="h-11" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-semibold">Téléphone *</Label>
+                      <Input type="tel" placeholder="+223 XX XX XX XX" value={quickOrder.phone} onChange={(e) => setQuickOrder(prev => ({ ...prev, phone: e.target.value }))} className="h-11" />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-sm font-semibold">Description du projet</Label>
+                    <Textarea placeholder="Décrivez votre projet en quelques mots..." rows={3} value={quickOrder.description} onChange={(e) => setQuickOrder(prev => ({ ...prev, description: e.target.value }))} />
+                  </div>
+                  <Button
+                    onClick={() => {
+                      if (!quickOrder.service || !quickOrder.name || !quickOrder.phone) {
+                        toast({ title: 'Champs requis', description: 'Service, nom et téléphone sont obligatoires.', variant: 'destructive' })
+                        return
+                      }
+                      const msg = encodeURIComponent(`Bonjour ! Je souhaite commander :\n\nService : ${quickOrder.service}\nNom : ${quickOrder.name}\nTéléphone : ${quickOrder.phone}\nDescription : ${quickOrder.description || 'Aucune description fournie.'}\n\nMerci !`)
+                      window.open(`https://wa.me/22397787244?text=${msg}`, '_blank')
+                      toast({ title: 'Redirection WhatsApp', description: 'Votre demande de commande est envoyée !' })
+                    }}
+                    className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold h-12 text-sm shadow-lg shadow-emerald-500/20"
+                  >
+                    <Send className="h-4 w-4 mr-2" /> Envoyer ma commande via WhatsApp
+                  </Button>
+                  <p className="text-[10px] text-muted-foreground text-center">Réponse garantie en moins de 30 minutes. Paiement via Wave après confirmation.</p>
+                </CardContent>
+              </Card>
+            </FadeIn>
+          </div>
+        </section>
+
         {/* ═══ CTA FINAL ═══ */}
         <section className="py-16 sm:py-20 bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 relative overflow-hidden">
           <div className="absolute inset-0">
@@ -3012,7 +3096,7 @@ export default function Home() {
                 Ne laissez pas votre idée attendre. Contactez-nous dès maintenant et transformez votre vision en réalité. Design professionnel, livraison rapide et satisfaction garantie.
               </p>
               <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-                <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20commander%20un%20service%20chez%20Cr%C3%A9ateur%20Boutique." target="_blank" rel="noopener noreferrer">
+                <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20commander%20un%20service%20chez%20SK%20Designer%20Luxe." target="_blank" rel="noopener noreferrer">
                   <Button size="lg" className="bg-white text-amber-600 hover:bg-white/90 font-bold shadow-xl text-base px-8">
                     <MessageCircle className="h-5 w-5 mr-2" /> Commander sur WhatsApp
                   </Button>
@@ -3217,7 +3301,7 @@ export default function Home() {
         </AnimatePresence>
         {/* WhatsApp button */}
         <a
-          href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20commander%20un%20service%20chez%20Cr%C3%A9ateur%20Boutique."
+          href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20commander%20un%20service%20chez%20SK%20Designer%20Luxe."
           target="_blank"
           rel="noopener noreferrer"
           className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500 text-white shadow-lg shadow-emerald-500/30 hover:bg-emerald-600 hover:shadow-xl hover:shadow-emerald-500/40 transition-all duration-300 hover:scale-110 group relative"

@@ -11,12 +11,11 @@ import { motion, AnimatePresence } from 'framer-motion'
 const navLinks = [
   { label: 'Accueil', href: '#accueil' },
   { label: 'Services', href: '#services' },
-  { label: 'Formations', href: '#formations' },
   { label: 'Portfolio', href: '#portfolio' },
-  { label: 'Dépôt/Retrait', href: '#wallet' },
-  { label: 'Blog', href: '#blog' },
+  { label: 'À propos', href: '#apropos' },
   { label: 'Témoignages', href: '#temoignages' },
   { label: 'Parrainage', href: '#parrainage' },
+  { label: 'Commander', href: '#commande-rapide' },
   { label: 'FAQ', href: '#faq' },
   { label: 'Contact', href: '#contact' },
 ]
@@ -60,10 +59,10 @@ export default function Header() {
         {/* Logo */}
         <a href="#accueil" className="flex items-center gap-2.5 group">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 text-white font-bold text-lg shadow-lg shadow-amber-500/25 group-hover:shadow-amber-500/40 transition-shadow">
-            C
+            S
           </div>
           <span className="text-xl font-bold tracking-tight">
-            Créateur <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">Boutique</span>
+            SK <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">Designer Luxe</span>
           </span>
         </a>
 
@@ -116,7 +115,7 @@ export default function Header() {
           </Button>
 
           {/* CTA Button Desktop */}
-          <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20commander%20un%20service%20chez%20Cr%C3%A9ateur%20Boutique." target="_blank" rel="noopener noreferrer" className="hidden sm:block">
+          <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20commander%20un%20service%20chez%20SK%20Designer%20Luxe." target="_blank" rel="noopener noreferrer" className="hidden sm:block">
             <Button size="sm" className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold shadow-md shadow-amber-500/20 h-9 px-4 text-xs">
               <Sparkles className="h-3.5 w-3.5 mr-1.5" /> Commander
             </Button>
@@ -242,7 +241,7 @@ export default function Header() {
             <SheetContent side="right" className="w-72">
               <SheetHeader>
                 <SheetTitle className="flex items-center gap-2">
-                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 text-white font-bold text-xs">C</div>
+                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 text-white font-bold text-xs">S</div>
                   Menu
                 </SheetTitle>
               </SheetHeader>
