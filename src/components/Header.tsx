@@ -1,8 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
-import { ShoppingCart, Menu, X, Sparkles } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { ShoppingCart, Menu, X, Sparkles, Sun, Moon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { useCartStore } from '@/store/cart'
@@ -15,13 +15,44 @@ const navLinks = [
   { label: 'Portfolio', href: '#portfolio' },
   { label: 'Dépôt/Retrait', href: '#wallet' },
   { label: 'Blog', href: '#blog' },
+  { label: 'Témoignages', href: '#temoignages' },
+  { label: 'Parrainage', href: '#parrainage' },
   { label: 'FAQ', href: '#faq' },
   { label: 'Contact', href: '#contact' },
 ]
 
+function useTheme() {
+  const [dark, setDark] = useState(false)
+
+  useEffect(() => {
+    const saved = localStorage.getItem('theme')
+    if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      setDark(true)
+      document.documentElement.classList.add('dark')
+    }
+  }, [])
+
+  const toggle = () => {
+    setDark(prev => {
+      const next = !prev
+      if (next) {
+        document.documentElement.classList.add('dark')
+        localStorage.setItem('theme', 'dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+        localStorage.setItem('theme', 'light')
+      }
+      return next
+    })
+  }
+
+  return { dark, toggle }
+}
+
 export default function Header() {
   const { items, isOpen, closeCart, removeItem, updateQuantity, total, itemCount } = useCartStore()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const { dark, toggle } = useTheme()
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 shadow-sm">
@@ -37,20 +68,53 @@ export default function Header() {
         </a>
 
         {/* Desktop Nav */}
-        <nav className="hidden lg:flex items-center gap-0.5">
+        <nav className="hidden xl:flex items-center gap-0.5">
           {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-accent"
+              className="px-2.5 py-2 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-accent"
             >
               {link.label}
             </a>
           ))}
         </nav>
 
-        {/* Cart + Mobile menu */}
-        <div className="flex items-center gap-2">
+        {/* Cart + Dark mode + Mobile menu */}
+        <div className="flex items-center gap-1.5">
+          {/* Dark mode toggle */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggle}
+            className="hover:bg-accent"
+            aria-label="Changer le thème"
+          >
+            <AnimatePresence mode="wait">
+              {dark ? (
+                <motion.div
+                  key="sun"
+                  initial={{ rotate: -90, opacity: 0, scale: 0.5 }}
+                  animate={{ rotate: 0, opacity: 1, scale: 1 }}
+                  exit={{ rotate: 90, opacity: 0, scale: 0.5 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Sun className="h-5 w-5 text-amber-500" />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="moon"
+                  initial={{ rotate: 90, opacity: 0, scale: 0.5 }}
+                  animate={{ rotate: 0, opacity: 1, scale: 1 }}
+                  exit={{ rotate: -90, opacity: 0, scale: 0.5 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Moon className="h-5 w-5" />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </Button>
+
           {/* CTA Button Desktop */}
           <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20commander%20un%20service%20chez%20Cr%C3%A9ateur%20Boutique." target="_blank" rel="noopener noreferrer" className="hidden sm:block">
             <Button size="sm" className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold shadow-md shadow-amber-500/20 h-9 px-4 text-xs">
@@ -170,7 +234,7 @@ export default function Header() {
 
           {/* Mobile Menu */}
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-            <SheetTrigger asChild className="lg:hidden">
+            <SheetTrigger asChild className="xl:hidden">
               <Button variant="ghost" size="icon" className="hover:bg-accent">
                 <Menu className="h-5 w-5" />
               </Button>
@@ -194,7 +258,16 @@ export default function Header() {
                   </a>
                 ))}
               </nav>
-              <div className="mt-6 px-3">
+              <div className="mt-6 px-3 space-y-2">
+                {/* Dark mode toggle in mobile */}
+                <Button
+                  variant="outline"
+                  className="w-full justify-start text-sm"
+                  onClick={() => { toggle(); setMobileOpen(false) }}
+                >
+                  {dark ? <Sun className="h-4 w-4 mr-2 text-amber-500" /> : <Moon className="h-4 w-4 mr-2" />}
+                  {dark ? 'Mode clair' : 'Mode sombre'}
+                </Button>
                 <a href="https://wa.me/22397787244" target="_blank" rel="noopener noreferrer" onClick={() => setMobileOpen(false)}>
                   <Button className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold text-sm">
                     <Sparkles className="h-4 w-4 mr-2" /> Commander maintenant

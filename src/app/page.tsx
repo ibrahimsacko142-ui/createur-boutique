@@ -69,6 +69,16 @@ import {
   Package,
   ShieldCheck,
   Laptop,
+  Sun,
+  Moon,
+  ThumbsUp,
+  Share2,
+  Rocket,
+  Layers,
+  RefreshCw,
+  ClipboardCheck,
+  MessageSquare,
+  Award,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -679,6 +689,46 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ═══ COMMENT ÇA MARCHE ═══ */}
+        <section className="py-16 sm:py-20 relative overflow-hidden bg-gradient-to-b from-white to-amber-50/30 dark:from-background dark:to-amber-950/10">
+          <div className="absolute top-20 left-10 h-64 w-64 bg-amber-100/40 dark:bg-amber-900/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-20 right-10 h-64 w-64 bg-orange-100/30 dark:bg-orange-900/10 rounded-full blur-3xl" />
+          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <FadeIn className="text-center mb-14">
+              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+                <Rocket className="h-3 w-3 mr-1" /> Processus
+              </Badge>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Comment Ça Marche ?</h2>
+              <p className="mt-4 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                Commander chez Créateur Boutique est simple et rapide. Suivez ces 4 étapes pour obtenir votre design, site web ou outil numérique en moins de 24 heures.
+              </p>
+            </FadeIn>
+
+            <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+              {/* Connector line (desktop only) */}
+              <div className="hidden lg:block absolute top-16 left-[12.5%] right-[12.5%] h-0.5 bg-gradient-to-r from-amber-300 via-orange-400 to-red-400 z-0" />
+
+              {[
+                { step: '01', icon: ClipboardCheck, title: 'Choisissez votre service', desc: 'Parcourez notre catalogue de services, outils et formations. Sélectionnez ce dont vous avez besoin et ajoutez au panier.', color: 'from-amber-400 to-orange-500' },
+                { step: '02', icon: MessageCircle, title: 'Contactez-nous', desc: 'Envoyez votre commande via WhatsApp ou le formulaire de contact. Décrivez votre projet en quelques mots.', color: 'from-orange-400 to-red-500' },
+                { step: '03', icon: RefreshCw, title: 'Paiement via Wave', desc: 'Effectuez le paiement au numéro +223 97 78 72 44 via Wave. Simple, rapide et 100% sécurisé.', color: 'from-red-400 to-pink-500' },
+                { step: '04', icon: Award, title: 'Réception & Livraison', desc: 'Recevez votre commande en moins de 24h. Révisions gratuites jusqu\'à votre entière satisfaction.', color: 'from-pink-400 to-purple-500' },
+              ].map((item) => (
+                <motion.div key={item.step} variants={cardVariants} className="relative z-10">
+                  <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full text-center group pt-8 pb-6">
+                    <div className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${item.color} text-white mx-auto shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                      <item.icon className="h-6 w-6" />
+                    </div>
+                    <div className="mt-4 text-xs font-extrabold text-amber-500 tracking-widest">ÉTAPE {item.step}</div>
+                    <h3 className="mt-2 font-bold text-base">{item.title}</h3>
+                    <p className="mt-2 text-xs text-muted-foreground leading-relaxed px-2">{item.desc}</p>
+                  </Card>
+                </motion.div>
+              ))}
+            </StaggerContainer>
+          </div>
+        </section>
+
         {/* ═══ OUTILS DÉFILANT ═══ */}
         <section className="py-4 border-b overflow-hidden bg-muted/20">
           <div className="flex animate-marquee">
@@ -1245,6 +1295,70 @@ export default function Home() {
                     <GraduationCap className="h-5 w-5 mr-2" /> S'inscrire à une formation
                   </Button>
                 </a>
+              </div>
+            </FadeIn>
+          </div>
+        </section>
+
+        {/* ═══ POURQUOI NOUS CHOISIR ═══ */}
+        <section className="py-16 sm:py-20 bg-gradient-to-br from-amber-50 via-orange-50/50 to-white dark:from-amber-950/10 dark:via-orange-950/5 dark:to-background relative overflow-hidden">
+          <div className="absolute -top-20 -left-20 h-80 w-80 bg-amber-200/30 dark:bg-amber-900/10 rounded-full blur-3xl" />
+          <div className="absolute -bottom-20 -right-20 h-80 w-80 bg-orange-200/20 dark:bg-orange-900/10 rounded-full blur-3xl" />
+          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <FadeIn className="text-center mb-14">
+              <Badge variant="secondary" className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200">
+                <ThumbsUp className="h-3 w-3 mr-1" /> Avantages
+              </Badge>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Pourquoi Nous Choisir ?</h2>
+              <p className="mt-4 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                Des centaines de clients nous font confiance à Bamako et au-delà. Voici ce qui nous distingue des autres et fait de Créateur Boutique le meilleur choix pour vos projets digitaux.
+              </p>
+            </FadeIn>
+
+            <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[
+                { icon: Zap, title: 'Livraison Express 24h', desc: 'Nous livrons vos projets en moins de 24 heures. Urgence ? Nous pouvons même faire en quelques heures pour les commandes prioritaires. Aucun compromis sur la qualité.', color: 'bg-amber-100 dark:bg-amber-900/30', iconColor: 'text-amber-600' },
+                { icon: ShieldCheck, title: 'Qualité Professionnelle', desc: 'Chaque projet est réalisé avec des outils professionnels et suit un processus rigoureux. Résultats garantis à la hauteur de vos attentes.', color: 'bg-emerald-100 dark:bg-emerald-900/30', iconColor: 'text-emerald-600' },
+                { icon: Wallet, title: 'Paiement Flexible Wave', desc: 'Payez facilement via Wave, le moyen de paiement le plus populaire au Mali. Pas besoin de compte bancaire, juste votre téléphone.', color: 'bg-blue-100 dark:bg-blue-900/30', iconColor: 'text-blue-600' },
+                { icon: Headphones, title: 'Support 7j/7', desc: 'Besoin d\'aide ? Notre équipe est disponible 7 jours sur 7 via WhatsApp. Réponse rapide garantie en moins de 30 minutes.', color: 'bg-purple-100 dark:bg-purple-900/30', iconColor: 'text-purple-600' },
+                { icon: RefreshCw, title: 'Révisions Gratuites', desc: 'Non satisfait ? Nous effectuons des révisions gratuites jusqu\'à ce que le résultat vous convienne parfaitement. Votre satisfaction est notre priorité.', color: 'bg-orange-100 dark:bg-orange-900/30', iconColor: 'text-orange-600' },
+                { icon: Trophy, title: '200+ Clients Satisfaits', desc: 'Plus de 200 clients nous font confiance au Mali et en Afrique de l\'Ouest. Leur satisfaction est notre meilleure publicité et notre plus grande fierté.', color: 'bg-red-100 dark:bg-red-900/30', iconColor: 'text-red-600' },
+              ].map((item) => (
+                <motion.div key={item.title} variants={cardVariants}>
+                  <Card className="h-full border-0 shadow-md hover:shadow-xl transition-all duration-300 group hover:-translate-y-1">
+                    <CardContent className="p-6">
+                      <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${item.color} mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                        <item.icon className={`h-6 w-6 ${item.iconColor}`} />
+                      </div>
+                      <h3 className="font-bold text-base mb-2">{item.title}</h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </StaggerContainer>
+
+            {/* Garantie badge */}
+            <FadeIn delay={0.3} className="mt-12">
+              <div className="mx-auto max-w-2xl">
+                <Card className="border-2 border-emerald-200 dark:border-emerald-800 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20 overflow-hidden">
+                  <CardContent className="p-6 sm:p-8 text-center">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30 mx-auto mb-4">
+                      <BadgeCheck className="h-8 w-8 text-emerald-600" />
+                    </div>
+                    <h3 className="text-xl font-extrabold text-emerald-700 dark:text-emerald-400 mb-2">Garantie 100% Satisfaction</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Nous garantissons votre satisfaction ou nous vous remboursons intégralement. Si le résultat ne correspond pas à votre commande, nous reprenons le travail gratuitement ou vous remboursons via Wave en moins de 48h. Aucun risque pour vous.
+                    </p>
+                    <div className="flex flex-wrap items-center justify-center gap-4 mt-5">
+                      {['Remboursement 48h', 'Révisions illimitées', 'Support permanent'].map((tag) => (
+                        <span key={tag} className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 px-3 py-1 text-xs font-medium text-emerald-700 dark:text-emerald-400">
+                          <CheckCircle2 className="h-3 w-3" /> {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             </FadeIn>
           </div>
@@ -2156,6 +2270,135 @@ export default function Home() {
                 </div>
               </FadeIn>
             </div>
+          </div>
+        </section>
+
+        {/* ═══ TÉMOIGNAGES CLIENTS ═══ */}
+        <section id="temoignages" className="py-16 sm:py-20 bg-gradient-to-b from-muted/20 to-background relative overflow-hidden">
+          <div className="absolute top-0 right-0 h-72 w-72 bg-amber-200/20 dark:bg-amber-900/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 h-72 w-72 bg-orange-200/15 dark:bg-orange-900/10 rounded-full blur-3xl" />
+          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <FadeIn className="text-center mb-14">
+              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+                <Star className="h-3 w-3 mr-1" /> Témoignages
+              </Badge>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Ce Que Disent Nos Clients</h2>
+              <p className="mt-4 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                La satisfaction de nos clients est notre plus grande fierté. Découvrez les avis de ceux qui nous ont fait confiance pour leurs projets digitaux.
+              </p>
+            </FadeIn>
+
+            <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[
+                { name: 'Amadou Diallo', role: 'Entrepreneur, Bamako', text: 'Excellent travail ! J\'ai commandé un logo et une affiche pour mon entreprise. Le résultat était professionnel et livré en moins de 24h. Je recommande vivement Créateur Boutique à tous les entrepreneurs.', rating: 5, avatar: 'AD', gradient: 'from-amber-400 to-orange-500' },
+                { name: 'Fatoumata Traoré', role: 'Étudiante, Université de Bamako', text: 'La formation en design graphique m\'a permis de développer mes compétences rapidement. Les explications sont claires et le suivi est personnalisé. Merci Créateur Boutique !', rating: 5, avatar: 'FT', gradient: 'from-emerald-400 to-teal-500' },
+                { name: 'Ibrahim Keita', role: 'Gérant de restaurant', text: 'Les visuels pour mes réseaux sociaux sont incroyables. Mon engagement a augmenté de 300% depuis que je travaille avec Créateur Boutique. Service au top !', rating: 5, avatar: 'IK', gradient: 'from-purple-400 to-pink-500' },
+                { name: 'Mariam Coulibaly', role: 'Blogueuse', text: 'CapCut Pro et PicsArt Pro à un prix imbattable ! L\'activation est rapide et le support est très réactif. Je ne pouvais pas rêver mieux pour mon contenu.', rating: 4, avatar: 'MC', gradient: 'from-blue-400 to-cyan-500' },
+                { name: 'Oumar Sidibé', role: 'Propriétaire de boutique', text: 'Mon site web est magnifique et professionnel. Mes clients peuvent maintenant me trouver en ligne facilement. Le meilleur investissement pour mon business.', rating: 5, avatar: 'OS', gradient: 'from-red-400 to-orange-500' },
+                { name: 'Aïssata Dembélé', role: 'Créatrice de contenu', text: 'Le montage vidéo est d\'une qualité exceptionnelle. Mes vidéos TikTok et YouTube ont beaucoup plus de vues maintenant. Merci pour votre créativité !', rating: 5, avatar: 'AD2', gradient: 'from-pink-400 to-rose-500' },
+              ].map((t, i) => (
+                <motion.div key={i} variants={cardVariants}>
+                  <Card className="h-full border-0 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                    <CardContent className="p-6">
+                      {/* Stars */}
+                      <div className="flex gap-0.5 mb-4">
+                        {Array.from({ length: 5 }).map((_, si) => (
+                          <Star key={si} className={`h-4 w-4 ${si < t.rating ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground/30'}`} />
+                        ))}
+                      </div>
+                      <p className="text-sm text-muted-foreground leading-relaxed mb-5 italic">&ldquo;{t.text}&rdquo;</p>
+                      <div className="flex items-center gap-3 pt-4 border-t">
+                        <div className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br ${t.gradient} text-white font-bold text-sm shadow-md`}>
+                          {t.avatar}
+                        </div>
+                        <div>
+                          <p className="text-sm font-bold">{t.name}</p>
+                          <p className="text-xs text-muted-foreground">{t.role}</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </StaggerContainer>
+          </div>
+        </section>
+
+        {/* ═══ PARRAINAGE ═══ */}
+        <section id="parrainage" className="py-16 sm:py-20 bg-gradient-to-br from-purple-50 via-amber-50 to-orange-50 dark:from-purple-950/10 dark:via-amber-950/10 dark:to-orange-950/10 relative overflow-hidden">
+          <div className="absolute top-10 right-10 h-64 w-64 bg-purple-200/30 dark:bg-purple-900/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-10 left-10 h-64 w-64 bg-amber-200/20 dark:bg-amber-900/10 rounded-full blur-3xl" />
+          <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+            <FadeIn className="text-center mb-10">
+              <Badge variant="secondary" className="mb-3 bg-purple-100 text-purple-700 border-purple-200">
+                <Gift className="h-3 w-3 mr-1" /> Programme
+              </Badge>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Programme de Parrainage</h2>
+              <p className="mt-4 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                Invitez vos amis et gagnez des récompenses ! Pour chaque personne qui commande grâce à votre code de parrainage, vous recevez une réduction sur votre prochaine commande.
+              </p>
+            </FadeIn>
+
+            <FadeIn delay={0.15}>
+              <Card className="border-0 shadow-xl overflow-hidden">
+                <div className="bg-gradient-to-r from-purple-500 via-amber-500 to-orange-500 p-6 sm:p-8 text-white text-center">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mx-auto mb-4">
+                    <Share2 className="h-8 w-8" />
+                  </div>
+                  <h3 className="text-2xl font-extrabold mb-2">Votre Code de Parrainage</h3>
+                  <p className="text-white/80 text-sm mb-5">Partagez ce code avec vos amis. Ils auront 10% de réduction et vous aussi !</p>
+                  <div className="flex items-center justify-center gap-3 max-w-xs mx-auto">
+                    <div className="flex-1 bg-white/20 backdrop-blur-sm rounded-xl px-6 py-4 border border-white/30">
+                      <p className="text-2xl sm:text-3xl font-extrabold tracking-[0.2em] font-mono" id="referral-code">CB-IBRA-2024</p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText('CB-IBRA-2024')
+                        toast({ title: 'Code copié !', description: 'Partagez-le avec vos amis.' })
+                      }}
+                      className="flex h-14 w-14 items-center justify-center rounded-xl bg-white text-purple-600 hover:bg-white/90 transition-colors shadow-lg"
+                    >
+                      <Copy className="h-6 w-6" />
+                    </button>
+                  </div>
+                </div>
+                <CardContent className="p-6 sm:p-8">
+                  <div className="grid sm:grid-cols-3 gap-6 text-center">
+                    <div className="space-y-2">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-100 dark:bg-purple-900/30 mx-auto">
+                        <Users className="h-6 w-6 text-purple-600" />
+                      </div>
+                      <h4 className="font-bold text-sm">1. Partagez</h4>
+                      <p className="text-xs text-muted-foreground leading-relaxed">Envoyez votre code à vos amis, famille et collègues</p>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30 mx-auto">
+                        <ShoppingCart className="h-6 w-6 text-amber-600" />
+                      </div>
+                      <h4 className="font-bold text-sm">2. Ils commandent</h4>
+                      <p className="text-xs text-muted-foreground leading-relaxed">Votre ami utilise le code et obtient 10% de réduction</p>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-900/30 mx-auto">
+                        <Gift className="h-6 w-6 text-emerald-600" />
+                      </div>
+                      <h4 className="font-bold text-sm">3. Vous gagnez</h4>
+                      <p className="text-xs text-muted-foreground leading-relaxed">Recevez 10% de réduction sur votre prochaine commande</p>
+                    </div>
+                  </div>
+
+                  <div className="mt-8 p-4 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
+                    <div className="flex items-start gap-3">
+                      <Flame className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <p className="text-sm font-bold text-amber-700 dark:text-amber-400">Offre spéciale parrainage</p>
+                        <p className="text-xs text-muted-foreground mt-1 leading-relaxed">Parrainez 5 personnes et recevez un service gratuit de votre choix (logo, affiche ou montage vidéo) ! Offre valable jusqu\'à fin du mois.</p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </FadeIn>
           </div>
         </section>
 
