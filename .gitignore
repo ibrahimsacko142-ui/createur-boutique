@@ -1,0 +1,17 @@
+node_modules/
+.next/
+out/
+*.log
+.env
+.env.local
+db/
+download/
+upload/
+tool-results/
+examples/
+bun.lock
+skills/
+worklog.md
+.zscripts/
+mini-services/
+Caddyfile
