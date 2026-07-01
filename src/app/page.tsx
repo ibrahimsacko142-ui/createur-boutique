@@ -80,6 +80,10 @@ import {
   MessageSquare,
   Award,
   Plus,
+  Search,
+  Crown,
+  LinkIcon,
+  Smartphone,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -355,10 +359,12 @@ export default function Home() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [activeFilter, setActiveFilter] = useState('all')
+  const [searchQuery, setSearchQuery] = useState('')
   const [contactData, setContactData] = useState({ name: '', email: '', subject: '', message: '' })
   const [sending, setSending] = useState(false)
   const [showBanner, setShowBanner] = useState(true)
   const [showBackToTop, setShowBackToTop] = useState(false)
+  const [showChatPopup, setShowChatPopup] = useState(true)
   const [countdown, setCountdown] = useState({ hours: 23, minutes: 59, seconds: 59 })
   const [walletTab, setWalletTab] = useState<'depot' | 'retrait'>('depot')
   const [walletAmount, setWalletAmount] = useState('')
@@ -451,11 +457,21 @@ export default function Home() {
     ]
     setProducts(hardcodedProducts)
     setLoading(false)
+    // Welcome notification after a short delay
+    const timer = setTimeout(() => {
+      toast({
+        title: 'Bienvenue chez Créateur Boutique !',
+        description: 'Découvrez nos services et profitez de 10% de réduction avec le code CB-IBRA-2024.',
+      })
+    }, 2000)
+    return () => clearTimeout(timer)
   }, [])
 
   const filteredProducts = products.filter((p) => {
-    if (activeFilter === 'all') return true
-    return p.category === activeFilter
+    if (activeFilter === 'all' && !searchQuery) return true
+    const matchCategory = activeFilter === 'all' || p.category === activeFilter
+    const matchSearch = !searchQuery || p.name.toLowerCase().includes(searchQuery.toLowerCase()) || (p.description && p.description.toLowerCase().includes(searchQuery.toLowerCase()))
+    return matchCategory && matchSearch
   })
 
   const services = products.filter((p) => p.category === 'service')
@@ -715,7 +731,7 @@ export default function Home() {
         </section>
 
         {/* ═══ BARRE DE CONFIANCE ═══ */}
-        <section className="py-6 border-b bg-white dark:bg-background">
+        <section className="py-6 border-b bg-background">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10">
               {[
@@ -950,7 +966,16 @@ export default function Home() {
             </FadeIn>
 
             {/* Filters */}
-            <FadeIn delay={0.1} className="flex justify-center mb-8">
+            <FadeIn delay={0.1} className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+              <div className="relative w-full sm:w-80">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Rechercher un service ou outil..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="h-10 pl-10 bg-white dark:bg-background"
+                />
+              </div>
               <div className="inline-flex rounded-full border bg-muted/50 p-1 gap-1">
                 {filters.map((f) => (
                   <button
@@ -996,6 +1021,13 @@ export default function Home() {
                   })
               }
             </StaggerContainer>
+            {!loading && filteredProducts.length === 0 && (
+              <FadeIn className="text-center py-12">
+                <Search className="h-12 w-12 text-muted-foreground/30 mx-auto mb-3" />
+                <p className="text-sm font-medium text-muted-foreground">Aucun résultat trouvé</p>
+                <p className="text-xs text-muted-foreground/60 mt-1">Essayez avec d&apos;autres mots-clés ou filtres</p>
+              </FadeIn>
+            )}
           </div>
         </section>
 
@@ -1866,6 +1898,112 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ═══ COMPARATEUR RAPIDE ═══ */}
+        <section className="py-16 sm:py-20 bg-muted/30">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <FadeIn className="text-center mb-12">
+              <Badge variant="secondary" className="mb-3 bg-blue-100 text-blue-700 border-blue-200">
+                <ArrowRightLeft className="h-3 w-3 mr-1" /> Comparatif
+              </Badge>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Comparateur de Services</h2>
+              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                Comparez nos services populaires en un coup d&apos;oeil. Trouvez rapidement le service adapté à vos besoins et à votre budget.
+              </p>
+            </FadeIn>
+
+            <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {[
+                {
+                  name: 'Affiche Pro',
+                  price: 2000,
+                  delivery: '1-24h',
+                  revisions: 2,
+                  format: 'PNG, PDF, JPEG',
+                  source: 'Oui',
+                  icon: PenTool,
+                  popular: false,
+                  features: ['Design haute qualité', 'Format personnalisé', 'Prêt pour impression', 'Fichiers sources inclus'],
+                },
+                {
+                  name: 'Logo Professionnel',
+                  price: 5000,
+                  delivery: '1-24h',
+                  revisions: 3,
+                  format: 'PNG, SVG, PDF',
+                  source: 'Oui',
+                  icon: Sparkles,
+                  popular: true,
+                  features: ['Logo unique', '3 variantes', 'Guide d\'utilisation', 'Identité visuelle complète'],
+                },
+                {
+                  name: 'Site Web Pro',
+                  price: 25000,
+                  delivery: '1-3 jours',
+                  revisions: 5,
+                  format: 'Déployé en ligne',
+                  source: 'Oui',
+                  icon: Globe,
+                  popular: false,
+                  features: ['Design sur mesure', 'Responsive mobile', 'SEO optimisé', 'Hébergement inclus', 'Nom de domaine', 'Formulaire de contact'],
+                },
+              ].map((svc) => (
+                <motion.div key={svc.name} variants={cardVariants}>
+                  <Card className={`relative h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden ${svc.popular ? 'ring-2 ring-amber-400 dark:ring-amber-600' : ''}`}>
+                    {svc.popular && (
+                      <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-1.5 text-xs font-bold">
+                        Le plus populaire
+                      </div>
+                    )}
+                    <div className={`h-2 ${svc.popular ? 'bg-gradient-to-r from-amber-400 to-orange-500' : 'bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600'}`} />
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${svc.popular ? 'bg-amber-100 dark:bg-amber-900/30' : 'bg-muted'} transition-colors`}>
+                          <svc.icon className={`h-6 w-6 ${svc.popular ? 'text-amber-600' : 'text-muted-foreground'}`} />
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-base">{svc.name}</h3>
+                          <p className="text-xs text-muted-foreground">Livraison : {svc.delivery}</p>
+                        </div>
+                      </div>
+
+                      <div className="text-2xl font-extrabold text-amber-600 mb-4">{formatPrice(svc.price)}</div>
+
+                      <div className="space-y-3 mb-5">
+                        {[
+                          { label: 'Livraison', value: svc.delivery },
+                          { label: 'Révisions', value: `${svc.revisions} incluses` },
+                          { label: 'Formats', value: svc.format },
+                          { label: 'Fichiers sources', value: svc.source },
+                        ].map((detail) => (
+                          <div key={detail.label} className="flex items-center justify-between text-sm">
+                            <span className="text-muted-foreground">{detail.label}</span>
+                            <span className="font-medium text-xs">{detail.value}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="border-t pt-4 space-y-2 mb-5">
+                        {svc.features.map((feat) => (
+                          <div key={feat} className="flex items-center gap-2 text-xs">
+                            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 flex-shrink-0" />
+                            <span className="text-muted-foreground">{feat}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      <a href={`https://wa.me/22397787244?text=Bonjour ! Je souhaite commander ${svc.name} à ${svc.price} FCFA.`} target="_blank" rel="noopener noreferrer">
+                        <Button className={`w-full font-semibold ${svc.popular ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-lg shadow-amber-500/20' : ''}`}>
+                          <MessageCircle className="h-4 w-4 mr-2" /> Commander
+                        </Button>
+                      </a>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </StaggerContainer>
+          </div>
+        </section>
+
         {/* ═══ TÉMOIGNAGES CLIENTS ═══ */}
         <section id="temoignages" className="py-16 sm:py-20 bg-gradient-to-b from-muted/20 to-background relative overflow-hidden">
           <div className="absolute top-0 right-0 h-72 w-72 bg-amber-200/20 dark:bg-amber-900/10 rounded-full blur-3xl" />
@@ -1921,127 +2059,314 @@ export default function Home() {
         <section id="parrainage" className="py-16 sm:py-20 bg-gradient-to-br from-purple-50 via-amber-50 to-orange-50 dark:from-purple-950/10 dark:via-amber-950/10 dark:to-orange-950/10 relative overflow-hidden">
           <div className="absolute top-10 right-10 h-64 w-64 bg-purple-200/30 dark:bg-purple-900/10 rounded-full blur-3xl" />
           <div className="absolute bottom-10 left-10 h-64 w-64 bg-amber-200/20 dark:bg-amber-900/10 rounded-full blur-3xl" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-96 w-96 bg-orange-200/15 dark:bg-orange-900/8 rounded-full blur-3xl" />
           <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
             <FadeIn className="text-center mb-10">
-              <Badge variant="secondary" className="mb-3 bg-purple-100 text-purple-700 border-purple-200">
+              <Badge variant="secondary" className="mb-3 bg-purple-100 text-purple-700 border-purple-200 dark:bg-purple-900/30 dark:text-purple-400 dark:border-purple-800">
                 <Gift className="h-3 w-3 mr-1" /> Programme
               </Badge>
               <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Programme de Parrainage</h2>
               <p className="mt-4 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                Invitez vos amis et gagnez des récompenses ! Chaque personne qui commande avec votre code vous fait gagner des réductions cumulables. Plus vous parrainez, plus les récompenses sont importantes.
+                Invitez vos amis et gagnez des récompenses exceptionnelles ! Chaque personne qui commande avec votre code vous fait gagner des réductions cumulables. Plus vous parrainez, plus les récompenses sont importantes.
               </p>
             </FadeIn>
 
-            {/* Code de parrainage */}
+            {/* Hero Code Card */}
             <FadeIn delay={0.1}>
-              <Card className="border-0 shadow-xl overflow-hidden mb-6">
-                <div className="bg-gradient-to-r from-purple-500 via-amber-500 to-orange-500 p-6 sm:p-8 text-white">
-                  <div className="flex flex-col sm:flex-row items-center gap-6">
-                    <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm flex-shrink-0">
-                      <Share2 className="h-8 w-8" />
-                    </div>
-                    <div className="text-center sm:text-left flex-1">
-                      <h3 className="text-xl sm:text-2xl font-extrabold mb-1">Votre Code de Parrainage</h3>
-                      <p className="text-white/80 text-sm">Partagez ce code — votre ami obtient <strong>10% de réduction</strong> et vous gagnez <strong>500 FCFA</strong> par parrainage.</p>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="bg-white/20 backdrop-blur-sm rounded-xl px-5 py-3 border border-white/30">
-                        <p className="text-xl sm:text-2xl font-extrabold tracking-[0.15em] font-mono">{REFERRAL_CODE}</p>
+              <Card className="border-0 shadow-2xl overflow-hidden mb-8">
+                <div className="bg-gradient-to-r from-purple-600 via-amber-500 to-orange-500 p-1">
+                  <div className="bg-gradient-to-br from-purple-600 via-amber-500 to-orange-500 rounded-[3px] p-6 sm:p-8 text-white relative overflow-hidden">
+                    <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIzMCIgY3k9IjMwIiByPSIxLjUiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wOCkiLz48L3N2Zz4=')] opacity-50" />
+                    <div className="relative z-10 flex flex-col sm:flex-row items-center gap-6">
+                      <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm flex-shrink-0 border border-white/30">
+                        <Share2 className="h-10 w-10" />
                       </div>
-                      <button
-                        onClick={() => {
-                          navigator.clipboard.writeText(REFERRAL_CODE)
-                          toast({ title: 'Code copié !', description: 'Partagez-le avec vos amis.' })
-                        }}
-                        className="flex h-12 w-12 items-center justify-center rounded-xl bg-white text-purple-600 hover:bg-white/90 transition-colors shadow-lg flex-shrink-0"
-                      >
-                        <Copy className="h-5 w-5" />
-                      </button>
+                      <div className="text-center sm:text-left flex-1">
+                        <h3 className="text-2xl sm:text-3xl font-extrabold mb-1">Votre Code de Parrainage</h3>
+                        <p className="text-white/80 text-sm leading-relaxed">Partagez ce code avec vos amis. Ils obtiennent <strong className="text-white">10% de réduction</strong> et vous gagnez <strong className="text-white">500 FCFA</strong> par parrainage validé.</p>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="bg-white/20 backdrop-blur-sm rounded-2xl px-6 py-4 border border-white/30">
+                          <p className="text-2xl sm:text-3xl font-extrabold tracking-[0.15em] font-mono">{REFERRAL_CODE}</p>
+                        </div>
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(REFERRAL_CODE)
+                            toast({ title: 'Code copié !', description: 'Partagez-le avec vos amis.' })
+                          }}
+                          className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-purple-600 hover:bg-white/90 transition-all shadow-lg flex-shrink-0 hover:scale-105 active:scale-95"
+                        >
+                          <Copy className="h-5 w-5" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
               </Card>
             </FadeIn>
 
-            {/* Stats + Barre de progression */}
+            {/* Lien de parrainage + Boutons de partage */}
             <FadeIn delay={0.15}>
-              <div className="grid sm:grid-cols-3 gap-4 mb-6">
-                <Card className="border-0 shadow-md">
-                  <CardContent className="p-5 text-center">
-                    <div className="text-3xl font-extrabold text-purple-600">{referralData.totalReferred}</div>
-                    <p className="text-xs text-muted-foreground mt-1">Personnes parrainées</p>
-                  </CardContent>
-                </Card>
-                <Card className="border-0 shadow-md">
-                  <CardContent className="p-5 text-center">
-                    <div className="text-3xl font-extrabold text-amber-600">{referralData.totalEarned.toLocaleString('fr-FR')}</div>
-                    <p className="text-xs text-muted-foreground mt-1">FCFA de réductions gagnées</p>
-                  </CardContent>
-                </Card>
-                <Card className="border-0 shadow-md">
-                  <CardContent className="p-5 text-center">
-                    <div className="text-3xl font-extrabold text-emerald-600">{next ? next.at - referralData.totalReferred : 0}</div>
-                    <p className="text-xs text-muted-foreground mt-1">Avant la prochaine récompense</p>
-                  </CardContent>
-                </Card>
+              <Card className="border-0 shadow-lg overflow-hidden mb-8">
+                <CardContent className="p-6">
+                  <h3 className="font-bold text-sm mb-4 flex items-center gap-2">
+                    <LinkIcon className="h-4 w-4 text-purple-500" /> Partagez rapidement
+                  </h3>
+
+                  {/* Referral link */}
+                  <div className="mb-5">
+                    <p className="text-xs text-muted-foreground mb-2 font-medium">Lien de parrainage</p>
+                    <div className="flex items-center gap-2">
+                      <div className="flex-1 bg-muted/80 rounded-xl px-4 py-3 border text-sm text-muted-foreground font-mono truncate">
+                        {typeof window !== 'undefined' ? `${window.location.origin}?ref=${REFERRAL_CODE}` : `...?ref=${REFERRAL_CODE}`}
+                      </div>
+                      <button
+                        onClick={() => {
+                          const link = `${window.location.origin}?ref=${REFERRAL_CODE}`
+                          navigator.clipboard.writeText(link)
+                          toast({ title: 'Lien copié !', description: 'Envoyez-le à vos amis.' })
+                        }}
+                        className="flex h-11 w-11 items-center justify-center rounded-xl bg-purple-500 hover:bg-purple-600 text-white transition-all shadow-md flex-shrink-0 hover:scale-105"
+                      >
+                        <Copy className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Share buttons */}
+                  <p className="text-xs text-muted-foreground mb-3 font-medium">Partager via</p>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <button
+                      onClick={() => {
+                        const text = encodeURIComponent(`Salut ! Profite de 10% de réduction chez Créateur Boutique avec mon code parrainage ${REFERRAL_CODE}. Design graphique, sites web, montage vidéo et outils numériques à Bamako !`)
+                        window.open(`https://wa.me/?text=${text}`, '_blank')
+                      }}
+                      className="flex items-center justify-center gap-2 h-12 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-semibold text-sm transition-all hover:scale-[1.02] hover:shadow-lg hover:shadow-emerald-500/20 active:scale-95"
+                    >
+                      <MessageCircle className="h-4 w-4" /> WhatsApp
+                    </button>
+                    <button
+                      onClick={() => {
+                        const text = encodeURIComponent(`Profite de 10% de réduction chez Créateur Boutique avec le code ${REFERRAL_CODE} ! Design, sites web, montage vidéo et outils numériques professionnels à Bamako.`)
+                        window.open(`https://www.facebook.com/sharer/sharer.php?quote=${text}`, '_blank')
+                      }}
+                      className="flex items-center justify-center gap-2 h-12 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-all hover:scale-[1.02] hover:shadow-lg hover:shadow-blue-500/20 active:scale-95"
+                    >
+                      <Facebook className="h-4 w-4" /> Facebook
+                    </button>
+                    <button
+                      onClick={() => {
+                        const text = encodeURIComponent(`10% de réduction chez @CreateurBoutique avec le code ${REFERRAL_CODE} ! Design pro, sites web, montage vidéo et outils numériques à Bamako.`)
+                        window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank')
+                      }}
+                      className="flex items-center justify-center gap-2 h-12 rounded-xl bg-gray-900 dark:bg-gray-800 hover:bg-gray-800 dark:hover:bg-gray-700 text-white font-semibold text-sm transition-all hover:scale-[1.02] hover:shadow-lg active:scale-95"
+                    >
+                      <Twitter className="h-4 w-4" /> Twitter
+                    </button>
+                    <button
+                      onClick={() => {
+                        const text = `Salut ! Profite de 10% de réduction chez Créateur Boutique avec mon code parrainage ${REFERRAL_CODE}. Design graphique, sites web, montage vidéo et outils numériques professionnels.`
+                        if (navigator.share) {
+                          navigator.share({ title: 'Créateur Boutique - 10% de réduction', text, url: `${window.location.origin}?ref=${REFERRAL_CODE}` })
+                        } else {
+                          navigator.clipboard.writeText(text)
+                          toast({ title: 'Texte copié !', description: 'Collez-le dans votre SMS ou message.' })
+                        }
+                      }}
+                      className="flex items-center justify-center gap-2 h-12 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-semibold text-sm transition-all hover:scale-[1.02] hover:shadow-lg hover:shadow-amber-500/20 active:scale-95"
+                    >
+                      <Smartphone className="h-4 w-4" /> SMS / Autre
+                    </button>
+                  </div>
+                </CardContent>
+              </Card>
+            </FadeIn>
+
+            {/* Dashboard Stats + Progression */}
+            <FadeIn delay={0.2}>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+                {[
+                  { label: 'Personnes parrainées', value: referralData.totalReferred, color: 'text-purple-600', bg: 'from-purple-500 to-purple-600', icon: Users },
+                  { label: 'Réductions gagnées', value: `${referralData.totalEarned.toLocaleString('fr-FR')}`, suffix: ' FCFA', color: 'text-amber-600', bg: 'from-amber-500 to-orange-500', icon: Banknote },
+                  { label: 'Rang actuel', value: referralData.totalReferred >= 10 ? 'Légende' : referralData.totalReferred >= 5 ? 'Expert' : referralData.totalReferred >= 3 ? 'Avancé' : referralData.totalReferred >= 1 ? 'Débutant' : 'Nouveau', color: 'text-emerald-600', bg: 'from-emerald-500 to-teal-500', icon: Crown },
+                  { label: 'Prochain palier', value: next ? `${next.at - referralData.totalReferred}` : 'Max', suffix: next ? ' restant(s)' : '', color: 'text-blue-600', bg: 'from-blue-500 to-cyan-500', icon: Trophy },
+                ].map((stat) => (
+                  <Card key={stat.label} className="border-0 shadow-md overflow-hidden">
+                    <div className={`h-1 bg-gradient-to-r ${stat.bg}`} />
+                    <CardContent className="p-4 text-center">
+                      <stat.icon className={`h-5 w-5 ${stat.color} mx-auto mb-2`} />
+                      <div className={`text-lg sm:text-xl font-extrabold ${stat.color}`}>{stat.value}{stat.suffix || ''}</div>
+                      <p className="text-[10px] text-muted-foreground mt-1 leading-snug">{stat.label}</p>
+                    </CardContent>
+                  </Card>
+                ))}
               </div>
             </FadeIn>
 
-            {/* Paliers de récompenses */}
-            <FadeIn delay={0.2}>
-              <Card className="border-0 shadow-lg overflow-hidden mb-6">
+            {/* Paliers de récompenses - Amélioré avec timeline visuelle */}
+            <FadeIn delay={0.25}>
+              <Card className="border-0 shadow-xl overflow-hidden mb-8">
                 <CardContent className="p-6">
-                  <h3 className="font-bold text-sm mb-4 flex items-center gap-2">
+                  <h3 className="font-bold text-sm mb-6 flex items-center gap-2">
                     <Trophy className="h-4 w-4 text-amber-500" /> Paliers de récompenses
                   </h3>
+
+                  {/* Visual milestone timeline */}
+                  <div className="relative mb-6">
+                    {/* Progress bar background */}
+                    <div className="h-4 bg-muted rounded-full overflow-hidden">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        whileInView={{ width: `${progress}%` }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 1.2, ease: 'easeOut' }}
+                        className="h-full bg-gradient-to-r from-emerald-400 via-amber-400 via-orange-400 to-purple-500 rounded-full relative"
+                      >
+                        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxMCIgY3k9IjEwIiByPSIxIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMikiLz48L3N2Zz4=')]" />
+                      </motion.div>
+                    </div>
+
+                    {/* Milestone markers */}
+                    <div className="relative mt-2">
+                      <div className="flex justify-between">
+                        {tiers.map((tier, idx) => {
+                          const pos = (idx / (tiers.length - 1)) * 100
+                          const unlocked = referralData.totalReferred >= tier.at
+                          return (
+                            <div key={tier.at} className="flex flex-col items-center" style={{ width: '60px', marginLeft: idx === 0 ? 0 : 'auto', marginRight: idx === tiers.length - 1 ? 0 : 'auto' }}>
+                              <div className={`relative flex h-8 w-8 items-center justify-center rounded-full border-2 transition-all duration-300 -mt-5 ${unlocked ? 'bg-emerald-500 border-emerald-500 text-white shadow-lg shadow-emerald-500/30' : 'bg-card border-border text-muted-foreground'}`}>
+                                {unlocked ? <CheckCircle2 className="h-4 w-4" /> : <span className="text-[10px] font-bold">{tier.at}</span>}
+                              </div>
+                              <p className="text-[9px] font-semibold text-center mt-1.5 leading-tight max-w-[70px]">{tier.label}</p>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Tier cards grid */}
                   <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                     {tiers.map((tier) => {
                       const unlocked = referralData.totalReferred >= tier.at
-                      const isCurrent = current && current.at === tier.at
+                      const isNext = next && next.at === tier.at
                       return (
-                        <div key={tier.at} className={`relative rounded-xl p-4 border-2 transition-all ${unlocked ? 'border-emerald-300 dark:border-emerald-700 bg-emerald-50/50 dark:bg-emerald-950/20' : isCurrent ? 'border-amber-300 dark:border-amber-700 bg-amber-50/50 dark:bg-amber-950/20' : 'border-border bg-muted/30 opacity-70'}`}>
-                          {unlocked && <div className="absolute top-2 right-2"><CheckCircle2 className="h-4 w-4 text-emerald-500" /></div>}
-                          <div className={`flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${tier.color} text-white mb-2 ${!unlocked ? 'grayscale opacity-60' : ''}`}>
-                            <tier.icon className="h-5 w-5" />
+                        <div key={tier.at} className={`relative rounded-xl p-4 border-2 transition-all duration-300 ${unlocked ? 'border-emerald-300 dark:border-emerald-700 bg-emerald-50/80 dark:bg-emerald-950/20 shadow-md' : isNext ? 'border-amber-400 dark:border-amber-600 bg-amber-50/80 dark:bg-amber-950/20 shadow-md ring-2 ring-amber-200 dark:ring-amber-800' : 'border-border bg-muted/30 opacity-60'}`}>
+                          {unlocked && (
+                            <div className="absolute -top-2 -right-2">
+                              <Badge className="bg-emerald-500 text-white border-0 text-[9px] px-1.5 shadow-md">Débloqué</Badge>
+                            </div>
+                          )}
+                          {isNext && (
+                            <div className="absolute -top-2 -right-2">
+                              <Badge className="bg-amber-500 text-white border-0 text-[9px] px-1.5 shadow-md animate-pulse">Prochain</Badge>
+                            </div>
+                          )}
+                          <div className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${tier.color} text-white mb-3 shadow-md ${!unlocked ? 'grayscale opacity-50' : ''}`}>
+                            <tier.icon className="h-6 w-6" />
                           </div>
-                          <div className="text-xs font-extrabold">{tier.at} parrainage{tier.at > 1 ? 's' : ''}</div>
-                          <p className="text-[10px] text-muted-foreground mt-0.5">{tier.label}</p>
+                          <div className="text-sm font-extrabold">{tier.at} parrainage{tier.at > 1 ? 's' : ''}</div>
+                          <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">{tier.label}</p>
+                          {isNext && (
+                            <div className="mt-3">
+                              <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+                                <motion.div
+                                  initial={{ width: 0 }}
+                                  whileInView={{ width: `${progress}%` }}
+                                  viewport={{ once: true }}
+                                  transition={{ duration: 1, ease: 'easeOut', delay: 0.3 }}
+                                  className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full"
+                                />
+                              </div>
+                              <p className="text-[9px] text-amber-600 font-bold mt-1 text-center">{Math.round(progress)}%</p>
+                            </div>
+                          )}
                         </div>
                       )
                     })}
                   </div>
-                  {/* Progress bar */}
+
                   {next && (
-                    <div className="mt-5">
-                      <div className="flex items-center justify-between text-xs mb-2">
-                        <span className="font-medium">Progression vers : {next.label}</span>
-                        <span className="text-amber-600 font-bold">{Math.round(progress)}%</span>
+                    <div className="mt-5 p-4 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/15 dark:to-orange-900/15 border border-amber-200 dark:border-amber-800 flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30 flex-shrink-0">
+                        <Target className="h-5 w-5 text-amber-600" />
                       </div>
-                      <div className="h-3 bg-muted rounded-full overflow-hidden">
-                        <motion.div
-                          initial={{ width: 0 }}
-                          whileInView={{ width: `${progress}%` }}
-                          viewport={{ once: true }}
-                          transition={{ duration: 1, ease: 'easeOut' }}
-                          className="h-full bg-gradient-to-r from-purple-500 via-amber-500 to-orange-500 rounded-full"
-                        />
+                      <div className="flex-1">
+                        <p className="text-sm font-bold">Objectif : {next.label}</p>
+                        <p className="text-xs text-muted-foreground">Encore {next.at - referralData.totalReferred} parrainage(s) pour débloquer cette récompense</p>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-lg font-extrabold text-amber-600">{Math.round(progress)}%</span>
                       </div>
                     </div>
                   )}
                   {!next && referralData.totalReferred > 0 && (
-                    <div className="mt-4 p-3 rounded-lg bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border border-amber-200 dark:border-amber-800 text-center">
-                      <p className="text-sm font-bold text-amber-700 dark:text-amber-400">Félicitations ! Tous les paliers débloqués</p>
-                      <p className="text-xs text-muted-foreground mt-1">Contactez-nous sur WhatsApp pour récupérer votre récompense maximale.</p>
+                    <div className="mt-5 p-4 rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/15 dark:to-teal-900/15 border border-emerald-200 dark:border-emerald-800 text-center">
+                      <Crown className="h-6 w-6 text-amber-500 mx-auto mb-1" />
+                      <p className="text-sm font-bold text-emerald-700 dark:text-emerald-400">Félicitations ! Tous les paliers débloqués</p>
+                      <p className="text-xs text-muted-foreground mt-1">Vous êtes un parraineur légende. Contactez-nous sur WhatsApp pour récupérer votre récompense maximale.</p>
                     </div>
                   )}
                 </CardContent>
               </Card>
             </FadeIn>
 
+            {/* Classement des meilleurs parraineurs */}
+            <FadeIn delay={0.28}>
+              <Card className="border-0 shadow-lg overflow-hidden mb-8">
+                <CardContent className="p-6">
+                  <h3 className="font-bold text-sm mb-4 flex items-center gap-2">
+                    <Crown className="h-4 w-4 text-amber-500" /> Classement des parraineurs
+                  </h3>
+                  <div className="space-y-2">
+                    {[
+                      { rank: 1, name: 'Amadou D.', referrals: 12, earned: '6 000', gradient: 'from-amber-400 to-yellow-500', badge: 'bg-amber-100 dark:bg-amber-900/30 text-amber-700' },
+                      { rank: 2, name: 'Fatoumata T.', referrals: 8, earned: '4 000', gradient: 'from-gray-300 to-gray-400', badge: 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300' },
+                      { rank: 3, name: 'Ibrahim S.', referrals: 5, earned: '2 500', gradient: 'from-orange-400 to-amber-600', badge: 'bg-orange-100 dark:bg-orange-900/30 text-orange-700' },
+                    ].map((leader) => (
+                      <div key={leader.rank} className={`flex items-center gap-4 p-3 rounded-xl border transition-all ${leader.rank === 1 ? 'bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/10 dark:to-yellow-900/10 border-amber-200 dark:border-amber-800 shadow-sm' : 'bg-card border-border hover:shadow-sm'}`}>
+                        <div className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br ${leader.gradient} text-white font-extrabold text-sm shadow-md`}>
+                          {leader.rank}
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-sm font-bold">{leader.name}</p>
+                          <p className="text-[10px] text-muted-foreground">{leader.referrals} personne(s) parrainée(s)</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm font-extrabold text-emerald-600">{leader.earned} FCFA</p>
+                          <Badge variant="secondary" className={`text-[9px] ${leader.badge}`}>
+                            {leader.rank === 1 ? 'Champion' : leader.rank === 2 ? 'Vice-champion' : 'Troisième'}
+                          </Badge>
+                        </div>
+                      </div>
+                    ))}
+
+                    {referralData.totalReferred > 0 && (
+                      <div className="mt-2 p-3 rounded-xl bg-purple-50 dark:bg-purple-900/10 border-2 border-dashed border-purple-300 dark:border-purple-700">
+                        <div className="flex items-center gap-4">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500 text-white font-extrabold text-sm shadow-md">
+                            Vous
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-sm font-bold">Votre position</p>
+                            <p className="text-[10px] text-muted-foreground">{referralData.totalReferred} personne(s) parrainée(s)</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-sm font-extrabold text-emerald-600">{referralData.totalEarned.toLocaleString('fr-FR')} FCFA</p>
+                            <Badge className="bg-purple-500 text-white border-0 text-[9px]">Parraineur actif</Badge>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </FadeIn>
+
             {/* Formulaire d'ajout + Historique */}
             <div className="grid lg:grid-cols-2 gap-6">
-              <FadeIn delay={0.25}>
-                <Card className="border-0 shadow-lg h-full">
+              <FadeIn delay={0.3}>
+                <Card className="border-0 shadow-xl h-full">
                   <CardContent className="p-6">
                     <h3 className="font-bold text-sm mb-4 flex items-center gap-2">
                       <UserCheck className="h-4 w-4 text-purple-500" /> Enregistrer un parrainage
@@ -2057,24 +2382,27 @@ export default function Home() {
                         onKeyDown={(e) => e.key === 'Enter' && addReferral()}
                         className="h-11"
                       />
-                      <Button onClick={addReferral} className="bg-purple-500 hover:bg-purple-600 text-white font-semibold h-11 px-5 flex-shrink-0">
-                        <Plus className="h-4 w-4" />
+                      <Button onClick={addReferral} className="bg-purple-500 hover:bg-purple-600 text-white font-semibold h-11 px-5 flex-shrink-0 shadow-md hover:shadow-lg transition-all hover:scale-[1.02] active:scale-95">
+                        <Plus className="h-4 w-4 mr-1" /> Ajouter
                       </Button>
                     </div>
 
-                    {/* Comment ça marche */}
+                    {/* Comment ça marche - Amélioré */}
                     <div className="mt-6 pt-5 border-t">
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">Comment ça marche</h4>
-                      <div className="space-y-3">
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-4">Comment ça marche en 3 étapes</h4>
+                      <div className="space-y-4">
                         {[
-                          { step: '1', title: 'Partagez votre code', desc: 'Envoyez CB-IBRA-2024 à vos amis via WhatsApp, SMS ou en personne.', color: 'bg-purple-500' },
-                          { step: '2', title: 'Ils commandent', desc: "Votre ami mentionne votre code lors de sa commande et obtient 10% de réduction immédiate.", color: 'bg-amber-500' },
-                          { step: '3', title: 'Vous gagnez 500 FCFA', desc: "Chaque parrainage validé vous crédite 500 FCFA de réduction cumulable sur vos prochaines commandes.", color: 'bg-emerald-500' },
-                        ].map((item) => (
+                          { step: '1', title: 'Partagez votre code ou lien', desc: 'Envoyez CB-IBRA-2024 via WhatsApp, Facebook, Twitter ou SMS. Utilisez les boutons de partage ci-dessus.', color: 'bg-purple-500', icon: Share2 },
+                          { step: '2', title: 'Votre ami commande', desc: "Votre ami mentionne votre code lors de sa commande et obtient 10% de réduction immédiate sur tout service.", color: 'bg-amber-500', icon: ShoppingCart },
+                          { step: '3', title: 'Vous gagnez des récompenses', desc: "Chaque parrainage validé vous crédite 500 FCFA cumulables. Débloquez des paliers : service gratuit, logo offert, et même un site web !", color: 'bg-emerald-500', icon: Gift },
+                        ].map((item, idx) => (
                           <div key={item.step} className="flex items-start gap-3">
-                            <div className={`flex h-7 w-7 items-center justify-center rounded-full ${item.color} text-white text-xs font-bold flex-shrink-0 mt-0.5`}>{item.step}</div>
-                            <div>
-                              <p className="text-xs font-semibold">{item.title}</p>
+                            <div className="relative flex-shrink-0">
+                              <div className={`flex h-8 w-8 items-center justify-center rounded-full ${item.color} text-white text-xs font-bold shadow-md`}>{item.step}</div>
+                              {idx < 2 && <div className="absolute top-8 left-1/2 -translate-x-1/2 w-0.5 h-4 bg-border" />}
+                            </div>
+                            <div className="pt-0.5">
+                              <p className="text-xs font-semibold flex items-center gap-1.5">{item.title}</p>
                               <p className="text-[11px] text-muted-foreground leading-relaxed mt-0.5">{item.desc}</p>
                             </div>
                           </div>
@@ -2083,11 +2411,12 @@ export default function Home() {
                     </div>
 
                     {/* Conditions */}
-                    <div className="mt-5 p-3 rounded-lg bg-muted/50 border">
+                    <div className="mt-5 p-3 rounded-xl bg-muted/50 border">
                       <div className="flex items-start gap-2">
                         <Lock className="h-3.5 w-3.5 text-muted-foreground mt-0.5 flex-shrink-0" />
                         <div className="text-[10px] text-muted-foreground leading-relaxed space-y-1">
-                          <p>Le client doit payer un service complet pour que le parrainage soit validé. Les réductions sont cumulables et applicables sur toute commande future. Les récompenses ne sont pas échangeables en argent.</p>
+                          <p className="font-semibold text-foreground/70">Conditions du programme</p>
+                          <p>Le client doit payer un service complet pour que le parrainage soit validé. Les réductions sont cumulables et applicables sur toute commande future. Les récompenses ne sont pas échangeables en argent. Le code est valable pour une utilisation unique par nouvelle personne.</p>
                         </div>
                       </div>
                     </div>
@@ -2095,24 +2424,46 @@ export default function Home() {
                 </Card>
               </FadeIn>
 
-              <FadeIn delay={0.3}>
-                <Card className="border-0 shadow-lg h-full">
+              <FadeIn delay={0.35}>
+                <Card className="border-0 shadow-xl h-full">
                   <CardContent className="p-6">
-                    <h3 className="font-bold text-sm mb-4 flex items-center gap-2">
-                      <History className="h-4 w-4 text-amber-500" /> Historique des parrainages
-                    </h3>
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="font-bold text-sm flex items-center gap-2">
+                        <History className="h-4 w-4 text-amber-500" /> Historique des parrainages
+                      </h3>
+                      {referralData.totalReferred > 0 && (
+                        <Badge variant="secondary" className="text-[10px]">{referralData.totalReferred} entrée(s)</Badge>
+                      )}
+                    </div>
                     {referralData.referred.length === 0 ? (
-                      <div className="flex flex-col items-center justify-center py-10 text-muted-foreground">
-                        <Users className="h-10 w-10 opacity-20 mb-3" />
-                        <p className="text-sm">Aucun parrainage encore</p>
-                        <p className="text-xs text-muted-foreground/60 mt-1">Partagez votre code pour commencer à gagner</p>
+                      <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
+                        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-muted/50 mb-4">
+                          <Users className="h-8 w-8 opacity-20" />
+                        </div>
+                        <p className="text-sm font-medium">Aucun parrainage encore</p>
+                        <p className="text-xs text-muted-foreground/60 mt-1 mb-4">Partagez votre code pour commencer à gagner</p>
+                        <button
+                          onClick={() => {
+                            const text = encodeURIComponent(`Salut ! Profite de 10% de réduction chez Créateur Boutique avec mon code ${REFERRAL_CODE}.`)
+                            window.open(`https://wa.me/?text=${text}`, '_blank')
+                          }}
+                          className="flex items-center gap-2 text-xs font-semibold text-emerald-600 hover:text-emerald-700 transition-colors"
+                        >
+                          <MessageCircle className="h-3.5 w-3.5" /> Inviter maintenant sur WhatsApp
+                        </button>
                       </div>
                     ) : (
-                      <div className="space-y-2 max-h-[400px] overflow-y-auto">
+                      <div className="space-y-2 max-h-[400px] overflow-y-auto pr-1">
                         {referralData.referred.map((ref, i) => (
-                          <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-muted/50 border">
+                          <motion.div
+                            key={i}
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.3, delay: i * 0.05 }}
+                            className="flex items-center justify-between p-3 rounded-xl bg-muted/50 border hover:shadow-sm transition-shadow"
+                          >
                             <div className="flex items-center gap-3">
-                              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-purple-100 dark:bg-purple-900/30">
+                              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-purple-100 to-amber-100 dark:from-purple-900/30 dark:to-amber-900/30">
                                 <UserCheck className="h-4 w-4 text-purple-600" />
                               </div>
                               <div>
@@ -2121,21 +2472,28 @@ export default function Home() {
                               </div>
                             </div>
                             <div className="text-right">
-                              <p className="text-xs font-bold text-emerald-600">+500 FCFA</p>
+                              <p className="text-xs font-bold text-emerald-600 flex items-center gap-1">
+                                <span>+500 FCFA</span>
+                                {ref.status === 'Validé' && <CheckCircle2 className="h-3 w-3" />}
+                              </p>
                               <Badge variant={ref.status === 'Validé' ? 'default' : 'secondary'} className="text-[9px]">
                                 {ref.status}
                               </Badge>
                             </div>
-                          </div>
+                          </motion.div>
                         ))}
                       </div>
                     )}
 
                     {referralData.totalReferred > 0 && (
-                      <div className="mt-4 pt-4 border-t">
+                      <div className="mt-4 pt-4 border-t space-y-2">
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-muted-foreground">Total cumulé</span>
+                          <span className="font-extrabold text-emerald-600">{referralData.totalEarned.toLocaleString('fr-FR')} FCFA</span>
+                        </div>
                         <a href={`https://wa.me/22397787244?text=Bonjour ! J'ai parrainé ${referralData.totalReferred} personne(s) avec le code ${REFERRAL_CODE}. Mes réductions cumulées : ${referralData.totalEarned} FCFA. Je souhaite les utiliser.`} target="_blank" rel="noopener noreferrer">
-                          <Button className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold">
-                            <MessageCircle className="h-4 w-4 mr-2" /> Réclamer mes récompenses
+                          <Button className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold shadow-md hover:shadow-lg transition-all">
+                            <MessageCircle className="h-4 w-4 mr-2" /> Réclamer mes récompenses via WhatsApp
                           </Button>
                         </a>
                       </div>
@@ -2613,7 +2971,7 @@ export default function Home() {
 
       {/* ═══ WHATSAPP FLOTTANT + BACK TO TOP ═══ */}
       <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
-        {/* Back to top button */}
+        {/* Back to top button with scroll progress */}
         <AnimatePresence>
           {showBackToTop && (
             <motion.button
@@ -2628,43 +2986,62 @@ export default function Home() {
             </motion.button>
           )}
         </AnimatePresence>
-        {/* Chat automatique popup */}
-        <motion.div
-          initial={{ opacity: 0, y: 10, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ delay: 3, duration: 0.4 }}
-          className="bg-white dark:bg-card border shadow-xl rounded-2xl p-4 w-64 hidden sm:block"
-        >
-          <div className="flex items-center gap-2 mb-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30">
-              <Headphones className="h-4 w-4 text-emerald-600" />
-            </div>
-            <div>
-              <p className="text-xs font-bold">Écrivez-nous maintenant</p>
-              <p className="text-[10px] text-muted-foreground">sur WhatsApp — réponse rapide</p>
-            </div>
-          </div>
-          <p className="text-[11px] text-muted-foreground leading-relaxed mb-3">
-            Besoin d&apos;un service ? Une question ? Écrivez-nous directement et recevez une réponse en quelques minutes.
-          </p>
-          <a
-            href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20avoir%20des%20informations%20sur%20vos%20services."
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block w-full text-center text-xs font-semibold bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg py-2 transition-colors"
-          >
-            Démarrer la conversation
-          </a>
-        </motion.div>
+        {/* Chat automatique popup - with auto dismiss */}
+        <AnimatePresence>
+          {showChatPopup && (
+            <motion.div
+              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 10, scale: 0.95 }}
+              transition={{ delay: 3, duration: 0.4 }}
+              className="bg-white dark:bg-card border shadow-xl rounded-2xl p-4 w-72 hidden sm:block relative"
+            >
+              <button
+                onClick={() => setShowChatPopup(false)}
+                className="absolute top-2 right-2 text-muted-foreground hover:text-foreground transition-colors"
+                aria-label="Fermer"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="relative">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30">
+                    <Headphones className="h-4 w-4 text-emerald-600" />
+                  </div>
+                  <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 bg-emerald-500 rounded-full border-2 border-white dark:border-card" />
+                </div>
+                <div>
+                  <p className="text-xs font-bold">Écrivez-nous maintenant</p>
+                  <p className="text-[10px] text-emerald-600 font-medium">En ligne — réponse rapide</p>
+                </div>
+              </div>
+              <p className="text-[11px] text-muted-foreground leading-relaxed mb-3">
+                Besoin d&apos;un service ? Une question ? Écrivez-nous directement et recevez une réponse en quelques minutes via WhatsApp.
+              </p>
+              <a
+                href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20avoir%20des%20informations%20sur%20vos%20services."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full text-center text-xs font-semibold bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg py-2.5 transition-colors shadow-sm"
+              >
+                Démarrer la conversation
+              </a>
+            </motion.div>
+          )}
+        </AnimatePresence>
         {/* WhatsApp button */}
         <a
           href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20commander%20un%20service%20chez%20Cr%C3%A9ateur%20Boutique."
           target="_blank"
           rel="noopener noreferrer"
-          className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500 text-white shadow-lg shadow-emerald-500/30 hover:bg-emerald-600 hover:shadow-xl hover:shadow-emerald-500/40 transition-all duration-300 hover:scale-110 group"
+          className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500 text-white shadow-lg shadow-emerald-500/30 hover:bg-emerald-600 hover:shadow-xl hover:shadow-emerald-500/40 transition-all duration-300 hover:scale-110 group relative"
           aria-label="Contacter sur WhatsApp"
         >
           <MessageCircle className="h-6 w-6" />
+          <span className="absolute -top-1 -right-1 flex h-4 w-4">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+            <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-white dark:border-background" />
+          </span>
           <span className="absolute right-full mr-3 whitespace-nowrap rounded-lg bg-gray-900 text-white px-3 py-1.5 text-xs font-medium shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
             Commandez sur WhatsApp
             <span className="absolute top-1/2 -right-1 -translate-y-1/2 h-2 w-2 bg-gray-900 rotate-45" />
