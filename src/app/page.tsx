@@ -558,40 +558,36 @@ export default function Home() {
                 </motion.div>
               </div>
 
-              {/* Hero Visual */}
+              {/* Hero Visual - Real Images */}
               <motion.div
                 className="hidden lg:block"
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.7, delay: 0.2 }}
               >
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-4">
-                    <div className="rounded-2xl overflow-hidden shadow-xl h-48 bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
-                      <div className="text-center text-white p-4">
-                        <Palette className="h-10 w-10 mx-auto mb-2 opacity-90" />
-                        <p className="text-sm font-semibold">Design</p>
-                      </div>
-                    </div>
-                    <div className="rounded-2xl overflow-hidden shadow-xl h-64 bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                      <div className="text-center text-white p-4">
-                        <Globe className="h-10 w-10 mx-auto mb-2 opacity-90" />
-                        <p className="text-sm font-semibold">Sites Web</p>
+                <div className="relative">
+                  <div className="absolute -inset-4 bg-gradient-to-r from-amber-400/20 via-orange-400/20 to-red-400/20 rounded-3xl blur-2xl" />
+                  <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/20">
+                    <img src="https://sfile.chatglm.cn/images-ppt/ab607e582b32.jpg" alt="Design professionnel" className="w-full h-[420px] object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-6">
+                      <div className="flex gap-2 flex-wrap">
+                        {['Design Graphique', 'Sites Web', 'Montage Vidéo', 'Formations'].map((t) => (
+                          <span key={t} className="px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-white text-xs font-medium border border-white/10">{t}</span>
+                        ))}
                       </div>
                     </div>
                   </div>
-                  <div className="space-y-4 pt-8">
-                    <div className="rounded-2xl overflow-hidden shadow-xl h-64 bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center">
-                      <div className="text-center text-white p-4">
-                        <MonitorPlay className="h-10 w-10 mx-auto mb-2 opacity-90" />
-                        <p className="text-sm font-semibold">Vidéo</p>
-                      </div>
+                  {/* Floating card */}
+                  <div className="absolute -bottom-6 -left-6 bg-white dark:bg-card rounded-xl shadow-xl p-3 border flex items-center gap-3">
+                    <div className="flex -space-x-2">
+                      {[1,2,3,4].map((i) => (
+                        <div key={i} className={`h-8 w-8 rounded-full border-2 border-white bg-gradient-to-br ${['from-amber-400 to-orange-500','from-emerald-400 to-teal-500','from-purple-400 to-pink-500','from-blue-400 to-cyan-500'][i-1]}`} />
+                      ))}
                     </div>
-                    <div className="rounded-2xl overflow-hidden shadow-xl h-48 bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
-                      <div className="text-center text-white p-4">
-                        <Target className="h-10 w-10 mx-auto mb-2 opacity-90" />
-                        <p className="text-sm font-semibold">Marketing</p>
-                      </div>
+                    <div>
+                      <p className="text-xs font-bold">200+ Clients</p>
+                      <p className="text-[10px] text-muted-foreground">Satisfaits</p>
                     </div>
                   </div>
                 </div>
@@ -979,26 +975,24 @@ export default function Home() {
 
             <StaggerContainer className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
               {[
-                { title: 'Logo Restaurant Le Baobab', category: 'Logo', gradient: 'from-amber-400 to-orange-500', desc: 'Identité visuelle complète pour un restaurant traditionnel malien' },
-                { title: 'Affiche Festival Bamako', category: 'Affiche', gradient: 'from-purple-500 to-pink-500', desc: 'Affiche événementielle pour un festival culturel à Bamako' },
-                { title: 'Site Web MaliTech Solutions', category: 'Site Web', gradient: 'from-emerald-500 to-teal-500', desc: 'Site vitrine professionnel pour une entreprise tech malienne' },
-                { title: 'Logo Afro Fashion Store', category: 'Logo', gradient: 'from-red-500 to-rose-500', desc: 'Logo moderne pour une boutique de mode africaine' },
-                { title: 'Montage Promo Produit', category: 'Vidéo', gradient: 'from-blue-500 to-cyan-500', desc: 'Montage vidéo promotionnel pour un lancement de produit' },
-                { title: 'Identité ESIA Business', category: 'Identité', gradient: 'from-indigo-500 to-violet-500', desc: 'Charte graphique complète pour une école de business' },
+                { title: 'Logo Restaurant Le Baobab', category: 'Logo', image: 'https://sfile.chatglm.cn/images-ppt/578379168282.jpg', desc: 'Identité visuelle complète pour un restaurant traditionnel malien' },
+                { title: 'Affiche Festival Bamako', category: 'Affiche', image: 'https://sfile.chatglm.cn/images-ppt/d9ef36365f4d.jpg', desc: 'Affiche événementielle pour un festival culturel à Bamako' },
+                { title: 'Site Web MaliTech Solutions', category: 'Site Web', image: 'https://sfile.chatglm.cn/images-ppt/f1278b508122.jpg', desc: 'Site vitrine professionnel pour une entreprise tech malienne' },
+                { title: 'Logo Afro Fashion Store', category: 'Logo', image: 'https://sfile.chatglm.cn/images-ppt/3dc783490d16.jpg', desc: 'Logo moderne pour une boutique de mode africaine' },
+                { title: 'Montage Promo Produit', category: 'Vidéo', image: 'https://sfile.chatglm.cn/images-ppt/ff818456f3fe.jpg', desc: 'Montage vidéo promotionnel pour un lancement de produit' },
+                { title: 'Identité ESIA Business', category: 'Identité', image: 'https://sfile.chatglm.cn/images-ppt/f7a36d737b82.png', desc: 'Charte graphique complète pour une école de business' },
               ].map((item) => (
                 <motion.div key={item.title} variants={cardVariants}>
                   <Card className="overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 h-full group cursor-pointer">
-                    <div className={`relative h-48 sm:h-56 bg-gradient-to-br ${item.gradient} flex items-center justify-center overflow-hidden`}>
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
-                      <div className="relative text-center text-white p-4 z-10">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm mx-auto mb-3">
-                          <Sparkles className="h-6 w-6" />
-                        </div>
-                        <h3 className="font-bold text-sm sm:text-base">{item.title}</h3>
-                        <p className="text-white/70 text-xs mt-1">{item.desc}</p>
+                    <div className="relative h-48 sm:h-56 overflow-hidden">
+                      <img src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                      <div className="absolute bottom-0 left-0 right-0 p-4 z-10">
+                        <h3 className="font-bold text-sm sm:text-base text-white">{item.title}</h3>
+                        <p className="text-white/70 text-xs mt-1 line-clamp-2">{item.desc}</p>
                       </div>
                       <div className="absolute top-3 left-3">
-                        <Badge className="bg-white/20 backdrop-blur-sm text-white border-0 text-[10px]">{item.category}</Badge>
+                        <Badge className="bg-amber-500/90 text-white border-0 text-[10px] font-semibold backdrop-blur-sm">{item.category}</Badge>
                       </div>
                     </div>
                   </Card>
@@ -1546,13 +1540,15 @@ export default function Home() {
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <FadeIn>
                 <div className="relative">
-                  <div className="rounded-2xl overflow-hidden shadow-xl bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 h-[400px] flex items-center justify-center">
-                    <div className="text-center text-white p-8">
-                      <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mx-auto mb-4">
-                        <Palette className="h-10 w-10" />
+                  <div className="rounded-2xl overflow-hidden shadow-xl h-[400px] relative">
+                    <img src="https://sfile.chatglm.cn/images-ppt/501b27e524a5.jpg" alt="Créateur Boutique - À propos" className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-amber-900/80 via-amber-900/30 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mb-3">
+                        <Palette className="h-7 w-7" />
                       </div>
                       <h3 className="text-2xl font-bold">Créateur Boutique</h3>
-                      <p className="mt-2 text-white/80">Design &bull; Digital &bull; Créativité</p>
+                      <p className="mt-1 text-white/80 text-sm">Design &bull; Digital &bull; Créativité</p>
                     </div>
                   </div>
                   <div className="absolute -bottom-6 -right-6 bg-white dark:bg-card rounded-2xl p-5 shadow-xl border hidden sm:block">
@@ -2146,7 +2142,7 @@ export default function Home() {
                   date: '28 Juin 2026',
                   readTime: '4 min',
                   color: 'bg-amber-100 text-amber-700',
-                  gradient: 'from-amber-400 to-orange-500',
+                  image: 'https://sfile.chatglm.cn/images-ppt/578379168282.jpg',
                 },
                 {
                   title: 'Comment réussir en digital en 2026',
@@ -2155,7 +2151,7 @@ export default function Home() {
                   date: '25 Juin 2026',
                   readTime: '6 min',
                   color: 'bg-emerald-100 text-emerald-700',
-                  gradient: 'from-emerald-400 to-teal-500',
+                  image: 'https://sfile.chatglm.cn/images-ppt/f1278b508122.jpg',
                 },
                 {
                   title: 'Les tendances design graphique à suivre',
@@ -2164,7 +2160,7 @@ export default function Home() {
                   date: '22 Juin 2026',
                   readTime: '5 min',
                   color: 'bg-purple-100 text-purple-700',
-                  gradient: 'from-purple-400 to-pink-500',
+                  image: 'https://sfile.chatglm.cn/images-ppt/d9ef36365f4d.jpg',
                 },
                 {
                   title: 'Pourquoi votre entreprise a besoin d\'un site web',
@@ -2173,7 +2169,7 @@ export default function Home() {
                   date: '18 Juin 2026',
                   readTime: '5 min',
                   color: 'bg-blue-100 text-blue-700',
-                  gradient: 'from-blue-400 to-cyan-500',
+                  image: 'https://sfile.chatglm.cn/images-ppt/ab607e582b32.jpg',
                 },
                 {
                   title: 'Les outils indispensables pour un créateur de contenu',
@@ -2182,7 +2178,7 @@ export default function Home() {
                   date: '15 Juin 2026',
                   readTime: '7 min',
                   color: 'bg-red-100 text-red-700',
-                  gradient: 'from-red-400 to-rose-500',
+                  image: 'https://sfile.chatglm.cn/images-ppt/3dc783490d16.jpg',
                 },
                 {
                   title: 'Comment attirer des clients avec le marketing digital',
@@ -2191,16 +2187,14 @@ export default function Home() {
                   date: '10 Juin 2026',
                   readTime: '6 min',
                   color: 'bg-teal-100 text-teal-700',
-                  gradient: 'from-teal-400 to-emerald-500',
+                  image: 'https://sfile.chatglm.cn/images-ppt/ff818456f3fe.jpg',
                 },
               ].map((article) => (
                 <motion.div key={article.title} variants={cardVariants}>
                   <Card className="overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 h-full flex flex-col group">
-                    <div className={`relative h-44 overflow-hidden bg-gradient-to-br ${article.gradient} flex items-center justify-center`}>
-                      <div className="text-center text-white p-4">
-                        <span className="text-xs font-medium bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full">{article.category}</span>
-                        <h3 className="text-base font-bold mt-2 leading-snug">{article.title}</h3>
-                      </div>
+                    <div className="relative h-44 overflow-hidden">
+                      <img src={article.image} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                       <div className="absolute top-3 left-3">
                         <Badge className={article.color}>{article.category}</Badge>
                       </div>
