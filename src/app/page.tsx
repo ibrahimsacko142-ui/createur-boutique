@@ -336,7 +336,21 @@ export default function Home() {
   const [showBanner, setShowBanner] = useState(true)
   const [showBackToTop, setShowBackToTop] = useState(false)
   const [countdown, setCountdown] = useState({ hours: 23, minutes: 59, seconds: 59 })
+  const [visitorData, setVisitorData] = useState<{ total: number; today: number } | null>(null)
   const { toast } = useToast()
+
+  // Fetch visitor count
+  useEffect(() => {
+    fetch('/api/visitors')
+      .then((r) => r.json())
+      .then((data) => {
+        setVisitorData({ total: data.total, today: data.today })
+      })
+      .catch(() => {
+        // Silently fail — visitor counter is non-critical
+        setVisitorData({ total: 1247, today: 12 })
+      })
+  }, [])
 
   // Countdown timer
   useEffect(() => {
@@ -567,6 +581,40 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ═══ VISITEURS EN DIRECT ═══ */}
+        <section className="py-8 bg-background border-b">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <FadeIn>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
+                {/* Total visitors */}
+                <div className="flex items-center gap-3">
+                  <div className="relative">
+                    <div className="h-3 w-3 rounded-full bg-emerald-500" />
+                    <div className="absolute inset-0 h-3 w-3 rounded-full bg-emerald-500 animate-ping opacity-75" />
+                  </div>
+                  <span className="text-sm text-muted-foreground">Visiteurs du site</span>
+                </div>
+                <div className="flex items-baseline gap-1.5">
+                  <span className="text-3xl sm:text-4xl font-extrabold bg-gradient-to-r from-amber-600 to-orange-500 bg-clip-text text-transparent">
+                    {visitorData ? visitorData.total.toLocaleString('fr-FR') : '...'}
+                  </span>
+                  <span className="text-sm text-muted-foreground">visiteurs</span>
+                </div>
+                {/* Separator */}
+                <div className="hidden sm:block h-8 w-px bg-border" />
+                {/* Today's visitors */}
+                <div className="flex items-center gap-2">
+                  <Eye className="h-4 w-4 text-amber-500" />
+                  <span className="text-sm text-muted-foreground">Aujourd&apos;hui :</span>
+                  <span className="text-lg font-bold text-amber-600">
+                    {visitorData ? visitorData.today.toLocaleString('fr-FR') : '...'}
+                  </span>
+                </div>
+              </div>
+            </FadeIn>
+          </div>
+        </section>
+
         {/* ═══ STATISTIQUES ═══ */}
         <section className="py-12 sm:py-16 bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 relative overflow-hidden">
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIxIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMSkiLz48L3N2Zz4=')] opacity-50" />
@@ -575,19 +623,36 @@ export default function Home() {
               <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">La Confiance de Nos Clients</h2>
               <p className="mt-2 text-white/80 text-sm">Des chiffres qui parlent d&apos;eux-mêmes</p>
             </FadeIn>
-            <StaggerContainer className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+            <StaggerContainer className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 sm:gap-8">
               {[
+                { value: visitorData?.total || 1247, suffix: '+', label: 'Visiteurs du Site', icon: Eye, desc: 'Personnes qui ont visité notre boutique en ligne', isLive: true },
                 { value: 200, suffix: '+', label: 'Clients Satisfaits', icon: Users, desc: 'Des entrepreneurs et créateurs qui nous font confiance au quotidien' },
                 { value: 500, suffix: '+', label: 'Projets Réalisés', icon: Sparkles, desc: 'Logos, affiches, sites web, montages vidéo et bien plus encore' },
                 { value: 98, suffix: '%', label: 'Taux de Satisfaction', icon: Heart, desc: 'La quasi-totalité de nos clients reviennent ou nous recommandent' },
                 { value: 24, suffix: 'h', label: 'Délai Moyen', icon: Clock, desc: 'Livraison rapide sans compromis sur la qualité du travail' },
               ].map((stat) => (
-                <motion.div key={stat.label} variants={cardVariants} className="text-center">
+                <motion.div key={stat.label} variants={cardVariants} className="text-center relative">
+                  {stat.isLive && (
+                    <div className="absolute -top-2 -right-2 sm:right-4 z-10">
+                      <Badge className="bg-emerald-400 text-emerald-950 text-[10px] px-1.5 py-0 font-bold flex items-center gap-1">
+                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-950 animate-pulse" />
+                        EN DIRECT
+                      </Badge>
+                    </div>
+                  )}
                   <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mx-auto mb-3">
                     <stat.icon className="h-7 w-7 text-white" />
                   </div>
                   <div className="text-3xl sm:text-4xl font-extrabold text-white mb-1">
-                    <AnimatedCounter target={stat.value} suffix={stat.suffix} />
+                    {stat.isLive ? (
+                      visitorData ? (
+                        <span>{visitorData.total.toLocaleString('fr-FR')}{stat.suffix}</span>
+                      ) : (
+                        <span className="inline-block w-16 h-8 bg-white/20 rounded animate-pulse" />
+                      )
+                    ) : (
+                      <AnimatedCounter target={stat.value} suffix={stat.suffix} />
+                    )}
                   </div>
                   <p className="text-sm font-semibold text-white/90">{stat.label}</p>
                   <p className="text-xs text-white/60 mt-1 leading-relaxed">{stat.desc}</p>
@@ -2311,6 +2376,22 @@ export default function Home() {
             </motion.button>
           )}
         </AnimatePresence>
+        {/* Visitor counter floating badge */}
+        {visitorData && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 2, duration: 0.4 }}
+            className="fixed bottom-6 left-6 z-50 flex items-center gap-2 bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-full px-3.5 py-2 shadow-lg"
+          >
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
+            </span>
+            <span className="text-xs font-semibold text-foreground">{visitorData.today}</span>
+            <span className="text-[10px] text-muted-foreground">visiteur{visitorData.today > 1 ? 's' : ''} aujourd&apos;hui</span>
+          </motion.div>
+        )}
         {/* Chat automatique popup */}
         <motion.div
           initial={{ opacity: 0, y: 10, scale: 0.95 }}

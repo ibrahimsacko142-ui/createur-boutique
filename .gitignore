@@ -50,5 +50,6 @@ test
 prompt
 
 server.log
+.visitor-data.json
 # Skills directory
 /skills/
