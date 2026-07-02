@@ -1,0 +1,39 @@
+🚀 Initializing Z-AI SDK...
+🔎 Searching images: "professional logo design collection showcase"
+✅ Got 4 images
+{
+  "success": true,
+  "query": "professional logo design collection showcase",
+  "count": 4,
+  "ranked": false,
+  "results": [
+    {
+      "original_url": "https://sfile.chatglm.cn/images-ppt/6f6c28be527c.png",
+      "caption": "",
+      "source": "Sketch To",
+      "original_width": "1024px",
+      "original_height": "1024px"
+    },
+    {
+      "original_url": "https://sfile.chatglm.cn/images-ppt/4b0d9564c1f4.jpg",
+      "caption": "",
+      "source": "Transformed Design Inc.",
+      "original_width": "960px",
+      "original_height": "960px"
+    },
+    {
+      "original_url": "https://sfile.chatglm.cn/images-ppt/06e0767843b8.jpg",
+      "caption": "",
+      "source": "Twin Images",
+      "original_width": "1211px",
+      "original_height": "865px"
+    },
+    {
+      "original_url": "https://sfile.chatglm.cn/images-ppt/07b31ed6e7f2.jpg",
+      "caption": "",
+      "source": "Into The Wild Studios",
+      "original_width": "1600px",
+      "original_height": "1600px"
+    }
+  ]
+}
