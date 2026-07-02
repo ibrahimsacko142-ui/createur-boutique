@@ -14,11 +14,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Créateur Boutique — Design Graphique, Sites Web & Outils Numériques à Bamako",
+  title: "SK Designer Luxe — Design Graphique, Sites Web & Solutions Numériques à Bamako | Sacko",
   description:
-    "Créateur Boutique : votre partenaire digital à Bamako, Mali. Design graphique professionnel, création de logos, sites web, montage vidéo, outils numériques (CapCut Pro, PicsArt Pro, IPTV Pro). Paiement Wave. Livraison rapide 24h.",
+    "SK Designer Luxe par Sacko : votre partenaire digital premium à Bamako, Mali. Design graphique professionnel, création de logos, sites web, montage vidéo, outils numériques (CapCut Pro, PicsArt Pro, IPTV Pro). Paiement Wave. Livraison rapide 24h.",
   keywords: [
-    "Créateur Boutique",
+    "SK Designer Luxe",
+    "Sacko",
+    "design Mali",
+    "SK Designer",
     "design graphique Bamako",
     "création de logo Mali",
     "site web Bamako",
@@ -38,8 +41,8 @@ export const metadata: Metadata = {
     icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
   },
   openGraph: {
-    title: "Créateur Boutique — Design & Digital à Bamako",
-    description: "Services professionnels de design graphique, sites web, montage vidéo et outils numériques. Qualité, Créativité, Satisfaction.",
+    title: "SK Designer Luxe — Design & Digital Premium à Bamako | Sacko",
+    description: "SK Designer Luxe par Sacko — Services professionnels de design graphique, sites web, montage vidéo et outils numériques. L'excellence du design digital en Afrique.",
     locale: "fr_ML",
     type: "website",
   },

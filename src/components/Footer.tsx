@@ -1,17 +1,28 @@
-import { Instagram, Facebook, Twitter, Mail, MapPin, Phone, MessageCircle } from 'lucide-react'
+import { Instagram, Facebook, Mail, MapPin, Phone, MessageCircle, Sparkles, Heart } from 'lucide-react'
+// TikTok SVG icon component
+function TikTokIcon({ className = 'h-4.5 w-4.5' }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.87a8.16 8.16 0 0 0 4.77 1.52V6.94a4.85 4.85 0 0 1-1.01-.25z" />
+    </svg>
+  )
+}
 
 export default function Footer() {
   return (
     <footer className="border-t bg-gradient-to-b from-muted/30 to-muted/50 mt-auto">
       {/* CTA bar before footer */}
-      <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIzMCIgY3k9IjMwIiByPSIxLjUiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wOCkiLz48L3N2Zz4=')] opacity-50" />
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="text-center sm:text-left">
-            <p className="text-white font-bold text-lg">Besoin d&apos;un service ? Contactez-nous maintenant !</p>
+            <p className="text-white font-bold text-lg flex items-center gap-2 justify-center sm:justify-start">
+              <Sparkles className="h-5 w-5" /> Besoin d&apos;un service ?
+            </p>
             <p className="text-white/80 text-sm">Réponse rapide sur WhatsApp — Disponible 7j/7</p>
           </div>
           <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20avoir%20des%20informations." target="_blank" rel="noopener noreferrer">
-            <button className="bg-white text-emerald-600 hover:bg-white/90 font-bold text-sm px-6 py-2.5 rounded-full shadow-lg flex items-center gap-2 transition-colors">
+            <button className="bg-white text-emerald-600 hover:bg-white/90 font-bold text-sm px-6 py-2.5 rounded-full shadow-lg flex items-center gap-2 transition-all hover:scale-105">
               <MessageCircle className="h-4 w-4" /> WhatsApp
             </button>
           </a>
@@ -21,30 +32,30 @@ export default function Footer() {
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500 text-white font-bold text-base">
-                C
+          <div className="space-y-4">
+            <div className="flex items-center gap-2.5">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 text-white font-bold text-lg shadow-lg shadow-amber-500/20">
+                S
               </div>
               <span className="text-lg font-bold">
-                Créateur <span className="text-amber-500">Boutique</span>
+                SK <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">Designer Luxe</span>
               </span>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Votre partenaire digital de confiance à Bamako. Design graphique, création de sites web, montage vidéo et outils numériques professionnels. Qualité, Créativité, Satisfaction — notre promesse depuis le premier jour.
+              Votre partenaire digital de confiance à Bamako. Design graphique, création de sites web, montage vidéo et outils numériques professionnels. Qualité, Créativité, Satisfaction.
             </p>
-            <div className="flex gap-3 pt-1">
-              <a href="#" className="text-muted-foreground hover:text-amber-500 transition-colors" aria-label="Instagram">
-                <Instagram className="h-5 w-5" />
+            <div className="flex gap-2.5 pt-1">
+              <a href="https://www.instagram.com/sk_designer_luxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted hover:bg-amber-100 dark:hover:bg-amber-900/30 hover:text-amber-500 transition-all group" aria-label="Instagram">
+                <Instagram className="h-4.5 w-4.5" />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-amber-500 transition-colors" aria-label="Facebook">
-                <Facebook className="h-5 w-5" />
+              <a href="https://www.facebook.com/skdesignerluxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted hover:bg-amber-100 dark:hover:bg-amber-900/30 hover:text-amber-500 transition-all group" aria-label="Facebook">
+                <Facebook className="h-4.5 w-4.5" />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-amber-500 transition-colors" aria-label="Twitter">
-                <Twitter className="h-5 w-5" />
+              <a href="https://www.tiktok.com/@sk_designer_luxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted hover:bg-amber-100 dark:hover:bg-amber-900/30 hover:text-amber-500 transition-all group" aria-label="TikTok">
+                <TikTokIcon />
               </a>
-              <a href="https://wa.me/22397787244" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-emerald-500 transition-colors" aria-label="WhatsApp">
-                <MessageCircle className="h-5 w-5" />
+              <a href="https://wa.me/22397787244" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted hover:bg-emerald-100 dark:hover:bg-emerald-900/30 hover:text-emerald-500 transition-all group" aria-label="WhatsApp">
+                <MessageCircle className="h-4.5 w-4.5" />
               </a>
             </div>
           </div>
@@ -53,11 +64,11 @@ export default function Footer() {
           <div>
             <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">Navigation</h3>
             <ul className="space-y-2.5">
-              {['Accueil', 'Services', 'Offres', 'Blog', 'FAQ', 'Valeurs', 'Parrainage', 'Contact'].map((item) => (
+              {['Accueil', 'Services', 'Formations', 'Portfolio', 'Blog', 'FAQ', 'Parrainage', 'Contact'].map((item) => (
                 <li key={item}>
                   <a
                     href={`#${item.toLowerCase()}`}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    className="text-sm text-muted-foreground hover:text-amber-600 transition-colors"
                   >
                     {item}
                   </a>
@@ -72,7 +83,7 @@ export default function Footer() {
             <ul className="space-y-2.5">
               {['Design Graphique', 'Création de Logo', 'Site Web', 'Montage Vidéo', 'Marketing Digital', 'Formation Design', 'CapCut Pro', 'PicsArt Pro'].map((item) => (
                 <li key={item}>
-                  <a href="#services" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  <a href="#services" className="text-sm text-muted-foreground hover:text-amber-600 transition-colors">
                     {item}
                   </a>
                 </li>
@@ -84,42 +95,47 @@ export default function Footer() {
           <div>
             <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">Contact</h3>
             <ul className="space-y-3">
-              <li className="flex items-start gap-2 text-sm text-muted-foreground">
-                <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
+              <li className="flex items-start gap-2.5 text-sm text-muted-foreground">
+                <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0 text-amber-500" />
                 <span>Bamako, Mali</span>
               </li>
-              <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Phone className="h-4 w-4 flex-shrink-0" />
+              <li className="flex items-center gap-2.5 text-sm text-muted-foreground">
+                <Phone className="h-4 w-4 flex-shrink-0 text-amber-500" />
                 <span>+223 97 78 72 44</span>
               </li>
-              <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Mail className="h-4 w-4 flex-shrink-0" />
-                <span>contact@createurboutique.com</span>
+              <li className="flex items-center gap-2.5 text-sm text-muted-foreground">
+                <Mail className="h-4 w-4 flex-shrink-0 text-amber-500" />
+                <span>contact@skdesignerluxe.com</span>
               </li>
-              <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                <MessageCircle className="h-4 w-4 flex-shrink-0" />
+              <li className="flex items-center gap-2.5 text-sm text-muted-foreground">
+                <MessageCircle className="h-4 w-4 flex-shrink-0 text-emerald-500" />
                 <a href="https://wa.me/22397787244" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-500 transition-colors">
                   WhatsApp Direct
                 </a>
               </li>
             </ul>
-            <div className="mt-4 p-3 rounded-lg bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800">
-              <p className="text-xs font-semibold text-amber-700 dark:text-amber-400">Paiement via Wave</p>
-              <p className="text-xs text-muted-foreground">+223 97 78 72 44</p>
+            <div className="mt-4 p-3.5 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/10 dark:to-orange-900/10 border border-amber-200/60 dark:border-amber-800/40">
+              <p className="text-xs font-semibold text-amber-700 dark:text-amber-400 flex items-center gap-1.5">
+                <span className="flex h-5 w-5 items-center justify-center rounded-md bg-amber-500 text-white text-[10px] font-bold">W</span>
+                Paiement via Wave
+              </p>
+              <p className="text-xs text-muted-foreground mt-1 font-mono">+223 97 78 72 44</p>
             </div>
           </div>
         </div>
 
         <div className="mt-10 border-t pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-muted-foreground">
-            &copy; {new Date().getFullYear()} Créateur Boutique. Tous droits réservés. Fait avec passion à Bamako, Mali.
+          <p className="text-xs text-muted-foreground flex items-center gap-1">
+            &copy; {new Date().getFullYear()} SK Designer Luxe. Tous droits réservés. Fait avec <Heart className="h-3 w-3 text-red-500 fill-red-500" /> à Bamako, Mali.
           </p>
           <div className="flex items-center gap-4 text-xs text-muted-foreground">
-            <a href="#politique" className="hover:text-foreground transition-colors">Politique de service</a>
-            <span>|</span>
-            <a href="#faq" className="hover:text-foreground transition-colors">FAQ</a>
-            <span>|</span>
-            <a href="#contact" className="hover:text-foreground transition-colors">Contact</a>
+            <a href="#politique" className="hover:text-amber-600 transition-colors">Mentions légales</a>
+            <span className="text-border">|</span>
+            <a href="#politique" className="hover:text-amber-600 transition-colors">Confidentialité</a>
+            <span className="text-border">|</span>
+            <a href="#faq" className="hover:text-amber-600 transition-colors">FAQ</a>
+            <span className="text-border">|</span>
+            <a href="#contact" className="hover:text-amber-600 transition-colors">Contact</a>
           </div>
         </div>
       </div>
