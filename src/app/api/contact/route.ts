@@ -1,4 +1,3 @@
-import { db } from '@/lib/db'
 import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
@@ -10,16 +9,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Champs requis manquants' }, { status: 400 })
     }
 
-    const contactMessage = await db.contactMessage.create({
-      data: {
-        name,
-        email,
-        subject: subject || 'Nouveau message',
-        message,
-      },
-    })
+    // Log contact message (no database needed — could be connected to email service later)
+    console.log('📩 Nouveau message de contact:', { name, email, subject, message })
 
-    return NextResponse.json(contactMessage, { status: 201 })
+    return NextResponse.json({ success: true, message: 'Message envoyé avec succès' }, { status: 200 })
   } catch {
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
   }
