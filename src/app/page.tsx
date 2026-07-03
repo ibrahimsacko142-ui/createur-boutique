@@ -93,7 +93,6 @@ import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/hooks/use-toast'
-import { useCartStore } from '@/store/cart'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import {
@@ -161,18 +160,12 @@ function formatPrice(p: number) {
 }
 
 /* ─── Service Card ─── */
-function ServiceCard({ product, icon: Icon, onWavePay }: { product: Product; icon: React.ElementType; onWavePay: (name: string, price: number) => void }) {
-  const addItem = useCartStore((s) => s.addItem)
+function ServiceCard({ product, icon: Icon }: { product: Product; icon: React.ElementType }) {
   const [selected, setSelected] = useState<Product | null>(null)
-  const { toast } = useToast()
 
-  const handleAdd = () => {
-    addItem({ id: product.id, name: product.name, price: product.price, image: product.image })
-    toast({ title: 'Ajouté au panier', description: `${product.name} — ${formatPrice(product.price)}` })
-  }
-
-  const handleWavePay = () => {
-    onWavePay(product.name, product.price)
+  const handleWhatsApp = (p: Product) => {
+    const msg = `Bonjour Sacko ! Je souhaite obtenir : ${p.name}.\n\nDescription : ${p.description || ''}\nPrix : ${formatPrice(p.price)}\n\nMerci !`
+    window.open(`https://wa.me/22397787244?text=${encodeURIComponent(msg)}`, '_blank')
   }
 
   const categoryLabel = product.category === 'service' ? 'Service' : product.category === 'outil' ? 'Outil' : 'Produit'
@@ -200,17 +193,22 @@ function ServiceCard({ product, icon: Icon, onWavePay }: { product: Product; ico
               <Badge className="bg-amber-500 text-white border-0 text-[10px] px-2 py-0.5">
                 {categoryLabel}
               </Badge>
+              {product.price === 0 && (
+                <Badge className="bg-emerald-500 text-white border-0 text-[10px] px-2 py-0.5">
+                  <Gift className="h-2.5 w-2.5 mr-0.5" /> Gratuit
+                </Badge>
+              )}
             </div>
             <div className="absolute bottom-3 right-3">
-              <span className="text-white font-bold text-lg drop-shadow-lg">{formatPrice(product.price)}</span>
+              <span className={`font-bold text-lg drop-shadow-lg ${product.price === 0 ? 'text-emerald-300' : 'text-white'}`}>{formatPrice(product.price)}</span>
             </div>
             {/* Hover overlay */}
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100">
               <Button size="sm" variant="secondary" className="rounded-full shadow-lg" onClick={() => setSelected(product)}>
                 <Eye className="h-4 w-4 mr-1" /> Détails
               </Button>
-              <Button size="sm" className="rounded-full shadow-lg bg-amber-500 hover:bg-amber-600 text-white" onClick={handleAdd}>
-                <ShoppingCart className="h-4 w-4 mr-1" /> Commander
+              <Button size="sm" className="rounded-full shadow-lg bg-emerald-500 hover:bg-emerald-600 text-white" onClick={() => handleWhatsApp(product)}>
+                <MessageCircle className="h-4 w-4 mr-1" /> Obtenir
               </Button>
             </div>
           </div>
@@ -219,14 +217,14 @@ function ServiceCard({ product, icon: Icon, onWavePay }: { product: Product; ico
             <h3 className="font-semibold text-sm leading-snug">{product.name}</h3>
             <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed flex-1">{product.description}</p>
             <div className="flex items-center justify-between pt-1">
-              <span className="text-base font-bold text-amber-600">{formatPrice(product.price)}</span>
+              <span className={`text-base font-bold ${product.price === 0 ? 'text-emerald-600' : 'text-amber-600'}`}>{formatPrice(product.price)}</span>
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-8 text-amber-500 hover:text-amber-700 hover:bg-amber-50 md:hidden"
-                onClick={handleAdd}
+                className="h-8 text-emerald-500 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 md:hidden"
+                onClick={() => handleWhatsApp(product)}
               >
-                <ShoppingCart className="h-4 w-4" />
+                <MessageCircle className="h-4 w-4" />
               </Button>
             </div>
           </CardContent>
@@ -241,7 +239,7 @@ function ServiceCard({ product, icon: Icon, onWavePay }: { product: Product; ico
               <Icon className="h-5 w-5 text-amber-500" />
               {selected?.name}
             </DialogTitle>
-            <DialogDescription>{selected ? categoryLabel : ''} SK Designer Luxe</DialogDescription>
+            <DialogDescription>{selected ? categoryLabel : ''} — SK Designer Luxe</DialogDescription>
           </DialogHeader>
           {selected && (
             <div className="space-y-4">
@@ -252,26 +250,14 @@ function ServiceCard({ product, icon: Icon, onWavePay }: { product: Product; ico
               )}
               <p className="text-sm text-muted-foreground leading-relaxed">{selected.description}</p>
               <div className="flex items-center justify-between pt-2">
-                <span className="text-2xl font-bold text-amber-600">{formatPrice(selected.price)}</span>
-                <div className="flex gap-2">
+                <span className={`text-2xl font-bold ${selected.price === 0 ? 'text-emerald-600' : 'text-amber-600'}`}>{formatPrice(selected.price)}</span>
+                <a href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je souhaite obtenir : ${selected.name}.\n\nDescription : ${selected.description || ''}\nPrix : ${formatPrice(selected.price)}\n\nMerci !`)}`} target="_blank" rel="noopener noreferrer" onClick={() => setSelected(null)}>
                   <Button
-                    variant="outline"
-                    className="font-semibold border-blue-300 text-blue-600 hover:bg-blue-50"
-                    onClick={() => { handleWavePay(); setSelected(null) }}
+                    className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold"
                   >
-                    <Wallet className="h-4 w-4 mr-1" /> Payer Wave
+                    <MessageCircle className="h-4 w-4 mr-2" /> Obtenir via WhatsApp
                   </Button>
-                  <Button
-                    className="bg-amber-500 hover:bg-amber-600 text-white font-semibold"
-                    onClick={() => {
-                      addItem({ id: selected.id, name: selected.name, price: selected.price, image: selected.image })
-                      toast({ title: 'Ajouté au panier', description: `${selected.name} ajouté.` })
-                      setSelected(null)
-                    }}
-                  >
-                    <ShoppingCart className="h-4 w-4 mr-2" /> Panier
-                  </Button>
-                </div>
+                </a>
               </div>
             </div>
           )}
@@ -302,10 +288,7 @@ function CompetenceItem({ text, icon: Icon, delay = 0 }: { text: string; icon: R
 }
 
 /* ─── Pricing Card ─── */
-function PricingCard({ name, price, description, icon: Icon, delay = 0, onWavePay }: { name: string; price: number; description: string; icon: React.ElementType; delay?: number; onWavePay: (name: string, price: number) => void }) {
-  const addItem = useCartStore((s) => s.addItem)
-  const { toast } = useToast()
-
+function PricingCard({ name, price, description, icon: Icon, delay = 0 }: { name: string; price: number; description: string; icon: React.ElementType; delay?: number }) {
   return (
     <FadeIn delay={delay}>
       <Card className="relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 group">
@@ -315,29 +298,17 @@ function PricingCard({ name, price, description, icon: Icon, delay = 0, onWavePa
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30 group-hover:bg-amber-500 group-hover:text-white transition-colors duration-300">
               <Icon className="h-6 w-6 text-amber-600 group-hover:text-white transition-colors duration-300" />
             </div>
-            <Badge variant="secondary" className="text-amber-600 font-medium">
+            <Badge variant="secondary" className={price === 0 ? 'text-emerald-600 font-medium bg-emerald-100 dark:bg-emerald-900/30' : 'text-amber-600 font-medium'}>
               {formatPrice(price)}
             </Badge>
           </div>
           <h3 className="font-bold text-lg mb-2">{name}</h3>
           <p className="text-sm text-muted-foreground leading-relaxed mb-4">{description}</p>
-          <div className="flex gap-2">
-            <Button
-              className="flex-1 bg-amber-500 hover:bg-amber-600 text-white font-semibold"
-              onClick={() => {
-                toast({ title: 'Service ajouté', description: `${name} — ${formatPrice(price)}` })
-              }}
-            >
-              <ShoppingCart className="h-4 w-4 mr-2" /> Panier
+          <a href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je souhaite obtenir : ${name} (${formatPrice(price)}). Merci !`)}`} target="_blank" rel="noopener noreferrer">
+            <Button className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold">
+              <MessageCircle className="h-4 w-4 mr-2" /> Obtenir via WhatsApp
             </Button>
-            <Button
-              variant="outline"
-              className="flex-1 font-semibold border-blue-300 text-blue-600 hover:bg-blue-50"
-              onClick={() => onWavePay(name, price)}
-            >
-              <Wallet className="h-4 w-4 mr-2" /> Payer Wave
-            </Button>
-          </div>
+          </a>
         </CardContent>
       </Card>
     </FadeIn>
@@ -412,10 +383,6 @@ export default function Home() {
   const [serviceCategory, setServiceCategory] = useState('all')
   const [portfolioFilter, setPortfolioFilter] = useState('Tous')
   const [quickOrder, setQuickOrder] = useState({ service: '', name: '', phone: '', description: '' })
-  const [wavePayOpen, setWavePayOpen] = useState(false)
-  const [wavePayService, setWavePayService] = useState({ name: '', price: 0 })
-  const [wavePayStep, setWavePayStep] = useState(1)
-  const [waveConfirmed, setWaveConfirmed] = useState(false)
   const [selectedArticle, setSelectedArticle] = useState<typeof blogArticles[number] | null>(null)
   const [legalPage, setLegalPage] = useState<'mentions' | 'confidentialite' | null>(null)
   const { toast } = useToast()
@@ -483,14 +450,6 @@ export default function Home() {
       content: `Le marketing digital est le levier de croissance le plus puissant et le plus accessible pour les entreprises au Mali. Voici les techniques éprouvées pour attirer des clients et développer votre activité, même avec un petit budget.\n\n**1. Construisez une marque forte**\nTout commence par l'identité visuelle. Un logo professionnel, des couleurs cohérentes et un ton de communication défini sont les fondations de votre stratégie marketing. Les clients font confiance aux marques qui ont une identité claire et cohérente. Investissez dans un logo de qualité, créez une charte graphique et appliquez-la systématiquement sur tous vos supports de communication. C'est la base de toute stratégie digitale réussie.\n\n**2. Le contenu est roi**\nCréez du contenu qui apporte de la valeur à votre audience. Tutoriels, avant-après, coulisses de votre travail, témoignages clients, conseils professionnels : chaque publication doit donner envie à votre audience de revenir et de s'engager. Au Mali, le contenu vidéo est particulièrement efficace sur TikTok et Instagram. Montrez votre savoir-faire, partagez vos réalisations et racontez l'histoire de votre entreprise.\n\n**3. Exploitez la publicité ciblée**\nMême avec un petit budget de 5 000 à 10 000 FCFA par semaine, vous pouvez atteindre des milliers de personnes grâce à la publicité Facebook et Instagram. Ciblez votre audience par localisation (Bamako, Mali), par centres d'intérêt et par démographie. Testez différentes créations publicitaires et mesurez les résultats pour optimiser vos campagnes. Le retour sur investissement peut être spectaculaire.\n\n**4. Le bouche-à-oreille digital**\nEncouragez vos clients satisfaits à laisser des avis, à taguer votre entreprise sur leurs publications et à recommander vos services. Un système de parrainage, comme celui proposé par SK Designer Luxe, est un excellent moyen de transformer vos clients existants en ambassadeurs de votre marque. Chaque client satisfait peut vous apporter 2 à 3 nouveaux clients grâce aux recommandations.\n\n**5. Soyez présent là où vos clients sont**\nIdentifiez les plateformes où votre audience cible passe le plus de temps. Pour le marché malien, Facebook et Instagram sont incontournables, TikTok est en forte croissance, et WhatsApp reste le canal de communication directe le plus utilisé. Adaptez votre contenu à chaque plateforme et soyez régulier dans vos publications. La constance bat l'intensité : mieux vaut publier trois fois par semaine pendant un an qu'une fois par jour pendant un mois.\n\nLe marketing digital n'est pas réservé aux grandes entreprises avec des budgets importants. Avec les bonnes stratégies, les bons outils et un peu de créativité, toute entreprise au Mali peut attirer des clients et croître grâce au digital. SK Designer Luxe vous accompagne avec des outils premium, des formations pratiques et des services de qualité pour booster votre présence en ligne !`
     },
   ]
-
-  // ═══ WAVE PAY HANDLER ═══
-  const handleWavePay = (name: string, price: number) => {
-    setWavePayService({ name, price })
-    setWavePayStep(1)
-    setWaveConfirmed(false)
-    setWavePayOpen(true)
-  }
 
   // ═══ REAL REFERRAL SYSTEM ═══
   const REFERRAL_CODE = 'CB-IBRA-2024'
@@ -1268,7 +1227,7 @@ export default function Home() {
                     'Contenu Réseaux Sociaux': Target, 'CapCut Pro': MonitorPlay, 'PicsArt Pro': PenTool,
                     'IPTV Pro': Tv, 'Livres Professionnels': BookOpen, 'Canva Pro': Palette,
                   }
-                  return <ServiceCard key={product.id} product={product} icon={iconMap[product.name] || Zap} onWavePay={handleWavePay} />
+                  return <ServiceCard key={product.id} product={product} icon={iconMap[product.name] || Zap} />
                 })
               }
             </StaggerContainer>
@@ -1307,7 +1266,7 @@ export default function Home() {
                       'IPTV Pro': Tv,
                       'Livres Professionnels': BookOpen,
                     }
-                    return <ServiceCard key={product.id} product={product} icon={iconMap[product.name] || Zap} onWavePay={handleWavePay} />
+                    return <ServiceCard key={product.id} product={product} icon={iconMap[product.name] || Zap} />
                   })
               }
             </StaggerContainer>
@@ -1377,7 +1336,7 @@ export default function Home() {
                       'IPTV Pro': Tv,
                       'Livres Professionnels': BookOpen,
                     }
-                    return <ServiceCard key={product.id} product={product} icon={iconMap[product.name] || Zap} onWavePay={handleWavePay} />
+                    return <ServiceCard key={product.id} product={product} icon={iconMap[product.name] || Zap} />
                   })
               }
             </StaggerContainer>
@@ -1596,31 +1555,30 @@ export default function Home() {
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {formations.map((form, i) => (
-                <motion.div
+                <motion.a
                   key={i}
+                  href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je suis intéressé(e) par la formation : ${form.text}. Pouvez-vous me donner plus de détails et comment y accéder ? Merci !`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: '-40px' }}
                   transition={{ duration: 0.4, delay: i * 0.04, ease: 'easeOut' }}
-                  className="group flex items-center gap-4 p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-amber-500/40 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/5"
+                  className="group flex items-center gap-4 p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-emerald-500/40 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/5 cursor-pointer"
                 >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 flex-shrink-0 group-hover:from-amber-500/30 group-hover:to-orange-500/30 transition-colors">
-                    <form.icon className="h-5 w-5 text-amber-400" />
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 flex-shrink-0 group-hover:from-emerald-500/30 group-hover:to-teal-500/30 transition-colors">
+                    <form.icon className="h-5 w-5 text-amber-400 group-hover:text-emerald-400 transition-colors" />
                   </div>
-                  <p className="text-sm font-medium text-slate-200 leading-relaxed group-hover:text-white transition-colors">{form.text}</p>
-                </motion.div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-slate-200 leading-relaxed group-hover:text-white transition-colors">{form.text}</p>
+                    <span className="text-[11px] text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity mt-1 flex items-center gap-1">
+                      <MessageCircle className="h-3 w-3" /> Cliquer pour commander via WhatsApp
+                    </span>
+                  </div>
+                  <ArrowRight className="h-4 w-4 text-white/30 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all flex-shrink-0" />
+                </motion.a>
               ))}
             </div>
-
-            <FadeIn delay={0.3}>
-              <div className="mt-10 text-center">
-                <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20suis%20int%C3%A9ress%C3%A9(e)%20par%20une%20formation.%20Pouvez-vous%20me%20donner%20plus%20d%27informations%20%3F" target="_blank" rel="noopener noreferrer">
-                  <Button size="lg" className="bg-amber-500 hover:bg-amber-600 text-white font-bold shadow-lg shadow-amber-500/25">
-                    <GraduationCap className="h-5 w-5 mr-2" /> S'inscrire à une formation
-                  </Button>
-                </a>
-              </div>
-            </FadeIn>
           </div>
         </section>
 
@@ -2389,7 +2347,7 @@ export default function Home() {
                         ))}
                       </div>
 
-                      <a href={`https://wa.me/22397787244?text=Bonjour ! Je souhaite commander ${svc.name} à ${svc.price} FCFA.`} target="_blank" rel="noopener noreferrer">
+                      <a href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je souhaite commander ${svc.name} (${formatPrice(svc.price)}). Merci !`)}`} target="_blank" rel="noopener noreferrer">
                         <Button className={`w-full font-semibold ${svc.popular ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-lg shadow-amber-500/20' : ''}`}>
                           <MessageCircle className="h-4 w-4 mr-2" /> Commander
                         </Button>
@@ -3572,106 +3530,6 @@ export default function Home() {
           </span>
         </a>
       </div>
-
-      {/* ═══ WAVE PAYMENT DIALOG ═══ */}
-      <Dialog open={wavePayOpen} onOpenChange={(open) => { if (!open) { setWavePayOpen(false); setWavePayStep(1); setWaveConfirmed(false) } }}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-xl">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 text-white">
-                <Wallet className="h-5 w-5" />
-              </div>
-              <span>Paiement Wave</span>
-            </DialogTitle>
-            <DialogDescription>Paiement sécurisé via Wave — Rapide et fiable</DialogDescription>
-          </DialogHeader>
-
-          {!waveConfirmed ? (
-            <div className="space-y-4">
-              {wavePayStep === 1 && (
-                <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="space-y-4">
-                  <div className="p-4 rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20 border border-blue-200 dark:border-blue-800">
-                    <h4 className="font-bold text-sm text-blue-800 dark:text-blue-300">Résumé de la commande</h4>
-                    <div className="mt-2 flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">{wavePayService.name}</span>
-                      <span className="font-bold text-blue-700 dark:text-blue-400">{wavePayService.price.toLocaleString('fr-FR')} FCFA</span>
-                    </div>
-                  </div>
-
-                  <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800">
-                    <p className="text-xs text-amber-700 dark:text-amber-400 font-semibold mb-2 flex items-center gap-1.5">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-md bg-blue-500 text-white text-[10px] font-bold">W</span>
-                      Étape 1 : Envoyez le paiement
-                    </p>
-                    <div className="flex items-center justify-between mt-2">
-                      <p className="text-lg font-bold text-foreground">+223 97 78 72 44</p>
-                      <button onClick={() => { navigator.clipboard.writeText('+22397787244'); toast({ title: 'Numéro copié !' }) }} className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 font-medium">
-                        <Copy className="h-3.5 w-3.5" /> Copier
-                      </button>
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-2">
-                      1. Ouvrez votre application Wave<br />
-                      2. Envoyez <strong>{wavePayService.price.toLocaleString('fr-FR')} FCFA</strong> au numéro ci-dessus<br />
-                      3. Ajoutez en note : <strong>{wavePayService.name}</strong>
-                    </p>
-                  </div>
-
-                  <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold" onClick={() => setWavePayStep(2)}>
-                    J&apos;ai effectué le paiement <ArrowRight className="h-4 w-4 ml-2" />
-                  </Button>
-                </motion.div>
-              )}
-
-              {wavePayStep === 2 && (
-                <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-4">
-                  <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800">
-                    <p className="text-xs text-emerald-700 dark:text-emerald-400 font-semibold mb-2 flex items-center gap-1.5">
-                      <CheckCircle2 className="h-4 w-4" />
-                      Étape 2 : Confirmez votre paiement
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Après avoir envoyé le paiement via Wave, confirmez en cliquant ci-dessous. Un message pré-rempli sera envoyé sur WhatsApp pour validation rapide de votre commande.
-                    </p>
-                  </div>
-
-                  <div className="p-3 rounded-lg bg-muted/50 border text-center">
-                    <p className="text-xs text-muted-foreground mb-1">Montant à envoyer</p>
-                    <p className="text-2xl font-bold text-foreground">{wavePayService.price.toLocaleString('fr-FR')} <span className="text-sm font-medium text-muted-foreground">FCFA</span></p>
-                  </div>
-
-                  <a
-                    href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! J'ai effectué un paiement Wave de ${wavePayService.price.toLocaleString('fr-FR')} FCFA pour : ${wavePayService.name}. Veuillez confirmer la réception. Merci !`)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => { setWaveConfirmed(true); toast({ title: 'Paiement confirmé !', description: 'Votre commande sera traitée après vérification.' }) }}
-                  >
-                    <Button className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-5 text-base">
-                      <MessageCircle className="h-5 w-5 mr-2" /> Confirmer via WhatsApp
-                    </Button>
-                  </a>
-
-                  <button onClick={() => setWavePayStep(1)} className="w-full text-center text-xs text-muted-foreground hover:text-foreground transition-colors py-1">
-                    Retour à l&apos;étape précédente
-                  </button>
-                </motion.div>
-              )}
-            </div>
-          ) : (
-            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-6 space-y-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30 mx-auto">
-                <CheckCircle2 className="h-8 w-8 text-emerald-600" />
-              </div>
-              <h3 className="text-lg font-bold text-emerald-700 dark:text-emerald-400">Paiement envoyé !</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Votre commande de <strong>{wavePayService.name}</strong> a été envoyée pour validation. Vous recevrez une confirmation sur WhatsApp sous peu. Merci pour votre confiance !
-              </p>
-              <Button onClick={() => { setWavePayOpen(false); setWavePayStep(1); setWaveConfirmed(false) }} className="bg-emerald-500 hover:bg-emerald-600 text-white">
-                Fermer
-              </Button>
-            </motion.div>
-          )}
-        </DialogContent>
-      </Dialog>
 
       {/* ═══ BLOG ARTICLE DIALOG ═══ */}
       <Dialog open={!!selectedArticle} onOpenChange={() => setSelectedArticle(null)}>
