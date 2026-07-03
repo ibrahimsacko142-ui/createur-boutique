@@ -1672,10 +1672,10 @@ export default function Home() {
                     </div>
                     <h3 className="text-xl font-extrabold text-emerald-700 dark:text-emerald-400 mb-2">Garantie 100% Satisfaction</h3>
                     <p className="text-sm text-muted-foreground leading-relaxed">
-                      Nous garantissons votre satisfaction ou nous vous remboursons intégralement. Si le résultat ne correspond pas à votre commande, nous reprenons le travail gratuitement ou vous remboursons via Wave en moins de 48h. Aucun risque pour vous.
+                      Je garantis votre satisfaction. Si le résultat ne correspond pas à votre commande, je reprends le travail gratuitement. Aucun risque pour vous.
                     </p>
                     <div className="flex flex-wrap items-center justify-center gap-4 mt-5">
-                      {['Remboursement 48h', 'Révisions illimitées', 'Support permanent'].map((tag) => (
+                      {['Gratuit', 'Révisions illimitées', 'Support permanent'].map((tag) => (
                         <span key={tag} className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 px-3 py-1 text-xs font-medium text-emerald-700 dark:text-emerald-400">
                           <CheckCircle2 className="h-3 w-3" /> {tag}
                         </span>
@@ -3203,7 +3203,7 @@ export default function Home() {
               {[
                 {
                   q: "Quels modes de paiement acceptez-vous ?",
-                  a: "Nous acceptons uniquement les paiements via Wave au numéro +223 97 78 72 44. C'est un moyen de paiement rapide, sécurisé et accessible à tous au Mali. Selon le service, le paiement peut se faire en deux fois (50% à la commande, 50% à la livraison) ou en une seule fois avant le début du travail."
+                  a: "Tous les services sont actuellement gratuits. Pour les services payants à l'avenir, le paiement s'effectuera via l'application mobile Wave au numéro +223 97 78 72 44. C'est un moyen de paiement rapide, sécurisé et accessible à tous au Mali."
                 },
                 {
                   q: "Combien de temps faut-il pour recevoir mon projet ?",
@@ -3272,8 +3272,8 @@ export default function Home() {
                     <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIzMCIgY3k9IjMwIiByPSIxLjUiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wOCkiLz48L3N2Zz4=')] opacity-50" />
                     <div className="relative z-10 text-center">
                       <Zap className="h-8 w-8 mx-auto mb-2" />
-                      <h2 className="text-2xl sm:text-3xl font-extrabold">Commande Rapide</h2>
-                      <p className="mt-2 text-white/80 text-sm">Remplissez le formulaire et recevez un devis personnalisé via WhatsApp en quelques minutes.</p>
+                      <h2 className="text-2xl sm:text-3xl font-extrabold">Commander un Service</h2>
+                      <p className="mt-2 text-white/80 text-sm">Remplissez le formulaire et recevez votre service gratuitement via WhatsApp.</p>
                     </div>
                   </div>
                 </div>
@@ -3286,17 +3286,18 @@ export default function Home() {
                       className="w-full h-11 rounded-md border border-input bg-background px-3 text-sm"
                     >
                       <option value="">Sélectionnez un service...</option>
-                      <option value="Affiche Professionnelle - 2 000 FCFA">Affiche Professionnelle — 2 000 FCFA</option>
-                      <option value="Logo Professionnel - 5 000 FCFA">Logo Professionnel — 5 000 FCFA</option>
-                      <option value="Site Web Simple - 15 000 FCFA">Site Web Simple — 15 000 FCFA</option>
-                      <option value="Site Web Professionnel - 25 000 FCFA">Site Web Professionnel — 25 000 FCFA</option>
-                      <option value="Montage Vidéo Pro - 5 000 FCFA">Montage Vidéo Pro — 5 000 FCFA</option>
-                      <option value="Contenu Réseaux Sociaux - 10 000 FCFA">Contenu Réseaux Sociaux — 10 000 FCFA</option>
-                      <option value="Formation Designer Graphique - 20 000 FCFA">Formation Designer Graphique — 20 000 FCFA</option>
-                      <option value="CapCut Pro - 3 000 FCFA">CapCut Pro — 3 000 FCFA</option>
-                      <option value="PicsArt Pro - 3 000 FCFA">PicsArt Pro — 3 000 FCFA</option>
-                      <option value="IPTV Pro - 5 000 FCFA">IPTV Pro — 5 000 FCFA</option>
-                      <option value="Canva Pro - 3 000 FCFA">Canva Pro — 3 000 FCFA</option>
+                      <option value="Affiche Professionnelle — Gratuit">Affiche Professionnelle — Gratuit</option>
+                      <option value="Logo Professionnel — Gratuit">Logo Professionnel — Gratuit</option>
+                      <option value="Site Web Simple — Gratuit">Site Web Simple — Gratuit</option>
+                      <option value="Site Web Professionnel — Gratuit">Site Web Professionnel — Gratuit</option>
+                      <option value="Montage Vidéo Pro — Gratuit">Montage Vidéo Pro — Gratuit</option>
+                      <option value="Contenu Réseaux Sociaux — Gratuit">Contenu Réseaux Sociaux — Gratuit</option>
+                      <option value="Formation Designer Graphique — Gratuit">Formation Designer Graphique — Gratuit</option>
+                      <option value="CapCut Pro — Gratuit">CapCut Pro — Gratuit</option>
+                      <option value="PicsArt Pro — Gratuit">PicsArt Pro — Gratuit</option>
+                      <option value="IPTV Pro — Gratuit">IPTV Pro — Gratuit</option>
+                      <option value="Canva Pro — Gratuit">Canva Pro — Gratuit</option>
+                      <option value="Livres Professionnels — Gratuit">Livres Professionnels — Gratuit</option>
                     </select>
                   </div>
                   <div className="grid sm:grid-cols-2 gap-4">
@@ -3327,7 +3328,7 @@ export default function Home() {
                   >
                     <Send className="h-4 w-4 mr-2" /> Envoyer ma commande via WhatsApp
                   </Button>
-                  <p className="text-[10px] text-muted-foreground text-center">Réponse garantie en moins de 30 minutes. Paiement via Wave après confirmation.</p>
+                  <p className="text-[10px] text-muted-foreground text-center">Réponse garantie en moins de 30 minutes. Tous les services sont gratuits.</p>
                 </CardContent>
               </Card>
             </FadeIn>
@@ -3534,7 +3535,7 @@ export default function Home() {
                   <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 bg-emerald-500 rounded-full border-2 border-white dark:border-card" />
                 </div>
                 <div>
-                  <p className="text-xs font-bold">Écrivez-nous maintenant</p>
+                  <p className="text-xs font-bold">Écrivez-moi maintenant</p>
                   <p className="text-[10px] text-emerald-600 font-medium">En ligne — réponse rapide</p>
                 </div>
               </div>
@@ -3554,7 +3555,7 @@ export default function Home() {
         </AnimatePresence>
         {/* WhatsApp button */}
         <a
-          href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20commander%20un%20service%20chez%20SK%20Designer%20Luxe."
+          href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20souhaite%20discuter%20d%27un%20projet."
           target="_blank"
           rel="noopener noreferrer"
           className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500 text-white shadow-lg shadow-emerald-500/30 hover:bg-emerald-600 hover:shadow-xl hover:shadow-emerald-500/40 transition-all duration-300 hover:scale-110 group relative"
@@ -3566,7 +3567,7 @@ export default function Home() {
             <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-white dark:border-background" />
           </span>
           <span className="absolute right-full mr-3 whitespace-nowrap rounded-lg bg-gray-900 text-white px-3 py-1.5 text-xs font-medium shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-            Commandez sur WhatsApp
+            Me contacter sur WhatsApp
             <span className="absolute top-1/2 -right-1 -translate-y-1/2 h-2 w-2 bg-gray-900 rotate-45" />
           </span>
         </a>
