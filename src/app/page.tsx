@@ -430,7 +430,7 @@ export default function Home() {
       readTime: '4 min',
       color: 'bg-amber-100 text-amber-700',
       image: 'https://sfile.chatglm.cn/images-ppt/b90eaf7f2e0c.jpg',
-      content: `Un logo est bien plus qu'une simple image : c'est le visage de votre marque, le premier contact visuel avec votre public. Voici cinq conseils fondamentaux pour créer un logo qui reste gravé dans les mémoires.\n\n**1. La simplicité avant tout**\nLes meilleurs logos sont ceux qui sont simples et immédiatement reconnaissables. Pensez au logo d'Apple, de Nike ou de McDonald's : des formes épurées, sans surcharge visuelle. Un logo trop complexe est difficile à mémoriser et à reproduire sur différents supports. Limitez-vous à deux ou trois couleurs maximum et évitez les détails superflus qui ne seront pas visibles en petite taille.\n\n**2. Pensez à la polyvalence**\nVotre logo doit fonctionner sur tous les supports : cartes de visite, affiches, site web, réseaux sociaux, tee-shirts, et même en noir et blanc. Testez toujours votre création à différentes tailles et sur différents fonds pour vérifier sa lisibilité et son impact visuel. Un bon logo reste efficace qu'il soit affiché sur un écran géant ou imprimé sur un stylo.\n\n**3. Choisissez les bonnes couleurs**\nChaque couleur évoque une émotion différente. Le bleu inspire la confiance, le rouge l'urgence et la passion, le vert la nature et la croissance, le jaune l'optimisme. Pour une entreprise au Mali, pensez également aux couleurs qui résonnent avec votre public cible et votre secteur d'activité. La cohérence chromatique est essentielle pour renforcer l'identité de votre marque.\n\n**4. La typographie compte**\nLa police de caractère que vous choisissez pour votre logo en dit long sur votre marque. Une police serif classique évoque le prestige et la tradition, tandis qu'une police sans-serif moderne communique l'innovation et la simplicité. Évitez les polices trop décoratives qui peuvent devenir illisibles. L'idéal est d'utiliser une police unique ou d'en combiner deux au maximum.\n\n**5. Rendez-le intemporel**\nÉvitez de suivre les tendances éphémères qui datent rapidement. Un bon logo doit rester pertinent pendant des années, voire des décennies. Regardez les marques les plus prestigieuses : leur logo a peu changé depuis leur création. Concentrez-vous sur l'essence de votre marque plutôt que sur les effets de mode du moment.\n\nChez SK Designer Luxe, nous appliquons ces principes à chaque création. Chaque logo est conçu sur mesure pour refléter l'identité unique de votre entreprise et marquer les esprits de votre audience. Contactez-nous pour discuter de votre projet !`
+      content: `Un logo est bien plus qu'une simple image : c'est le visage de votre marque, le premier contact visuel avec votre public. Voici cinq conseils fondamentaux pour créer un logo qui reste gravé dans les mémoires.\n\n**1. La simplicité avant tout**\nLes meilleurs logos sont ceux qui sont simples et immédiatement reconnaissables. Pensez au logo d'Apple, de Nike ou de McDonald's : des formes épurées, sans surcharge visuelle. Un logo trop complexe est difficile à mémoriser et à reproduire sur différents supports. Limitez-vous à deux ou trois couleurs maximum et évitez les détails superflus qui ne seront pas visibles en petite taille.\n\n**2. Pensez à la polyvalence**\nVotre logo doit fonctionner sur tous les supports : cartes de visite, affiches, site web, réseaux sociaux, tee-shirts, et même en noir et blanc. Testez toujours votre création à différentes tailles et sur différents fonds pour vérifier sa lisibilité et son impact visuel. Un bon logo reste efficace qu'il soit affiché sur un écran géant ou imprimé sur un stylo.\n\n**3. Choisissez les bonnes couleurs**\nChaque couleur évoque une émotion différente. Le bleu inspire la confiance, le rouge l'urgence et la passion, le vert la nature et la croissance, le jaune l'optimisme. Pour une entreprise au Mali, pensez également aux couleurs qui résonnent avec votre public cible et votre secteur d'activité. La cohérence chromatique est essentielle pour renforcer l'identité de votre marque.\n\n**4. La typographie compte**\nLa police de caractère que vous choisissez pour votre logo en dit long sur votre marque. Une police serif classique évoque le prestige et la tradition, tandis qu'une police sans-serif moderne communique l'innovation et la simplicité. Évitez les polices trop décoratives qui peuvent devenir illisibles. L'idéal est d'utiliser une police unique ou d'en combiner deux au maximum.\n\n**5. Rendez-le intemporel**\nÉvitez de suivre les tendances éphémères qui datent rapidement. Un bon logo doit rester pertinent pendant des années, voire des décennies. Regardez les marques les plus prestigieuses : leur logo a peu changé depuis leur création. Concentrez-vous sur l'essence de votre marque plutôt que sur les effets de mode du moment.\n\nChez SK Designer Luxe, nous appliquons ces principes à chaque création. Chaque logo est conçu sur mesure pour refléter l'identité unique de votre entreprise et marquer les esprits de votre audience. Discutons de votre projet pour discuter de votre projet !`
     },
     {
       title: 'Comment réussir en digital en 2026',
@@ -882,13 +882,11 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.1 }}
                 >
-                  Je transforme vos idées en{' '}
+                  Donnez vie à vos projets digitaux et{' '}
                   <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 bg-clip-text text-transparent">
-                    identités visuelles
+                    démarquez-vous.
                   </span>
-                  <span className="block text-lg sm:text-xl font-medium text-muted-foreground mt-2">
-                    professionnelles.
-                  </span>
+
                 </motion.h1>
 
                 <motion.p
@@ -897,7 +895,7 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.2 }}
                 >
-                  De la création de votre logo à l'habillage de vos réseaux et la conception de votre site web. Un design sur-mesure pour propulser votre business depuis Bamako.
+                  Création de logos, sites web et visuels sur-mesure pour propulser les entrepreneurs et créateurs de Bamako et d'ailleurs. Chaque projet est une opportunité de transformer votre vision en une réalité qui attire et fidélise.
                 </motion.p>
 
                 <motion.div
@@ -908,12 +906,12 @@ export default function Home() {
                 >
                   <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20discuter%20de%20mon%20projet." target="_blank" rel="noopener noreferrer">
                     <Button size="lg" className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 hover:from-amber-600 hover:via-orange-600 hover:to-red-600 text-white font-semibold shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 transition-all transition-transform duration-200 hover:scale-105 active:scale-95">
-                      <MessageCircle className="mr-2 h-4 w-4" /> Discuter de mon projet
+                      <Rocket className="mr-2 h-4 w-4" /> Lancer mon projet
                     </Button>
                   </a>
-                  <a href="#services">
+                  <a href="https://wa.me/22397787244?text=Bonjour%20!%20J%27aimerais%20obtenir%20un%20devis%20gratuit%20pour%20mon%20projet." target="_blank" rel="noopener noreferrer">
                     <Button size="lg" variant="outline" className="font-semibold hover:bg-accent transition-transform duration-200 hover:scale-105 active:scale-95">
-                      Découvrir le Studio <ArrowRight className="ml-2 h-4 w-4" />
+                      Obtenir un devis gratuit <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </a>
                 </motion.div>
@@ -976,14 +974,12 @@ export default function Home() {
                   </div>
                   {/* Floating cards */}
                   <div className="absolute -bottom-6 -left-6 bg-white dark:bg-card rounded-xl shadow-xl p-3 border flex items-center gap-3 hover:scale-105 transition-transform cursor-default">
-                    <div className="flex -space-x-2">
-                      {[1,2,3,4].map((i) => (
-                        <div key={i} className={`h-8 w-8 rounded-full border-2 border-white bg-gradient-to-br ${['from-amber-400 to-orange-500','from-emerald-400 to-teal-500','from-purple-400 to-pink-500','from-blue-400 to-cyan-500'][i-1]}`} />
-                      ))}
-                    </div>
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
+                        <Award className="h-5 w-5 text-amber-500" />
+                      </div>
                     <div>
                       <p className="text-xs font-bold">50+ Marques</p>
-                      <p className="text-[10px] text-muted-foreground">Satisfaits</p>
+                      <p className="text-[10px] text-muted-foreground">Propulsées</p>
                     </div>
                   </div>
                   <div className="absolute -top-4 -right-4 bg-white dark:bg-card rounded-xl shadow-xl p-3 border hover:scale-105 transition-transform cursor-default">
@@ -992,8 +988,8 @@ export default function Home() {
                         <CheckCircle2 className="h-5 w-5 text-emerald-500" />
                       </div>
                       <div>
-                        <p className="text-xs font-bold">Livraison 24h</p>
-                        <p className="text-[10px] text-muted-foreground">Garantie</p>
+                        <p className="text-xs font-bold">100% Sur-mesure</p>
+                        <p className="text-[10px] text-muted-foreground">Chaque pixel pensé pour vous</p>
                       </div>
                     </div>
                   </div>
@@ -1041,7 +1037,7 @@ export default function Home() {
                 { icon: Zap, label: 'Livraison 24h' },
                 { icon: CheckCircle2, label: 'Satisfaction Garantie' },
                 { icon: CreditCard, label: 'Wave Accepté' },
-                { icon: Headphones, label: 'Support 7j/7' },
+                { icon: Headphones, label: 'Qualité Professionnelle' },
               ].map((item) => (
                 <div key={item.label} className="flex items-center gap-2 text-muted-foreground">
                   <item.icon className="h-4 w-4 text-amber-500" />
@@ -1063,7 +1059,7 @@ export default function Home() {
               </Badge>
               <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Comment Ça Marche ?</h2>
               <p className="mt-4 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                Commander chez SK Designer Luxe est simple et rapide. Suivez ces 4 étapes pour obtenir votre design, site web ou outil numérique en moins de 24 heures.
+                Travailler avec moi est simple et direct. Voici comment votre projet passe de l'idée à la réalité en quelques étapes.
               </p>
             </FadeIn>
 
@@ -1072,10 +1068,10 @@ export default function Home() {
               <div className="hidden lg:block absolute top-16 left-[12.5%] right-[12.5%] h-0.5 bg-gradient-to-r from-amber-300 via-orange-400 to-red-400 z-0" />
 
               {[
-                { step: '01', icon: ClipboardCheck, title: 'Choisissez votre service', desc: 'Parcourez notre catalogue de services, outils et formations. Sélectionnez ce dont vous avez besoin et ajoutez au panier.', color: 'from-amber-400 to-orange-500' },
-                { step: '02', icon: MessageCircle, title: 'Contactez-nous', desc: 'Envoyez votre commande via WhatsApp ou le formulaire de contact. Décrivez votre projet en quelques mots.', color: 'from-orange-400 to-red-500' },
-                { step: '03', icon: RefreshCw, title: 'Paiement via Wave', desc: 'Effectuez le paiement au numéro +223 97 78 72 44 via Wave. Simple, rapide et 100% sécurisé.', color: 'from-red-400 to-pink-500' },
-                { step: '04', icon: Award, title: 'Réception & Livraison', desc: 'Recevez votre commande en moins de 24h. Révisions gratuites jusqu\'à votre entière satisfaction.', color: 'from-pink-400 to-purple-500' },
+                { step: '01', icon: ClipboardCheck, title: 'Découvrez mes services', desc: 'Explorez mes services de design, sites web, vidéo et formations. Identifiez ce qui correspond à votre projet et à vos objectifs.', color: 'from-amber-400 to-orange-500' },
+                { step: '02', icon: MessageCircle, title: 'Discutons de votre projet', desc: 'Envoyez-moi un message sur WhatsApp pour me présenter votre vision. Je vous écoute et vous guide vers la meilleure solution.', color: 'from-orange-400 to-red-500' },
+                { step: '03', icon: RefreshCw, title: 'Création & Production', desc: 'Je conçois votre projet avec les meilleurs outils professionnels. Chaque détail est peaufiné pour un résultat qui vous ressemble.', color: 'from-red-400 to-pink-500' },
+                { step: '04', icon: Award, title: 'Livraison & Satisfaction', desc: 'Recevez votre création et validez. Révisions gratuites jusqu\'à ce que le résultat vous convienne parfaitement.', color: 'from-pink-400 to-purple-500' },
               ].map((item) => (
                 <motion.div key={item.step} variants={cardVariants} className="relative z-10">
                   <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full text-center group pt-8 pb-6">
@@ -1157,16 +1153,76 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ═══ SERVICES & TARIFS PAR CATÉGORIE ═══ */}
+        
+        {/* ═══ CE QUE VOUS OBTENEZ ═══ */}
+        <section className="py-16 sm:py-20 bg-muted/30">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <FadeIn className="text-center mb-14">
+              <Badge variant="secondary" className="mb-3 bg-blue-100 text-blue-700 border-blue-200">
+                <TrendingUp className="h-3 w-3 mr-1" /> Résultats
+              </Badge>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Ce que vous obtenez concrètement</h2>
+              <p className="mt-4 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                Chaque service est conçu pour vous apporter un bénéfice réel et mesurable. Voici ce que mes clients obtiennent après avoir travaillé avec moi.
+              </p>
+            </FadeIn>
+
+            <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[
+                {
+                  icon: Palette,
+                  title: 'Création de Logos & Identité Visuelle',
+                  desc: "Votre logo est l'âme de votre entreprise. Obtenez un design unique, moderne et professionnel qui capte immédiatement l'attention et inspire confiance à vos futurs clients.",
+                  color: 'from-amber-400 to-orange-500',
+                },
+                {
+                  icon: PenTool,
+                  title: 'Affiches Publicitaires & Visuels',
+                  desc: "Communiquez sur vos événements, vos produits ou vos promotions avec des visuels percutants conçus pour maximiser votre impact sur les réseaux sociaux et en format physique.",
+                  color: 'from-emerald-400 to-teal-500',
+                },
+                {
+                  icon: Globe,
+                  title: 'Création de Sites Web Professionnels',
+                  desc: "Offrez à votre entreprise une vitrine ouverte 24h/24. Des sites web rapides, fluides et adaptés aux mobiles pour renforcer votre crédibilité et augmenter vos ventes en ligne.",
+                  color: 'from-blue-400 to-indigo-500',
+                },
+                {
+                  icon: GraduationCap,
+                  title: 'Formations Digitales Pratiques',
+                  desc: "Prenez le contrôle de votre communication numérique. Des formations pratiques et accessibles pour maîtriser les outils digitaux essentiels à votre croissance.",
+                  color: 'from-purple-400 to-pink-500',
+                },
+              ].map((item) => (
+                <motion.div key={item.title} variants={cardVariants}>
+                  <Card className="h-full border-0 shadow-md hover:shadow-xl transition-all duration-300 group hover:-translate-y-1">
+                    <CardContent className="p-6">
+                      <div className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${item.color} text-white mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
+                        <item.icon className="h-6 w-6" />
+                      </div>
+                      <h3 className="font-bold text-sm mb-3">{item.title}</h3>
+                      <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
+                      <a href="#services" className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-amber-600 hover:text-amber-700 transition-colors">
+                        En savoir plus <ArrowUpRight className="h-3 w-3" />
+                      </a>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </StaggerContainer>
+          </div>
+        </section>
+
+{/* ═══ SERVICES & TARIFS PAR CATÉGORIE ═══ */}
         <section id="services" className="py-20 sm:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <FadeIn className="text-center mb-10">
               <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
-                <Sparkles className="h-3 w-3 mr-1" /> Tarifs
+                <Sparkles className="h-3 w-3 mr-1" /> Ce que je propose
               </Badge>
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Nos Services & Tarifs</h2>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Mes Services</h2>
               <p className="mt-3 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                Des services premium adaptés à tous les budgets. Chaque prestation est livrée avec soin, révisions incluses et accompagnement personnalisé par Sacko.
+                Découvrez comment chaque service peut transformer votre activité. Du logo qui capte l'attention au site web qui convertit, chaque création est conçue pour vous apporter des résultats concrets.
               </p>
             </FadeIn>
 
@@ -1263,9 +1319,9 @@ export default function Home() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <FadeIn className="text-center mb-10">
               <Badge variant="secondary" className="mb-3">Boutique</Badge>
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Toutes Mes Offres</h2>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Tous les Services</h2>
               <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
-                Explorez l&apos;ensemble de mes services et outils disponibles. Filtez par catégorie pour trouver ce dont vous avez besoin.
+                Explorez l&apos;ensemble de mes services, outils et ressources. Filtrer par catégorie pour trouver exactement ce dont votre projet a besoin.
               </p>
             </FadeIn>
 
@@ -1575,22 +1631,22 @@ export default function Home() {
           <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <FadeIn className="text-center mb-14">
               <Badge variant="secondary" className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200">
-                <ThumbsUp className="h-3 w-3 mr-1" /> Avantages
+                <ThumbsUp className="h-3 w-3 mr-1" /> Collaboration
               </Badge>
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Pourquoi Nous Choisir ?</h2>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Pourquoi Collaborer Ensemble ?</h2>
               <p className="mt-4 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                  Des centaines de clients font confiance à Sacko et SK Designer Luxe à Bamako et au-delà. Voici ce qui nous distingue et fait de SK Designer Luxe le meilleur choix pour vos projets digitaux.
+                  Au-delà des compétences techniques, c'est une approche humaine et personnalisée qui fait la différence. Voici ce qui rend chaque collaboration unique et efficace.
               </p>
             </FadeIn>
 
             <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {[
-                { icon: Zap, title: 'Livraison Express 24h', desc: 'Nous livrons vos projets en moins de 24 heures. Urgence ? Nous pouvons même faire en quelques heures pour les commandes prioritaires. Aucun compromis sur la qualité.', color: 'bg-amber-100 dark:bg-amber-900/30', iconColor: 'text-amber-600' },
-                { icon: ShieldCheck, title: 'Qualité Professionnelle', desc: 'Chaque projet est réalisé avec des outils professionnels et suit un processus rigoureux. Résultats garantis à la hauteur de vos attentes.', color: 'bg-emerald-100 dark:bg-emerald-900/30', iconColor: 'text-emerald-600' },
-                { icon: Wallet, title: 'Paiement Flexible Wave', desc: 'Payez facilement via Wave, le moyen de paiement le plus populaire au Mali. Pas besoin de compte bancaire, juste votre téléphone.', color: 'bg-blue-100 dark:bg-blue-900/30', iconColor: 'text-blue-600' },
-                { icon: Headphones, title: 'Support 7j/7', desc: 'Besoin d\'aide ? Notre équipe est disponible 7 jours sur 7 via WhatsApp. Réponse rapide garantie en moins de 30 minutes.', color: 'bg-purple-100 dark:bg-purple-900/30', iconColor: 'text-purple-600' },
-                { icon: RefreshCw, title: 'Révisions Gratuites', desc: 'Non satisfait ? Nous effectuons des révisions gratuites jusqu\'à ce que le résultat vous convienne parfaitement. Votre satisfaction est notre priorité.', color: 'bg-orange-100 dark:bg-orange-900/30', iconColor: 'text-orange-600' },
-                { icon: Trophy, title: '200+ Clients Satisfaits', desc: 'Plus de 200 clients nous font confiance au Mali et en Afrique de l\'Ouest. Leur satisfaction est notre meilleure publicité et notre plus grande fierté.', color: 'bg-red-100 dark:bg-red-900/30', iconColor: 'text-red-600' },
+                { icon: Zap, title: 'Créativité sur-mesure', desc: "Chaque projet est conçu selon vos besoins spécifiques. Aucun template pré-fait, aucune copie : votre identité visuelle sera unique et reflétera parfaitement l'essence de votre marque. Du premier croquis au fichier final, chaque détail est pensé pour vous.", color: 'bg-amber-100 dark:bg-amber-900/30', iconColor: 'text-amber-600' },
+                { icon: ShieldCheck, title: 'Rapidité & Efficacité', desc: "Des délais respectés pour que vous puissiez lancer vos campagnes à temps. Je comprends que le temps est précieux pour un entrepreneur : c'est pourquoi chaque projet est livré rapidement sans jamais compromettre la qualité.", color: 'bg-emerald-100 dark:bg-emerald-900/30', iconColor: 'text-emerald-600' },
+                { icon: Wallet, title: 'Accompagnement de A à Z', desc: "Une écoute attentive pour garantir un résultat qui dépasse vos attentes. De la première discussion sur WhatsApp à la livraison finale, je vous guide à chaque étape et j'ajuste jusqu'à ce que vous soyez entièrement satisfait.", color: 'bg-blue-100 dark:bg-blue-900/30', iconColor: 'text-blue-600' },
+                { icon: ShieldCheck, title: 'Qualité Professionnelle', desc: 'Chaque création est réalisée avec les meilleurs outils du marché : Canva Pro, CapCut Pro, PicsArt Pro. Le résultat est un visuel qui rivalise avec ceux des grandes agences, à une fraction du prix.', color: 'bg-purple-100 dark:bg-purple-900/30', iconColor: 'text-purple-600' },
+                { icon: RefreshCw, title: 'Révisions Gratuites', desc: "Non satisfait ? J'effectue des révisions gratuites jusqu'à ce que le résultat vous convienne parfaitement. Votre satisfaction n'est pas une option, c'est mon engagement.", color: 'bg-orange-100 dark:bg-orange-900/30', iconColor: 'text-orange-600' },
+                { icon: Wallet, title: 'Paiement Flexible Wave', desc: 'Payez facilement via Wave au +223 97 78 72 44. Pas besoin de compte bancaire, juste votre téléphone. Simple, rapide et 100% sécurisé.', color: 'bg-red-100 dark:bg-red-900/30', iconColor: 'text-red-600' },
               ].map((item) => (
                 <motion.div key={item.title} variants={cardVariants}>
                   <Card className="h-full border-0 shadow-md hover:shadow-xl transition-all duration-300 group hover:-translate-y-1">
@@ -1935,7 +1991,7 @@ export default function Home() {
                       {[
                         { icon: MessageCircle, label: 'Fichiers envoyés via WhatsApp', detail: 'Réception instantanée' },
                         { icon: Globe, label: 'Google Drive', detail: 'Dossier partagé sécurisé' },
-                        { icon: Zap, label: 'Livraison rapide', detail: 'Selon le délai annoncé' },
+                        { icon: Zap, label: 'Devis gratuit', detail: 'Selon le délai annoncé' },
                         { icon: Shield, label: 'Fichiers haute qualité', detail: 'Format source + export' },
                       ].map((item) => (
                         <div key={item.label} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border">
@@ -1964,14 +2020,14 @@ export default function Home() {
               <FadeIn>
                 <div className="relative">
                   <div className="rounded-2xl overflow-hidden shadow-xl h-[400px] relative">
-                    <img src="https://images.unsplash.com/photo-1559028012-481c04fa702d?w=800&h=500&fit=crop" alt="SK Designer Luxe par Sacko - À propos" className="w-full h-full object-cover" />
+                    <img src="/demo-photo.png" alt="SK Designer Luxe par Sacko - À propos" className="w-full h-full object-cover" />
                     <div className="absolute inset-0 bg-gradient-to-t from-amber-900/80 via-amber-900/30 to-transparent" />
                     <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                       <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mb-3">
                         <Palette className="h-7 w-7" />
                       </div>
                       <h3 className="text-2xl font-bold">SK Designer Luxe</h3>
-                      <p className="mt-1 text-white/80 text-sm">par Sacko &bull; Design &bull; Digital &bull; Créativité</p>
+                      <p className="mt-1 text-white/80 text-sm">Créateur Digital &bull; Bamako, Mali</p>
                     </div>
                   </div>
                   <div className="absolute -bottom-6 -right-6 bg-white dark:bg-card rounded-2xl p-5 shadow-xl border hidden sm:block">
@@ -1980,8 +2036,8 @@ export default function Home() {
                         <Zap className="h-5 w-5 text-amber-600" />
                       </div>
                       <div>
-                        <p className="text-lg font-bold">Services Rapides</p>
-                        <p className="text-xs text-muted-foreground">Livraison professionnelle</p>
+                        <p className="text-lg font-bold">50+ Projets livrés</p>
+                        <p className="text-xs text-muted-foreground">À Bamako et au-delà</p>
                       </div>
                     </div>
                   </div>
@@ -1990,26 +2046,26 @@ export default function Home() {
 
               <FadeIn delay={0.2}>
                 <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
-                  <Heart className="h-3 w-3 mr-1" /> Ma Vision
+                  <Heart className="h-3 w-3 mr-1" /> Qui suis-je
                 </Badge>
-                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">À Propos</h2>
+                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">À Propos de Sacko</h2>
                 <div className="mt-6 space-y-4 text-muted-foreground leading-relaxed">
                   <p>
-                    Je suis un créateur passionné par le design graphique et le digital, basé à Bamako, Mali. Mon objectif est de fournir des services de haute qualité qui répondent aux besoins réels de mes clients, avec un souci constant de l&apos;esthétique et de l&apos;efficacité. Chaque projet que je réalise est traité comme une opportunité de démontrer mon engagement envers l&apos;excellence créative.
+                    Bienvenue ! Je suis <strong className="text-foreground">Sacko</strong>, créateur digital passionné basé à Bamako. Mon objectif est d&apos;accompagner les entreprises et les porteurs de projets dans la construction d&apos;une <strong className="text-foreground">image de marque forte, professionnelle et mémorable</strong>. De la première idée à la conception finale, je transforme votre vision en une réalité visuelle qui attire et fidélise vos clients.
                   </p>
                   <p>
-                    De la création de logos à la conception de sites web, en passant par le montage vidéo et le marketing digital, je mets mon expertise à votre service pour vous aider à vous démarquer et à atteindre vos objectifs. J&apos;utilise les meilleurs outils professionnels du marché — CapCut Pro, Canva Pro, PicsArt Pro — pour garantir des résultats qui dépassent vos attentes.
+                    Je maîtrise les outils les plus demandés du marché — <strong className="text-foreground">CapCut Pro, Canva Pro, PicsArt Pro</strong> — et je les mets au service de chaque projet pour garantir des résultats à la hauteur de vos ambitions. Que ce soit un logo percutant, un site web qui convertit, ou une identité visuelle complète, chaque création est pensée pour vous démarquer de la concurrence.
                   </p>
                   <p>
-                    Ma mission va au-delà de la simple création visuelle : je souhaite <strong className="text-foreground">aider les jeunes entrepreneurs du Mali et d&apos;Afrique</strong> à bâtir une image de marque forte et professionnelle. Que vous soyez étudiant, entrepreneur, entreprise ou créateur de contenu, j&apos;ai la solution adaptée à vos besoins et à votre budget.
+                    Ma mission : <strong className="text-foreground">aider les entrepreneurs et créateurs du Mali et d&apos;Afrique</strong> à prendre le contrôle de leur image numérique. Je crois fermement que chaque business, même le plus modeste, mérite une identité visuelle qui inspire confiance et attire des clients. C&apos;est cette conviction qui guide chaque projet que je réalise.
                   </p>
                 </div>
 
                 <div className="mt-6 grid grid-cols-3 gap-3">
                   {[
-                    { number: '500+', label: 'Projets' },
-                    { number: '200+', label: 'Clients' },
-                    { number: '98%', label: 'Satisfaction' },
+                    { number: '50+', label: 'Marques créées' },
+                    { number: '100%', label: 'Sur-mesure' },
+                    { number: '5/5', label: 'Satisfaction' },
                   ].map((stat) => (
                     <div key={stat.label} className="text-center p-3 rounded-lg bg-muted/50 border">
                       <div className="text-lg font-bold text-amber-600">{stat.number}</div>
@@ -2021,7 +2077,7 @@ export default function Home() {
                 <div className="mt-8 flex flex-wrap gap-3">
                   <a href="#services">
                     <Button className="bg-amber-500 hover:bg-amber-600 text-white font-semibold">
-                      Voir les tarifs <ArrowRight className="ml-2 h-4 w-4" />
+                      Découvrir mes services <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </a>
                   <a href="#contact">
@@ -2854,9 +2910,9 @@ export default function Home() {
               <Badge variant="secondary" className="mb-3 bg-blue-100 text-blue-700 border-blue-200">
                 <BookOpen className="h-3 w-3 mr-1" /> Blog
               </Badge>
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Conseils & Astuces</h2>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Guides, Articles & Ressources</h2>
               <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
-                Articles et conseils pour vous aider à réussir dans le design et le digital.
+                Des articles approfondis, des guides pratiques et des ressources pour vous aider à maîtriser le design et le digital. Tout ce qu'il faut savoir, gratuitement.
               </p>
             </FadeIn>
 
@@ -2900,7 +2956,7 @@ export default function Home() {
               </Badge>
               <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Nos Valeurs</h2>
               <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
-                Ce qui définit notre travail et notre engagement envers chaque client.
+                Ce qui guide mon travail et mon engagement envers chaque projet.
               </p>
             </FadeIn>
 
@@ -3287,20 +3343,20 @@ export default function Home() {
           <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
             <FadeIn>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
-                Prêt à Donner Vie à Votre Projet ?
+                Prêt à faire passer votre communication au niveau supérieur ?
               </h2>
               <p className="mt-4 text-lg text-white/90 max-w-2xl mx-auto leading-relaxed">
-                Ne laissez pas votre idée attendre. Contactez-nous dès maintenant et transformez votre vision en réalité. Design professionnel, livraison rapide et satisfaction garantie.
+                N'attendez plus pour donner à votre entreprise l'image qu'elle mérite. Contactez-moi dès aujourd'hui pour discuter de votre projet et obtenir un devis gratuit.
               </p>
               <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-                <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20commander%20un%20service%20chez%20SK%20Designer%20Luxe." target="_blank" rel="noopener noreferrer">
+                <a href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20suis%20pr%C3%AAt%20%C3%A0%20lancer%20mon%20projet%20de%20communication." target="_blank" rel="noopener noreferrer">
                   <Button size="lg" className="bg-white text-amber-600 hover:bg-white/90 font-bold shadow-xl text-base px-8">
-                    <MessageCircle className="h-5 w-5 mr-2" /> Commander sur WhatsApp
+                    <MessageCircle className="h-5 w-5 mr-2" /> Commander via WhatsApp
                   </Button>
                 </a>
-                <a href="#services">
+                <a href="https://wa.me/22397787244?text=Bonjour%20!%20J%27aimerais%20discuter%20de%20mon%20projet%20avec%20vous." target="_blank" rel="noopener noreferrer">
                   <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 font-semibold text-base px-8">
-                    Voir les services <ArrowRight className="ml-2 h-4 w-4" />
+                    M'envoyer un message <Send className="ml-2 h-4 w-4" />
                   </Button>
                 </a>
               </div>
