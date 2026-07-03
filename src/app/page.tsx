@@ -156,6 +156,7 @@ const cardVariants = {
 
 /* ─── Format Price ─── */
 function formatPrice(p: number) {
+  if (p === 0) return 'Gratuit'
   return p.toLocaleString('fr-FR', { style: 'currency', currency: 'XOF', minimumFractionDigits: 0 })
 }
 
@@ -344,30 +345,46 @@ function PricingCard({ name, price, description, icon: Icon, delay = 0, onWavePa
 }
 
 /* ─── Animated Counter ─── */
-function AnimatedCounter({ target, suffix = '', prefix = '' }: { target: number; suffix?: string; prefix?: string }) {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: '-30px' })
+function Counter({ target, duration = 1500, suffix = '', prefix = '' }: { target: number; duration?: number; suffix?: string; prefix?: string }) {
   const [count, setCount] = useState(0)
+  const elementRef = useRef<HTMLSpanElement>(null)
+  const hasAnimated = useRef(false)
 
   useEffect(() => {
-    if (!isInView) return
-    let start = 0
-    const duration = 2000
-    const step = target / (duration / 16)
-    const timer = setInterval(() => {
-      start += step
-      if (start >= target) {
-        setCount(target)
-        clearInterval(timer)
-      } else {
-        setCount(Math.floor(start))
-      }
-    }, 16)
-    return () => clearInterval(timer)
-  }, [isInView, target])
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAnimated.current) {
+          hasAnimated.current = true
+          let startTime: number | null = null
+          const startValue = 0
+
+          const animate = (timestamp: number) => {
+            if (!startTime) startTime = timestamp
+            const progress = Math.min((timestamp - startTime) / duration, 1)
+            const easeProgress = progress * (2 - progress)
+            const currentValue = Math.floor(easeProgress * (target - startValue) + startValue)
+            setCount(currentValue)
+
+            if (progress < 1) {
+              requestAnimationFrame(animate)
+            }
+          }
+
+          requestAnimationFrame(animate)
+        }
+      },
+      { threshold: 0.2 }
+    )
+
+    if (elementRef.current) {
+      observer.observe(elementRef.current)
+    }
+
+    return () => observer.disconnect()
+  }, [target, duration])
 
   return (
-    <span ref={ref}>
+    <span ref={elementRef} className="tabular-nums">
       {prefix}{count.toLocaleString('fr-FR')}{suffix}
     </span>
   )
@@ -663,18 +680,18 @@ export default function Home() {
 
   useEffect(() => {
     const hardcodedProducts: Product[] = [
-      { id: 'p1', name: 'Formation Designer Graphique', description: 'Formation complète en design graphique avec pratique et accompagnement. Apprenez les bases et techniques avancées.', price: 20000, image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&h=400&fit=crop', category: 'service', featured: true, stock: 99 },
-      { id: 'p2', name: 'Affiche Professionnelle', description: 'Création d\'affiches publicitaires modernes, attractives et adaptées à votre marque. Design haute qualité.', price: 2000, image: 'https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=600&h=400&fit=crop', category: 'service', featured: true, stock: 99 },
-      { id: 'p3', name: 'Logo Professionnel', description: 'Création de logo unique avec identité visuelle complète. Fichiers sources inclus.', price: 5000, image: 'https://images.unsplash.com/photo-1626785774625-ddcddc3445e9?w=600&h=400&fit=crop', category: 'service', featured: true, stock: 99 },
-      { id: 'p4', name: 'Site Web Simple', description: 'Site web vitrine moderne, responsive et optimisé SEO. Parfait pour présenter votre activité.', price: 15000, image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop', category: 'service', featured: false, stock: 99 },
-      { id: 'p5', name: 'Site Web Professionnel', description: 'Site web complet avec fonctionnalités avancées, design sur mesure et hébergement inclus.', price: 25000, image: 'https://images.unsplash.com/photo-1547658719-da2b51169166?w=600&h=400&fit=crop', category: 'service', featured: true, stock: 99 },
-      { id: 'p6', name: 'Montage Vidéo Pro', description: 'Montage vidéo professionnel avec effets premium et transitions fluides via CapCut Pro.', price: 5000, image: 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=600&h=400&fit=crop', category: 'service', featured: false, stock: 99 },
-      { id: 'p7', name: 'Contenu Réseaux Sociaux', description: 'Création de visuels et contenus engageants pour vos réseaux sociaux. Pack mensuel disponible.', price: 10000, image: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=600&h=400&fit=crop', category: 'service', featured: false, stock: 99 },
-      { id: 'p8', name: 'CapCut Pro', description: 'Accès premium à CapCut Pro pour un montage vidéo professionnel sans filigrane. Compte activé.', price: 3000, image: 'https://images.unsplash.com/photo-1536240478700-b869070f9279?w=600&h=400&fit=crop', category: 'outil', featured: true, stock: 50 },
-      { id: 'p9', name: 'PicsArt Pro', description: 'Accès premium à PicsArt Pro pour le design mobile professionnel. Tous les outils débloqués.', price: 3000, image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&h=400&fit=crop', category: 'outil', featured: true, stock: 50 },
-      { id: 'p10', name: 'IPTV Pro', description: 'Accès IPTV Pro avec des milliers de chaînes TV en streaming haute qualité. Abonnement complet.', price: 5000, image: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=600&h=400&fit=crop', category: 'outil', featured: true, stock: 30 },
-      { id: 'p11', name: 'Livres Professionnels', description: 'Pack de livres numériques professionnels et éducatifs pour développer vos compétences.', price: 5000, image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600&h=400&fit=crop', category: 'outil', featured: false, stock: 99 },
-      { id: 'p12', name: 'Canva Pro', description: 'Accès premium à Canva Pro pour créer des designs professionnels. Templates illimités.', price: 3000, image: 'https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=600&h=400&fit=crop', category: 'outil', featured: false, stock: 50 },
+      { id: 'p1', name: 'Formation Designer Graphique', description: 'Formation complète en design graphique avec pratique et accompagnement. Apprenez les bases et techniques avancées.', price: 0, image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&h=400&fit=crop', category: 'service', featured: true, stock: 99 },
+      { id: 'p2', name: 'Affiche Professionnelle', description: 'Création d\'affiches publicitaires modernes, attractives et adaptées à votre marque. Design haute qualité.', price: 0, image: 'https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=600&h=400&fit=crop', category: 'service', featured: true, stock: 99 },
+      { id: 'p3', name: 'Logo Professionnel', description: 'Création de logo unique avec identité visuelle complète. Fichiers sources inclus.', price: 0, image: 'https://images.unsplash.com/photo-1626785774625-ddcddc3445e9?w=600&h=400&fit=crop', category: 'service', featured: true, stock: 99 },
+      { id: 'p4', name: 'Site Web Simple', description: 'Site web vitrine moderne, responsive et optimisé SEO. Parfait pour présenter votre activité.', price: 0, image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop', category: 'service', featured: false, stock: 99 },
+      { id: 'p5', name: 'Site Web Professionnel', description: 'Site web complet avec fonctionnalités avancées, design sur mesure et hébergement inclus.', price: 0, image: 'https://images.unsplash.com/photo-1547658719-da2b51169166?w=600&h=400&fit=crop', category: 'service', featured: true, stock: 99 },
+      { id: 'p6', name: 'Montage Vidéo Pro', description: 'Montage vidéo professionnel avec effets premium et transitions fluides via CapCut Pro.', price: 0, image: 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=600&h=400&fit=crop', category: 'service', featured: false, stock: 99 },
+      { id: 'p7', name: 'Contenu Réseaux Sociaux', description: 'Création de visuels et contenus engageants pour vos réseaux sociaux. Pack mensuel disponible.', price: 0, image: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=600&h=400&fit=crop', category: 'service', featured: false, stock: 99 },
+      { id: 'p8', name: 'CapCut Pro', description: 'Accès premium à CapCut Pro pour un montage vidéo professionnel sans filigrane. Compte activé.', price: 0, image: 'https://images.unsplash.com/photo-1536240478700-b869070f9279?w=600&h=400&fit=crop', category: 'outil', featured: true, stock: 50 },
+      { id: 'p9', name: 'PicsArt Pro', description: 'Accès premium à PicsArt Pro pour le design mobile professionnel. Tous les outils débloqués.', price: 0, image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&h=400&fit=crop', category: 'outil', featured: true, stock: 50 },
+      { id: 'p10', name: 'IPTV Pro', description: 'Accès IPTV Pro avec des milliers de chaînes TV en streaming haute qualité. Abonnement complet.', price: 0, image: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=600&h=400&fit=crop', category: 'outil', featured: true, stock: 30 },
+      { id: 'p11', name: 'Livres Professionnels', description: 'Pack de livres numériques professionnels et éducatifs pour développer vos compétences.', price: 0, image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600&h=400&fit=crop', category: 'outil', featured: false, stock: 99 },
+      { id: 'p12', name: 'Canva Pro', description: 'Accès premium à Canva Pro pour créer des designs professionnels. Templates illimités.', price: 0, image: '/canva-pro-real.png', category: 'outil', featured: false, stock: 50 },
     ]
     setProducts(hardcodedProducts)
     setLoading(false)
@@ -855,7 +872,7 @@ export default function Home() {
               <div>
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
                   <Badge variant="secondary" className="mb-4 px-3 py-1 text-xs font-medium bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800 shadow-sm">
-                    <Zap className="h-3 w-3 mr-1" /> Services rapides, modernes et professionnels
+                    <Sparkles className="h-3 w-3 mr-1" /> Studio Créatif Indépendant
                   </Badge>
                 </motion.div>
 
@@ -865,17 +882,13 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.1 }}
                 >
+                  Je transforme vos idées en{' '}
                   <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 bg-clip-text text-transparent">
-                    SK Designer Luxe
+                    identités visuelles
                   </span>
-                  <motion.span
-                    className="block text-lg sm:text-xl font-medium text-muted-foreground mt-2"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.25 }}
-                  >
-                    L&apos;excellence du design digital en Afrique
-                  </motion.span>
+                  <span className="block text-lg sm:text-xl font-medium text-muted-foreground mt-2">
+                    professionnelles.
+                  </span>
                 </motion.h1>
 
                 <motion.p
@@ -884,12 +897,7 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.2 }}
                 >
-                  Je suis Sacko, créateur digital passionné basé à Bamako. Je transforme vos idées en réalisations digitales concrètes, efficaces et professionnelles — logos, sites web, montages vidéo et bien plus encore. Qualité, Créativité, Satisfaction.
-                  {!activeReferralCode && (
-                    <span className="block mt-2 text-emerald-600 dark:text-emerald-400 font-medium">
-                      Avez un code parrainage ? <a href="#parrainage" className="underline hover:no-underline">Appliquez-le pour 10% de réduction</a>
-                    </span>
-                  )}
+                  De la création de votre logo à l'habillage de vos réseaux et la conception de votre site web. Un design sur-mesure pour propulser votre business depuis Bamako.
                 </motion.p>
 
                 <motion.div
@@ -898,14 +906,14 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.3 }}
                 >
-                  <a href="#services">
-                    <Button size="lg" className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 hover:from-amber-600 hover:via-orange-600 hover:to-red-600 text-white font-semibold shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 transition-all">
-                      Voir mes services <ArrowRight className="ml-2 h-4 w-4" />
+                  <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20discuter%20de%20mon%20projet." target="_blank" rel="noopener noreferrer">
+                    <Button size="lg" className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 hover:from-amber-600 hover:via-orange-600 hover:to-red-600 text-white font-semibold shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 transition-all transition-transform duration-200 hover:scale-105 active:scale-95">
+                      <MessageCircle className="mr-2 h-4 w-4" /> Discuter de mon projet
                     </Button>
                   </a>
-                  <a href="#competences">
-                    <Button size="lg" variant="outline" className="font-semibold hover:bg-accent">
-                      Mes compétences
+                  <a href="#services">
+                    <Button size="lg" variant="outline" className="font-semibold hover:bg-accent transition-transform duration-200 hover:scale-105 active:scale-95">
+                      Découvrir le Studio <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </a>
                 </motion.div>
@@ -998,27 +1006,26 @@ export default function Home() {
         {/* ═══ STATISTIQUES ═══ */}
         <section className="py-12 sm:py-16 bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 relative overflow-hidden">
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIxIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMSkiLz48L3N2Zz4=')] opacity-50" />
-          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
             <FadeIn className="text-center mb-10">
-              <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">La Confiance de Nos Clients</h2>
-              <p className="mt-2 text-white/80 text-sm">Des chiffres qui parlent d&apos;eux-mêmes</p>
+              <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">Ce que je fais, en chiffres</h2>
+              <p className="mt-2 text-white/80 text-sm">Transparent, impactant, à taille humaine</p>
             </FadeIn>
-            <StaggerContainer className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+            <StaggerContainer className="grid grid-cols-3 gap-6 sm:gap-12">
               {[
-                { value: 200, suffix: '+', label: 'Clients Satisfaits', icon: Users, desc: 'Des entrepreneurs et créateurs qui nous font confiance au quotidien' },
-                { value: 500, suffix: '+', label: 'Projets Réalisés', icon: Sparkles, desc: 'Logos, affiches, sites web, montages vidéo et bien plus encore' },
-                { value: 98, suffix: '%', label: 'Taux de Satisfaction', icon: Heart, desc: 'La quasi-totalité de nos clients reviennent ou nous recommandent' },
-                { value: 24, suffix: 'h', label: 'Délai Moyen', icon: Clock, desc: 'Livraison rapide sans compromis sur la qualité du travail' },
+                { value: 50, suffix: '+', label: 'Marques propulsées', icon: Award, desc: 'Logos, affiches et identités créées avec soin' },
+                { value: 100, suffix: '%', label: 'Sur-mesure', icon: Palette, desc: 'Aucun template pré-fait, chaque pixel est pensé pour vous' },
+                { value: 5, suffix: '/5', label: 'Satisfaction client', icon: ThumbsUp, desc: 'Une collaboration basée sur l\'écoute et le résultat' },
               ].map((stat) => (
                 <motion.div key={stat.label} variants={cardVariants} className="text-center">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mx-auto mb-3">
-                    <stat.icon className="h-7 w-7 text-white" />
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mx-auto mb-3">
+                    <stat.icon className="h-6 w-6 text-white" />
                   </div>
                   <div className="text-3xl sm:text-4xl font-extrabold text-white mb-1">
-                    <AnimatedCounter target={stat.value} suffix={stat.suffix} />
+                    <Counter target={stat.value} suffix={stat.suffix} />
                   </div>
                   <p className="text-sm font-semibold text-white/90">{stat.label}</p>
-                  <p className="text-xs text-white/60 mt-1 leading-relaxed">{stat.desc}</p>
+                  <p className="text-xs text-white/60 mt-1 leading-relaxed hidden sm:block">{stat.desc}</p>
                 </motion.div>
               ))}
             </StaggerContainer>
@@ -1109,7 +1116,7 @@ export default function Home() {
                 <CardContent className="p-6 sm:p-8 relative z-10">
                   <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
                     <div className="flex items-center gap-3 flex-shrink-0">
-                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-red-500 text-white animate-pulse">
+                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-red-500 text-white">
                         <AlertTriangle className="h-7 w-7" />
                       </div>
                       <div>
@@ -2259,7 +2266,7 @@ export default function Home() {
               {[
                 {
                   name: 'Affiche Pro',
-                  price: 2000,
+                  price: 0,
                   delivery: '1-24h',
                   revisions: 2,
                   format: 'PNG, PDF, JPEG',
@@ -2270,7 +2277,7 @@ export default function Home() {
                 },
                 {
                   name: 'Logo Professionnel',
-                  price: 5000,
+                  price: 0,
                   delivery: '1-24h',
                   revisions: 3,
                   format: 'PNG, SVG, PDF',
@@ -2281,7 +2288,7 @@ export default function Home() {
                 },
                 {
                   name: 'Site Web Pro',
-                  price: 25000,
+                  price: 0,
                   delivery: '1-3 jours',
                   revisions: 5,
                   format: 'Déployé en ligne',
@@ -2603,7 +2610,7 @@ export default function Home() {
                           )}
                           {isNext && (
                             <div className="absolute -top-2 -right-2">
-                              <Badge className="bg-amber-500 text-white border-0 text-[9px] px-1.5 shadow-md animate-pulse">Prochain</Badge>
+                              <Badge className="bg-amber-500 text-white border-0 text-[9px] px-1.5 shadow-md">Prochain</Badge>
                             </div>
                           )}
                           <div className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${tier.color} text-white mb-3 shadow-md ${!unlocked ? 'grayscale opacity-50' : ''}`}>
