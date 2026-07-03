@@ -944,7 +944,7 @@ export default function Home() {
                     ))}
                   </div>
                   <div>
-                    <p className="text-xs font-bold">200+ Clients satisfaits</p>
+                    <p className="text-xs font-bold">50+ Marques propulsées</p>
                     <div className="flex gap-0.5">
                       {[1,2,3,4,5].map((s) => (
                         <Star key={s} className="h-3 w-3 fill-amber-400 text-amber-400" />
@@ -964,7 +964,7 @@ export default function Home() {
                 <div className="relative">
                   <div className="absolute -inset-4 bg-gradient-to-r from-amber-400/20 via-orange-400/20 to-red-400/20 rounded-3xl blur-2xl" />
                   <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/20">
-                    <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?w=800&h=500&fit=crop" alt="Design professionnel" className="w-full h-[420px] object-cover" />
+                    <img src="/demo-photo.png" alt="SK Designer Luxe - Studio Créatif" className="w-full h-[420px] object-cover" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                     <div className="absolute bottom-0 left-0 right-0 p-6">
                       <div className="flex gap-2 flex-wrap">
@@ -982,7 +982,7 @@ export default function Home() {
                       ))}
                     </div>
                     <div>
-                      <p className="text-xs font-bold">200+ Clients</p>
+                      <p className="text-xs font-bold">50+ Marques</p>
                       <p className="text-[10px] text-muted-foreground">Satisfaits</p>
                     </div>
                   </div>
@@ -2224,25 +2224,16 @@ export default function Home() {
                 </a>
               </FadeIn>
               <FadeIn delay={0.2}>
-                <div className="relative rounded-2xl overflow-hidden shadow-2xl aspect-video bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center group cursor-pointer">
-                  <div className="absolute inset-0 bg-gradient-to-br from-amber-500/20 via-orange-500/10 to-red-500/20" />
-                  <div className="relative text-center z-10">
-                    <motion.div
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="flex h-20 w-20 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm border border-white/30 mx-auto mb-4 group-hover:bg-amber-500/80 transition-colors duration-300"
-                    >
-                      <Play className="h-8 w-8 text-white ml-1" fill="white" />
-                    </motion.div>
-                    <p className="text-white/80 text-sm">Vidéo de présentation</p>
-                    <p className="text-white/50 text-xs mt-1">SK Designer Luxe</p>
-                  </div>
-                  {/* Decorative elements */}
-                  <div className="absolute top-4 right-4 flex gap-1.5">
-                    <div className="h-2 w-2 rounded-full bg-red-500" />
-                    <div className="h-2 w-2 rounded-full bg-yellow-500" />
-                    <div className="h-2 w-2 rounded-full bg-green-500" />
-                  </div>
+                <div className="relative rounded-2xl overflow-hidden shadow-2xl aspect-video bg-black">
+                  <video
+                    className="w-full h-full object-cover"
+                    controls
+                    preload="metadata"
+                    poster="/demo-photo.png"
+                  >
+                    <source src="/demo-video.mp4" type="video/mp4" />
+                    Votre navigateur ne supporte pas la lecture vidéo.
+                  </video>
                 </div>
               </FadeIn>
             </div>
