@@ -73,6 +73,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/hooks/use-toast'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import AdBanner from '@/components/AdBanner'
 import {
   Dialog,
   DialogContent,
@@ -853,6 +854,9 @@ export default function Home() {
         
 
         
+        {/* ═══ PUB 1 — Après services ═══ */}
+        <div className="max-w-4xl mx-auto px-4"><AdBanner /></div>
+
         {/* ═══ CE QUE VOUS OBTENEZ ═══ */}
         <section className="py-16 sm:py-20 bg-muted/30">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -1101,6 +1105,9 @@ export default function Home() {
             </FadeIn>
           </div>
         </section>
+
+        {/* ═══ PUB 2 — Après portfolio ═══ */}
+        <div className="max-w-4xl mx-auto px-4"><AdBanner /></div>
 
         {/* ═══ NEWSLETTER ═══ */}
         <section className="py-16 sm:py-20">
@@ -1957,6 +1964,9 @@ export default function Home() {
 
         
 
+        {/* ═══ PUB 3 — Après espace client ═══ */}
+        <div className="max-w-4xl mx-auto px-4"><AdBanner /></div>
+
         {/* ═══ TÉMOIGNAGES CLIENTS ═══ */}
         <section id="temoignages" className="py-16 sm:py-20 bg-gradient-to-b from-muted/20 to-background relative overflow-hidden">
           <div className="absolute top-0 right-0 h-72 w-72 bg-amber-200/20 dark:bg-amber-900/10 rounded-full blur-3xl" />
@@ -2010,6 +2020,9 @@ export default function Home() {
 
         
 {/* ═══ BLOG ═══ */}
+        {/* ═══ PUB 4 — Avant blog ═══ */}
+        <div className="max-w-4xl mx-auto px-4"><AdBanner /></div>
+
         <section id="blog" className="py-16 sm:py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <FadeIn className="text-center mb-12">
