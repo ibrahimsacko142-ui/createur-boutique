@@ -1,0 +1,502 @@
+  1000→                  { title: 'Identité Complète', before: 'https://sfile.chatglm.cn/images-ppt/6c9261ec8848.jpg', after: 'https://sfile.chatglm.cn/images-ppt/0c5c9b1b948b.jpg', desc: 'De l\'amateur au professionnalisme total' },
+  1001→                ].map((item, i) => (
+  1002→                  <Card key={i} className="overflow-hidden border-0 shadow-lg group hover:shadow-xl transition-all duration-300">
+  1003→                    <div className="grid grid-cols-2 h-56">
+  1004→                      <div className="relative overflow-hidden">
+  1005→                        <img src={item.before} alt="Avant" className="w-full h-full object-cover" />
+  1006→                        <div className="absolute top-2 left-2">
+  1007→                          <span className="bg-red-500/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-full backdrop-blur-sm">AVANT</span>
+  1008→                        </div>
+  1009→                      </div>
+  1010→                      <div className="relative overflow-hidden">
+  1011→                        <img src={item.after} alt="Après" className="w-full h-full object-cover" />
+  1012→                        <div className="absolute top-2 left-2">
+  1013→                          <span className="bg-emerald-500/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-full backdrop-blur-sm">APRÈS</span>
+  1014→                        </div>
+  1015→                      </div>
+  1016→                    </div>
+  1017→                    <CardContent className="p-4">
+  1018→                      <h4 className="font-bold text-sm">{item.title}</h4>
+  1019→                      <p className="text-xs text-muted-foreground mt-1">{item.desc}</p>
+  1020→                    </CardContent>
+  1021→                  </Card>
+  1022→                ))}
+  1023→              </div>
+  1024→            </FadeIn>
+  1025→
+  1026→            <FadeIn delay={0.3} className="mt-8 text-center">
+  1027→              <p className="text-sm text-muted-foreground">
+  1028→                Envie d&apos;un projet similaire ?{' '}
+  1029→                <a href="https://wa.me/22397787244?text=Bonjour%20!%20J%27ai%20vu%20vos%20réalisations%20et%20je%20souhaite%20un%20projet%20similaire." target="_blank" rel="noopener noreferrer" className="text-amber-600 font-semibold hover:underline">
+  1030→                  Me contacter
+  1031→                </a>{' '}et discutons de votre projet !
+  1032→              </p>
+  1033→            </FadeIn>
+  1034→          </div>
+  1035→        </section>
+  1036→
+  1037→        {/* ═══ NEWSLETTER ═══ */}
+  1038→        <section className="py-16 sm:py-20">
+  1039→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  1040→            <FadeIn>
+  1041→              <Card className="border-0 shadow-xl overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 dark:from-amber-950/10 dark:via-orange-950/10 dark:to-red-950/10">
+  1042→                <CardContent className="p-8 sm:p-12">
+  1043→                  <div className="grid lg:grid-cols-2 gap-8 items-center">
+  1044→                    <div>
+  1045→                      <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+  1046→                        <Mail className="h-3 w-3 mr-1" /> Newsletter
+  1047→                      </Badge>
+  1048→                      <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">Restez Informé</h2>
+  1049→                      <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+  1050→                        Inscrivez-vous à ma newsletter pour recevoir mes dernières offres, des conseils en design et digital, et être informé en avant-première de mes offres exclusives. Rejoignez ma communauté de créateurs et d&apos;entrepreneurs.
+  1051→                      </p>
+  1052→                      <div className="mt-6 space-y-3">
+  1053→                        {[
+  1054→                          'Offres exclusives réservées aux abonnés',
+  1055→                          'Conseils et astuces design chaque semaine',
+  1056→                          'Accès prioritaire aux nouvelles promotions',
+  1057→                        ].map((item, i) => (
+  1058→                          <div key={i} className="flex items-center gap-2">
+  1059→                            <CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" />
+  1060→                            <span className="text-xs text-muted-foreground">{item}</span>
+  1061→                          </div>
+  1062→                        ))}
+  1063→                      </div>
+  1064→                    </div>
+  1065→                    <div className="space-y-4">
+  1066→                      <div className="space-y-2">
+  1067→                        <Input placeholder="Votre nom" value={newsletterName} onChange={(e) => setNewsletterName(e.target.value)} className="h-11 bg-white dark:bg-background" />
+  1068→                        <Input type="email" placeholder="Votre email" value={newsletterEmail} onChange={(e) => setNewsletterEmail(e.target.value)} className="h-11 bg-white dark:bg-background" />
+  1069→                      </div>
+  1070→                      <Button onClick={() => { if (!newsletterName.trim() || !newsletterEmail.trim()) { toast({ title: 'Champs requis', description: 'Veuillez remplir votre nom et email.', variant: 'destructive' }); return } const msg = encodeURIComponent(`Bonjour ! Je souhaite m\'inscrire à la newsletter. Nom: ${newsletterName.trim()}, Email: ${newsletterEmail.trim()}`); window.open(`https://wa.me/22397787244?text=${msg}`, '_blank'); toast({ title: 'Redirection WhatsApp', description: 'Vous allez être redirigé vers WhatsApp.' }) }} className="w-full bg-amber-500 hover:bg-amber-600 text-white font-semibold h-11">
+  1071→                        <Send className="h-4 w-4 mr-2" /> S&rsquo;inscrire gratuitement
+  1072→                      </Button>
+  1073→                      <p className="text-[10px] text-muted-foreground text-center">
+  1074→                        En vous inscrivant, vous acceptez de recevoir mes communications. Désabonnement possible à tout moment.
+  1075→                      </p>
+  1076→                    </div>
+  1077→                  </div>
+  1078→                </CardContent>
+  1079→              </Card>
+  1080→            </FadeIn>
+  1081→          </div>
+  1082→        </section>
+  1083→
+  1084→        {/* ═══ COMPÉTENCES ═══ */}
+  1085→        <section id="competences" className="py-16 sm:py-20 bg-muted/30">
+  1086→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  1087→            <div className="grid lg:grid-cols-2 gap-12 items-start">
+  1088→              <FadeIn>
+  1089→                <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+  1090→                  <Star className="h-3 w-3 mr-1" /> Expertise
+  1091→                </Badge>
+  1092→                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Mes Compétences</h2>
+  1093→                <p className="mt-4 text-muted-foreground leading-relaxed">
+  1094→                  Spécialisé dans le domaine du design graphique, du développement web et du digital avec une expertise avancée dans plusieurs outils et services numériques professionnels. Une maîtrise complète qui va de la création visuelle à la formation en passant par les outils digitaux premium.
+  1095→                </p>
+  1096→
+  1097→                <div className="mt-8 grid grid-cols-2 gap-3">
+  1098→                  {[
+  1099→                    { label: 'Qualité', icon: Star },
+  1100→                    { label: 'Créativité', icon: Sparkles },
+  1101→                    { label: 'Satisfaction', icon: Heart },
+  1102→                    { label: 'Rapidité', icon: Zap },
+  1103→                  ].map((item) => (
+  1104→                    <div key={item.label} className="flex items-center gap-2 p-3 rounded-lg bg-card border">
+  1105→                      <item.icon className="h-4 w-4 text-amber-500" />
+  1106→                      <span className="text-sm font-medium">{item.label}</span>
+  1107→                    </div>
+  1108→                  ))}
+  1109→                </div>
+  1110→              </FadeIn>
+  1111→
+  1112→              <div className="space-y-1">
+  1113→                {competences.map((comp, i) => (
+  1114→                  <CompetenceItem key={i} text={comp.text} icon={comp.icon} delay={i * 0.05} />
+  1115→                ))}
+  1116→              </div>
+  1117→            </div>
+  1118→          </div>
+  1119→        </section>
+  1120→
+  1121→        {/* ═══ FORMATIONS DISPONIBLES ═══ */}
+  1122→        <section id="formations" className="py-16 sm:py-20 relative overflow-hidden text-white" style={{background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)'}}>
+  1123→          <div className="absolute inset-0">
+  1124→            <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1400&h=800&fit=crop" alt="" className="w-full h-full object-cover opacity-10" />
+  1125→            <div className="absolute top-10 right-10 h-72 w-72 bg-amber-500/15 rounded-full blur-3xl" />
+  1126→            <div className="absolute bottom-10 left-10 h-72 w-72 bg-orange-500/15 rounded-full blur-3xl" />
+  1127→            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-96 w-96 bg-purple-500/10 rounded-full blur-3xl" />
+  1128→          </div>
+  1129→          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  1130→            <FadeIn>
+  1131→              <div className="text-center mb-12">
+  1132→                <Badge className="mb-3 bg-amber-500/20 text-amber-300 border-amber-500/30 hover:bg-amber-500/30">
+  1133→                  <GraduationCap className="h-3 w-3 mr-1" /> Formations
+  1134→                </Badge>
+  1135→                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Formations Disponibles</h2>
+  1136→                <p className="mt-4 text-slate-300 max-w-2xl mx-auto leading-relaxed">
+  1137→                  J'aide les entrepreneurs, étudiants et créateurs à développer leurs compétences digitales avec des formations modernes et accessibles. Chaque formation est conçue pour vous donner des compétences pratiques et immédiatement applicables.
+  1138→                </p>
+  1139→              </div>
+  1140→            </FadeIn>
+  1141→
+  1142→            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+  1143→              {formations.map((form, i) => (
+  1144→                <motion.a
+  1145→                  key={i}
+  1146→                  href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je suis intéressé(e) par la formation : ${form.text}. Pouvez-vous me donner plus de détails et comment y accéder ? Merci !`)}`}
+  1147→                  target="_blank"
+  1148→                  rel="noopener noreferrer"
+  1149→                  initial={{ opacity: 0, y: 20 }}
+  1150→                  whileInView={{ opacity: 1, y: 0 }}
+  1151→                  viewport={{ once: true, margin: '-40px' }}
+  1152→                  transition={{ duration: 0.4, delay: i * 0.04, ease: 'easeOut' }}
+  1153→                  className="group flex items-center gap-4 p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-emerald-500/40 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/5 cursor-pointer"
+  1154→                >
+  1155→                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 flex-shrink-0 group-hover:from-emerald-500/30 group-hover:to-teal-500/30 transition-colors">
+  1156→                    <form.icon className="h-5 w-5 text-amber-400 group-hover:text-emerald-400 transition-colors" />
+  1157→                  </div>
+  1158→                  <div className="flex-1 min-w-0">
+  1159→                    <p className="text-sm font-medium text-slate-200 leading-relaxed group-hover:text-white transition-colors">{form.text}</p>
+  1160→                    <span className="text-[11px] text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity mt-1 flex items-center gap-1">
+  1161→                      <MessageCircle className="h-3 w-3" /> Cliquer pour demander via WhatsApp
+  1162→                    </span>
+  1163→                  </div>
+  1164→                  <ArrowRight className="h-4 w-4 text-white/30 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all flex-shrink-0" />
+  1165→                </motion.a>
+  1166→              ))}
+  1167→            </div>
+  1168→          </div>
+  1169→        </section>
+  1170→
+  1171→        {/* ═══ POURQUOI NOUS CHOISIR ═══ */}
+  1172→        <section className="py-16 sm:py-20 bg-gradient-to-br from-amber-50 via-orange-50/50 to-white dark:from-amber-950/10 dark:via-orange-950/5 dark:to-background relative overflow-hidden">
+  1173→          <div className="absolute -top-20 -left-20 h-80 w-80 bg-amber-200/30 dark:bg-amber-900/10 rounded-full blur-3xl" />
+  1174→          <div className="absolute -bottom-20 -right-20 h-80 w-80 bg-orange-200/20 dark:bg-orange-900/10 rounded-full blur-3xl" />
+  1175→          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  1176→            <FadeIn className="text-center mb-14">
+  1177→              <Badge variant="secondary" className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200">
+  1178→                <ThumbsUp className="h-3 w-3 mr-1" /> Collaboration
+  1179→              </Badge>
+  1180→              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Pourquoi Collaborer Ensemble ?</h2>
+  1181→              <p className="mt-4 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+  1182→                  Au-delà des compétences techniques, c'est une approche humaine et personnalisée qui fait la différence. Voici ce qui rend chaque collaboration unique et efficace.
+  1183→              </p>
+  1184→            </FadeIn>
+  1185→
+  1186→            <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  1187→              {[
+  1188→                { icon: Zap, title: 'Créativité sur-mesure', desc: "Chaque projet est conçu selon vos besoins spécifiques. Aucun template pré-fait, aucune copie : votre identité visuelle sera unique et reflétera parfaitement l'essence de votre marque. Du premier croquis au fichier final, chaque détail est pensé pour vous.", color: 'bg-amber-100 dark:bg-amber-900/30', iconColor: 'text-amber-600' },
+  1189→                { icon: ShieldCheck, title: 'Rapidité & Efficacité', desc: "Des délais respectés pour que vous puissiez lancer vos campagnes à temps. Je comprends que le temps est précieux pour un entrepreneur : c'est pourquoi chaque projet est livré rapidement sans jamais compromettre la qualité.", color: 'bg-emerald-100 dark:bg-emerald-900/30', iconColor: 'text-emerald-600' },
+  1190→                { icon: MessageCircle, title: 'Accompagnement de A à Z', desc: "Une écoute attentive pour garantir un résultat qui dépasse vos attentes. De la première discussion sur WhatsApp à la livraison finale, je vous guide à chaque étape et j'ajuste jusqu'à ce que vous soyez entièrement satisfait.", color: 'bg-blue-100 dark:bg-blue-900/30', iconColor: 'text-blue-600' },
+  1191→                { icon: ShieldCheck, title: 'Qualité Professionnelle', desc: 'Chaque création est réalisée avec les meilleurs outils du marché : Canva Pro, CapCut Pro, PicsArt Pro. Le résultat est un visuel qui rivalise avec ceux des grandes agences, à une fraction du prix.', color: 'bg-purple-100 dark:bg-purple-900/30', iconColor: 'text-purple-600' },
+  1192→                { icon: RefreshCw, title: 'Révisions Gratuites', desc: "Non satisfait ? J'effectue des révisions gratuites jusqu'à ce que le résultat vous convienne parfaitement. Votre satisfaction n'est pas une option, c'est mon engagement.", color: 'bg-orange-100 dark:bg-orange-900/30', iconColor: 'text-orange-600' },
+  1193→                { icon: Gift, title: '100% Gratuit', desc: "Tous mes services sont actuellement offerts gratuitement. C'est ma façon de vous permettre de découvrir la qualité de mon travail sans aucun engagement financier.", color: 'bg-emerald-100 dark:bg-emerald-900/30', iconColor: 'text-emerald-600' },
+  1194→              ].map((item) => (
+  1195→                <motion.div key={item.title} variants={cardVariants}>
+  1196→                  <Card className="h-full border-0 shadow-md hover:shadow-xl transition-all duration-300 group hover:-translate-y-1">
+  1197→                    <CardContent className="p-6">
+  1198→                      <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${item.color} mb-4 group-hover:scale-110 transition-transform duration-300`}>
+  1199→                        <item.icon className={`h-6 w-6 ${item.iconColor}`} />
+  1200→                      </div>
+  1201→                      <h3 className="font-bold text-base mb-2">{item.title}</h3>
+  1202→                      <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
+  1203→                    </CardContent>
+  1204→                  </Card>
+  1205→                </motion.div>
+  1206→              ))}
+  1207→            </StaggerContainer>
+  1208→
+  1209→            {/* Garantie badge */}
+  1210→            <FadeIn delay={0.3} className="mt-12">
+  1211→              <div className="mx-auto max-w-2xl">
+  1212→                <Card className="border-2 border-emerald-200 dark:border-emerald-800 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20 overflow-hidden">
+  1213→                  <CardContent className="p-6 sm:p-8 text-center">
+  1214→                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30 mx-auto mb-4">
+  1215→                      <BadgeCheck className="h-8 w-8 text-emerald-600" />
+  1216→                    </div>
+  1217→                    <h3 className="text-xl font-extrabold text-emerald-700 dark:text-emerald-400 mb-2">Garantie 100% Satisfaction</h3>
+  1218→                    <p className="text-sm text-muted-foreground leading-relaxed">
+  1219→                      Je garantis votre satisfaction. Si le résultat ne correspond pas à votre commande, je reprends le travail gratuitement. Aucun risque pour vous.
+  1220→                    </p>
+  1221→                    <div className="flex flex-wrap items-center justify-center gap-4 mt-5">
+  1222→                      {['Gratuit', 'Révisions illimitées', 'Support permanent'].map((tag) => (
+  1223→                        <span key={tag} className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 px-3 py-1 text-xs font-medium text-emerald-700 dark:text-emerald-400">
+  1224→                          <CheckCircle2 className="h-3 w-3" /> {tag}
+  1225→                        </span>
+  1226→                      ))}
+  1227→                    </div>
+  1228→                  </CardContent>
+  1229→                </Card>
+  1230→              </div>
+  1231→            </FadeIn>
+  1232→          </div>
+  1233→        </section>
+  1234→
+  1235→        
+  1236→
+  1237→        {/* ═══ POUR QUI + OUTILS + LIVRAISON ═══ */}
+  1238→        <section className="py-16 sm:py-20 bg-muted/30">
+  1239→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  1240→            {/* Pour qui */}
+  1241→            <FadeIn className="mb-12">
+  1242→              <div className="text-center mb-8">
+  1243→                <Badge variant="secondary" className="mb-3 bg-blue-100 text-blue-700 border-blue-200">
+  1244→                  <UserCheck className="h-3 w-3 mr-1" /> Cible
+  1245→                </Badge>
+  1246→                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Pour Qui Sont Mes Services ?</h2>
+  1247→              </div>
+  1248→              <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+  1249→                {[
+  1250→                  { icon: Target, title: 'Entrepreneurs', desc: 'Créez une identité visuelle forte pour votre business et attirez plus de clients avec des designs professionnels.', image: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=300&h=200&fit=crop' },
+  1251→                  { icon: GraduationCap, title: 'Étudiants', desc: 'Développez vos compétences en design et digital avec mes formations abordables et mes outils pro.', image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=300&h=200&fit=crop' },
+  1252→                  { icon: Building2, title: 'Entreprises', desc: 'Renforcez votre image de marque avec des supports de communication professionnels et modernes.', image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=300&h=200&fit=crop' },
+  1253→                  { icon: Sparkles, title: 'Créateurs de contenu', desc: 'Boostez votre production de contenu avec du montage vidéo pro, des visuels réseaux sociaux et des outils premium.', image: 'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=300&h=200&fit=crop' },
+  1254→                ].map((item) => (
+  1255→                  <motion.div key={item.title} variants={cardVariants}>
+  1256→                    <Card className="h-full border-0 shadow-md text-center hover:shadow-xl transition-all duration-300 overflow-hidden group">
+  1257→                      <div className="relative h-32 overflow-hidden">
+  1258→                        <img src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+  1259→                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+  1260→                        <div className="absolute bottom-3 left-1/2 -translate-x-1/2">
+  1261→                          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white shadow-lg">
+  1262→                            <item.icon className="h-6 w-6 text-amber-600" />
+  1263→                          </div>
+  1264→                        </div>
+  1265→                      </div>
+  1266→                      <CardContent className="p-5">
+  1267→                        <h3 className="font-bold text-sm mb-2">{item.title}</h3>
+  1268→                        <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
+  1269→                      </CardContent>
+  1270→                    </Card>
+  1271→                  </motion.div>
+  1272→                ))}
+  1273→              </StaggerContainer>
+  1274→            </FadeIn>
+  1275→
+  1276→            <div className="grid lg:grid-cols-2 gap-8 mt-12">
+  1277→              {/* Outils utilisés */}
+  1278→              <FadeIn>
+  1279→                <Card className="border-0 shadow-lg h-full">
+  1280→                  <CardContent className="p-6 sm:p-8">
+  1281→                    <h3 className="text-lg font-bold mb-2 flex items-center gap-2">
+  1282→                      <Wrench className="h-5 w-5 text-amber-500" /> Outils Utilisés
+  1283→                    </h3>
+  1284→                    <p className="text-xs text-muted-foreground mb-5">Les outils professionnels qui garantissent la qualité de mes créations.</p>
+  1285→                    <div className="grid grid-cols-2 gap-3">
+  1286→                      {[
+  1287→                        { name: 'CapCut Pro', desc: 'Montage vidéo' },
+  1288→                        { name: 'Canva Pro', desc: 'Design rapide' },
+  1289→                        { name: 'PicsArt Pro', desc: 'Design mobile' },
+  1290→                        { name: 'Outils web pro', desc: 'Sites web' },
+  1291→                      ].map((outil) => (
+  1292→                        <div key={outil.name} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border">
+  1293→                          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 flex-shrink-0">
+  1294→                            <Wrench className="h-4 w-4 text-amber-600" />
+  1295→                          </div>
+  1296→                          <div>
+  1297→                            <p className="text-xs font-bold">{outil.name}</p>
+  1298→                            <p className="text-[10px] text-muted-foreground">{outil.desc}</p>
+  1299→                          </div>
+  1300→                        </div>
+  1301→                      ))}
+  1302→                    </div>
+  1303→                  </CardContent>
+  1304→                </Card>
+  1305→              </FadeIn>
+  1306→
+  1307→              {/* Livraison numérique */}
+  1308→              <FadeIn delay={0.1}>
+  1309→                <Card className="border-0 shadow-lg h-full">
+  1310→                  <CardContent className="p-6 sm:p-8">
+  1311→                    <h3 className="text-lg font-bold mb-2 flex items-center gap-2">
+  1312→                      <FolderDown className="h-5 w-5 text-emerald-500" /> Livraison Numérique
+  1313→                    </h3>
+  1314→                    <p className="text-xs text-muted-foreground mb-5">Vos fichiers livrés rapidement et en toute sécurité.</p>
+  1315→                    <div className="space-y-3">
+  1316→                      {[
+  1317→                        { icon: MessageCircle, label: 'Fichiers envoyés via WhatsApp', detail: 'Réception instantanée' },
+  1318→                        { icon: Globe, label: 'Google Drive', detail: 'Dossier partagé sécurisé' },
+  1319→                        { icon: Zap, label: 'Devis gratuit', detail: 'Selon le délai annoncé' },
+  1320→                        { icon: Shield, label: 'Fichiers haute qualité', detail: 'Format source + export' },
+  1321→                      ].map((item) => (
+  1322→                        <div key={item.label} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border">
+  1323→                          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex-shrink-0">
+  1324→                            <item.icon className="h-4 w-4 text-emerald-600" />
+  1325→                          </div>
+  1326→                          <div className="flex-1">
+  1327→                            <p className="text-xs font-bold">{item.label}</p>
+  1328→                            <p className="text-[10px] text-muted-foreground">{item.detail}</p>
+  1329→                          </div>
+  1330→                          <CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" />
+  1331→                        </div>
+  1332→                      ))}
+  1333→                    </div>
+  1334→                  </CardContent>
+  1335→                </Card>
+  1336→              </FadeIn>
+  1337→            </div>
+  1338→          </div>
+  1339→        </section>
+  1340→
+  1341→        {/* ═══ À PROPOS ═══ */}
+  1342→        <section id="apropos" className="py-16 sm:py-20">
+  1343→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  1344→            <div className="grid lg:grid-cols-2 gap-12 items-center">
+  1345→              <FadeIn>
+  1346→                <div className="relative">
+  1347→                  <div className="rounded-2xl overflow-hidden shadow-xl h-[400px] relative">
+  1348→                    <img src="/demo-photo.png" alt="SK Designer Luxe par Sacko - À propos" className="w-full h-full object-cover" />
+  1349→                    <div className="absolute inset-0 bg-gradient-to-t from-amber-900/80 via-amber-900/30 to-transparent" />
+  1350→                    <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+  1351→                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mb-3">
+  1352→                        <Palette className="h-7 w-7" />
+  1353→                      </div>
+  1354→                      <h3 className="text-2xl font-bold">SK Designer Luxe</h3>
+  1355→                      <p className="mt-1 text-white/80 text-sm">Créateur Digital &bull; Bamako, Mali</p>
+  1356→                    </div>
+  1357→                  </div>
+  1358→                  <div className="absolute -bottom-6 -right-6 bg-white dark:bg-card rounded-2xl p-5 shadow-xl border hidden sm:block">
+  1359→                    <div className="flex items-center gap-3">
+  1360→                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
+  1361→                        <Zap className="h-5 w-5 text-amber-600" />
+  1362→                      </div>
+  1363→                      <div>
+  1364→                        <p className="text-lg font-bold">50+ Projets livrés</p>
+  1365→                        <p className="text-xs text-muted-foreground">À Bamako et au-delà</p>
+  1366→                      </div>
+  1367→                    </div>
+  1368→                  </div>
+  1369→                </div>
+  1370→              </FadeIn>
+  1371→
+  1372→              <FadeIn delay={0.2}>
+  1373→                <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+  1374→                  <Heart className="h-3 w-3 mr-1" /> Qui suis-je
+  1375→                </Badge>
+  1376→                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">À Propos de Sacko</h2>
+  1377→                <div className="mt-6 space-y-4 text-muted-foreground leading-relaxed">
+  1378→                  <p>
+  1379→                    Bienvenue ! Je suis <strong className="text-foreground">Sacko</strong>, créateur digital passionné basé à Bamako. Mon objectif est d&apos;accompagner les entreprises et les porteurs de projets dans la construction d&apos;une <strong className="text-foreground">image de marque forte, professionnelle et mémorable</strong>. De la première idée à la conception finale, je transforme votre vision en une réalité visuelle qui attire et fidélise vos clients.
+  1380→                  </p>
+  1381→                  <p>
+  1382→                    Je maîtrise les outils les plus demandés du marché — <strong className="text-foreground">CapCut Pro, Canva Pro, PicsArt Pro</strong> — et je les mets au service de chaque projet pour garantir des résultats à la hauteur de vos ambitions. Que ce soit un logo percutant, un site web qui convertit, ou une identité visuelle complète, chaque création est pensée pour vous démarquer de la concurrence.
+  1383→                  </p>
+  1384→                  <p>
+  1385→                    Ma mission : <strong className="text-foreground">aider les entrepreneurs et créateurs du Mali et d&apos;Afrique</strong> à prendre le contrôle de leur image numérique. Je crois fermement que chaque business, même le plus modeste, mérite une identité visuelle qui inspire confiance et attire des clients. C&apos;est cette conviction qui guide chaque projet que je réalise.
+  1386→                  </p>
+  1387→                </div>
+  1388→
+  1389→                <div className="mt-6 grid grid-cols-3 gap-3">
+  1390→                  {[
+  1391→                    { number: '50+', label: 'Marques créées' },
+  1392→                    { number: '100%', label: 'Sur-mesure' },
+  1393→                    { number: '5/5', label: 'Satisfaction' },
+  1394→                  ].map((stat) => (
+  1395→                    <div key={stat.label} className="text-center p-3 rounded-lg bg-muted/50 border">
+  1396→                      <div className="text-lg font-bold text-amber-600">{stat.number}</div>
+  1397→                      <div className="text-[10px] text-muted-foreground">{stat.label}</div>
+  1398→                    </div>
+  1399→                  ))}
+  1400→                </div>
+  1401→
+  1402→                <div className="mt-8 flex flex-wrap gap-3">
+  1403→                  <a href="#services">
+  1404→                    <Button className="bg-amber-500 hover:bg-amber-600 text-white font-semibold">
+  1405→                      Découvrir mes services <ArrowRight className="ml-2 h-4 w-4" />
+  1406→                    </Button>
+  1407→                  </a>
+  1408→                  <a href="#contact">
+  1409→                    <Button variant="outline" className="font-semibold">
+  1410→                      Me contacter
+  1411→                    </Button>
+  1412→                  </a>
+  1413→                </div>
+  1414→              </FadeIn>
+  1415→            </div>
+  1416→          </div>
+  1417→        </section>
+  1418→
+  1419→        {/* ═══ AVANT / APRÈS + GARANTIE ═══ */}
+  1420→        <section className="py-16 sm:py-20 bg-muted/30">
+  1421→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  1422→            <div className="grid lg:grid-cols-2 gap-8">
+  1423→              {/* Comparaison Avant/Après */}
+  1424→              <FadeIn>
+  1425→                <div className="text-center mb-6">
+  1426→                  <Badge variant="secondary" className="mb-3 bg-purple-100 text-purple-700 border-purple-200">
+  1427→                    <ArrowRightLeft className="h-3 w-3 mr-1" /> Avant / Après
+  1428→                  </Badge>
+  1429→                  <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">La Différence est Visible</h2>
+  1430→                  <p className="text-sm text-muted-foreground mt-2">Design simple vs design professionnel — voyez la valeur ajoutée</p>
+  1431→                </div>
+  1432→                <div className="grid grid-cols-2 gap-4">
+  1433→                  <div className="space-y-3">
+  1434→                    <div className="text-center">
+  1435→                      <Badge variant="secondary" className="bg-red-100 text-red-600 border-red-200">Avant</Badge>
+  1436→                    </div>
+  1437→                    <Card className="border-0 shadow-md overflow-hidden">
+  1438→                      <div className="h-28 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 flex items-center justify-center">
+  1439→                        <div className="text-center p-3">
+  1440→                          <div className="w-16 h-16 bg-gray-300 dark:bg-gray-600 rounded-lg mx-auto mb-2 flex items-center justify-center">
+  1441→                            <PenTool className="h-6 w-6 text-gray-400" />
+  1442→                          </div>
+  1443→                          <p className="text-[10px] text-gray-500">Logo basique</p>
+  1444→                        </div>
+  1445→                      </div>
+  1446→                      <CardContent className="p-3">
+  1447→                        <ul className="space-y-1">
+  1448→                          {['Design basique', 'Pas d\'identité', 'Non professionnel'].map((t) => (
+  1449→                            <li key={t} className="flex items-center gap-1 text-[10px] text-red-500">
+  1450→                              <X className="h-3 w-3" /> {t}
+  1451→                            </li>
+  1452→                          ))}
+  1453→                        </ul>
+  1454→                      </CardContent>
+  1455→                    </Card>
+  1456→                  </div>
+  1457→                  <div className="space-y-3">
+  1458→                    <div className="text-center">
+  1459→                      <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200">Après</Badge>
+  1460→                    </div>
+  1461→                    <Card className="border-0 shadow-md overflow-hidden">
+  1462→                      <div className="h-28 bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
+  1463→                        <div className="text-center p-3">
+  1464→                          <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-lg mx-auto mb-2 flex items-center justify-center">
+  1465→                            <Sparkles className="h-6 w-6 text-white" />
+  1466→                          </div>
+  1467→                          <p className="text-[10px] text-white/90">Logo pro</p>
+  1468→                        </div>
+  1469→                      </div>
+  1470→                      <CardContent className="p-3">
+  1471→                        <ul className="space-y-1">
+  1472→                          {['Design professionnel', 'Identité forte', 'Impact visuel'].map((t) => (
+  1473→                            <li key={t} className="flex items-center gap-1 text-[10px] text-emerald-600">
+  1474→                              <CheckCircle2 className="h-3 w-3" /> {t}
+  1475→                            </li>
+  1476→                          ))}
+  1477→                        </ul>
+  1478→                      </CardContent>
+  1479→                    </Card>
+  1480→                  </div>
+  1481→                </div>
+  1482→              </FadeIn>
+  1483→
+  1484→              {/* Garantie + Objectif + Partenariats + Publicité */}
+  1485→              <div className="space-y-6">
+  1486→                {/* Garantie de qualité */}
+  1487→                <FadeIn delay={0.1}>
+  1488→                  <Card className="border-2 border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-950/10">
+  1489→                    <CardContent className="p-5">
+  1490→                      <div className="flex items-center gap-3 mb-3">
+  1491→                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500 text-white">
+  1492→                          <BadgeCheck className="h-5 w-5" />
+  1493→                        </div>
+  1494→                        <div>
+  1495→                          <h3 className="font-bold text-sm">Garantie de Qualité</h3>
+  1496→                          <p className="text-[10px] text-muted-foreground">Ma promesse envers vous</p>
+  1497→                        </div>
+  1498→                      </div>
+  1499→                      <div className="grid grid-cols-2 gap-2">
+
+[showing lines 1000-1499 of 2400; use offset=1500 with limit to continue reading]

@@ -329,6 +329,7 @@ export default function Home() {
   const [portfolioFilter, setPortfolioFilter] = useState('Tous')
   const [quickOrder, setQuickOrder] = useState({ service: '', name: '', phone: '', description: '' })
   const [selectedArticle, setSelectedArticle] = useState<typeof blogArticles[number] | null>(null)
+  const [faqOpen, setFaqOpen] = useState<string | null>(null)
   const [legalPage, setLegalPage] = useState<'mentions' | 'confidentialite' | null>(null)
   const { toast } = useToast()
 
@@ -412,7 +413,7 @@ export default function Home() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setShowBackToTop(window.scrollY > 500)
+      setShowBackToTop(window.scrollY > 600)
     }
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
@@ -1522,7 +1523,7 @@ export default function Home() {
                           <Trophy className="h-5 w-5" />
                         </div>
                         <div>
-                          <h3 className="font-bold text-sm">Notre Objectif</h3>
+                          <h3 className="font-bold text-sm">Mon Objectif</h3>
                         </div>
                       </div>
                       <p className="text-sm text-muted-foreground leading-relaxed">
@@ -1600,7 +1601,7 @@ export default function Home() {
                 </div>
                 <a href="https://wa.me/22397787244?text=Bonjour%20!%20J%27ai%20vu%20votre%20vidéo%20et%20je%20souhaite%20commander%20un%20service." target="_blank" rel="noopener noreferrer">
                   <Button className="mt-6 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold">
-                    <MessageCircle className="h-4 w-4 mr-2" /> Commander via WhatsApp
+                    <MessageCircle className="h-4 w-4 mr-2" /> Demander via WhatsApp
                   </Button>
                 </a>
               </FadeIn>
@@ -1643,7 +1644,7 @@ export default function Home() {
                 { name: 'Amadou Diallo', role: 'Entrepreneur, Bamako', text: 'Excellent travail ! J\'ai commandé un logo et une affiche pour mon entreprise. Le résultat était professionnel et livré en moins de 24h. Je recommande vivement SK Designer Luxe à tous les entrepreneurs.', rating: 5, avatar: 'AD', gradient: 'from-amber-400 to-orange-500' },
                 { name: 'Fatoumata Traoré', role: 'Étudiante, Université de Bamako', text: 'La formation en design graphique m\'a permis de développer mes compétences rapidement. Les explications sont claires et le suivi est personnalisé. Merci SK Designer Luxe !', rating: 5, avatar: 'FT', gradient: 'from-emerald-400 to-teal-500' },
                 { name: 'Ibrahim Keita', role: 'Gérant de restaurant', text: 'Les visuels pour mes réseaux sociaux sont incroyables. Mon engagement a augmenté de 300% depuis que je travaille avec SK Designer Luxe. Service au top !', rating: 5, avatar: 'IK', gradient: 'from-purple-400 to-pink-500' },
-                { name: 'Mariam Coulibaly', role: 'Blogueuse', text: 'CapCut Pro et PicsArt Pro à un prix imbattable ! L\'activation est rapide et le support est très réactif. Je ne pouvais pas rêver mieux pour mon contenu.', rating: 4, avatar: 'MC', gradient: 'from-blue-400 to-cyan-500' },
+                { name: 'Mariam Coulibaly', role: 'Blogueuse', text: 'CapCut Pro et PicsArt Pro gratuitement ! L\'activation est rapide et le support est très réactif. Je ne pouvais pas rêver mieux pour mon contenu.', rating: 4, avatar: 'MC', gradient: 'from-blue-400 to-cyan-500' },
                 { name: 'Oumar Sidibé', role: 'Propriétaire de boutique', text: 'Mon site web est magnifique et professionnel. Mes clients peuvent maintenant me trouver en ligne facilement. Le meilleur investissement pour mon business.', rating: 5, avatar: 'OS', gradient: 'from-red-400 to-orange-500' },
                 { name: 'Aïssata Dembélé', role: 'Créatrice de contenu', text: 'Le montage vidéo est d\'une qualité exceptionnelle. Mes vidéos TikTok et YouTube ont beaucoup plus de vues maintenant. Merci pour votre créativité !', rating: 5, avatar: 'AD2', gradient: 'from-pink-400 to-rose-500' },
               ].map((t, i) => (
@@ -1960,74 +1961,80 @@ export default function Home() {
 
         {/* ═══ FAQ ═══ */}
         <section id="faq" className="py-16 sm:py-20 bg-muted/30">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
             <FadeIn className="text-center mb-12">
-              <Badge variant="secondary" className="mb-3 bg-blue-100 text-blue-700 border-blue-200">
-                <Headphones className="h-3 w-3 mr-1" /> Support
+              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+                <MessageCircle className="h-3 w-3 mr-1" /> FAQ
               </Badge>
               <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Questions Fréquentes</h2>
-              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
-                Trouvez rapidement les réponses aux questions les plus posées par nos clients. Si votre question n&apos;est pas ici, contactez-nous directement.
+              <p className="mt-3 text-muted-foreground max-w-xl mx-auto">
+                Les réponses aux questions les plus posées. Si vous ne trouvez pas votre réponse, contactez-moi directement sur WhatsApp.
               </p>
             </FadeIn>
-
-            <div className="max-w-3xl mx-auto space-y-3">
+            <FadeIn delay={0.1} className="space-y-3">
               {[
                 {
-                  q: "Quels modes de paiement acceptez-vous ?",
-                  a: "Tous les services sont actuellement gratuits. Pour les services payants à l'avenir, le paiement s'effectuera via l'application mobile Wave au numéro +223 97 78 72 44. C'est un moyen de paiement rapide, sécurisé et accessible à tous au Mali."
+                  q: "Est-ce que les services sont vraiment gratuits ?",
+                  a: "Oui, tous les services sont actuellement offerts gratuitement. C'est ma façon de vous permettre de découvrir la qualité de mon travail sans aucun engagement financier."
                 },
                 {
-                  q: "Combien de temps faut-il pour recevoir mon projet ?",
-                  a: "Les délais dépendent du type de service. Pour les affiches et logos, la livraison se fait entre 1 et 24 heures. Pour les outils comme CapCut Pro et PicsArt Pro, c'est également 1 à 24 heures. Les sites web nécessitent 1 à 3 jours ouvrables, et les formations suivent un programme spécifique communiqué à l'avance."
+                  q: "Comment recevoir ma commande ?",
+                  a: "Après avoir discuté de votre projet sur WhatsApp, je crée votre design et vous l'envoie directement via WhatsApp ou Google Drive. La livraison se fait généralement entre 1 et 24 heures selon le service."
                 },
                 {
-                  q: "Puis-je demander des révisions sur mon projet ?",
-                  a: "Oui, absolument ! Des révisions sont incluses avant la validation finale. Nous travaillons avec vous pour nous assurer que le résultat correspond parfaitement à vos attentes. Votre satisfaction est notre priorité et nous ne validons pas un projet tant que vous n'êtes pas pleinement satisfait du rendu."
+                  q: "Quels outils utilisez-vous ?",
+                  a: "J'utilise les meilleurs outils professionnels du marché : Canva Pro pour le design, CapCut Pro pour le montage vidéo, PicsArt Pro pour le design mobile, et des outils web professionnels pour les sites."
                 },
                 {
-                  q: "Comment se passe la livraison de mon travail ?",
-                  a: "Les fichiers sont livrés en haute qualité via WhatsApp pour une réception instantanée, ou via Google Drive pour les fichiers volumineux. Vous recevez les fichiers sources et les exports dans les formats souhaités. Tout est fait pour que vous puissiez utiliser votre création immédiatement."
+                  q: "Combien de révisions sont incluses ?",
+                  a: "Les révisions sont illimitées et gratuites. Je travaille jusqu'à ce que vous soyez entièrement satisfait du résultat. Votre satisfaction est ma priorité absolue."
                 },
                 {
-                  q: "Y a-t-il un système de parrainage ?",
-                  a: "Oui ! Notre programme de parrainage vous permet de gagner des récompenses en recommandant nos services. Pour 1 client parrainé, recevez 500 FCFA de réduction. Pour 2 clients, un service gratuit (affiche ou logo). Pour 5 clients, un logo ou mini projet entièrement offert. Pour 10 clients, un site web simple gratuitement !"
+                  q: "Comment suivre une formation ?",
+                  a: "Cliquez simplement sur la formation qui vous intéresse. Vous serez redirigé vers WhatsApp où je vous expliquerai le contenu et comment y accéder. Simple et direct."
                 },
                 {
-                  q: "Le paiement est-il sécurisé ?",
-                  a: "Oui, toutes les transactions passent par Wave, un moyen de paiement sécurisé et fiable. Chaque paiement est confirmé avant le début du travail, garantissant la sécurité des deux parties. Nous ne commençons aucun travail sans confirmation claire du paiement."
+                  q: "Travaillez-vous avec des clients en dehors de Bamako ?",
+                  a: "Absolument ! Je travaille avec des clients partout au Mali et en Afrique. Toutes les communications et livraisons se font en ligne via WhatsApp et Google Drive."
                 },
-                {
-                  q: "Quels outils numériques proposez-vous ?",
-                  a: "Nous proposons CapCut Pro pour le montage vidéo professionnel, PicsArt Pro pour le design mobile, IPTV Pro pour les chaînes TV en streaming, et des livres professionnels et éducatifs pour développer vos compétences. Tous les outils sont livrés avec leur compte activé et prêt à l'emploi."
-                },
-                {
-                  q: "Proposez-vous des formations ?",
-                  a: "Oui ! Nous proposons une formation complète en design graphique à 20 000 FCFA. Cette formation couvre les bases et techniques avancées pour créer des visuels professionnels. C'est idéal pour les étudiants, les entrepreneurs et toute personne souhaitant développer des compétences en design."
-                },
-              ].map((faq, i) => (
-                <FadeIn key={i} delay={i * 0.05}>
-                  <Card className="border-0 shadow-sm hover:shadow-md transition-shadow duration-200">
-                    <CardContent className="p-5">
-                      <div className="flex items-start gap-3">
-                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 flex-shrink-0 mt-0.5">
-                          <span className="text-xs font-bold text-amber-600">Q</span>
-                        </div>
-                        <div>
-                          <h3 className="font-semibold text-sm mb-2">{faq.q}</h3>
-                          <p className="text-xs text-muted-foreground leading-relaxed">{faq.a}</p>
-                        </div>
-                      </div>
-                    </CardContent>
+              ].map((faq, i) => {
+                const isOpen = faqOpen === `faq-${i}`
+                return (
+                  <Card key={i} className="border-0 shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
+                    <button
+                      onClick={() => setFaqOpen(isOpen ? null : `faq-${i}`)}
+                      className="w-full flex items-center justify-between p-5 text-left"
+                    >
+                      <h3 className="font-semibold text-sm pr-4">{faq.q}</h3>
+                      <motion.div
+                        animate={{ rotate: isOpen ? 180 : 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="flex-shrink-0"
+                      >
+                        <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                      </motion.div>
+                    </button>
+                    <AnimatePresence initial={false}>
+                      {isOpen && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.25, ease: 'easeInOut' }}
+                          className="overflow-hidden"
+                        >
+                          <p className="text-sm text-muted-foreground leading-relaxed px-5 pb-5">{faq.a}</p>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </Card>
-                </FadeIn>
-              ))}
-            </div>
-
+                )
+              })}
+            </FadeIn>
             <FadeIn className="mt-8 text-center">
               <p className="text-sm text-muted-foreground">
                 Vous avez d&apos;autres questions ?{' '}
-                <a href="#contact" className="text-amber-600 font-medium hover:underline">Contactez-nous</a> ou écrivez-nous directement sur{' '}
+                <a href="#contact" className="text-amber-600 font-medium hover:underline">Contactez-moi</a> ou écrivez-moi directement sur{' '}
                 <a href="https://wa.me/22397787244" target="_blank" rel="noopener noreferrer" className="text-emerald-600 font-medium hover:underline">WhatsApp</a>.
               </p>
             </FadeIn>
@@ -2070,6 +2077,16 @@ export default function Home() {
                       <option value="IPTV Pro — Gratuit">IPTV Pro — Gratuit</option>
                       <option value="Canva Pro — Gratuit">Canva Pro — Gratuit</option>
                       <option value="Livres Professionnels — Gratuit">Livres Professionnels — Gratuit</option>
+                      <option disabled className="font-semibold text-muted-foreground">── Formations ──</option>
+                      <option value="Formation en Trading — Gratuit">Formation en Trading — Gratuit</option>
+                      <option value="Formation en Management et Gestion de projets — Gratuit">Formation en Management et Gestion de projets — Gratuit</option>
+                      <option value="Formation en Intelligence Artificielle — Gratuit">Formation en Intelligence Artificielle — Gratuit</option>
+                      <option value="Formation YouTube et Monétisation — Gratuit">Formation YouTube et Monétisation — Gratuit</option>
+                      <option value="Formation en Programmation — Gratuit">Formation en Programmation — Gratuit</option>
+                      <option value="Formation en Montage Vidéo — Gratuit">Formation en Montage Vidéo — Gratuit</option>
+                      <option value="Formation E-commerce — Gratuit">Formation E-commerce — Gratuit</option>
+                      <option value="Formation en Maintenance Informatique — Gratuit">Formation en Maintenance Informatique — Gratuit</option>
+                      <option value="Formation en Hacking et Sécurité Informatique — Gratuit">Formation en Hacking et Sécurité Informatique — Gratuit</option>
                     </select>
                   </div>
                   <div className="grid sm:grid-cols-2 gap-4">
@@ -2267,15 +2284,16 @@ export default function Home() {
 
       {/* ═══ WHATSAPP FLOTTANT + BACK TO TOP ═══ */}
       <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
-        {/* Back to top button with scroll progress */}
+        {/* Back to top button */}
         <AnimatePresence>
           {showBackToTop && (
             <motion.button
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
+              initial={{ opacity: 0, scale: 0.5, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.5, y: 20 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="flex h-11 w-11 items-center justify-center rounded-full bg-gray-800 dark:bg-gray-700 text-white shadow-lg hover:bg-gray-700 dark:hover:bg-gray-600 transition-all duration-300 hover:scale-110"
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 text-white shadow-lg shadow-amber-500/30 hover:shadow-xl hover:shadow-amber-500/40 transition-all duration-300 hover:scale-110"
               aria-label="Retour en haut"
             >
               <ChevronUp className="h-5 w-5" />
