@@ -12,6 +12,7 @@ const navLinks = [
   { label: 'Résultats', href: '#ce-que-vous-obtenez' },
   { label: 'Portfolio', href: '#portfolio' },
   { label: 'Inscription', href: '#inscription' },
+  { label: 'Espace Client', href: '#espace-client' },
   { label: 'À propos', href: '#apropos' },
   { label: 'Témoignages', href: '#temoignages' },
   { label: 'FAQ', href: '#faq' },

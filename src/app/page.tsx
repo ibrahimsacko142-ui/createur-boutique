@@ -94,6 +94,82 @@ interface Product {
 }
 
 /* ─── Animation Helpers ─── */
+function BeforeAfterSlider({ before, after, title }: { before: string; after: string; title: string }) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [sliderPos, setSliderPos] = useState(50)
+  const [isDragging, setIsDragging] = useState(false)
+
+  const updatePosition = (clientX: number) => {
+    if (!containerRef.current) return
+    const rect = containerRef.current.getBoundingClientRect()
+    const x = clientX - rect.left
+    const pct = Math.max(0, Math.min(100, (x / rect.width) * 100))
+    setSliderPos(pct)
+  }
+
+  const handlePointerDown = (e: React.PointerEvent) => {
+    setIsDragging(true)
+    ;(e.target as HTMLElement).setPointerCapture(e.pointerId)
+    updatePosition(e.clientX)
+  }
+
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (!isDragging) return
+    updatePosition(e.clientX)
+  }
+
+  const handlePointerUp = () => {
+    setIsDragging(false)
+  }
+
+  return (
+    <div className="space-y-2">
+      <div
+        ref={containerRef}
+        className="relative h-56 sm:h-64 rounded-xl overflow-hidden cursor-col-resize select-none border-2 border-border shadow-lg"
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+      >
+        {/* After (background — full width) */}
+        <img src={after} alt="Après" className="absolute inset-0 w-full h-full object-cover" draggable={false} />
+
+        {/* Before (clipped) */}
+        <div className="absolute inset-0" style={{ clipPath: `inset(0 ${100 - sliderPos}% 0 0)` }}>
+          <img src={before} alt="Avant" className="w-full h-full object-cover" draggable={false} />
+        </div>
+
+        {/* Labels */}
+        <span className="absolute top-3 left-3 z-20 bg-red-500/90 text-white text-[10px] font-bold px-2.5 py-1 rounded-full backdrop-blur-sm">AVANT</span>
+        <span className="absolute top-3 right-3 z-20 bg-emerald-500/90 text-white text-[10px] font-bold px-2.5 py-1 rounded-full backdrop-blur-sm">APRÈS</span>
+
+        {/* Slider line */}
+        <div
+          className="absolute top-0 bottom-0 z-30 w-0.5 bg-white shadow-[0_0_8px_rgba(0,0,0,0.5)]"
+          style={{ left: `${sliderPos}%` }}
+        >
+          {/* Handle */}
+          <div className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white shadow-xl flex items-center justify-center border-2 border-white/80">
+            <div className="flex items-center gap-0.5">
+              <div className="w-0 h-0 border-t-[5px] border-b-[5px] border-r-[6px] border-t-transparent border-b-transparent border-r-gray-700" />
+              <div className="w-0 h-0 border-t-[5px] border-b-[5px] border-l-[6px] border-t-transparent border-b-transparent border-l-gray-700" />
+            </div>
+          </div>
+        </div>
+
+        {/* Drag hint overlay */}
+        {!isDragging && (
+          <div className="absolute inset-0 z-10 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity bg-black/20">
+            <div className="bg-white/90 text-gray-800 text-xs font-semibold px-3 py-1.5 rounded-full shadow">
+              Glissez pour comparer
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
 function FadeIn({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-60px' })
@@ -329,6 +405,7 @@ export default function Home() {
   const [portfolioFilter, setPortfolioFilter] = useState('Tous')
   const [quickOrder, setQuickOrder] = useState({ service: '', name: '', phone: '', description: '' })
   const [inscriptionData, setInscriptionData] = useState({ name: '', phone: '', formation: '' })
+  const [clientLogin, setClientLogin] = useState({ name: '', phone: '' })
   const [selectedArticle, setSelectedArticle] = useState<typeof blogArticles[number] | null>(null)
   const [faqOpen, setFaqOpen] = useState<string | null>(null)
   const [legalPage, setLegalPage] = useState<'mentions' | 'confidentialite' | null>(null)
@@ -994,33 +1071,22 @@ export default function Home() {
             {/* Avant / Après Section */}
             <FadeIn delay={0.4} className="mt-14">
               <h3 className="text-xl font-bold text-center mb-2">Avant / Après</h3>
-              <p className="text-sm text-muted-foreground text-center mb-8 max-w-xl mx-auto">Voici quelques exemples concrets de transformations réalisées pour mes clients. Chaque projet est unique et pensé pour maximiser l'impact visuel.</p>
+              <p className="text-sm text-muted-foreground text-center mb-8 max-w-xl mx-auto">Glissez le curseur pour comparer mes transformations. Chaque projet est unique et pensé pour maximiser l&apos;impact visuel.</p>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[
                   { title: 'Refonte Logo Boutique', before: 'https://sfile.chatglm.cn/images-ppt/f972157605f2.jpg', after: 'https://sfile.chatglm.cn/images-ppt/082b6f181c95.jpg', desc: 'Logo basique transformé en identité premium' },
                   { title: 'Affiche Événement', before: 'https://sfile.chatglm.cn/images-ppt/d2c6b53ee01b.jpg', after: 'https://sfile.chatglm.cn/images-ppt/d247ebeec9b2.jpg', desc: 'Affiche simple devenue visuel professionnel' },
                   { title: 'Identité Complète', before: 'https://sfile.chatglm.cn/images-ppt/6c9261ec8848.jpg', after: 'https://sfile.chatglm.cn/images-ppt/0c5c9b1b948b.jpg', desc: 'De l\'amateur au professionnalisme total' },
                 ].map((item, i) => (
-                  <Card key={i} className="overflow-hidden border-0 shadow-lg group hover:shadow-xl transition-all duration-300">
-                    <div className="grid grid-cols-2 h-56">
-                      <div className="relative overflow-hidden">
-                        <img src={item.before} alt="Avant" className="w-full h-full object-cover" />
-                        <div className="absolute top-2 left-2">
-                          <span className="bg-red-500/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-full backdrop-blur-sm">AVANT</span>
-                        </div>
-                      </div>
-                      <div className="relative overflow-hidden">
-                        <img src={item.after} alt="Après" className="w-full h-full object-cover" />
-                        <div className="absolute top-2 left-2">
-                          <span className="bg-emerald-500/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-full backdrop-blur-sm">APRÈS</span>
-                        </div>
-                      </div>
-                    </div>
-                    <CardContent className="p-4">
-                      <h4 className="font-bold text-sm">{item.title}</h4>
-                      <p className="text-xs text-muted-foreground mt-1">{item.desc}</p>
-                    </CardContent>
-                  </Card>
+                  <FadeIn key={i} delay={0.5 + i * 0.1}>
+                    <Card className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+                      <CardContent className="p-4 space-y-3">
+                        <BeforeAfterSlider before={item.before} after={item.after} title={item.title} />
+                        <h4 className="font-bold text-sm">{item.title}</h4>
+                        <p className="text-xs text-muted-foreground">{item.desc}</p>
+                      </CardContent>
+                    </Card>
+                  </FadeIn>
                 ))}
               </div>
             </FadeIn>
@@ -1282,6 +1348,157 @@ export default function Home() {
                 </CardContent>
               </Card>
             </FadeIn>
+          </div>
+        </section>
+
+        {/* ═══ ESPACE CLIENT ═══ */}
+        <section id="espace-client" className="py-16 sm:py-20 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white relative overflow-hidden">
+          <div className="absolute inset-0">
+            <div className="absolute top-0 left-0 h-96 w-96 bg-amber-500/10 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 right-0 h-96 w-96 bg-emerald-500/10 rounded-full blur-3xl" />
+          </div>
+          <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+            <FadeIn>
+              <div className="text-center mb-12">
+                <Badge className="mb-3 bg-amber-500/20 text-amber-300 border-amber-500/30 hover:bg-amber-500/30">
+                  <Lock className="h-3 w-3 mr-1" /> Espace Client
+                </Badge>
+                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Votre Espace Client Sécurisé</h2>
+                <p className="mt-4 text-slate-300 max-w-2xl mx-auto leading-relaxed">
+                  Connectez-vous pour suivre l&apos;avancée de votre projet en temps réel, consulter les livrables et communiquer directement avec moi. Un accompagnement professionnel de A à Z.
+                </p>
+              </div>
+            </FadeIn>
+
+            <div className="grid lg:grid-cols-5 gap-8 items-start">
+              {/* Login Form */}
+              <FadeIn delay={0.1} className="lg:col-span-2">
+                <Card className="border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl">
+                  <CardContent className="p-6 sm:p-8 space-y-5">
+                    <div className="text-center mb-2">
+                      <div className="mx-auto w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center mb-3 shadow-lg shadow-amber-500/25">
+                        <Lock className="h-6 w-6 text-white" />
+                      </div>
+                      <h3 className="text-lg font-bold">Connexion Client</h3>
+                      <p className="text-xs text-slate-400 mt-1">Accédez à votre espace personnel</p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label className="text-sm font-semibold text-slate-200">Nom complet *</Label>
+                      <Input
+                        placeholder="Votre nom"
+                        value={clientLogin.name}
+                        onChange={(e) => setClientLogin(prev => ({ ...prev, name: e.target.value }))}
+                        className="h-11 bg-white/10 border-white/10 text-white placeholder:text-slate-500 focus:ring-amber-500/40 focus:border-amber-500"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-semibold text-slate-200">Numéro de téléphone *</Label>
+                      <Input
+                        type="tel"
+                        placeholder="+223 XX XX XX XX"
+                        value={clientLogin.phone}
+                        onChange={(e) => setClientLogin(prev => ({ ...prev, phone: e.target.value }))}
+                        className="h-11 bg-white/10 border-white/10 text-white placeholder:text-slate-500 focus:ring-amber-500/40 focus:border-amber-500"
+                      />
+                    </div>
+
+                    <Button
+                      onClick={() => {
+                        if (!clientLogin.name || !clientLogin.phone) {
+                          toast({ title: 'Champs requis', description: 'Veuillez remplir votre nom et numéro de téléphone.', variant: 'destructive' })
+                          return
+                        }
+                        const msg = encodeURIComponent(
+                          `Bonjour Sacko ! Je suis client et je souhaite accéder à mon espace.\n\n` +
+                          `Nom : ${clientLogin.name}\n` +
+                          `Téléphone : ${clientLogin.phone}\n\n` +
+                          `Merci de me donner l'état d'avancement de mon projet et les livrables disponibles.`
+                        )
+                        window.open(`https://wa.me/22397787244?text=${msg}`, '_blank')
+                        toast({ title: 'Connexion en cours', description: 'Votre demande est envoyée via WhatsApp. Sacko vous répondra avec les détails de votre projet.' })
+                      }}
+                      className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold h-12 text-sm shadow-lg shadow-amber-500/20"
+                    >
+                      <Lock className="h-4 w-4 mr-2" /> Accéder à mon espace
+                    </Button>
+
+                    <p className="text-[10px] text-slate-500 text-center">Vos données sont protégées. Communication sécurisée via WhatsApp.</p>
+                  </CardContent>
+                </Card>
+              </FadeIn>
+
+              {/* Dashboard Preview */}
+              <FadeIn delay={0.2} className="lg:col-span-3">
+                <Card className="border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl overflow-hidden">
+                  <div className="bg-white/5 border-b border-white/10 px-5 py-3 flex items-center gap-2">
+                    <div className="flex gap-1.5">
+                      <div className="w-3 h-3 rounded-full bg-red-500/80" />
+                      <div className="w-3 h-3 rounded-full bg-amber-500/80" />
+                      <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
+                    </div>
+                    <span className="text-[11px] text-slate-400 ml-2 font-medium">dashboard.createurboutique.com</span>
+                  </div>
+                  <CardContent className="p-5 sm:p-6 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-xs text-slate-400">Bienvenue,</p>
+                        <p className="text-sm font-bold text-amber-400">Mon Espace Client</p>
+                      </div>
+                      <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-[10px]">
+                        <span className="relative flex h-1.5 w-1.5 mr-1.5">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400" />
+                        </span>
+                        En ligne
+                      </Badge>
+                    </div>
+
+                    {/* Mini project cards */}
+                    {[
+                      { name: 'Logo Restaurant', status: 'Terminé', statusColor: 'text-emerald-400', progress: 100, icon: '✅' },
+                      { name: 'Affiche Promotion', status: 'En cours', statusColor: 'text-amber-400', progress: 65, icon: '🔄' },
+                      { name: 'Site Web Vitrine', status: 'En attente', statusColor: 'text-slate-400', progress: 0, icon: '⏳' },
+                    ].map((project, i) => (
+                      <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5">
+                        <span className="text-lg">{project.icon}</span>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-slate-200 truncate">{project.name}</p>
+                          <div className="flex items-center gap-2 mt-1.5">
+                            <div className="flex-1 h-1.5 rounded-full bg-white/10 overflow-hidden">
+                              <motion.div
+                                className="h-full rounded-full bg-gradient-to-r from-amber-500 to-emerald-500"
+                                initial={{ width: 0 }}
+                                whileInView={{ width: `${project.progress}%` }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 1, delay: 0.3 + i * 0.15, ease: 'easeOut' }}
+                              />
+                            </div>
+                            <span className="text-[10px] font-medium text-slate-400">{project.progress}%</span>
+                          </div>
+                        </div>
+                        <span className={`text-[11px] font-semibold ${project.statusColor} whitespace-nowrap`}>{project.status}</span>
+                      </div>
+                    ))}
+
+                    <div className="grid grid-cols-3 gap-3 pt-2">
+                      {[
+                        { label: 'Projets', value: '3', color: 'text-amber-400' },
+                        { label: 'Terminés', value: '1', color: 'text-emerald-400' },
+                        { label: 'Livré', value: '1', color: 'text-blue-400' },
+                      ].map((stat, i) => (
+                        <div key={i} className="text-center p-2.5 rounded-xl bg-white/5 border border-white/5">
+                          <p className={`text-lg font-bold ${stat.color}`}>{stat.value}</p>
+                          <p className="text-[10px] text-slate-400 mt-0.5">{stat.label}</p>
+                        </div>
+                      ))}
+                    </div>
+
+                    <p className="text-[10px] text-slate-500 text-center pt-1">Connectez-vous via le formulaire pour accéder à votre vrai tableau de bord personnalisé.</p>
+                  </CardContent>
+                </Card>
+              </FadeIn>
+            </div>
           </div>
         </section>
 
@@ -2169,6 +2386,13 @@ export default function Home() {
                       <Zap className="h-8 w-8 mx-auto mb-2" />
                       <h2 className="text-2xl sm:text-3xl font-extrabold">Commander un Service</h2>
                       <p className="mt-2 text-white/80 text-sm">Remplissez le formulaire et recevez votre service gratuitement via WhatsApp.</p>
+                      <div className="mt-4 inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm rounded-full px-4 py-1.5 text-white text-xs font-semibold border border-white/20">
+                        <span className="relative flex h-2 w-2">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-red-400" />
+                        </span>
+                        Limité à 5 commandes par jour — Réservez votre place
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -2254,6 +2478,13 @@ export default function Home() {
               <p className="mt-4 text-lg text-white/90 max-w-2xl mx-auto leading-relaxed">
                 N'attendez plus pour donner à votre entreprise l'image qu'elle mérite. Contactez-moi dès aujourd'hui pour discuter de votre projet et obtenir un devis gratuit.
               </p>
+              <div className="mt-5 inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm rounded-full px-4 py-1.5 text-white text-xs font-semibold border border-white/20">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-red-400" />
+                </span>
+                Limité à 5 commandes par jour — Réservez votre place
+              </div>
               <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
                 <a href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20suis%20pr%C3%AAt%20%C3%A0%20lancer%20mon%20projet%20de%20communication." target="_blank" rel="noopener noreferrer">
                   <Button size="lg" className="bg-white text-amber-600 hover:bg-white/90 font-bold shadow-xl text-base px-8">
