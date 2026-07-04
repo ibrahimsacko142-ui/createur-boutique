@@ -40,6 +40,9 @@ export const metadata: Metadata = {
   icons: {
     icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
   },
+  other: {
+    'google-adsense-account': 'ca-pub-5792648101445233',
+  },
   openGraph: {
     title: "SK Designer Luxe — Design & Digital Premium à Bamako | Sacko",
     description: "SK Designer Luxe par Sacko — Services professionnels de design graphique, sites web, montage vidéo et outils numériques. L'excellence du design digital en Afrique.",
