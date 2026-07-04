@@ -14,7 +14,6 @@ import {
   Tv,
   PenTool,
   Sparkles,
-  ChevronRight,
   Eye,
   Zap,
   Heart,
@@ -25,27 +24,20 @@ import {
   MapPin,
   Instagram,
   Facebook,
-  Twitter,
   X,
-  Users,
   Gift,
   Shield,
   CreditCard,
-  Banknote,
-  Quote,
   Timer,
   Lock,
-  CircleDollarSign,
   MessageCircle,
   Play,
   Trophy,
   Flame,
   Clock,
-  Ban,
   FileCheck,
   Calendar,
   ArrowUpRight,
-  AlertTriangle,
   Handshake,
   FolderDown,
   ArrowRightLeft,
@@ -56,34 +48,20 @@ import {
   BadgeCheck,
   Wrench,
   Headphones,
-  Wallet,
   TrendingUp,
   Code,
   Brain,
   Youtube,
-  Copy,
-  ArrowDown,
-  ArrowUp,
-  History,
   ChevronUp,
-  Package,
   ShieldCheck,
   Laptop,
-  Sun,
-  Moon,
   ThumbsUp,
-  Share2,
   Rocket,
   Layers,
   RefreshCw,
   ClipboardCheck,
-  MessageSquare,
   Award,
   Plus,
-  Search,
-  Crown,
-  LinkIcon,
-  Smartphone,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -287,33 +265,6 @@ function CompetenceItem({ text, icon: Icon, delay = 0 }: { text: string; icon: R
   )
 }
 
-/* ─── Pricing Card ─── */
-function PricingCard({ name, price, description, icon: Icon, delay = 0 }: { name: string; price: number; description: string; icon: React.ElementType; delay?: number }) {
-  return (
-    <FadeIn delay={delay}>
-      <Card className="relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 group">
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-400 to-orange-500" />
-        <CardContent className="p-6">
-          <div className="flex items-start justify-between mb-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30 group-hover:bg-amber-500 group-hover:text-white transition-colors duration-300">
-              <Icon className="h-6 w-6 text-amber-600 group-hover:text-white transition-colors duration-300" />
-            </div>
-            <Badge variant="secondary" className={price === 0 ? 'text-emerald-600 font-medium bg-emerald-100 dark:bg-emerald-900/30' : 'text-amber-600 font-medium'}>
-              {formatPrice(price)}
-            </Badge>
-          </div>
-          <h3 className="font-bold text-lg mb-2">{name}</h3>
-          <p className="text-sm text-muted-foreground leading-relaxed mb-4">{description}</p>
-          <a href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je souhaite obtenir : ${name} (${formatPrice(price)}). Merci !`)}`} target="_blank" rel="noopener noreferrer">
-            <Button className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold">
-              <MessageCircle className="h-4 w-4 mr-2" /> Obtenir via WhatsApp
-            </Button>
-          </a>
-        </CardContent>
-      </Card>
-    </FadeIn>
-  )
-}
 
 /* ─── Animated Counter ─── */
 function Counter({ target, duration = 1500, suffix = '', prefix = '' }: { target: number; duration?: number; suffix?: string; prefix?: string }) {
@@ -367,19 +318,13 @@ function Counter({ target, duration = 1500, suffix = '', prefix = '' }: { target
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
-  const [activeFilter, setActiveFilter] = useState('all')
-  const [searchQuery, setSearchQuery] = useState('')
   const [contactData, setContactData] = useState({ name: '', email: '', subject: '', message: '' })
+  const [newsletterName, setNewsletterName] = useState('')
+  const [newsletterEmail, setNewsletterEmail] = useState('')
   const [sending, setSending] = useState(false)
   const [showBanner, setShowBanner] = useState(true)
   const [showBackToTop, setShowBackToTop] = useState(false)
   const [showChatPopup, setShowChatPopup] = useState(true)
-  const [countdown, setCountdown] = useState({ hours: 23, minutes: 59, seconds: 59 })
-  const [walletTab, setWalletTab] = useState<'depot' | 'retrait'>('depot')
-  const [walletAmount, setWalletAmount] = useState('')
-  const [walletName, setWalletName] = useState('')
-  const [walletPhone, setWalletPhone] = useState('')
-  const [walletTransactions, setWalletTransactions] = useState<{type: 'depot' | 'retrait'; amount: string; date: string; status: string}[]>([])
   const [serviceCategory, setServiceCategory] = useState('all')
   const [portfolioFilter, setPortfolioFilter] = useState('Tous')
   const [quickOrder, setQuickOrder] = useState({ service: '', name: '', phone: '', description: '' })
@@ -407,7 +352,7 @@ export default function Home() {
       readTime: '6 min',
       color: 'bg-emerald-100 text-emerald-700',
       image: 'https://sfile.chatglm.cn/images-ppt/6345c222842a.jpg',
-      content: `Le paysage digital évolue à une vitesse vertigineuse, et 2026 n'est pas une exception. Que vous soyez entrepreneur, freelancer ou créateur de contenu à Bamako, voici les stratégies essentielles pour réussir votre transition numérique et vous démarquer de la concurrence.\n\n**1. Investissez dans une identité visuelle forte**\nDans un monde saturé de contenus visuels, votre identité graphique est votre meilleur atout. Un logo professionnel, une charte graphique cohérente et des visuels de qualité sont indispensables pour inspirer confiance et attirer des clients. Les entreprises qui investissent dans leur branding voient en moyenne une augmentation de 23% de leurs revenus. Ne sous-estimez jamais le pouvoir d'un premier visuel impactant.\n\n**2. Maîtrisez les réseaux sociaux**\nLes réseaux sociaux sont le canal d'acquisition client le plus efficace au Mali en 2026. Instagram, TikTok et Facebook dominent le marché. Créez du contenu régulier, authentique et engageant. Utilisez des outils professionnels comme CapCut Pro et PicsArt Pro pour des visuels et vidéos qui sortent du lot. La constance est la clé : publiez au minimum trois fois par semaine et interagissez avec votre communauté quotidiennement.\n\n**3. Ayez un site web professionnel**\nUn site web est votre vitrine ouverte 24h/24. En 2026, ne pas avoir de site web professionnel, c'est comme avoir un magasin sans enseigne. Un site vitrine bien conçu booste votre crédibilité et vous permet de toucher des clients au-delà de Bamako, dans tout le Mali et même en Afrique de l'Ouest. Optez pour un design moderne, rapide sur mobile et optimisé pour les moteurs de recherche.\n\n**4. Le marketing digital accessible à tous**\nVous n'avez pas besoin d'un gros budget pour faire du marketing digital efficace. Commencez par optimiser vos profils sociaux, créez du contenu à valeur ajoutée, et utilisez les publicités ciblées avec un petit budget. Les stories Instagram, les reels TikTok et les publications Facebook restent les formats les plus performants pour atteindre votre audience cible au Mali.\n\n**5. Automatisez et optimisez**\nUtilisez les outils numériques pour gagner du temps : planification des publications, réponses automatiques, gestion de la relation client. Plus vous automatisez les tâches répétitives, plus vous pouvez vous concentrer sur la création de valeur et le développement de votre activité. C'est un investissement qui paie rapidement.\n\nChez SK Designer Luxe, nous vous accompagnons dans chacune de ces étapes. De la création de votre identité visuelle au développement de votre site web, nous avons les outils et l'expertise pour propulser votre présence digitale. Contactez-nous pour un diagnostic gratuit de votre présence en ligne !`
+      content: `Le paysage digital évolue à une vitesse vertigineuse, et 2026 n'est pas une exception. Que vous soyez entrepreneur, freelancer ou créateur de contenu à Bamako, voici les stratégies essentielles pour réussir votre transition numérique et vous démarquer de la concurrence.\n\n**1. Investissez dans une identité visuelle forte**\nDans un monde saturé de contenus visuels, votre identité graphique est votre meilleur atout. Un logo professionnel, une charte graphique cohérente et des visuels de qualité sont indispensables pour inspirer confiance et attirer des clients. Les entreprises qui investissent dans leur branding voient en moyenne une augmentation de 23% de leurs revenus. Ne sous-estimez jamais le pouvoir d'un premier visuel impactant.\n\n**2. Maîtrisez les réseaux sociaux**\nLes réseaux sociaux sont le canal d'acquisition client le plus efficace au Mali en 2026. Instagram, TikTok et Facebook dominent le marché. Créez du contenu régulier, authentique et engageant. Utilisez des outils professionnels comme CapCut Pro et PicsArt Pro pour des visuels et vidéos qui sortent du lot. La constance est la clé : publiez au minimum trois fois par semaine et interagissez avec votre communauté quotidiennement.\n\n**3. Ayez un site web professionnel**\nUn site web est votre vitrine ouverte 24h/24. En 2026, ne pas avoir de site web professionnel, c'est comme avoir un magasin sans enseigne. Un site vitrine bien conçu booste votre crédibilité et vous permet de toucher des clients au-delà de Bamako, dans tout le Mali et même en Afrique de l'Ouest. Optez pour un design moderne, rapide sur mobile et optimisé pour les moteurs de recherche.\n\n**4. Le marketing digital accessible à tous**\nVous n'avez pas besoin d'un gros budget pour faire du marketing digital efficace. Commencez par optimiser vos profils sociaux, créez du contenu à valeur ajoutée, et utilisez les publicités ciblées avec un petit budget. Les stories Instagram, les reels TikTok et les publications Facebook restent les formats les plus performants pour atteindre votre audience cible au Mali.\n\n**5. Automatisez et optimisez**\nUtilisez les outils numériques pour gagner du temps : planification des publications, réponses automatiques, gestion de la relation client. Plus vous automatisez les tâches répétitives, plus vous pouvez vous concentrer sur la création de valeur et le développement de votre activité. C'est un investissement qui paie rapidement.\n\nChez SK Designer Luxe, nous vous accompagnons dans chacune de ces étapes. De la création de votre identité visuelle au développement de votre site web, nous avons les outils et l'expertise pour propulser votre présence digitale. Me contacter pour un diagnostic gratuit de votre présence en ligne !`
     },
     {
       title: 'Les tendances design graphique à suivre',
@@ -451,170 +396,6 @@ export default function Home() {
     },
   ]
 
-  // ═══ REAL REFERRAL SYSTEM ═══
-  const REFERRAL_CODE = 'CB-IBRA-2024'
-  const REFERRAL_KEY = 'createur-boutique-referral'
-  const REFERRAL_VISITOR_KEY = 'createur-boutique-referred-visit'
-
-  interface ReferredPerson {
-    name: string
-    date: string
-    status: 'En attente' | 'Validé' | 'Annulé'
-    validatedAt?: string
-  }
-  const [referralData, setReferralData] = useState<{ referred: ReferredPerson[]; totalEarned: number; totalReferred: number; totalValidated: number; totalVisits: number }>({ referred: [], totalEarned: 0, totalReferred: 0, totalValidated: 0, totalVisits: 0 })
-  const [referralName, setReferralName] = useState('')
-  const [activeReferralCode, setActiveReferralCode] = useState('')
-  const [showReferralBanner, setShowReferralBanner] = useState(false)
-  const [referralCodeInput, setReferralCodeInput] = useState('')
-
-  // Load referral data from localStorage
-  useEffect(() => {
-    const saved = localStorage.getItem(REFERRAL_KEY)
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved)
-        // Migration: ensure new fields exist
-        setReferralData({
-          referred: parsed.referred || [],
-          totalEarned: parsed.totalEarned || 0,
-          totalReferred: parsed.totalReferred || 0,
-          totalValidated: parsed.totalValidated || 0,
-          totalVisits: parsed.totalVisits || 0,
-        })
-      } catch {}
-    }
-  }, [])
-
-  // Detect referral code from URL (?ref=CB-IBRA-2024)
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-    const params = new URLSearchParams(window.location.search)
-    const refCode = params.get('ref')
-    if (refCode && refCode === REFERRAL_CODE) {
-      // Check if this visit was already counted
-      const visitData = localStorage.getItem(REFERRAL_VISITOR_KEY)
-      if (!visitData) {
-        // First visit via referral - show banner and track
-        setActiveReferralCode(refCode)
-        setShowReferralBanner(true)
-        localStorage.setItem(REFERRAL_VISITOR_KEY, JSON.stringify({
-          code: refCode,
-          firstVisit: new Date().toISOString(),
-          visitCount: 1,
-          lastVisit: new Date().toISOString(),
-        }))
-        // Update total visits for the referrer (stored separately)
- const visitStatsKey = 'createur-boutique-visit-stats'
-        const vStats = JSON.parse(localStorage.getItem(visitStatsKey) || '{"visits":0,"conversions":0}')
-        vStats.visits++
-        localStorage.setItem(visitStatsKey, JSON.stringify(vStats))
-        // Clean URL
-        window.history.replaceState({}, document.title, window.location.pathname)
-      } else {
-        // Returning visitor
-        const parsed = JSON.parse(visitData)
-        parsed.visitCount++
-        parsed.lastVisit = new Date().toISOString()
-        localStorage.setItem(REFERRAL_VISITOR_KEY, JSON.stringify(parsed))
-        window.history.replaceState({}, document.title, window.location.pathname)
-      }
-    }
-  }, [])
-
-  // Apply a referral code manually (for visitors who got the code verbally)
-  const applyReferralCode = () => {
-    const code = referralCodeInput.trim().toUpperCase()
-    if (!code) {
-      toast({ title: 'Code requis', description: 'Entrez votre code de parrainage.', variant: 'destructive' })
-      return
-    }
-    if (code === REFERRAL_CODE) {
-      setActiveReferralCode(code)
-      setShowReferralBanner(false)
-      localStorage.setItem(REFERRAL_VISITOR_KEY, JSON.stringify({
-        code: code,
-        firstVisit: new Date().toISOString(),
-        visitCount: 1,
-        lastVisit: new Date().toISOString(),
-      }))
-      toast({
-        title: 'Code appliqué avec succès !',
-        description: 'Vous bénéficiez de 10% de réduction sur votre prochaine commande. Mentionnez le code lors de votre commande WhatsApp.',
-      })
-      setReferralCodeInput('')
-    } else {
-      toast({ title: 'Code invalide', description: 'Ce code de parrainage n\'est pas reconnu. Vérifiez et réessayez.', variant: 'destructive' })
-    }
-  }
-
-  const addReferral = () => {
-    if (!referralName.trim()) {
-      toast({ title: 'Nom requis', description: 'Entrez le nom de la personne parrainée.', variant: 'destructive' })
-      return
-    }
-    const now = new Date().toLocaleString('fr-FR')
-    const newEntry: ReferredPerson = { name: referralName.trim(), date: now, status: 'En attente' }
-    const updated = {
-      referred: [newEntry, ...referralData.referred],
-      totalEarned: referralData.totalEarned + 500,
-      totalReferred: referralData.totalReferred + 1,
-      totalValidated: referralData.totalValidated,
-      totalVisits: referralData.totalVisits,
-    }
-    setReferralData(updated)
-    localStorage.setItem(REFERRAL_KEY, JSON.stringify(updated))
-    setReferralName('')
-    toast({ title: 'Parrainage enregistré !', description: `${newEntry.name} a été ajouté. +500 FCFA de réduction accumulés.` })
-  }
-
-  const validateReferral = (index: number) => {
-    const updated = { ...referralData }
-    const entry = { ...updated.referred[index] }
-    if (entry.status === 'Validé') return
-    entry.status = 'Validé'
-    entry.validatedAt = new Date().toLocaleString('fr-FR')
-    updated.referred[index] = entry
-    updated.totalValidated = (updated.totalValidated || 0) + 1
-    setReferralData(updated)
-    localStorage.setItem(REFERRAL_KEY, JSON.stringify(updated))
-    toast({ title: 'Parrainage validé !', description: `${entry.name} est maintenant validé. Vos réductions sont confirmées.` })
-  }
-
-  const cancelReferral = (index: number) => {
-    const updated = { ...referralData }
-    const entry = { ...updated.referred[index] }
-    entry.status = 'Annulé'
-    updated.referred[index] = entry
-    updated.totalReferred = Math.max(0, updated.totalReferred - 1)
-    updated.totalEarned = Math.max(0, updated.totalEarned - 500)
-    setReferralData(updated)
-    localStorage.setItem(REFERRAL_KEY, JSON.stringify(updated))
-    toast({ title: 'Parrainage annulé', description: `${entry.name} a été retiré de la liste.` })
-  }
-
-  const getNextTier = () => {
-    const tiers = [
-      { at: 1, label: '500 FCFA réduction', icon: Banknote, color: 'from-emerald-500 to-teal-500' },
-      { at: 3, label: '1 service gratuit', icon: Gift, color: 'from-amber-500 to-orange-500' },
-      { at: 5, label: 'Logo + Montage offerts', icon: Sparkles, color: 'from-purple-500 to-pink-500' },
-      { at: 10, label: '1 site web offert', icon: Globe, color: 'from-red-500 to-rose-500' },
-    ]
-    const next = tiers.find(t => referralData.totalReferred < t.at)
-    const current = [...tiers].reverse().find(t => referralData.totalReferred >= t.at)
-    return { tiers, next, current, progress: next ? (referralData.totalReferred / next.at) * 100 : 100 }
-  }
-  const { tiers, next, current, progress } = getNextTier()
-
-  // Check if user has an active referral code (for WhatsApp messages)
-  const getWhatsAppWithReferral = (baseMsg: string) => {
-    if (activeReferralCode) {
-      return baseMsg + `\n\nMon code de parrainage : ${activeReferralCode} (10% de réduction)`
-    }
-    return baseMsg
-  }
-
-  // Countdown timer
   useEffect(() => {
     const timer = setInterval(() => {
       setCountdown((prev) => {
@@ -658,27 +439,16 @@ export default function Home() {
     const timer = setTimeout(() => {
       toast({
         title: 'Bienvenue chez SK Designer Luxe !',
-        description: 'Découvrez nos services et profitez de 10% de réduction avec le code CB-IBRA-2024.',
+        description: 'Découvrez mes services — tous actuellement gratuits !',
       })
     }, 2000)
     return () => clearTimeout(timer)
   }, [])
 
-  const filteredProducts = products.filter((p) => {
-    if (activeFilter === 'all' && !searchQuery) return true
-    const matchCategory = activeFilter === 'all' || p.category === activeFilter
-    const matchSearch = !searchQuery || p.name.toLowerCase().includes(searchQuery.toLowerCase()) || (p.description && p.description.toLowerCase().includes(searchQuery.toLowerCase()))
-    return matchCategory && matchSearch
-  })
 
   const services = products.filter((p) => p.category === 'service')
   const outils = products.filter((p) => p.category === 'outil')
 
-  const filters = [
-    { key: 'all', label: 'Tout voir' },
-    { key: 'service', label: 'Services' },
-    { key: 'outil', label: 'Outils & Ressources' },
-  ]
 
   const competences = [
     { text: 'Designer graphique professionnel', icon: Palette },
@@ -742,79 +512,18 @@ export default function Home() {
               <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-4">
                 <p className="text-xs sm:text-sm font-medium text-center sm:text-left flex-1">
                   <Flame className="h-3.5 w-3.5 inline mr-1" />
-                  Bienvenue ! Offre spéciale pour nouveaux clients — <strong>Réduction de 10%</strong> sur votre première commande
+                  Bienvenue ! Tous les services sont actuellement gratuits — Profitez-en pour lancer votre projet digital
                 </p>
                 <div className="flex items-center gap-2 flex-shrink-0">
                   <a href="#services">
                     <Button size="sm" variant="secondary" className="h-7 text-xs bg-white text-amber-600 hover:bg-white/90 font-semibold px-3">
-                      En profiter
+                      Découvrir les services
                     </Button>
                   </a>
                   <button onClick={() => setShowBanner(false)} className="text-white/80 hover:text-white transition-colors" aria-label="Fermer">
                     <X className="h-4 w-4" />
                   </button>
                 </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* ═══ BANNIÈRE PARRAINAGE RÉFÉRÉ ═══ */}
-        <AnimatePresence>
-          {showReferralBanner && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="overflow-hidden bg-gradient-to-r from-emerald-600 via-teal-500 to-cyan-500 text-white relative"
-            >
-              <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIxIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMSkiLz48L3N2Zz4=')] opacity-50" />
-              <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3 flex-1">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm flex-shrink-0">
-                    <Gift className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold flex items-center gap-1.5">
-                      <Sparkles className="h-3.5 w-3.5" /> Vous avez été invité par un ami !
-                    </p>
-                    <p className="text-xs text-white/80 mt-0.5">
-                      Code <strong className="bg-white/20 px-1.5 py-0.5 rounded font-mono text-[11px]">{activeReferralCode}</strong> appliqué automatiquement — <strong>10% de réduction</strong> sur votre commande
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 flex-shrink-0">
-                  <a href="#services">
-                    <Button size="sm" className="h-8 text-xs bg-white text-emerald-600 hover:bg-white/90 font-bold px-4 shadow-md">
-                      Commander avec réduction
-                    </Button>
-                  </a>
-                  <button onClick={() => setShowReferralBanner(false)} className="text-white/80 hover:text-white transition-colors ml-1" aria-label="Fermer">
-                    <X className="h-4 w-4" />
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* ═══ ACTIVE REFERRAL INDICATOR (sticky below header when code is applied) ═══ */}
-        <AnimatePresence>
-          {activeReferralCode && !showReferralBanner && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="overflow-hidden bg-emerald-50 dark:bg-emerald-950/20 border-b border-emerald-200 dark:border-emerald-800"
-            >
-              <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-center gap-3">
-                <CheckCircle2 className="h-4 w-4 text-emerald-600 flex-shrink-0" />
-                <p className="text-xs text-emerald-700 dark:text-emerald-400 font-medium">
-                  Code parrainage <strong className="font-mono">{activeReferralCode}</strong> actif — <strong>10% de réduction</strong> appliquée automatiquement sur votre commande
-                </p>
-                <button onClick={() => setActiveReferralCode('')} className="text-emerald-600 hover:text-emerald-800 transition-colors" aria-label="Retirer le code">
-                  <X className="h-3.5 w-3.5" />
-                </button>
               </div>
             </motion.div>
           )}
@@ -992,11 +701,11 @@ export default function Home() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10">
               {[
-                { icon: Shield, label: 'Paiement Sécurisé' },
-                { icon: Zap, label: 'Livraison 24h' },
+                { icon: ShieldCheck, label: 'Qualité Garantie' },
+                { icon: Zap, label: 'Livraison Rapide' },
                 { icon: CheckCircle2, label: 'Satisfaction Garantie' },
-                { icon: CreditCard, label: 'Wave Accepté' },
-                { icon: Headphones, label: 'Qualité Professionnelle' },
+                { icon: Gift, label: '100% Gratuit' },
+                { icon: MessageCircle, label: 'Support WhatsApp' },
               ].map((item) => (
                 <div key={item.label} className="flex items-center gap-2 text-muted-foreground">
                   <item.icon className="h-4 w-4 text-amber-500" />
@@ -1062,55 +771,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ═══ OFFRES LIMITÉES (URGENCE) ═══ */}
-        <section className="py-10 sm:py-14">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <FadeIn>
-              <Card className="border-2 border-red-200 dark:border-red-800 bg-gradient-to-r from-red-50 via-amber-50 to-orange-50 dark:from-red-950/20 dark:via-amber-950/10 dark:to-orange-950/20 overflow-hidden relative">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-full -translate-y-1/2 translate-x-1/2" />
-                <CardContent className="p-6 sm:p-8 relative z-10">
-                  <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
-                    <div className="flex items-center gap-3 flex-shrink-0">
-                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-red-500 text-white">
-                        <AlertTriangle className="h-7 w-7" />
-                      </div>
-                      <div>
-                        <h3 className="text-lg sm:text-xl font-extrabold text-red-600 dark:text-red-400">Offres Limitées</h3>
-                        <p className="text-xs text-muted-foreground">Ne manquez pas cette opportunité</p>
-                      </div>
-                    </div>
-                    <div className="flex-1 text-center sm:text-left">
-                      <p className="text-2xl sm:text-3xl font-extrabold">
-                        <span className="bg-gradient-to-r from-red-500 to-amber-500 bg-clip-text text-transparent">Seulement 5 commandes par jour</span>
-                      </p>
-                      <p className="text-sm text-muted-foreground mt-1">Offre valable 24h — Réservez votre place maintenant</p>
-                      <div className="flex items-center justify-center sm:justify-start gap-2 mt-3">
-                        <span className="text-xs text-muted-foreground">Expire dans :</span>
-                        {[
-                          { val: countdown.hours, label: 'h' },
-                          { val: countdown.minutes, label: 'm' },
-                          { val: countdown.seconds, label: 's' },
-                        ].map((t, i) => (
-                          <div key={i} className="flex items-center gap-1">
-                            <span className="bg-red-500 text-white text-sm font-bold px-2 py-0.5 rounded">
-                              {String(t.val).padStart(2, '0')}
-                            </span>
-                            <span className="text-xs font-bold text-red-500">{t.label}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                    <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20réserver%20ma%20commande%20du%20jour." target="_blank" rel="noopener noreferrer" className="flex-shrink-0">
-                      <Button className="bg-red-500 hover:bg-red-600 text-white font-bold text-sm shadow-lg shadow-red-500/25 whitespace-nowrap">
-                        <Flame className="h-4 w-4 mr-2" /> Réserver ma place
-                      </Button>
-                    </a>
-                  </div>
-                </CardContent>
-              </Card>
-            </FadeIn>
-          </div>
-        </section>
+        
 
         
         {/* ═══ CE QUE VOUS OBTENEZ ═══ */}
@@ -1273,82 +934,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ═══ TOUTES LES OFFRES ═══ */}
-        <section id="produits" className="py-16 sm:py-20">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <FadeIn className="text-center mb-10">
-              <Badge variant="secondary" className="mb-3">Boutique</Badge>
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Tous les Services</h2>
-              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
-                Explorez l&apos;ensemble de mes services, outils et ressources. Filtrer par catégorie pour trouver exactement ce dont votre projet a besoin.
-              </p>
-            </FadeIn>
-
-            {/* Filters */}
-            <FadeIn delay={0.1} className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
-              <div className="relative w-full sm:w-80">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Rechercher un service ou outil..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="h-10 pl-10 bg-white dark:bg-background"
-                />
-              </div>
-              <div className="inline-flex rounded-full border bg-muted/50 p-1 gap-1">
-                {filters.map((f) => (
-                  <button
-                    key={f.key}
-                    onClick={() => setActiveFilter(f.key)}
-                    className={`rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200 ${
-                      activeFilter === f.key
-                        ? 'bg-amber-500 text-white shadow-sm'
-                        : 'text-muted-foreground hover:text-foreground hover:bg-accent'
-                    }`}
-                  >
-                    {f.label}
-                  </button>
-                ))}
-              </div>
-            </FadeIn>
-
-            <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5">
-              {loading
-                ? Array.from({ length: 6 }).map((_, i) => (
-                    <Card key={i} className="overflow-hidden border-0 shadow-md">
-                      <Skeleton className="aspect-[4/3] w-full" />
-                      <CardContent className="p-4 space-y-2">
-                        <Skeleton className="h-4 w-3/4" />
-                        <Skeleton className="h-3 w-full" />
-                        <Skeleton className="h-5 w-1/3 mt-2" />
-                      </CardContent>
-                    </Card>
-                  ))
-                : filteredProducts.map((product) => {
-                    const iconMap: Record<string, React.ElementType> = {
-                      'Formation Designer Graphique': Palette,
-                      'Affiche Professionnelle': PenTool,
-                      'Logo Professionnel': Sparkles,
-                      'Site Web Simple': Globe,
-                      'Site Web Professionnel': Globe,
-                      'CapCut Pro': MonitorPlay,
-                      'PicsArt Pro': PenTool,
-                      'IPTV Pro': Tv,
-                      'Livres Professionnels': BookOpen,
-                    }
-                    return <ServiceCard key={product.id} product={product} icon={iconMap[product.name] || Zap} />
-                  })
-              }
-            </StaggerContainer>
-            {!loading && filteredProducts.length === 0 && (
-              <FadeIn className="text-center py-12">
-                <Search className="h-12 w-12 text-muted-foreground/30 mx-auto mb-3" />
-                <p className="text-sm font-medium text-muted-foreground">Aucun résultat trouvé</p>
-                <p className="text-xs text-muted-foreground/60 mt-1">Essayez avec d&apos;autres mots-clés ou filtres</p>
-              </FadeIn>
-            )}
-          </div>
-        </section>
+        
 
         {/* ═══ PORTFOLIO / RÉALISATIONS ═══ */}
         <section id="portfolio" className="py-16 sm:py-20">
@@ -1357,9 +943,9 @@ export default function Home() {
               <Badge variant="secondary" className="mb-3 bg-purple-100 text-purple-700 border-purple-200">
                 <Eye className="h-3 w-3 mr-1" /> Portfolio
               </Badge>
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Nos Réalisations</h2>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Mes Réalisations</h2>
               <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
-                Découvrez une sélection de nos meilleurs travaux. Chaque projet est unique et réalisé avec passion pour nos clients.
+                Découvrez une sélection de mes meilleurs travaux. Chaque projet est unique et réalisé avec passion pour mes clients.
               </p>
             </FadeIn>
 
@@ -1406,7 +992,7 @@ export default function Home() {
             {/* Avant / Après Section */}
             <FadeIn delay={0.4} className="mt-14">
               <h3 className="text-xl font-bold text-center mb-2">Avant / Après</h3>
-              <p className="text-sm text-muted-foreground text-center mb-8 max-w-xl mx-auto">Voici quelques exemples concrets de transformations réalisées pour nos clients. Chaque projet est unique et pensé pour maximiser l'impact visuel.</p>
+              <p className="text-sm text-muted-foreground text-center mb-8 max-w-xl mx-auto">Voici quelques exemples concrets de transformations réalisées pour mes clients. Chaque projet est unique et pensé pour maximiser l'impact visuel.</p>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[
                   { title: 'Refonte Logo Boutique', before: 'https://sfile.chatglm.cn/images-ppt/f972157605f2.jpg', after: 'https://sfile.chatglm.cn/images-ppt/082b6f181c95.jpg', desc: 'Logo basique transformé en identité premium' },
@@ -1441,7 +1027,7 @@ export default function Home() {
               <p className="text-sm text-muted-foreground">
                 Envie d&apos;un projet similaire ?{' '}
                 <a href="https://wa.me/22397787244?text=Bonjour%20!%20J%27ai%20vu%20vos%20réalisations%20et%20je%20souhaite%20un%20projet%20similaire." target="_blank" rel="noopener noreferrer" className="text-amber-600 font-semibold hover:underline">
-                  Contactez-nous
+                  Me contacter
                 </a>{' '}et discutons de votre projet !
               </p>
             </FadeIn>
@@ -1461,7 +1047,7 @@ export default function Home() {
                       </Badge>
                       <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">Restez Informé</h2>
                       <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
-                        Inscrivez-vous à notre newsletter pour recevoir nos dernières offres, des conseils en design et digital, et être informé en avant-première de nos promotions exclusives. Rejoignez notre communauté de créateurs et d&apos;entrepreneurs.
+                        Inscrivez-vous à ma newsletter pour recevoir mes dernières offres, des conseils en design et digital, et être informé en avant-première de mes offres exclusives. Rejoignez ma communauté de créateurs et d&apos;entrepreneurs.
                       </p>
                       <div className="mt-6 space-y-3">
                         {[
@@ -1478,14 +1064,14 @@ export default function Home() {
                     </div>
                     <div className="space-y-4">
                       <div className="space-y-2">
-                        <Input placeholder="Votre nom" className="h-11 bg-white dark:bg-background" />
-                        <Input type="email" placeholder="Votre email" className="h-11 bg-white dark:bg-background" />
+                        <Input placeholder="Votre nom" value={newsletterName} onChange={(e) => setNewsletterName(e.target.value)} className="h-11 bg-white dark:bg-background" />
+                        <Input type="email" placeholder="Votre email" value={newsletterEmail} onChange={(e) => setNewsletterEmail(e.target.value)} className="h-11 bg-white dark:bg-background" />
                       </div>
-                      <Button className="w-full bg-amber-500 hover:bg-amber-600 text-white font-semibold h-11">
-                        <Send className="h-4 w-4 mr-2" /> S&apos;inscrire gratuitement
+                      <Button onClick={() => { if (!newsletterName.trim() || !newsletterEmail.trim()) { toast({ title: 'Champs requis', description: 'Veuillez remplir votre nom et email.', variant: 'destructive' }); return } const msg = encodeURIComponent(`Bonjour ! Je souhaite m\'inscrire à la newsletter. Nom: ${newsletterName.trim()}, Email: ${newsletterEmail.trim()}`); window.open(`https://wa.me/22397787244?text=${msg}`, '_blank'); toast({ title: 'Redirection WhatsApp', description: 'Vous allez être redirigé vers WhatsApp.' }) }} className="w-full bg-amber-500 hover:bg-amber-600 text-white font-semibold h-11">
+                        <Send className="h-4 w-4 mr-2" /> S&rsquo;inscrire gratuitement
                       </Button>
                       <p className="text-[10px] text-muted-foreground text-center">
-                        En vous inscrivant, vous acceptez de recevoir nos communications. Désabonnement possible à tout moment.
+                        En vous inscrivant, vous acceptez de recevoir mes communications. Désabonnement possible à tout moment.
                       </p>
                     </div>
                   </div>
@@ -1548,7 +1134,7 @@ export default function Home() {
                 </Badge>
                 <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Formations Disponibles</h2>
                 <p className="mt-4 text-slate-300 max-w-2xl mx-auto leading-relaxed">
-                  Nous aidons les entrepreneurs, étudiants et créateurs à développer leurs compétences digitales avec des formations modernes et accessibles. Chaque formation est conçue pour vous donner des compétences pratiques et immédiatement applicables.
+                  J'aide les entrepreneurs, étudiants et créateurs à développer leurs compétences digitales avec des formations modernes et accessibles. Chaque formation est conçue pour vous donner des compétences pratiques et immédiatement applicables.
                 </p>
               </div>
             </FadeIn>
@@ -1572,7 +1158,7 @@ export default function Home() {
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-slate-200 leading-relaxed group-hover:text-white transition-colors">{form.text}</p>
                     <span className="text-[11px] text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity mt-1 flex items-center gap-1">
-                      <MessageCircle className="h-3 w-3" /> Cliquer pour commander via WhatsApp
+                      <MessageCircle className="h-3 w-3" /> Cliquer pour demander via WhatsApp
                     </span>
                   </div>
                   <ArrowRight className="h-4 w-4 text-white/30 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all flex-shrink-0" />
@@ -1601,10 +1187,10 @@ export default function Home() {
               {[
                 { icon: Zap, title: 'Créativité sur-mesure', desc: "Chaque projet est conçu selon vos besoins spécifiques. Aucun template pré-fait, aucune copie : votre identité visuelle sera unique et reflétera parfaitement l'essence de votre marque. Du premier croquis au fichier final, chaque détail est pensé pour vous.", color: 'bg-amber-100 dark:bg-amber-900/30', iconColor: 'text-amber-600' },
                 { icon: ShieldCheck, title: 'Rapidité & Efficacité', desc: "Des délais respectés pour que vous puissiez lancer vos campagnes à temps. Je comprends que le temps est précieux pour un entrepreneur : c'est pourquoi chaque projet est livré rapidement sans jamais compromettre la qualité.", color: 'bg-emerald-100 dark:bg-emerald-900/30', iconColor: 'text-emerald-600' },
-                { icon: Wallet, title: 'Accompagnement de A à Z', desc: "Une écoute attentive pour garantir un résultat qui dépasse vos attentes. De la première discussion sur WhatsApp à la livraison finale, je vous guide à chaque étape et j'ajuste jusqu'à ce que vous soyez entièrement satisfait.", color: 'bg-blue-100 dark:bg-blue-900/30', iconColor: 'text-blue-600' },
+                { icon: MessageCircle, title: 'Accompagnement de A à Z', desc: "Une écoute attentive pour garantir un résultat qui dépasse vos attentes. De la première discussion sur WhatsApp à la livraison finale, je vous guide à chaque étape et j'ajuste jusqu'à ce que vous soyez entièrement satisfait.", color: 'bg-blue-100 dark:bg-blue-900/30', iconColor: 'text-blue-600' },
                 { icon: ShieldCheck, title: 'Qualité Professionnelle', desc: 'Chaque création est réalisée avec les meilleurs outils du marché : Canva Pro, CapCut Pro, PicsArt Pro. Le résultat est un visuel qui rivalise avec ceux des grandes agences, à une fraction du prix.', color: 'bg-purple-100 dark:bg-purple-900/30', iconColor: 'text-purple-600' },
                 { icon: RefreshCw, title: 'Révisions Gratuites', desc: "Non satisfait ? J'effectue des révisions gratuites jusqu'à ce que le résultat vous convienne parfaitement. Votre satisfaction n'est pas une option, c'est mon engagement.", color: 'bg-orange-100 dark:bg-orange-900/30', iconColor: 'text-orange-600' },
-                { icon: Wallet, title: 'Paiement Flexible Wave', desc: 'Payez facilement via Wave au +223 97 78 72 44. Pas besoin de compte bancaire, juste votre téléphone. Simple, rapide et 100% sécurisé.', color: 'bg-red-100 dark:bg-red-900/30', iconColor: 'text-red-600' },
+                { icon: Gift, title: '100% Gratuit', desc: "Tous mes services sont actuellement offerts gratuitement. C'est ma façon de vous permettre de découvrir la qualité de mon travail sans aucun engagement financier.", color: 'bg-emerald-100 dark:bg-emerald-900/30', iconColor: 'text-emerald-600' },
               ].map((item) => (
                 <motion.div key={item.title} variants={cardVariants}>
                   <Card className="h-full border-0 shadow-md hover:shadow-xl transition-all duration-300 group hover:-translate-y-1">
@@ -1646,226 +1232,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ═══ DÉPÔT ET RETRAIT ═══ */}
-        <section id="wallet" className="py-16 sm:py-20 bg-muted/30">
-          <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-            <FadeIn>
-              <div className="text-center mb-10">
-                <Badge variant="secondary" className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200">
-                  <Wallet className="h-3 w-3 mr-1" /> Portefeuille
-                </Badge>
-                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Dépôt et Retrait</h2>
-                <p className="mt-3 text-muted-foreground leading-relaxed max-w-xl mx-auto">
-                  Gérez vos paiements facilement via Wave. Effectuez un dépôt pour commander nos services ou demandez un retrait. Simple, rapide et sécurisé.
-                </p>
-              </div>
-            </FadeIn>
-
-            <FadeIn delay={0.15}>
-              <Card className="border-0 shadow-xl overflow-hidden">
-                {/* Tabs */}
-                <div className="flex border-b">
-                  <button
-                    onClick={() => setWalletTab('depot')}
-                    className={`flex-1 flex items-center justify-center gap-2 py-4 text-sm font-semibold transition-all duration-200 ${
-                      walletTab === 'depot'
-                        ? 'text-emerald-600 border-b-2 border-emerald-500 bg-emerald-50/50'
-                        : 'text-muted-foreground hover:text-foreground'
-                    }`}
-                  >
-                    <ArrowDown className="h-4 w-4" />
-                    Dépôt
-                  </button>
-                  <button
-                    onClick={() => setWalletTab('retrait')}
-                    className={`flex-1 flex items-center justify-center gap-2 py-4 text-sm font-semibold transition-all duration-200 ${
-                      walletTab === 'retrait'
-                        ? 'text-orange-600 border-b-2 border-orange-500 bg-orange-50/50'
-                        : 'text-muted-foreground hover:text-foreground'
-                    }`}
-                  >
-                    <ArrowUp className="h-4 w-4" />
-                    Retrait
-                  </button>
-                </div>
-
-                <CardContent className="p-6 sm:p-8">
-                  <AnimatePresence mode="wait">
-                    {walletTab === 'depot' ? (
-                      <motion.div
-                        key="depot"
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: 20 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <div className="mb-6 p-4 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800">
-                          <div className="flex items-center gap-3 mb-2">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/40">
-                              <ArrowDown className="h-5 w-5 text-emerald-600" />
-                            </div>
-                            <div>
-                              <p className="font-bold text-emerald-700 dark:text-emerald-400">Effectuer un Dépôt</p>
-                              <p className="text-xs text-emerald-600/70 dark:text-emerald-400/70">Envoyez le montant via Wave pour activer votre commande</p>
-                            </div>
-                          </div>
-                        </div>
-
-                        <form
-                          onSubmit={(e) => {
-                            e.preventDefault()
-                            if (!walletAmount || !walletName || !walletPhone) {
-                              toast({ title: 'Champs requis', description: 'Veuillez remplir tous les champs.', variant: 'destructive' })
-                              return
-                            }
-                            const now = new Date().toLocaleString('fr-FR')
-                            setWalletTransactions(prev => [{ type: 'depot', amount: walletAmount, date: now, status: 'En attente' }, ...prev])
-                            toast({ title: 'Dépôt enregistré !', description: `Votre dépôt de ${formatPrice(Number(walletAmount))} a été soumis. Envoyez le montant via Wave.` })
-                            setWalletAmount('')
-                            setWalletName('')
-                            setWalletPhone('')
-                          }}
-                          className="space-y-4"
-                        >
-                          <div className="space-y-2">
-                            <Label htmlFor="wname">Nom complet *</Label>
-                            <Input id="wname" placeholder="Votre nom complet" value={walletName} onChange={(e) => setWalletName(e.target.value)} />
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="wphone">Numéro Wave *</Label>
-                            <Input id="wphone" type="tel" placeholder="+223 XX XX XX XX" value={walletPhone} onChange={(e) => setWalletPhone(e.target.value)} />
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="wamount">Montant (FCFA) *</Label>
-                            <div className="relative">
-                              <Input id="wamount" type="number" placeholder="Entrez le montant" value={walletAmount} onChange={(e) => setWalletAmount(e.target.value)} className="pr-20" />
-                              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-medium">FCFA</span>
-                            </div>
-                            <div className="flex gap-2 mt-2">
-                              {[{ label: '5 000', value: '5000' }, { label: '10 000', value: '10000' }, { label: '25 000', value: '25000' }, { label: '50 000', value: '50000' }].map((preset) => (
-                                <button key={preset.value} type="button" onClick={() => setWalletAmount(preset.value)}
-                                  className="flex-1 text-xs py-2 rounded-lg border hover:bg-accent transition-colors font-medium">
-                                  {preset.label}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-
-                          <div className="p-3 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
-                            <p className="text-xs text-amber-700 dark:text-amber-400 font-medium mb-1">Envoyez le montant à ce numéro :</p>
-                            <div className="flex items-center justify-between">
-                              <p className="text-lg font-bold text-amber-800 dark:text-amber-300">+223 97 78 72 44</p>
-                              <button type="button" onClick={() => { navigator.clipboard.writeText('+22397787244'); toast({ title: 'Copié !', description: 'Numéro copié dans le presse-papier.' }) }}
-                                className="flex items-center gap-1 text-xs text-amber-600 hover:text-amber-800 dark:text-amber-400 transition-colors">
-                                <Copy className="h-3.5 w-3.5" /> Copier
-                              </button>
-                            </div>
-                          </div>
-
-                          <Button type="submit" className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-5 text-base">
-                            <ArrowDown className="h-4 w-4 mr-2" /> Confirmer le dépôt
-                          </Button>
-                        </form>
-                      </motion.div>
-                    ) : (
-                      <motion.div
-                        key="retrait"
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -20 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <div className="mb-6 p-4 rounded-xl bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800">
-                          <div className="flex items-center gap-3 mb-2">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-100 dark:bg-orange-900/40">
-                              <ArrowUp className="h-5 w-5 text-orange-600" />
-                            </div>
-                            <div>
-                              <p className="font-bold text-orange-700 dark:text-orange-400">Demander un Retrait</p>
-                              <p className="text-xs text-orange-600/70 dark:text-orange-400/70">Vos gains seront envoyés sur votre numéro Wave</p>
-                            </div>
-                          </div>
-                        </div>
-
-                        <form
-                          onSubmit={(e) => {
-                            e.preventDefault()
-                            if (!walletAmount || !walletName || !walletPhone) {
-                              toast({ title: 'Champs requis', description: 'Veuillez remplir tous les champs.', variant: 'destructive' })
-                              return
-                            }
-                            const now = new Date().toLocaleString('fr-FR')
-                            setWalletTransactions(prev => [{ type: 'retrait', amount: walletAmount, date: now, status: 'En traitement' }, ...prev])
-                            toast({ title: 'Retrait demandé !', description: `Votre demande de retrait de ${formatPrice(Number(walletAmount))} a été soumise. Traitement sous 24h.` })
-                            setWalletAmount('')
-                            setWalletName('')
-                            setWalletPhone('')
-                          }}
-                          className="space-y-4"
-                        >
-                          <div className="space-y-2">
-                            <Label htmlFor="rname">Nom complet *</Label>
-                            <Input id="rname" placeholder="Votre nom complet" value={walletName} onChange={(e) => setWalletName(e.target.value)} />
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="rphone">Numéro Wave *</Label>
-                            <Input id="rphone" type="tel" placeholder="+223 XX XX XX XX" value={walletPhone} onChange={(e) => setWalletPhone(e.target.value)} />
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="ramount">Montant (FCFA) *</Label>
-                            <div className="relative">
-                              <Input id="ramount" type="number" placeholder="Entrez le montant" value={walletAmount} onChange={(e) => setWalletAmount(e.target.value)} className="pr-20" />
-                              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-medium">FCFA</span>
-                            </div>
-                          </div>
-
-                          <div className="p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
-                            <p className="text-xs text-blue-700 dark:text-blue-400 leading-relaxed">
-                              <ShieldCheck className="h-3.5 w-3.5 inline mr-1" />
-                              Le retrait sera traité sous 24 heures ouvrables. Assurez-vous que votre numéro Wave est correct.
-                            </p>
-                          </div>
-
-                          <Button type="submit" className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-5 text-base">
-                            <ArrowUp className="h-4 w-4 mr-2" /> Confirmer le retrait
-                          </Button>
-                        </form>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-
-                  {/* Historique des transactions */}
-                  {walletTransactions.length > 0 && (
-                    <div className="mt-8 pt-6 border-t">
-                      <div className="flex items-center gap-2 mb-4">
-                        <History className="h-4 w-4 text-muted-foreground" />
-                        <h4 className="font-semibold text-sm">Historique des transactions</h4>
-                      </div>
-                      <div className="space-y-2">
-                        {walletTransactions.map((tx, i) => (
-                          <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-muted/50 border">
-                            <div className="flex items-center gap-3">
-                              <div className={`flex h-8 w-8 items-center justify-center rounded-full ${tx.type === 'depot' ? 'bg-emerald-100 dark:bg-emerald-900/30' : 'bg-orange-100 dark:bg-orange-900/30'}`}>
-                                {tx.type === 'depot' ? <ArrowDown className="h-4 w-4 text-emerald-600" /> : <ArrowUp className="h-4 w-4 text-orange-600" />}
-                              </div>
-                              <div>
-                                <p className="text-sm font-medium">{tx.type === 'depot' ? 'Dépôt' : 'Retrait'} — {formatPrice(Number(tx.amount))}</p>
-                                <p className="text-xs text-muted-foreground">{tx.date}</p>
-                              </div>
-                            </div>
-                            <Badge variant={tx.status === 'En attente' ? 'secondary' : 'outline'} className="text-xs">
-                              {tx.status}
-                            </Badge>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </FadeIn>
-          </div>
-        </section>
+        
 
         {/* ═══ POUR QUI + OUTILS + LIVRAISON ═══ */}
         <section className="py-16 sm:py-20 bg-muted/30">
@@ -1876,12 +1243,12 @@ export default function Home() {
                 <Badge variant="secondary" className="mb-3 bg-blue-100 text-blue-700 border-blue-200">
                   <UserCheck className="h-3 w-3 mr-1" /> Cible
                 </Badge>
-                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Pour Qui Sont Nos Services ?</h2>
+                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Pour Qui Sont Mes Services ?</h2>
               </div>
               <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
                 {[
                   { icon: Target, title: 'Entrepreneurs', desc: 'Créez une identité visuelle forte pour votre business et attirez plus de clients avec des designs professionnels.', image: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=300&h=200&fit=crop' },
-                  { icon: GraduationCap, title: 'Étudiants', desc: 'Développez vos compétences en design et digital avec nos formations abordables et nos outils pro.', image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=300&h=200&fit=crop' },
+                  { icon: GraduationCap, title: 'Étudiants', desc: 'Développez vos compétences en design et digital avec mes formations abordables et mes outils pro.', image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=300&h=200&fit=crop' },
                   { icon: Building2, title: 'Entreprises', desc: 'Renforcez votre image de marque avec des supports de communication professionnels et modernes.', image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=300&h=200&fit=crop' },
                   { icon: Sparkles, title: 'Créateurs de contenu', desc: 'Boostez votre production de contenu avec du montage vidéo pro, des visuels réseaux sociaux et des outils premium.', image: 'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=300&h=200&fit=crop' },
                 ].map((item) => (
@@ -2126,7 +1493,7 @@ export default function Home() {
                         </div>
                         <div>
                           <h3 className="font-bold text-sm">Garantie de Qualité</h3>
-                          <p className="text-[10px] text-muted-foreground">Notre promesse envers vous</p>
+                          <p className="text-[10px] text-muted-foreground">Ma promesse envers vous</p>
                         </div>
                       </div>
                       <div className="grid grid-cols-2 gap-2">
@@ -2191,7 +1558,7 @@ export default function Home() {
                         </div>
                         <h3 className="font-bold text-sm mb-1">Publicité</h3>
                         <p className="text-[10px] text-muted-foreground leading-relaxed">
-                          Faites la publicité de votre entreprise avec nous. Affiches, visuels, supports pro.
+                          Faites la publicité de votre entreprise avec moi. Affiches, visuels, supports pro.
                         </p>
                         <a href="#contact">
                           <Button variant="link" className="text-xs text-purple-600 p-0 h-auto mt-2">
@@ -2254,111 +1621,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ═══ COMPARATEUR RAPIDE ═══ */}
-        <section className="py-16 sm:py-20 bg-muted/30">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <FadeIn className="text-center mb-12">
-              <Badge variant="secondary" className="mb-3 bg-blue-100 text-blue-700 border-blue-200">
-                <ArrowRightLeft className="h-3 w-3 mr-1" /> Comparatif
-              </Badge>
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Comparateur de Services</h2>
-              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                Comparez nos services populaires en un coup d&apos;oeil. Trouvez rapidement le service adapté à vos besoins et à votre budget.
-              </p>
-            </FadeIn>
-
-            <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {[
-                {
-                  name: 'Affiche Pro',
-                  price: 0,
-                  delivery: '1-24h',
-                  revisions: 2,
-                  format: 'PNG, PDF, JPEG',
-                  source: 'Oui',
-                  icon: PenTool,
-                  popular: false,
-                  features: ['Design haute qualité', 'Format personnalisé', 'Prêt pour impression', 'Fichiers sources inclus'],
-                },
-                {
-                  name: 'Logo Professionnel',
-                  price: 0,
-                  delivery: '1-24h',
-                  revisions: 3,
-                  format: 'PNG, SVG, PDF',
-                  source: 'Oui',
-                  icon: Sparkles,
-                  popular: true,
-                  features: ['Logo unique', '3 variantes', 'Guide d\'utilisation', 'Identité visuelle complète'],
-                },
-                {
-                  name: 'Site Web Pro',
-                  price: 0,
-                  delivery: '1-3 jours',
-                  revisions: 5,
-                  format: 'Déployé en ligne',
-                  source: 'Oui',
-                  icon: Globe,
-                  popular: false,
-                  features: ['Design sur mesure', 'Responsive mobile', 'SEO optimisé', 'Hébergement inclus', 'Nom de domaine', 'Formulaire de contact'],
-                },
-              ].map((svc) => (
-                <motion.div key={svc.name} variants={cardVariants}>
-                  <Card className={`relative h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden ${svc.popular ? 'ring-2 ring-amber-400 dark:ring-amber-600' : ''}`}>
-                    {svc.popular && (
-                      <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-1.5 text-xs font-bold">
-                        Le plus populaire
-                      </div>
-                    )}
-                    <div className={`h-2 ${svc.popular ? 'bg-gradient-to-r from-amber-400 to-orange-500' : 'bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600'}`} />
-                    <CardContent className="p-6">
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${svc.popular ? 'bg-amber-100 dark:bg-amber-900/30' : 'bg-muted'} transition-colors`}>
-                          <svc.icon className={`h-6 w-6 ${svc.popular ? 'text-amber-600' : 'text-muted-foreground'}`} />
-                        </div>
-                        <div>
-                          <h3 className="font-bold text-base">{svc.name}</h3>
-                          <p className="text-xs text-muted-foreground">Livraison : {svc.delivery}</p>
-                        </div>
-                      </div>
-
-                      <div className="text-2xl font-extrabold text-amber-600 mb-4">{formatPrice(svc.price)}</div>
-
-                      <div className="space-y-3 mb-5">
-                        {[
-                          { label: 'Livraison', value: svc.delivery },
-                          { label: 'Révisions', value: `${svc.revisions} incluses` },
-                          { label: 'Formats', value: svc.format },
-                          { label: 'Fichiers sources', value: svc.source },
-                        ].map((detail) => (
-                          <div key={detail.label} className="flex items-center justify-between text-sm">
-                            <span className="text-muted-foreground">{detail.label}</span>
-                            <span className="font-medium text-xs">{detail.value}</span>
-                          </div>
-                        ))}
-                      </div>
-
-                      <div className="border-t pt-4 space-y-2 mb-5">
-                        {svc.features.map((feat) => (
-                          <div key={feat} className="flex items-center gap-2 text-xs">
-                            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 flex-shrink-0" />
-                            <span className="text-muted-foreground">{feat}</span>
-                          </div>
-                        ))}
-                      </div>
-
-                      <a href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je souhaite commander ${svc.name} (${formatPrice(svc.price)}). Merci !`)}`} target="_blank" rel="noopener noreferrer">
-                        <Button className={`w-full font-semibold ${svc.popular ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-lg shadow-amber-500/20' : ''}`}>
-                          <MessageCircle className="h-4 w-4 mr-2" /> Commander
-                        </Button>
-                      </a>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </StaggerContainer>
-          </div>
-        </section>
+        
 
         {/* ═══ TÉMOIGNAGES CLIENTS ═══ */}
         <section id="temoignages" className="py-16 sm:py-20 bg-gradient-to-b from-muted/20 to-background relative overflow-hidden">
@@ -2369,9 +1632,9 @@ export default function Home() {
               <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
                 <Star className="h-3 w-3 mr-1" /> Témoignages
               </Badge>
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Ce Que Disent Nos Clients</h2>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Ce Que Disent Mes Clients</h2>
               <p className="mt-4 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                La satisfaction de nos clients est notre plus grande fierté. Découvrez les avis de ceux qui nous ont fait confiance pour leurs projets digitaux.
+                La satisfaction de mes clients est ma plus grande fierté. Découvrez les avis de ceux qui m'ont fait confiance pour leurs projets digitaux.
               </p>
             </FadeIn>
 
@@ -2411,457 +1674,8 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ═══ PARRAINAGE ═══ */}
-        <section id="parrainage" className="py-16 sm:py-20 bg-gradient-to-br from-purple-50 via-amber-50 to-orange-50 dark:from-purple-950/10 dark:via-amber-950/10 dark:to-orange-950/10 relative overflow-hidden">
-          <div className="absolute top-10 right-10 h-64 w-64 bg-purple-200/30 dark:bg-purple-900/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-10 left-10 h-64 w-64 bg-amber-200/20 dark:bg-amber-900/10 rounded-full blur-3xl" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-96 w-96 bg-orange-200/15 dark:bg-orange-900/8 rounded-full blur-3xl" />
-          <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-            <FadeIn className="text-center mb-10">
-              <Badge variant="secondary" className="mb-3 bg-purple-100 text-purple-700 border-purple-200 dark:bg-purple-900/30 dark:text-purple-400 dark:border-purple-800">
-                <Gift className="h-3 w-3 mr-1" /> Programme
-              </Badge>
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Programme de Parrainage</h2>
-              <p className="mt-4 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                Invitez vos amis et gagnez des récompenses exceptionnelles ! Chaque personne qui commande avec votre code vous fait gagner des réductions cumulables. Plus vous parrainez, plus les récompenses sont importantes.
-              </p>
-            </FadeIn>
-
-            {/* Hero Code Card */}
-            <FadeIn delay={0.1}>
-              <Card className="border-0 shadow-2xl overflow-hidden mb-8">
-                <div className="bg-gradient-to-r from-purple-600 via-amber-500 to-orange-500 p-1">
-                  <div className="bg-gradient-to-br from-purple-600 via-amber-500 to-orange-500 rounded-[3px] p-6 sm:p-8 text-white relative overflow-hidden">
-                    <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIzMCIgY3k9IjMwIiByPSIxLjUiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wOCkiLz48L3N2Zz4=')] opacity-50" />
-                    <div className="relative z-10 flex flex-col sm:flex-row items-center gap-6">
-                      <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm flex-shrink-0 border border-white/30">
-                        <Share2 className="h-10 w-10" />
-                      </div>
-                      <div className="text-center sm:text-left flex-1">
-                        <h3 className="text-2xl sm:text-3xl font-extrabold mb-1">Votre Code de Parrainage</h3>
-                        <p className="text-white/80 text-sm leading-relaxed">Partagez ce code avec vos amis. Ils obtiennent <strong className="text-white">10% de réduction</strong> et vous gagnez <strong className="text-white">500 FCFA</strong> par parrainage validé.</p>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="bg-white/20 backdrop-blur-sm rounded-2xl px-6 py-4 border border-white/30">
-                          <p className="text-2xl sm:text-3xl font-extrabold tracking-[0.15em] font-mono">{REFERRAL_CODE}</p>
-                        </div>
-                        <button
-                          onClick={() => {
-                            navigator.clipboard.writeText(REFERRAL_CODE)
-                            toast({ title: 'Code copié !', description: 'Partagez-le avec vos amis.' })
-                          }}
-                          className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-purple-600 hover:bg-white/90 transition-all shadow-lg flex-shrink-0 hover:scale-105 active:scale-95"
-                        >
-                          <Copy className="h-5 w-5" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            </FadeIn>
-
-            {/* Lien de parrainage + Boutons de partage */}
-            <FadeIn delay={0.15}>
-              <Card className="border-0 shadow-lg overflow-hidden mb-8">
-                <CardContent className="p-6">
-                  <h3 className="font-bold text-sm mb-4 flex items-center gap-2">
-                    <LinkIcon className="h-4 w-4 text-purple-500" /> Partagez rapidement
-                  </h3>
-
-                  {/* Referral link */}
-                  <div className="mb-5">
-                    <p className="text-xs text-muted-foreground mb-2 font-medium">Lien de parrainage</p>
-                    <div className="flex items-center gap-2">
-                      <div className="flex-1 bg-muted/80 rounded-xl px-4 py-3 border text-sm text-muted-foreground font-mono truncate">
-                        {typeof window !== 'undefined' ? `${window.location.origin}?ref=${REFERRAL_CODE}` : `...?ref=${REFERRAL_CODE}`}
-                      </div>
-                      <button
-                        onClick={() => {
-                          const link = `${window.location.origin}?ref=${REFERRAL_CODE}`
-                          navigator.clipboard.writeText(link)
-                          toast({ title: 'Lien copié !', description: 'Envoyez-le à vos amis.' })
-                        }}
-                        className="flex h-11 w-11 items-center justify-center rounded-xl bg-purple-500 hover:bg-purple-600 text-white transition-all shadow-md flex-shrink-0 hover:scale-105"
-                      >
-                        <Copy className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Share buttons */}
-                  <p className="text-xs text-muted-foreground mb-3 font-medium">Partager via</p>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    <button
-                      onClick={() => {
-                        const text = encodeURIComponent(`Salut ! Profite de 10% de réduction chez SK Designer Luxe avec mon code parrainage ${REFERRAL_CODE}. Design graphique, sites web, montage vidéo et outils numériques à Bamako !`)
-                        window.open(`https://wa.me/?text=${text}`, '_blank')
-                      }}
-                      className="flex items-center justify-center gap-2 h-12 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-semibold text-sm transition-all hover:scale-[1.02] hover:shadow-lg hover:shadow-emerald-500/20 active:scale-95"
-                    >
-                      <MessageCircle className="h-4 w-4" /> WhatsApp
-                    </button>
-                    <button
-                      onClick={() => {
-                        const text = encodeURIComponent(`Profite de 10% de réduction chez SK Designer Luxe avec le code ${REFERRAL_CODE} ! Design, sites web, montage vidéo et outils numériques professionnels à Bamako.`)
-                        window.open(`https://www.facebook.com/sharer/sharer.php?quote=${text}`, '_blank')
-                      }}
-                      className="flex items-center justify-center gap-2 h-12 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-all hover:scale-[1.02] hover:shadow-lg hover:shadow-blue-500/20 active:scale-95"
-                    >
-                      <Facebook className="h-4 w-4" /> Facebook
-                    </button>
-                    <button
-                      onClick={() => {
-                        const text = encodeURIComponent(`10% de réduction chez @CreateurBoutique avec le code ${REFERRAL_CODE} ! Design pro, sites web, montage vidéo et outils numériques à Bamako.`)
-                        window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank')
-                      }}
-                      className="flex items-center justify-center gap-2 h-12 rounded-xl bg-gray-900 dark:bg-gray-800 hover:bg-gray-800 dark:hover:bg-gray-700 text-white font-semibold text-sm transition-all hover:scale-[1.02] hover:shadow-lg active:scale-95"
-                    >
-                      <Twitter className="h-4 w-4" /> Twitter
-                    </button>
-                    <button
-                      onClick={() => {
-                        const text = `Salut ! Profite de 10% de réduction chez SK Designer Luxe avec mon code parrainage ${REFERRAL_CODE}. Design graphique, sites web, montage vidéo et outils numériques professionnels.`
-                        if (navigator.share) {
-                          navigator.share({ title: 'SK Designer Luxe - 10% de réduction', text, url: `${window.location.origin}?ref=${REFERRAL_CODE}` })
-                        } else {
-                          navigator.clipboard.writeText(text)
-                          toast({ title: 'Texte copié !', description: 'Collez-le dans votre SMS ou message.' })
-                        }
-                      }}
-                      className="flex items-center justify-center gap-2 h-12 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-semibold text-sm transition-all hover:scale-[1.02] hover:shadow-lg hover:shadow-amber-500/20 active:scale-95"
-                    >
-                      <Smartphone className="h-4 w-4" /> SMS / Autre
-                    </button>
-                  </div>
-                </CardContent>
-              </Card>
-            </FadeIn>
-
-            {/* Dashboard Stats + Progression */}
-            <FadeIn delay={0.2}>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
-                {[
-                  { label: 'Personnes parrainées', value: referralData.totalReferred, color: 'text-purple-600', bg: 'from-purple-500 to-purple-600', icon: Users },
-                  { label: 'Réductions gagnées', value: `${referralData.totalEarned.toLocaleString('fr-FR')}`, suffix: ' FCFA', color: 'text-amber-600', bg: 'from-amber-500 to-orange-500', icon: Banknote },
-                  { label: 'Rang actuel', value: referralData.totalReferred >= 10 ? 'Légende' : referralData.totalReferred >= 5 ? 'Expert' : referralData.totalReferred >= 3 ? 'Avancé' : referralData.totalReferred >= 1 ? 'Débutant' : 'Nouveau', color: 'text-emerald-600', bg: 'from-emerald-500 to-teal-500', icon: Crown },
-                  { label: 'Prochain palier', value: next ? `${next.at - referralData.totalReferred}` : 'Max', suffix: next ? ' restant(s)' : '', color: 'text-blue-600', bg: 'from-blue-500 to-cyan-500', icon: Trophy },
-                ].map((stat) => (
-                  <Card key={stat.label} className="border-0 shadow-md overflow-hidden">
-                    <div className={`h-1 bg-gradient-to-r ${stat.bg}`} />
-                    <CardContent className="p-4 text-center">
-                      <stat.icon className={`h-5 w-5 ${stat.color} mx-auto mb-2`} />
-                      <div className={`text-lg sm:text-xl font-extrabold ${stat.color}`}>{stat.value}{stat.suffix || ''}</div>
-                      <p className="text-[10px] text-muted-foreground mt-1 leading-snug">{stat.label}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </FadeIn>
-
-            {/* Paliers de récompenses - Amélioré avec timeline visuelle */}
-            <FadeIn delay={0.25}>
-              <Card className="border-0 shadow-xl overflow-hidden mb-8">
-                <CardContent className="p-6">
-                  <h3 className="font-bold text-sm mb-6 flex items-center gap-2">
-                    <Trophy className="h-4 w-4 text-amber-500" /> Paliers de récompenses
-                  </h3>
-
-                  {/* Visual milestone timeline */}
-                  <div className="relative mb-6">
-                    {/* Progress bar background */}
-                    <div className="h-4 bg-muted rounded-full overflow-hidden">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${progress}%` }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 1.2, ease: 'easeOut' }}
-                        className="h-full bg-gradient-to-r from-emerald-400 via-amber-400 via-orange-400 to-purple-500 rounded-full relative"
-                      >
-                        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxMCIgY3k9IjEwIiByPSIxIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMikiLz48L3N2Zz4=')]" />
-                      </motion.div>
-                    </div>
-
-                    {/* Milestone markers */}
-                    <div className="relative mt-2">
-                      <div className="flex justify-between">
-                        {tiers.map((tier, idx) => {
-                          const pos = (idx / (tiers.length - 1)) * 100
-                          const unlocked = referralData.totalReferred >= tier.at
-                          return (
-                            <div key={tier.at} className="flex flex-col items-center" style={{ width: '60px', marginLeft: idx === 0 ? 0 : 'auto', marginRight: idx === tiers.length - 1 ? 0 : 'auto' }}>
-                              <div className={`relative flex h-8 w-8 items-center justify-center rounded-full border-2 transition-all duration-300 -mt-5 ${unlocked ? 'bg-emerald-500 border-emerald-500 text-white shadow-lg shadow-emerald-500/30' : 'bg-card border-border text-muted-foreground'}`}>
-                                {unlocked ? <CheckCircle2 className="h-4 w-4" /> : <span className="text-[10px] font-bold">{tier.at}</span>}
-                              </div>
-                              <p className="text-[9px] font-semibold text-center mt-1.5 leading-tight max-w-[70px]">{tier.label}</p>
-                            </div>
-                          )
-                        })}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Tier cards grid */}
-                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                    {tiers.map((tier) => {
-                      const unlocked = referralData.totalReferred >= tier.at
-                      const isNext = next && next.at === tier.at
-                      return (
-                        <div key={tier.at} className={`relative rounded-xl p-4 border-2 transition-all duration-300 ${unlocked ? 'border-emerald-300 dark:border-emerald-700 bg-emerald-50/80 dark:bg-emerald-950/20 shadow-md' : isNext ? 'border-amber-400 dark:border-amber-600 bg-amber-50/80 dark:bg-amber-950/20 shadow-md ring-2 ring-amber-200 dark:ring-amber-800' : 'border-border bg-muted/30 opacity-60'}`}>
-                          {unlocked && (
-                            <div className="absolute -top-2 -right-2">
-                              <Badge className="bg-emerald-500 text-white border-0 text-[9px] px-1.5 shadow-md">Débloqué</Badge>
-                            </div>
-                          )}
-                          {isNext && (
-                            <div className="absolute -top-2 -right-2">
-                              <Badge className="bg-amber-500 text-white border-0 text-[9px] px-1.5 shadow-md">Prochain</Badge>
-                            </div>
-                          )}
-                          <div className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${tier.color} text-white mb-3 shadow-md ${!unlocked ? 'grayscale opacity-50' : ''}`}>
-                            <tier.icon className="h-6 w-6" />
-                          </div>
-                          <div className="text-sm font-extrabold">{tier.at} parrainage{tier.at > 1 ? 's' : ''}</div>
-                          <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">{tier.label}</p>
-                          {isNext && (
-                            <div className="mt-3">
-                              <div className="h-1.5 bg-muted rounded-full overflow-hidden">
-                                <motion.div
-                                  initial={{ width: 0 }}
-                                  whileInView={{ width: `${progress}%` }}
-                                  viewport={{ once: true }}
-                                  transition={{ duration: 1, ease: 'easeOut', delay: 0.3 }}
-                                  className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full"
-                                />
-                              </div>
-                              <p className="text-[9px] text-amber-600 font-bold mt-1 text-center">{Math.round(progress)}%</p>
-                            </div>
-                          )}
-                        </div>
-                      )
-                    })}
-                  </div>
-
-                  {next && (
-                    <div className="mt-5 p-4 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/15 dark:to-orange-900/15 border border-amber-200 dark:border-amber-800 flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30 flex-shrink-0">
-                        <Target className="h-5 w-5 text-amber-600" />
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-sm font-bold">Objectif : {next.label}</p>
-                        <p className="text-xs text-muted-foreground">Encore {next.at - referralData.totalReferred} parrainage(s) pour débloquer cette récompense</p>
-                      </div>
-                      <div className="text-right">
-                        <span className="text-lg font-extrabold text-amber-600">{Math.round(progress)}%</span>
-                      </div>
-                    </div>
-                  )}
-                  {!next && referralData.totalReferred > 0 && (
-                    <div className="mt-5 p-4 rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/15 dark:to-teal-900/15 border border-emerald-200 dark:border-emerald-800 text-center">
-                      <Crown className="h-6 w-6 text-amber-500 mx-auto mb-1" />
-                      <p className="text-sm font-bold text-emerald-700 dark:text-emerald-400">Félicitations ! Tous les paliers débloqués</p>
-                      <p className="text-xs text-muted-foreground mt-1">Vous êtes un parraineur légende. Contactez-nous sur WhatsApp pour récupérer votre récompense maximale.</p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </FadeIn>
-
-            {/* Classement des meilleurs parraineurs */}
-            <FadeIn delay={0.28}>
-              <Card className="border-0 shadow-lg overflow-hidden mb-8">
-                <CardContent className="p-6">
-                  <h3 className="font-bold text-sm mb-4 flex items-center gap-2">
-                    <Crown className="h-4 w-4 text-amber-500" /> Classement des parraineurs
-                  </h3>
-                  <div className="space-y-2">
-                    {[
-                      { rank: 1, name: 'Amadou D.', referrals: 12, earned: '6 000', gradient: 'from-amber-400 to-yellow-500', badge: 'bg-amber-100 dark:bg-amber-900/30 text-amber-700' },
-                      { rank: 2, name: 'Fatoumata T.', referrals: 8, earned: '4 000', gradient: 'from-gray-300 to-gray-400', badge: 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300' },
-                      { rank: 3, name: 'Ibrahim S.', referrals: 5, earned: '2 500', gradient: 'from-orange-400 to-amber-600', badge: 'bg-orange-100 dark:bg-orange-900/30 text-orange-700' },
-                    ].map((leader) => (
-                      <div key={leader.rank} className={`flex items-center gap-4 p-3 rounded-xl border transition-all ${leader.rank === 1 ? 'bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/10 dark:to-yellow-900/10 border-amber-200 dark:border-amber-800 shadow-sm' : 'bg-card border-border hover:shadow-sm'}`}>
-                        <div className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br ${leader.gradient} text-white font-extrabold text-sm shadow-md`}>
-                          {leader.rank}
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-sm font-bold">{leader.name}</p>
-                          <p className="text-[10px] text-muted-foreground">{leader.referrals} personne(s) parrainée(s)</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-sm font-extrabold text-emerald-600">{leader.earned} FCFA</p>
-                          <Badge variant="secondary" className={`text-[9px] ${leader.badge}`}>
-                            {leader.rank === 1 ? 'Champion' : leader.rank === 2 ? 'Vice-champion' : 'Troisième'}
-                          </Badge>
-                        </div>
-                      </div>
-                    ))}
-
-                    {referralData.totalReferred > 0 && (
-                      <div className="mt-2 p-3 rounded-xl bg-purple-50 dark:bg-purple-900/10 border-2 border-dashed border-purple-300 dark:border-purple-700">
-                        <div className="flex items-center gap-4">
-                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500 text-white font-extrabold text-sm shadow-md">
-                            Vous
-                          </div>
-                          <div className="flex-1">
-                            <p className="text-sm font-bold">Votre position</p>
-                            <p className="text-[10px] text-muted-foreground">{referralData.totalReferred} personne(s) parrainée(s)</p>
-                          </div>
-                          <div className="text-right">
-                            <p className="text-sm font-extrabold text-emerald-600">{referralData.totalEarned.toLocaleString('fr-FR')} FCFA</p>
-                            <Badge className="bg-purple-500 text-white border-0 text-[9px]">Parraineur actif</Badge>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            </FadeIn>
-
-            {/* Formulaire d'ajout + Historique */}
-            <div className="grid lg:grid-cols-2 gap-6">
-              <FadeIn delay={0.3}>
-                <Card className="border-0 shadow-xl h-full">
-                  <CardContent className="p-6">
-                    <h3 className="font-bold text-sm mb-4 flex items-center gap-2">
-                      <UserCheck className="h-4 w-4 text-purple-500" /> Enregistrer un parrainage
-                    </h3>
-                    <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
-                      Lorsqu&apos;une personne vous a été référé(e) et a commandé, enregistrez-la ici pour suivre vos gains. Le parrainage est validé après confirmation du paiement.
-                    </p>
-                    <div className="flex gap-2">
-                      <Input
-                        placeholder="Nom de la personne parrainée"
-                        value={referralName}
-                        onChange={(e) => setReferralName(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && addReferral()}
-                        className="h-11"
-                      />
-                      <Button onClick={addReferral} className="bg-purple-500 hover:bg-purple-600 text-white font-semibold h-11 px-5 flex-shrink-0 shadow-md hover:shadow-lg transition-all hover:scale-[1.02] active:scale-95">
-                        <Plus className="h-4 w-4 mr-1" /> Ajouter
-                      </Button>
-                    </div>
-
-                    {/* Comment ça marche - Amélioré */}
-                    <div className="mt-6 pt-5 border-t">
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-4">Comment ça marche en 3 étapes</h4>
-                      <div className="space-y-4">
-                        {[
-                          { step: '1', title: 'Partagez votre code ou lien', desc: 'Envoyez CB-IBRA-2024 via WhatsApp, Facebook, Twitter ou SMS. Utilisez les boutons de partage ci-dessus.', color: 'bg-purple-500', icon: Share2 },
-                          { step: '2', title: 'Votre ami commande', desc: "Votre ami mentionne votre code lors de sa commande et obtient 10% de réduction immédiate sur tout service.", color: 'bg-amber-500', icon: ShoppingCart },
-                          { step: '3', title: 'Vous gagnez des récompenses', desc: "Chaque parrainage validé vous crédite 500 FCFA cumulables. Débloquez des paliers : service gratuit, logo offert, et même un site web !", color: 'bg-emerald-500', icon: Gift },
-                        ].map((item, idx) => (
-                          <div key={item.step} className="flex items-start gap-3">
-                            <div className="relative flex-shrink-0">
-                              <div className={`flex h-8 w-8 items-center justify-center rounded-full ${item.color} text-white text-xs font-bold shadow-md`}>{item.step}</div>
-                              {idx < 2 && <div className="absolute top-8 left-1/2 -translate-x-1/2 w-0.5 h-4 bg-border" />}
-                            </div>
-                            <div className="pt-0.5">
-                              <p className="text-xs font-semibold flex items-center gap-1.5">{item.title}</p>
-                              <p className="text-[11px] text-muted-foreground leading-relaxed mt-0.5">{item.desc}</p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Conditions */}
-                    <div className="mt-5 p-3 rounded-xl bg-muted/50 border">
-                      <div className="flex items-start gap-2">
-                        <Lock className="h-3.5 w-3.5 text-muted-foreground mt-0.5 flex-shrink-0" />
-                        <div className="text-[10px] text-muted-foreground leading-relaxed space-y-1">
-                          <p className="font-semibold text-foreground/70">Conditions du programme</p>
-                          <p>Le client doit payer un service complet pour que le parrainage soit validé. Les réductions sont cumulables et applicables sur toute commande future. Les récompenses ne sont pas échangeables en argent. Le code est valable pour une utilisation unique par nouvelle personne.</p>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </FadeIn>
-
-              <FadeIn delay={0.35}>
-                <Card className="border-0 shadow-xl h-full">
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="font-bold text-sm flex items-center gap-2">
-                        <History className="h-4 w-4 text-amber-500" /> Historique des parrainages
-                      </h3>
-                      {referralData.totalReferred > 0 && (
-                        <Badge variant="secondary" className="text-[10px]">{referralData.totalReferred} entrée(s)</Badge>
-                      )}
-                    </div>
-                    {referralData.referred.length === 0 ? (
-                      <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
-                        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-muted/50 mb-4">
-                          <Users className="h-8 w-8 opacity-20" />
-                        </div>
-                        <p className="text-sm font-medium">Aucun parrainage encore</p>
-                        <p className="text-xs text-muted-foreground/60 mt-1 mb-4">Partagez votre code pour commencer à gagner</p>
-                        <button
-                          onClick={() => {
-                            const text = encodeURIComponent(`Salut ! Profite de 10% de réduction chez SK Designer Luxe avec mon code ${REFERRAL_CODE}.`)
-                            window.open(`https://wa.me/?text=${text}`, '_blank')
-                          }}
-                          className="flex items-center gap-2 text-xs font-semibold text-emerald-600 hover:text-emerald-700 transition-colors"
-                        >
-                          <MessageCircle className="h-3.5 w-3.5" /> Inviter maintenant sur WhatsApp
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="space-y-2 max-h-[400px] overflow-y-auto pr-1">
-                        {referralData.referred.map((ref, i) => (
-                          <motion.div
-                            key={i}
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.3, delay: i * 0.05 }}
-                            className="flex items-center justify-between p-3 rounded-xl bg-muted/50 border hover:shadow-sm transition-shadow"
-                          >
-                            <div className="flex items-center gap-3">
-                              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-purple-100 to-amber-100 dark:from-purple-900/30 dark:to-amber-900/30">
-                                <UserCheck className="h-4 w-4 text-purple-600" />
-                              </div>
-                              <div>
-                                <p className="text-sm font-medium">{ref.name}</p>
-                                <p className="text-[10px] text-muted-foreground">{ref.date}</p>
-                              </div>
-                            </div>
-                            <div className="text-right">
-                              <p className="text-xs font-bold text-emerald-600 flex items-center gap-1">
-                                <span>+500 FCFA</span>
-                                {ref.status === 'Validé' && <CheckCircle2 className="h-3 w-3" />}
-                              </p>
-                              <Badge variant={ref.status === 'Validé' ? 'default' : 'secondary'} className="text-[9px]">
-                                {ref.status}
-                              </Badge>
-                            </div>
-                          </motion.div>
-                        ))}
-                      </div>
-                    )}
-
-                    {referralData.totalReferred > 0 && (
-                      <div className="mt-4 pt-4 border-t space-y-2">
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-muted-foreground">Total cumulé</span>
-                          <span className="font-extrabold text-emerald-600">{referralData.totalEarned.toLocaleString('fr-FR')} FCFA</span>
-                        </div>
-                        <a href={`https://wa.me/22397787244?text=Bonjour ! J'ai parrainé ${referralData.totalReferred} personne(s) avec le code ${REFERRAL_CODE}. Mes réductions cumulées : ${referralData.totalEarned} FCFA. Je souhaite les utiliser.`} target="_blank" rel="noopener noreferrer">
-                          <Button className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold shadow-md hover:shadow-lg transition-all">
-                            <MessageCircle className="h-4 w-4 mr-2" /> Réclamer mes récompenses via WhatsApp
-                          </Button>
-                        </a>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              </FadeIn>
-            </div>
-          </div>
-        </section>
-
-        {/* ═══ BLOG ═══ */}
+        
+{/* ═══ BLOG ═══ */}
         <section id="blog" className="py-16 sm:py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <FadeIn className="text-center mb-12">
@@ -2912,7 +1726,7 @@ export default function Home() {
               <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
                 <Trophy className="h-3 w-3 mr-1" /> Promesses
               </Badge>
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Nos Valeurs</h2>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Mes Valeurs</h2>
               <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
                 Ce qui guide mon travail et mon engagement envers chaque projet.
               </p>
@@ -2923,25 +1737,25 @@ export default function Home() {
                 {
                   icon: Shield,
                   title: 'Sérieux',
-                  desc: "Chaque projet est traité avec le plus grand professionnalisme. Respect des délais, communication transparente et engagement total. Nous ne promettons que ce que nous pouvons tenir, et nous tenons tout ce que nous promettons.",
+                  desc: "Chaque projet est traité avec le plus grand professionnalisme. Respect des délais, communication transparente et engagement total. Je ne promets que ce que je peux tenir, et je tiens tout ce que je promets.",
                   gradient: 'from-emerald-500 to-teal-600',
                 },
                 {
                   icon: Sparkles,
                   title: 'Créativité',
-                  desc: "Des idées originales et des designs uniques pour chaque client. Chaque création est pensée pour se démarquer et marquer les esprits. Nous repoussons les limites du design pour offrir des visuels qui captivent.",
+                  desc: "Des idées originales et des designs uniques pour chaque client. Chaque création est pensée pour se démarquer et marquer les esprits. Je repousse les limites du design pour offrir des visuels qui captivent.",
                   gradient: 'from-amber-500 to-orange-600',
                 },
                 {
                   icon: Zap,
                   title: 'Rapidité',
-                  desc: "Des délais de livraison respectés sans compromis sur la qualité. Affiches et logos en 1 à 24h, sites web en 1 à 3 jours. Nous comprenons que votre temps est précieux et nous y répondons.",
+                  desc: "Des délais de livraison respectés sans compromis sur la qualité. Affiches et logos en 1 à 24h, sites web en 1 à 3 jours. Je comprends que votre temps est précieux et j'y réponds.",
                   gradient: 'from-purple-500 to-pink-600',
                 },
                 {
                   icon: Heart,
                   title: 'Satisfaction Client',
-                  desc: "Votre satisfaction est notre priorité numéro un. Nous travaillons main dans la main avec vous jusqu'au résultat parfait. Des révisions sont incluses pour garantir que chaque détail correspond à votre vision.",
+                  desc: "Votre satisfaction est ma priorité numéro un. Je travaille main dans la main avec vous jusqu'au résultat parfait. Des révisions sont incluses pour garantir que chaque détail correspond à votre vision.",
                   gradient: 'from-red-500 to-rose-600',
                 },
               ].map((valeur) => (
@@ -2971,7 +1785,7 @@ export default function Home() {
               </Badge>
               <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Mentions Légales & Politiques</h2>
               <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
-                Transparence totale sur nos conditions de service, nos mentions légales et notre politique de confidentialité.
+                Transparence totale sur mes conditions de service, mes mentions légales et ma politique de confidentialité.
               </p>
             </FadeIn>
 
@@ -2994,14 +1808,14 @@ export default function Home() {
                   {
                     icon: ShieldCheck,
                     title: 'Satisfaction ou remboursement',
-                    desc: "Si le résultat ne correspond pas à votre commande, nous reprenons le travail gratuitement ou vous remboursons via Wave sous 48h.",
+                    desc: "Si le résultat ne correspond pas à votre commande, je reprends le travail gratuitement.",
                     color: 'text-emerald-500',
                     bg: 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800',
                   },
                   {
                     icon: CreditCard,
-                    title: 'Travail livré après paiement',
-                    desc: "Le travail est livré uniquement après confirmation complète du paiement. Cela garantit la sécurité des deux parties.",
+                    title: 'Travail livré gratuitement',
+                    desc: "Tous les travaux sont livrés gratuitement. Aucun paiement n'est nécessaire.",
                     color: 'text-emerald-500',
                     bg: 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800',
                   },
@@ -3014,15 +1828,15 @@ export default function Home() {
                   },
                   {
                     icon: Shield,
-                    title: 'Paiement sécurisé',
-                    desc: "Toutes les transactions passent par Wave de manière sécurisée. Paiement 50/50 ou total selon le service convenu.",
+                    title: '100% Gratuit',
+                    desc: "Tous les services sont actuellement offerts gratuitement. C'est ma façon de vous permettre de découvrir la qualité de mon travail.",
                     color: 'text-blue-500',
                     bg: 'bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800',
                   },
                   {
                     icon: Lock,
                     title: 'Propriété intellectuelle',
-                    desc: "Après livraison finale et paiement complet, les droits de propriété intellectuelle du travail sont transférés au client.",
+                    desc: "Après livraison finale, les droits de propriété intellectuelle du travail sont transférés au client.",
                     color: 'text-purple-500',
                     bg: 'bg-purple-50 dark:bg-purple-950/20 border-purple-200 dark:border-purple-800',
                   },
@@ -3498,7 +2312,7 @@ export default function Home() {
                 </div>
               </div>
               <p className="text-[11px] text-muted-foreground leading-relaxed mb-3">
-                Besoin d&apos;un service ? Une question ? Écrivez-nous directement et recevez une réponse en quelques minutes via WhatsApp.
+                Besoin d&apos;un service ? Une question ? Écrivez-moi directement et recevez une réponse en quelques minutes via WhatsApp.
               </p>
               <a
                 href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20avoir%20des%20informations%20sur%20vos%20services."

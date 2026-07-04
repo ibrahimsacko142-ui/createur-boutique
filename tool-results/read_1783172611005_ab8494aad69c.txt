@@ -1,0 +1,2002 @@
+     1→'use client'
+     2→
+     3→import { useEffect, useState, useRef } from 'react'
+     4→import { motion, AnimatePresence, useInView } from 'framer-motion'
+     5→import {
+     6→  ArrowRight,
+     7→  Star,
+     8→  ShoppingCart,
+     9→  CheckCircle2,
+    10→  Palette,
+    11→  Globe,
+    12→  MonitorPlay,
+    13→  BookOpen,
+    14→  Tv,
+    15→  PenTool,
+    16→  Sparkles,
+    17→  ChevronRight,
+    18→  Eye,
+    19→  Zap,
+    20→  Heart,
+    21→  Target,
+    22→  Send,
+    23→  Mail,
+    24→  Phone,
+    25→  MapPin,
+    26→  Instagram,
+    27→  Facebook,
+    28→  Twitter,
+    29→  X,
+    30→  Users,
+    31→  Gift,
+    32→  Shield,
+    33→  CreditCard,
+    34→  Banknote,
+    35→  Quote,
+    36→  Timer,
+    37→  Lock,
+    38→  CircleDollarSign,
+    39→  MessageCircle,
+    40→  Play,
+    41→  Trophy,
+    42→  Flame,
+    43→  Clock,
+    44→  Ban,
+    45→  FileCheck,
+    46→  Calendar,
+    47→  ArrowUpRight,
+    48→  AlertTriangle,
+    49→  Handshake,
+    50→  FolderDown,
+    51→  ArrowRightLeft,
+    52→  GraduationCap,
+    53→  Building2,
+    54→  UserCheck,
+    55→  Megaphone,
+    56→  BadgeCheck,
+    57→  Wrench,
+    58→  Headphones,
+    59→  Wallet,
+    60→  TrendingUp,
+    61→  Code,
+    62→  Brain,
+    63→  Youtube,
+    64→  Copy,
+    65→  ArrowDown,
+    66→  ArrowUp,
+    67→  History,
+    68→  ChevronUp,
+    69→  Package,
+    70→  ShieldCheck,
+    71→  Laptop,
+    72→  Sun,
+    73→  Moon,
+    74→  ThumbsUp,
+    75→  Share2,
+    76→  Rocket,
+    77→  Layers,
+    78→  RefreshCw,
+    79→  ClipboardCheck,
+    80→  MessageSquare,
+    81→  Award,
+    82→  Plus,
+    83→  Search,
+    84→  Crown,
+    85→  LinkIcon,
+    86→  Smartphone,
+    87→} from 'lucide-react'
+    88→import { Button } from '@/components/ui/button'
+    89→import { Card, CardContent } from '@/components/ui/card'
+    90→import { Badge } from '@/components/ui/badge'
+    91→import { Input } from '@/components/ui/input'
+    92→import { Textarea } from '@/components/ui/textarea'
+    93→import { Label } from '@/components/ui/label'
+    94→import { Skeleton } from '@/components/ui/skeleton'
+    95→import { useToast } from '@/hooks/use-toast'
+    96→import Header from '@/components/Header'
+    97→import Footer from '@/components/Footer'
+    98→import {
+    99→  Dialog,
+   100→  DialogContent,
+   101→  DialogHeader,
+   102→  DialogTitle,
+   103→  DialogDescription,
+   104→} from '@/components/ui/dialog'
+   105→
+   106→/* ─── Types ─── */
+   107→interface Product {
+   108→  id: string
+   109→  name: string
+   110→  description: string | null
+   111→  price: number
+   112→  image: string | null
+   113→  category: string
+   114→  featured: boolean
+   115→  stock: number
+   116→}
+   117→
+   118→/* ─── Animation Helpers ─── */
+   119→function FadeIn({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
+   120→  const ref = useRef(null)
+   121→  const isInView = useInView(ref, { once: true, margin: '-60px' })
+   122→  return (
+   123→    <motion.div
+   124→      ref={ref}
+   125→      initial={{ opacity: 0, y: 30 }}
+   126→      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+   127→      transition={{ duration: 0.5, delay, ease: 'easeOut' }}
+   128→      className={className}
+   129→    >
+   130→      {children}
+   131→    </motion.div>
+   132→  )
+   133→}
+   134→
+   135→function StaggerContainer({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+   136→  const ref = useRef(null)
+   137→  const isInView = useInView(ref, { once: true, margin: '-60px' })
+   138→  return (
+   139→    <motion.div
+   140→      ref={ref}
+   141→      initial="hidden"
+   142→      animate={isInView ? 'visible' : 'hidden'}
+   143→      variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.08 } } }}
+   144→      className={className}
+   145→    >
+   146→      {children}
+   147→    </motion.div>
+   148→  )
+   149→}
+   150→
+   151→const cardVariants = {
+   152→  hidden: { opacity: 0, y: 30, scale: 0.95 },
+   153→  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.4, ease: 'easeOut' } },
+   154→}
+   155→
+   156→/* ─── Format Price ─── */
+   157→function formatPrice(p: number) {
+   158→  if (p === 0) return 'Gratuit'
+   159→  return p.toLocaleString('fr-FR', { style: 'currency', currency: 'XOF', minimumFractionDigits: 0 })
+   160→}
+   161→
+   162→/* ─── Service Card ─── */
+   163→function ServiceCard({ product, icon: Icon }: { product: Product; icon: React.ElementType }) {
+   164→  const [selected, setSelected] = useState<Product | null>(null)
+   165→
+   166→  const handleWhatsApp = (p: Product) => {
+   167→    const msg = `Bonjour Sacko ! Je souhaite obtenir : ${p.name}.\n\nDescription : ${p.description || ''}\nPrix : ${formatPrice(p.price)}\n\nMerci !`
+   168→    window.open(`https://wa.me/22397787244?text=${encodeURIComponent(msg)}`, '_blank')
+   169→  }
+   170→
+   171→  const categoryLabel = product.category === 'service' ? 'Service' : product.category === 'outil' ? 'Outil' : 'Produit'
+   172→
+   173→  return (
+   174→    <>
+   175→      <motion.div variants={cardVariants} className="group">
+   176→        <Card className="overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 h-full flex flex-col bg-gradient-to-b from-card to-card/80">
+   177→          {/* Image */}
+   178→          <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+   179→            {product.image ? (
+   180→              <img
+   181→                src={product.image}
+   182→                alt={product.name}
+   183→                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+   184→                loading="lazy"
+   185→              />
+   186→            ) : (
+   187→              <div className="flex h-full w-full items-center justify-center text-muted-foreground">
+   188→                <Icon className="h-12 w-12 opacity-30" />
+   189→              </div>
+   190→            )}
+   191→            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+   192→            <div className="absolute top-3 left-3 flex flex-col gap-1.5">
+   193→              <Badge className="bg-amber-500 text-white border-0 text-[10px] px-2 py-0.5">
+   194→                {categoryLabel}
+   195→              </Badge>
+   196→              {product.price === 0 && (
+   197→                <Badge className="bg-emerald-500 text-white border-0 text-[10px] px-2 py-0.5">
+   198→                  <Gift className="h-2.5 w-2.5 mr-0.5" /> Gratuit
+   199→                </Badge>
+   200→              )}
+   201→            </div>
+   202→            <div className="absolute bottom-3 right-3">
+   203→              <span className={`font-bold text-lg drop-shadow-lg ${product.price === 0 ? 'text-emerald-300' : 'text-white'}`}>{formatPrice(product.price)}</span>
+   204→            </div>
+   205→            {/* Hover overlay */}
+   206→            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100">
+   207→              <Button size="sm" variant="secondary" className="rounded-full shadow-lg" onClick={() => setSelected(product)}>
+   208→                <Eye className="h-4 w-4 mr-1" /> Détails
+   209→              </Button>
+   210→              <Button size="sm" className="rounded-full shadow-lg bg-emerald-500 hover:bg-emerald-600 text-white" onClick={() => handleWhatsApp(product)}>
+   211→                <MessageCircle className="h-4 w-4 mr-1" /> Obtenir
+   212→              </Button>
+   213→            </div>
+   214→          </div>
+   215→          {/* Content */}
+   216→          <CardContent className="flex-1 p-4 flex flex-col gap-2">
+   217→            <h3 className="font-semibold text-sm leading-snug">{product.name}</h3>
+   218→            <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed flex-1">{product.description}</p>
+   219→            <div className="flex items-center justify-between pt-1">
+   220→              <span className={`text-base font-bold ${product.price === 0 ? 'text-emerald-600' : 'text-amber-600'}`}>{formatPrice(product.price)}</span>
+   221→              <Button
+   222→                variant="ghost"
+   223→                size="sm"
+   224→                className="h-8 text-emerald-500 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 md:hidden"
+   225→                onClick={() => handleWhatsApp(product)}
+   226→              >
+   227→                <MessageCircle className="h-4 w-4" />
+   228→              </Button>
+   229→            </div>
+   230→          </CardContent>
+   231→        </Card>
+   232→      </motion.div>
+   233→
+   234→      {/* Detail Dialog */}
+   235→      <Dialog open={!!selected} onOpenChange={() => setSelected(null)}>
+   236→        <DialogContent className="sm:max-w-lg">
+   237→          <DialogHeader>
+   238→            <DialogTitle className="text-xl flex items-center gap-2">
+   239→              <Icon className="h-5 w-5 text-amber-500" />
+   240→              {selected?.name}
+   241→            </DialogTitle>
+   242→            <DialogDescription>{selected ? categoryLabel : ''} — SK Designer Luxe</DialogDescription>
+   243→          </DialogHeader>
+   244→          {selected && (
+   245→            <div className="space-y-4">
+   246→              {selected.image && (
+   247→                <div className="rounded-lg overflow-hidden aspect-video bg-muted">
+   248→                  <img src={selected.image} alt={selected.name} className="w-full h-full object-cover" />
+   249→                </div>
+   250→              )}
+   251→              <p className="text-sm text-muted-foreground leading-relaxed">{selected.description}</p>
+   252→              <div className="flex items-center justify-between pt-2">
+   253→                <span className={`text-2xl font-bold ${selected.price === 0 ? 'text-emerald-600' : 'text-amber-600'}`}>{formatPrice(selected.price)}</span>
+   254→                <a href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je souhaite obtenir : ${selected.name}.\n\nDescription : ${selected.description || ''}\nPrix : ${formatPrice(selected.price)}\n\nMerci !`)}`} target="_blank" rel="noopener noreferrer" onClick={() => setSelected(null)}>
+   255→                  <Button
+   256→                    className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold"
+   257→                  >
+   258→                    <MessageCircle className="h-4 w-4 mr-2" /> Obtenir via WhatsApp
+   259→                  </Button>
+   260→                </a>
+   261→              </div>
+   262→            </div>
+   263→          )}
+   264→        </DialogContent>
+   265→      </Dialog>
+   266→    </>
+   267→  )
+   268→}
+   269→
+   270→/* ─── Competence Item ─── */
+   271→function CompetenceItem({ text, icon: Icon, delay = 0 }: { text: string; icon: React.ElementType; delay?: number }) {
+   272→  const ref = useRef(null)
+   273→  const isInView = useInView(ref, { once: true, margin: '-30px' })
+   274→  return (
+   275→    <motion.div
+   276→      ref={ref}
+   277→      initial={{ opacity: 0, x: -20 }}
+   278→      animate={isInView ? { opacity: 1, x: 0 } : {}}
+   279→      transition={{ duration: 0.4, delay, ease: 'easeOut' }}
+   280→      className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent/50 transition-colors"
+   281→    >
+   282→      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 flex-shrink-0 mt-0.5">
+   283→        <Icon className="h-4 w-4 text-amber-600" />
+   284→      </div>
+   285→      <p className="text-sm leading-relaxed">{text}</p>
+   286→    </motion.div>
+   287→  )
+   288→}
+   289→
+   290→/* ─── Pricing Card ─── */
+   291→function PricingCard({ name, price, description, icon: Icon, delay = 0 }: { name: string; price: number; description: string; icon: React.ElementType; delay?: number }) {
+   292→  return (
+   293→    <FadeIn delay={delay}>
+   294→      <Card className="relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 group">
+   295→        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-400 to-orange-500" />
+   296→        <CardContent className="p-6">
+   297→          <div className="flex items-start justify-between mb-4">
+   298→            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30 group-hover:bg-amber-500 group-hover:text-white transition-colors duration-300">
+   299→              <Icon className="h-6 w-6 text-amber-600 group-hover:text-white transition-colors duration-300" />
+   300→            </div>
+   301→            <Badge variant="secondary" className={price === 0 ? 'text-emerald-600 font-medium bg-emerald-100 dark:bg-emerald-900/30' : 'text-amber-600 font-medium'}>
+   302→              {formatPrice(price)}
+   303→            </Badge>
+   304→          </div>
+   305→          <h3 className="font-bold text-lg mb-2">{name}</h3>
+   306→          <p className="text-sm text-muted-foreground leading-relaxed mb-4">{description}</p>
+   307→          <a href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je souhaite obtenir : ${name} (${formatPrice(price)}). Merci !`)}`} target="_blank" rel="noopener noreferrer">
+   308→            <Button className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold">
+   309→              <MessageCircle className="h-4 w-4 mr-2" /> Obtenir via WhatsApp
+   310→            </Button>
+   311→          </a>
+   312→        </CardContent>
+   313→      </Card>
+   314→    </FadeIn>
+   315→  )
+   316→}
+   317→
+   318→/* ─── Animated Counter ─── */
+   319→function Counter({ target, duration = 1500, suffix = '', prefix = '' }: { target: number; duration?: number; suffix?: string; prefix?: string }) {
+   320→  const [count, setCount] = useState(0)
+   321→  const elementRef = useRef<HTMLSpanElement>(null)
+   322→  const hasAnimated = useRef(false)
+   323→
+   324→  useEffect(() => {
+   325→    const observer = new IntersectionObserver(
+   326→      ([entry]) => {
+   327→        if (entry.isIntersecting && !hasAnimated.current) {
+   328→          hasAnimated.current = true
+   329→          let startTime: number | null = null
+   330→          const startValue = 0
+   331→
+   332→          const animate = (timestamp: number) => {
+   333→            if (!startTime) startTime = timestamp
+   334→            const progress = Math.min((timestamp - startTime) / duration, 1)
+   335→            const easeProgress = progress * (2 - progress)
+   336→            const currentValue = Math.floor(easeProgress * (target - startValue) + startValue)
+   337→            setCount(currentValue)
+   338→
+   339→            if (progress < 1) {
+   340→              requestAnimationFrame(animate)
+   341→            }
+   342→          }
+   343→
+   344→          requestAnimationFrame(animate)
+   345→        }
+   346→      },
+   347→      { threshold: 0.2 }
+   348→    )
+   349→
+   350→    if (elementRef.current) {
+   351→      observer.observe(elementRef.current)
+   352→    }
+   353→
+   354→    return () => observer.disconnect()
+   355→  }, [target, duration])
+   356→
+   357→  return (
+   358→    <span ref={elementRef} className="tabular-nums">
+   359→      {prefix}{count.toLocaleString('fr-FR')}{suffix}
+   360→    </span>
+   361→  )
+   362→}
+   363→
+   364→/* ═══════════════════════════════════════════════
+   365→   MAIN PAGE
+   366→   ═══════════════════════════════════════════════ */
+   367→export default function Home() {
+   368→  const [products, setProducts] = useState<Product[]>([])
+   369→  const [loading, setLoading] = useState(true)
+   370→  const [activeFilter, setActiveFilter] = useState('all')
+   371→  const [searchQuery, setSearchQuery] = useState('')
+   372→  const [contactData, setContactData] = useState({ name: '', email: '', subject: '', message: '' })
+   373→  const [sending, setSending] = useState(false)
+   374→  const [showBanner, setShowBanner] = useState(true)
+   375→  const [showBackToTop, setShowBackToTop] = useState(false)
+   376→  const [showChatPopup, setShowChatPopup] = useState(true)
+   377→  const [countdown, setCountdown] = useState({ hours: 23, minutes: 59, seconds: 59 })
+   378→  const [walletTab, setWalletTab] = useState<'depot' | 'retrait'>('depot')
+   379→  const [walletAmount, setWalletAmount] = useState('')
+   380→  const [walletName, setWalletName] = useState('')
+   381→  const [walletPhone, setWalletPhone] = useState('')
+   382→  const [walletTransactions, setWalletTransactions] = useState<{type: 'depot' | 'retrait'; amount: string; date: string; status: string}[]>([])
+   383→  const [serviceCategory, setServiceCategory] = useState('all')
+   384→  const [portfolioFilter, setPortfolioFilter] = useState('Tous')
+   385→  const [quickOrder, setQuickOrder] = useState({ service: '', name: '', phone: '', description: '' })
+   386→  const [selectedArticle, setSelectedArticle] = useState<typeof blogArticles[number] | null>(null)
+   387→  const [legalPage, setLegalPage] = useState<'mentions' | 'confidentialite' | null>(null)
+   388→  const { toast } = useToast()
+   389→
+   390→  // ═══ BLOG ARTICLES DATA ═══
+   391→  const blogArticles = [
+   392→    {
+   393→      title: '5 conseils pour créer un logo mémorable',
+   394→      excerpt: "Découvrez les règles essentielles pour concevoir un logo qui marque les esprits et reste gravé dans la mémoire de votre audience.",
+   395→      category: 'Design',
+   396→      date: '28 Juin 2026',
+   397→      readTime: '4 min',
+   398→      color: 'bg-amber-100 text-amber-700',
+   399→      image: 'https://sfile.chatglm.cn/images-ppt/b90eaf7f2e0c.jpg',
+   400→      content: `Un logo est bien plus qu'une simple image : c'est le visage de votre marque, le premier contact visuel avec votre public. Voici cinq conseils fondamentaux pour créer un logo qui reste gravé dans les mémoires.\n\n**1. La simplicité avant tout**\nLes meilleurs logos sont ceux qui sont simples et immédiatement reconnaissables. Pensez au logo d'Apple, de Nike ou de McDonald's : des formes épurées, sans surcharge visuelle. Un logo trop complexe est difficile à mémoriser et à reproduire sur différents supports. Limitez-vous à deux ou trois couleurs maximum et évitez les détails superflus qui ne seront pas visibles en petite taille.\n\n**2. Pensez à la polyvalence**\nVotre logo doit fonctionner sur tous les supports : cartes de visite, affiches, site web, réseaux sociaux, tee-shirts, et même en noir et blanc. Testez toujours votre création à différentes tailles et sur différents fonds pour vérifier sa lisibilité et son impact visuel. Un bon logo reste efficace qu'il soit affiché sur un écran géant ou imprimé sur un stylo.\n\n**3. Choisissez les bonnes couleurs**\nChaque couleur évoque une émotion différente. Le bleu inspire la confiance, le rouge l'urgence et la passion, le vert la nature et la croissance, le jaune l'optimisme. Pour une entreprise au Mali, pensez également aux couleurs qui résonnent avec votre public cible et votre secteur d'activité. La cohérence chromatique est essentielle pour renforcer l'identité de votre marque.\n\n**4. La typographie compte**\nLa police de caractère que vous choisissez pour votre logo en dit long sur votre marque. Une police serif classique évoque le prestige et la tradition, tandis qu'une police sans-serif moderne communique l'innovation et la simplicité. Évitez les polices trop décoratives qui peuvent devenir illisibles. L'idéal est d'utiliser une police unique ou d'en combiner deux au maximum.\n\n**5. Rendez-le intemporel**\nÉvitez de suivre les tendances éphémères qui datent rapidement. Un bon logo doit rester pertinent pendant des années, voire des décennies. Regardez les marques les plus prestigieuses : leur logo a peu changé depuis leur création. Concentrez-vous sur l'essence de votre marque plutôt que sur les effets de mode du moment.\n\nChez SK Designer Luxe, nous appliquons ces principes à chaque création. Chaque logo est conçu sur mesure pour refléter l'identité unique de votre entreprise et marquer les esprits de votre audience. Discutons de votre projet pour discuter de votre projet !`
+   401→    },
+   402→    {
+   403→      title: 'Comment réussir en digital en 2026',
+   404→      excerpt: "Les stratégies clés pour se démarquer dans le monde du digital cette année. Marketing, design et présence en ligne.",
+   405→      category: 'Digital',
+   406→      date: '25 Juin 2026',
+   407→      readTime: '6 min',
+   408→      color: 'bg-emerald-100 text-emerald-700',
+   409→      image: 'https://sfile.chatglm.cn/images-ppt/6345c222842a.jpg',
+   410→      content: `Le paysage digital évolue à une vitesse vertigineuse, et 2026 n'est pas une exception. Que vous soyez entrepreneur, freelancer ou créateur de contenu à Bamako, voici les stratégies essentielles pour réussir votre transition numérique et vous démarquer de la concurrence.\n\n**1. Investissez dans une identité visuelle forte**\nDans un monde saturé de contenus visuels, votre identité graphique est votre meilleur atout. Un logo professionnel, une charte graphique cohérente et des visuels de qualité sont indispensables pour inspirer confiance et attirer des clients. Les entreprises qui investissent dans leur branding voient en moyenne une augmentation de 23% de leurs revenus. Ne sous-estimez jamais le pouvoir d'un premier visuel impactant.\n\n**2. Maîtrisez les réseaux sociaux**\nLes réseaux sociaux sont le canal d'acquisition client le plus efficace au Mali en 2026. Instagram, TikTok et Facebook dominent le marché. Créez du contenu régulier, authentique et engageant. Utilisez des outils professionnels comme CapCut Pro et PicsArt Pro pour des visuels et vidéos qui sortent du lot. La constance est la clé : publiez au minimum trois fois par semaine et interagissez avec votre communauté quotidiennement.\n\n**3. Ayez un site web professionnel**\nUn site web est votre vitrine ouverte 24h/24. En 2026, ne pas avoir de site web professionnel, c'est comme avoir un magasin sans enseigne. Un site vitrine bien conçu booste votre crédibilité et vous permet de toucher des clients au-delà de Bamako, dans tout le Mali et même en Afrique de l'Ouest. Optez pour un design moderne, rapide sur mobile et optimisé pour les moteurs de recherche.\n\n**4. Le marketing digital accessible à tous**\nVous n'avez pas besoin d'un gros budget pour faire du marketing digital efficace. Commencez par optimiser vos profils sociaux, créez du contenu à valeur ajoutée, et utilisez les publicités ciblées avec un petit budget. Les stories Instagram, les reels TikTok et les publications Facebook restent les formats les plus performants pour atteindre votre audience cible au Mali.\n\n**5. Automatisez et optimisez**\nUtilisez les outils numériques pour gagner du temps : planification des publications, réponses automatiques, gestion de la relation client. Plus vous automatisez les tâches répétitives, plus vous pouvez vous concentrer sur la création de valeur et le développement de votre activité. C'est un investissement qui paie rapidement.\n\nChez SK Designer Luxe, nous vous accompagnons dans chacune de ces étapes. De la création de votre identité visuelle au développement de votre site web, nous avons les outils et l'expertise pour propulser votre présence digitale. Contactez-nous pour un diagnostic gratuit de votre présence en ligne !`
+   411→    },
+   412→    {
+   413→      title: 'Les tendances design graphique à suivre',
+   414→      excerpt: "Minimalisme, gradients, typographies audacieuses... Tour d'horizon des tendances qui dominent le design cette année.",
+   415→      category: 'Tendances',
+   416→      date: '22 Juin 2026',
+   417→      readTime: '5 min',
+   418→      color: 'bg-purple-100 text-purple-700',
+   419→      image: 'https://sfile.chatglm.cn/images-ppt/d247ebeec9b2.jpg',
+   420→      content: `Le design graphique est en constante évolution, et rester à jour avec les dernières tendances est essentiel pour tout créateur ou entrepreneur soucieux de l'image de sa marque. Voici les tendances qui dominent le design graphique en 2026.\n\n**1. Le néo-minimalisme**\nLe minimalisme revient en force, mais avec une touche moderne. Fini les designs trop froids et stériles : le néo-minimalisme intègre des textures subtiles, des gradients doux et des micro-animations qui apportent de la vie sans surcharger. L'idée est de communiquer un maximum d'information avec un minimum d'éléments, tout en créant une expérience visuelle agréable et mémorable.\n\n**2. Les typographies audacieuses**\nEn 2026, la typographie devient le protagoniste du design. Les polices surdimensionnées, les lettres déformées, les mots disposés verticalement ou en spirale : tout est permis tant que le message reste lisible. Cette tendance est particulièrement visible sur les affiches événementielles et les visuels pour les réseaux sociaux, où l'impact immédiat est primordial.\n\n**3. Les gradients évolués**\nLes gradients ne sont pas nouveaux, mais en 2026, ils se font plus sophistiqués. On voit des dégradés de couleurs inattendues (mélange de pastel et de néon), des mesh gradients qui simulent des effets 3D, et des transitions de couleurs fluides qui créent de la profondeur. Cette technique est parfaite pour les fonds de site web, les affiches et les identités de marque dynamiques.\n\n**4. Le design inclusif et culturel**\nUne tendance forte en Afrique et particulièrement au Mali : l'intégration d'éléments culturels dans le design moderne. Les motifs traditionnels réinterprétés, les couleurs inspirées du patrimoine local, les typographies qui rendent hommage aux langues africaines. C'est une façon de créer des designs uniques qui racontent une histoire et renforcent l'identité culturelle tout en restant contemporains et professionnels.\n\n**5. L'intelligence artificielle comme outil créatif**\nL'IA est devenue un outil incontournable pour les designers. Elle permet de générer des concepts rapides, d'explorer des directions créatives et d'accélérer les processus de production. Cependant, la touche humaine reste irremplaçable pour le raffinement, la cohérence et l'émotion. Les meilleurs designers en 2026 sont ceux qui combinent la puissance de l'IA avec leur sensibilité artistique.\n\nCes tendances inspirent chacune de nos créations chez SK Designer Luxe. Nous intégrons les meilleures pratiques actuelles tout en adaptant chaque projet au contexte local et aux besoins spécifiques de nos clients. Envie d'un design tendance et unique ? Parlons de votre projet !`
+   421→    },
+   422→    {
+   423→      title: "Pourquoi votre entreprise a besoin d'un site web",
+   424→      excerpt: "Un site web professionnel est devenu indispensable pour toute entreprise. Découvrez pourquoi investir dans un site vitrine.",
+   425→      category: 'Site Web',
+   426→      date: '18 Juin 2026',
+   427→      readTime: '5 min',
+   428→      color: 'bg-blue-100 text-blue-700',
+   429→      image: 'https://sfile.chatglm.cn/images-ppt/1e6a7645314b.png',
+   430→      content: `En 2026, ne pas avoir de site web professionnel équivaut à être invisible pour une grande partie de votre marché potentiel. Voici pourquoi chaque entreprise, même la plus petite, a besoin d'une présence en ligne structurée et professionnelle.\n\n**1. Une vitrine ouverte 24h/24 et 7j/7**\nVotre site web travaille pour vous même quand vous dormez. Un client potentiel peut découvrir vos services, consulter votre portfolio, lire vos tarifs et vous contacter à tout moment. Au Mali, de plus en plus de consommateurs utilisent internet pour rechercher des services locaux avant de prendre une décision d'achat. Sans site web, vous perdez ces clients au profit de concurrents qui ont compris l'importance du digital.\n\n**2. Crédibilité et professionnalisme**\nUn site web bien conçu renforce instantanément la crédibilité de votre entreprise. Lorsqu'un client potentiel recherche votre nom ou votre activité et trouve un site professionnel avec des informations claires, des témoignages et un portfolio de qualité, il est beaucoup plus enclin à faire confiance. À l'inverse, l'absence de site web peut susciter des doutes sur le sérieux de l'entreprise.\n\n**3. Atteindre au-delà de Bamako**\nUn site web vous permet de toucher des clients dans tout le Mali, en Afrique de l'Ouest et même dans le monde entier. Vos services de design, création de logos ou montage vidéo ne sont pas limités géographiquement. Un portfolio en ligne bien organisé est votre meilleur outil de vente, accessible depuis n'importe où. C'est particulièrement vrai pour les freelancers et les petites entreprises qui cherchent à élargir leur clientèle.\n\n**4. Un investissement rentable**\nContrairement à ce que beaucoup pensent, créer un site web professionnel n'est pas un luxe réservé aux grandes entreprises. Avec des solutions modernes et des créateurs talentueux à Bamako, vous pouvez avoir un site vitrine de qualité à partir de 25 000 FCFA. C'est un investissement qui se rentabilise rapidement grâce aux nouveaux clients qu'il génère et à l'image professionnelle qu'il projette.\n\n**5. Optimisation pour les réseaux sociaux**\nVotre site web est le hub central de votre présence digitale. Tous vos profils sur les réseaux sociaux (Instagram, Facebook, TikTok) doivent renvoyer vers votre site web. C'est là que les clients trouvent toutes les informations détaillées, passent commande et vous contactent directement. Un site web structuré avec des appels à l'action clairs transforme les visiteurs en clients.\n\nChez SK Designer Luxe, nous créons des sites web professionnels, modernes et optimisés pour convertir les visiteurs en clients. Chaque site est conçu sur mesure avec un design responsive, une navigation intuitive et un temps de chargement rapide. Contactez-nous pour donner à votre entreprise la présence en ligne qu'elle mérite !`
+   431→    },
+   432→    {
+   433→      title: 'Les outils indispensables pour un créateur de contenu',
+   434→      excerpt: "CapCut Pro, PicsArt Pro, Canva... Découvrez les outils qui feront la différence dans votre production de contenu.",
+   435→      category: 'Outils',
+   436→      date: '15 Juin 2026',
+   437→      readTime: '7 min',
+   438→      color: 'bg-red-100 text-red-700',
+   439→      image: 'https://sfile.chatglm.cn/images-ppt/0dcd8f4f7dd4.jpeg',
+   440→      content: `La création de contenu de qualité nécessite les bons outils. Que vous soyez créateur de contenu sur les réseaux sociaux, entrepreneur ou passionné de design, voici les outils indispensables qui feront la différence dans votre production.\n\n**1. CapCut Pro : le roi du montage vidéo**\nCapCut Pro est devenu l'outil de montage vidéo incontournable pour les créateurs de contenu. Sa version Pro débloque des fonctionnalités avancées : effets spéciaux premium, transitions cinématiques, suppression automatique de fond, templates professionnels et export en haute qualité. Pour les créateurs maliens qui produisent du contenu pour TikTok, Instagram Reels ou YouTube, CapCut Pro est un investissement qui transforme la qualité de vos vidéos.\n\n**2. PicsArt Pro : l'atelier de design mobile**\nPicsArt Pro offre des centaines d'outils de retouche photo, de création graphique et de montage. Avec la version Pro, vous accédez à des filtres premium, des stickers exclusifs, des outils AI de suppression d'arrière-plan et des templates professionnels. C'est l'outil parfait pour créer des visuels de qualité pour les réseaux sociaux, des affiches promotionnelles ou des stories engageantes directement depuis votre téléphone.\n\n**3. Canva : le design accessible à tous**\nCanva a révolutionné le design graphique en le rendant accessible à tous. Avec son interface intuitive et ses milliers de templates, même sans compétences en design, vous pouvez créer des visuels professionnels. La version Pro offre encore plus de possibilités : images premium, outils de branding, planification des publications et collaboration en équipe. C'est l'outil idéal pour les entrepreneurs qui veulent gérer eux-mêmes leur communication visuelle.\n\n**4. Les outils de gestion et planification**\nAu-delà de la création, la planification est essentielle. Des outils comme Buffer, Later ou Planoly vous permettent de programmer vos publications à l'avance, d'analyser vos performances et d'optimiser votre stratégie de contenu. Une bonne organisation est souvent ce qui sépare les créateurs qui réussissent de ceux qui abandonnent.\n\n**5. L'importance d'avoir les versions Pro**\nLes versions gratuites de ces outils sont utiles, mais les versions Pro font une réelle différence dans la qualité finale de votre contenu. Les effets premium, l'absence de filigrane, les exports en haute résolution et les templates exclusifs justifient largement l'investissement. Chez SK Designer Luxe, nous proposons l'activation de CapCut Pro et PicsArt Pro à des prix accessibles pour tous les créateurs au Mali.\n\nInvestir dans les bons outils, c'est investir dans la qualité de votre contenu et, ultimement, dans la croissance de votre audience et de votre entreprise. SK Designer Luxe vous aide à accéder à ces outils premium à des tarifs imbattables. Contactez-nous pour en savoir plus !`
+   441→    },
+   442→    {
+   443→      title: 'Comment attirer des clients avec le marketing digital',
+   444→      excerpt: "Réseaux sociaux, publicité en ligne, branding... Les techniques éprouvées pour développer votre clientèle.",
+   445→      category: 'Marketing',
+   446→      date: '10 Juin 2026',
+   447→      readTime: '6 min',
+   448→      color: 'bg-teal-100 text-teal-700',
+   449→      image: 'https://sfile.chatglm.cn/images-ppt/b994c44a4327.jpg',
+   450→      content: `Le marketing digital est le levier de croissance le plus puissant et le plus accessible pour les entreprises au Mali. Voici les techniques éprouvées pour attirer des clients et développer votre activité, même avec un petit budget.\n\n**1. Construisez une marque forte**\nTout commence par l'identité visuelle. Un logo professionnel, des couleurs cohérentes et un ton de communication défini sont les fondations de votre stratégie marketing. Les clients font confiance aux marques qui ont une identité claire et cohérente. Investissez dans un logo de qualité, créez une charte graphique et appliquez-la systématiquement sur tous vos supports de communication. C'est la base de toute stratégie digitale réussie.\n\n**2. Le contenu est roi**\nCréez du contenu qui apporte de la valeur à votre audience. Tutoriels, avant-après, coulisses de votre travail, témoignages clients, conseils professionnels : chaque publication doit donner envie à votre audience de revenir et de s'engager. Au Mali, le contenu vidéo est particulièrement efficace sur TikTok et Instagram. Montrez votre savoir-faire, partagez vos réalisations et racontez l'histoire de votre entreprise.\n\n**3. Exploitez la publicité ciblée**\nMême avec un petit budget de 5 000 à 10 000 FCFA par semaine, vous pouvez atteindre des milliers de personnes grâce à la publicité Facebook et Instagram. Ciblez votre audience par localisation (Bamako, Mali), par centres d'intérêt et par démographie. Testez différentes créations publicitaires et mesurez les résultats pour optimiser vos campagnes. Le retour sur investissement peut être spectaculaire.\n\n**4. Le bouche-à-oreille digital**\nEncouragez vos clients satisfaits à laisser des avis, à taguer votre entreprise sur leurs publications et à recommander vos services. Un système de parrainage, comme celui proposé par SK Designer Luxe, est un excellent moyen de transformer vos clients existants en ambassadeurs de votre marque. Chaque client satisfait peut vous apporter 2 à 3 nouveaux clients grâce aux recommandations.\n\n**5. Soyez présent là où vos clients sont**\nIdentifiez les plateformes où votre audience cible passe le plus de temps. Pour le marché malien, Facebook et Instagram sont incontournables, TikTok est en forte croissance, et WhatsApp reste le canal de communication directe le plus utilisé. Adaptez votre contenu à chaque plateforme et soyez régulier dans vos publications. La constance bat l'intensité : mieux vaut publier trois fois par semaine pendant un an qu'une fois par jour pendant un mois.\n\nLe marketing digital n'est pas réservé aux grandes entreprises avec des budgets importants. Avec les bonnes stratégies, les bons outils et un peu de créativité, toute entreprise au Mali peut attirer des clients et croître grâce au digital. SK Designer Luxe vous accompagne avec des outils premium, des formations pratiques et des services de qualité pour booster votre présence en ligne !`
+   451→    },
+   452→  ]
+   453→
+   454→  // ═══ REAL REFERRAL SYSTEM ═══
+   455→  const REFERRAL_CODE = 'CB-IBRA-2024'
+   456→  const REFERRAL_KEY = 'createur-boutique-referral'
+   457→  const REFERRAL_VISITOR_KEY = 'createur-boutique-referred-visit'
+   458→
+   459→  interface ReferredPerson {
+   460→    name: string
+   461→    date: string
+   462→    status: 'En attente' | 'Validé' | 'Annulé'
+   463→    validatedAt?: string
+   464→  }
+   465→  const [referralData, setReferralData] = useState<{ referred: ReferredPerson[]; totalEarned: number; totalReferred: number; totalValidated: number; totalVisits: number }>({ referred: [], totalEarned: 0, totalReferred: 0, totalValidated: 0, totalVisits: 0 })
+   466→  const [referralName, setReferralName] = useState('')
+   467→  const [activeReferralCode, setActiveReferralCode] = useState('')
+   468→  const [showReferralBanner, setShowReferralBanner] = useState(false)
+   469→  const [referralCodeInput, setReferralCodeInput] = useState('')
+   470→
+   471→  // Load referral data from localStorage
+   472→  useEffect(() => {
+   473→    const saved = localStorage.getItem(REFERRAL_KEY)
+   474→    if (saved) {
+   475→      try {
+   476→        const parsed = JSON.parse(saved)
+   477→        // Migration: ensure new fields exist
+   478→        setReferralData({
+   479→          referred: parsed.referred || [],
+   480→          totalEarned: parsed.totalEarned || 0,
+   481→          totalReferred: parsed.totalReferred || 0,
+   482→          totalValidated: parsed.totalValidated || 0,
+   483→          totalVisits: parsed.totalVisits || 0,
+   484→        })
+   485→      } catch {}
+   486→    }
+   487→  }, [])
+   488→
+   489→  // Detect referral code from URL (?ref=CB-IBRA-2024)
+   490→  useEffect(() => {
+   491→    if (typeof window === 'undefined') return
+   492→    const params = new URLSearchParams(window.location.search)
+   493→    const refCode = params.get('ref')
+   494→    if (refCode && refCode === REFERRAL_CODE) {
+   495→      // Check if this visit was already counted
+   496→      const visitData = localStorage.getItem(REFERRAL_VISITOR_KEY)
+   497→      if (!visitData) {
+   498→        // First visit via referral - show banner and track
+   499→        setActiveReferralCode(refCode)
+   500→        setShowReferralBanner(true)
+   501→        localStorage.setItem(REFERRAL_VISITOR_KEY, JSON.stringify({
+   502→          code: refCode,
+   503→          firstVisit: new Date().toISOString(),
+   504→          visitCount: 1,
+   505→          lastVisit: new Date().toISOString(),
+   506→        }))
+   507→        // Update total visits for the referrer (stored separately)
+   508→ const visitStatsKey = 'createur-boutique-visit-stats'
+   509→        const vStats = JSON.parse(localStorage.getItem(visitStatsKey) || '{"visits":0,"conversions":0}')
+   510→        vStats.visits++
+   511→        localStorage.setItem(visitStatsKey, JSON.stringify(vStats))
+   512→        // Clean URL
+   513→        window.history.replaceState({}, document.title, window.location.pathname)
+   514→      } else {
+   515→        // Returning visitor
+   516→        const parsed = JSON.parse(visitData)
+   517→        parsed.visitCount++
+   518→        parsed.lastVisit = new Date().toISOString()
+   519→        localStorage.setItem(REFERRAL_VISITOR_KEY, JSON.stringify(parsed))
+   520→        window.history.replaceState({}, document.title, window.location.pathname)
+   521→      }
+   522→    }
+   523→  }, [])
+   524→
+   525→  // Apply a referral code manually (for visitors who got the code verbally)
+   526→  const applyReferralCode = () => {
+   527→    const code = referralCodeInput.trim().toUpperCase()
+   528→    if (!code) {
+   529→      toast({ title: 'Code requis', description: 'Entrez votre code de parrainage.', variant: 'destructive' })
+   530→      return
+   531→    }
+   532→    if (code === REFERRAL_CODE) {
+   533→      setActiveReferralCode(code)
+   534→      setShowReferralBanner(false)
+   535→      localStorage.setItem(REFERRAL_VISITOR_KEY, JSON.stringify({
+   536→        code: code,
+   537→        firstVisit: new Date().toISOString(),
+   538→        visitCount: 1,
+   539→        lastVisit: new Date().toISOString(),
+   540→      }))
+   541→      toast({
+   542→        title: 'Code appliqué avec succès !',
+   543→        description: 'Vous bénéficiez de 10% de réduction sur votre prochaine commande. Mentionnez le code lors de votre commande WhatsApp.',
+   544→      })
+   545→      setReferralCodeInput('')
+   546→    } else {
+   547→      toast({ title: 'Code invalide', description: 'Ce code de parrainage n\'est pas reconnu. Vérifiez et réessayez.', variant: 'destructive' })
+   548→    }
+   549→  }
+   550→
+   551→  const addReferral = () => {
+   552→    if (!referralName.trim()) {
+   553→      toast({ title: 'Nom requis', description: 'Entrez le nom de la personne parrainée.', variant: 'destructive' })
+   554→      return
+   555→    }
+   556→    const now = new Date().toLocaleString('fr-FR')
+   557→    const newEntry: ReferredPerson = { name: referralName.trim(), date: now, status: 'En attente' }
+   558→    const updated = {
+   559→      referred: [newEntry, ...referralData.referred],
+   560→      totalEarned: referralData.totalEarned + 500,
+   561→      totalReferred: referralData.totalReferred + 1,
+   562→      totalValidated: referralData.totalValidated,
+   563→      totalVisits: referralData.totalVisits,
+   564→    }
+   565→    setReferralData(updated)
+   566→    localStorage.setItem(REFERRAL_KEY, JSON.stringify(updated))
+   567→    setReferralName('')
+   568→    toast({ title: 'Parrainage enregistré !', description: `${newEntry.name} a été ajouté. +500 FCFA de réduction accumulés.` })
+   569→  }
+   570→
+   571→  const validateReferral = (index: number) => {
+   572→    const updated = { ...referralData }
+   573→    const entry = { ...updated.referred[index] }
+   574→    if (entry.status === 'Validé') return
+   575→    entry.status = 'Validé'
+   576→    entry.validatedAt = new Date().toLocaleString('fr-FR')
+   577→    updated.referred[index] = entry
+   578→    updated.totalValidated = (updated.totalValidated || 0) + 1
+   579→    setReferralData(updated)
+   580→    localStorage.setItem(REFERRAL_KEY, JSON.stringify(updated))
+   581→    toast({ title: 'Parrainage validé !', description: `${entry.name} est maintenant validé. Vos réductions sont confirmées.` })
+   582→  }
+   583→
+   584→  const cancelReferral = (index: number) => {
+   585→    const updated = { ...referralData }
+   586→    const entry = { ...updated.referred[index] }
+   587→    entry.status = 'Annulé'
+   588→    updated.referred[index] = entry
+   589→    updated.totalReferred = Math.max(0, updated.totalReferred - 1)
+   590→    updated.totalEarned = Math.max(0, updated.totalEarned - 500)
+   591→    setReferralData(updated)
+   592→    localStorage.setItem(REFERRAL_KEY, JSON.stringify(updated))
+   593→    toast({ title: 'Parrainage annulé', description: `${entry.name} a été retiré de la liste.` })
+   594→  }
+   595→
+   596→  const getNextTier = () => {
+   597→    const tiers = [
+   598→      { at: 1, label: '500 FCFA réduction', icon: Banknote, color: 'from-emerald-500 to-teal-500' },
+   599→      { at: 3, label: '1 service gratuit', icon: Gift, color: 'from-amber-500 to-orange-500' },
+   600→      { at: 5, label: 'Logo + Montage offerts', icon: Sparkles, color: 'from-purple-500 to-pink-500' },
+   601→      { at: 10, label: '1 site web offert', icon: Globe, color: 'from-red-500 to-rose-500' },
+   602→    ]
+   603→    const next = tiers.find(t => referralData.totalReferred < t.at)
+   604→    const current = [...tiers].reverse().find(t => referralData.totalReferred >= t.at)
+   605→    return { tiers, next, current, progress: next ? (referralData.totalReferred / next.at) * 100 : 100 }
+   606→  }
+   607→  const { tiers, next, current, progress } = getNextTier()
+   608→
+   609→  // Check if user has an active referral code (for WhatsApp messages)
+   610→  const getWhatsAppWithReferral = (baseMsg: string) => {
+   611→    if (activeReferralCode) {
+   612→      return baseMsg + `\n\nMon code de parrainage : ${activeReferralCode} (10% de réduction)`
+   613→    }
+   614→    return baseMsg
+   615→  }
+   616→
+   617→  // Countdown timer
+   618→  useEffect(() => {
+   619→    const timer = setInterval(() => {
+   620→      setCountdown((prev) => {
+   621→        let { hours, minutes, seconds } = prev
+   622→        seconds--
+   623→        if (seconds < 0) { seconds = 59; minutes-- }
+   624→        if (minutes < 0) { minutes = 59; hours-- }
+   625→        if (hours < 0) { hours = 23; minutes = 59; seconds = 59 }
+   626→        return { hours, minutes, seconds }
+   627→      })
+   628→    }, 1000)
+   629→    return () => clearInterval(timer)
+   630→  }, [])
+   631→
+   632→  useEffect(() => {
+   633→    const handleScroll = () => {
+   634→      setShowBackToTop(window.scrollY > 500)
+   635→    }
+   636→    window.addEventListener('scroll', handleScroll)
+   637→    return () => window.removeEventListener('scroll', handleScroll)
+   638→  }, [])
+   639→
+   640→  useEffect(() => {
+   641→    const hardcodedProducts: Product[] = [
+   642→      { id: 'p1', name: 'Formation Designer Graphique', description: 'Formation complète en design graphique avec pratique et accompagnement. Apprenez les bases et techniques avancées.', price: 0, image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&h=400&fit=crop', category: 'service', featured: true, stock: 99 },
+   643→      { id: 'p2', name: 'Affiche Professionnelle', description: 'Création d\'affiches publicitaires modernes, attractives et adaptées à votre marque. Design haute qualité.', price: 0, image: 'https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=600&h=400&fit=crop', category: 'service', featured: true, stock: 99 },
+   644→      { id: 'p3', name: 'Logo Professionnel', description: 'Création de logo unique avec identité visuelle complète. Fichiers sources inclus.', price: 0, image: 'https://images.unsplash.com/photo-1626785774625-ddcddc3445e9?w=600&h=400&fit=crop', category: 'service', featured: true, stock: 99 },
+   645→      { id: 'p4', name: 'Site Web Simple', description: 'Site web vitrine moderne, responsive et optimisé SEO. Parfait pour présenter votre activité.', price: 0, image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop', category: 'service', featured: false, stock: 99 },
+   646→      { id: 'p5', name: 'Site Web Professionnel', description: 'Site web complet avec fonctionnalités avancées, design sur mesure et hébergement inclus.', price: 0, image: 'https://images.unsplash.com/photo-1547658719-da2b51169166?w=600&h=400&fit=crop', category: 'service', featured: true, stock: 99 },
+   647→      { id: 'p6', name: 'Montage Vidéo Pro', description: 'Montage vidéo professionnel avec effets premium et transitions fluides via CapCut Pro.', price: 0, image: 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=600&h=400&fit=crop', category: 'service', featured: false, stock: 99 },
+   648→      { id: 'p7', name: 'Contenu Réseaux Sociaux', description: 'Création de visuels et contenus engageants pour vos réseaux sociaux. Pack mensuel disponible.', price: 0, image: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=600&h=400&fit=crop', category: 'service', featured: false, stock: 99 },
+   649→      { id: 'p8', name: 'CapCut Pro', description: 'Accès premium à CapCut Pro pour un montage vidéo professionnel sans filigrane. Compte activé.', price: 0, image: 'https://images.unsplash.com/photo-1536240478700-b869070f9279?w=600&h=400&fit=crop', category: 'outil', featured: true, stock: 50 },
+   650→      { id: 'p9', name: 'PicsArt Pro', description: 'Accès premium à PicsArt Pro pour le design mobile professionnel. Tous les outils débloqués.', price: 0, image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&h=400&fit=crop', category: 'outil', featured: true, stock: 50 },
+   651→      { id: 'p10', name: 'IPTV Pro', description: 'Accès IPTV Pro avec des milliers de chaînes TV en streaming haute qualité. Abonnement complet.', price: 0, image: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=600&h=400&fit=crop', category: 'outil', featured: true, stock: 30 },
+   652→      { id: 'p11', name: 'Livres Professionnels', description: 'Pack de livres numériques professionnels et éducatifs pour développer vos compétences.', price: 0, image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600&h=400&fit=crop', category: 'outil', featured: false, stock: 99 },
+   653→      { id: 'p12', name: 'Canva Pro', description: 'Accès premium à Canva Pro pour créer des designs professionnels. Templates illimités.', price: 0, image: '/canva-pro-real.png', category: 'outil', featured: false, stock: 50 },
+   654→    ]
+   655→    setProducts(hardcodedProducts)
+   656→    setLoading(false)
+   657→    // Welcome notification after a short delay
+   658→    const timer = setTimeout(() => {
+   659→      toast({
+   660→        title: 'Bienvenue chez SK Designer Luxe !',
+   661→        description: 'Découvrez nos services et profitez de 10% de réduction avec le code CB-IBRA-2024.',
+   662→      })
+   663→    }, 2000)
+   664→    return () => clearTimeout(timer)
+   665→  }, [])
+   666→
+   667→  const filteredProducts = products.filter((p) => {
+   668→    if (activeFilter === 'all' && !searchQuery) return true
+   669→    const matchCategory = activeFilter === 'all' || p.category === activeFilter
+   670→    const matchSearch = !searchQuery || p.name.toLowerCase().includes(searchQuery.toLowerCase()) || (p.description && p.description.toLowerCase().includes(searchQuery.toLowerCase()))
+   671→    return matchCategory && matchSearch
+   672→  })
+   673→
+   674→  const services = products.filter((p) => p.category === 'service')
+   675→  const outils = products.filter((p) => p.category === 'outil')
+   676→
+   677→  const filters = [
+   678→    { key: 'all', label: 'Tout voir' },
+   679→    { key: 'service', label: 'Services' },
+   680→    { key: 'outil', label: 'Outils & Ressources' },
+   681→  ]
+   682→
+   683→  const competences = [
+   684→    { text: 'Designer graphique professionnel', icon: Palette },
+   685→    { text: "Création d'affiches publicitaires modernes", icon: PenTool },
+   686→    { text: 'Création de logos et identité visuelle', icon: Sparkles },
+   687→    { text: 'Création de sites web professionnels', icon: Globe },
+   688→    { text: 'Montage vidéo professionnel avec CapCut Pro', icon: MonitorPlay },
+   689→    { text: 'Utilisation avancée de Canva Pro et PicsArt Pro', icon: Palette },
+   690→    { text: 'Création de contenus pour réseaux sociaux', icon: Target },
+   691→    { text: 'Développement personnel et outils numériques', icon: Laptop },
+   692→    { text: 'Vente de livres professionnels et éducatifs', icon: BookOpen },
+   693→    { text: 'IPTV Pro et outils digitaux', icon: Tv },
+   694→  ]
+   695→
+   696→  const formations = [
+   697→    { text: 'Formation complète en Trading', icon: TrendingUp },
+   698→    { text: 'Formation en Management et Gestion de projets', icon: Building2 },
+   699→    { text: 'Formation en Intelligence Artificielle', icon: Brain },
+   700→    { text: 'Formation YouTube et monétisation', icon: Youtube },
+   701→    { text: 'Formation complète en Programmation', icon: Code },
+   702→    { text: 'Formation en Design Graphique', icon: Palette },
+   703→    { text: 'Formation complète en Montage Vidéo', icon: MonitorPlay },
+   704→    { text: 'Formation en Infographie et Design', icon: PenTool },
+   705→    { text: 'Formation E-commerce', icon: ShoppingCart },
+   706→    { text: 'Pack 10 000 templates et ressources Canva', icon: FolderDown },
+   707→    { text: 'Formation en Maintenance informatique', icon: Wrench },
+   708→    { text: 'Formation en Hacking et Sécurité informatique', icon: ShieldCheck },
+   709→    { text: 'Formation Revendeur IPTV', icon: Tv },
+   710→    { text: 'Formation complète en conception de Sites Web', icon: Globe },
+   711→  ]
+   712→
+   713→  const handleSubmitContact = async (e: React.FormEvent) => {
+   714→    e.preventDefault()
+   715→    if (!contactData.name || !contactData.email || !contactData.message) {
+   716→      toast({ title: 'Champs requis', description: 'Veuillez remplir tous les champs obligatoires.', variant: 'destructive' })
+   717→      return
+   718→    }
+   719→    setSending(true)
+   720→    // Redirect to WhatsApp with the message
+   721→    const msg = encodeURIComponent(`Bonjour ! Je suis ${contactData.name} (${contactData.email}).\n\nSujet : ${contactData.subject || 'Général'}\n\n${contactData.message}`)
+   722→    window.open(`https://wa.me/22397787244?text=${msg}`, '_blank')
+   723→    toast({ title: 'Redirection vers WhatsApp', description: 'Votre message sera envoyé via WhatsApp pour une réponse rapide.' })
+   724→    setContactData({ name: '', email: '', subject: '', message: '' })
+   725→    setSending(false)
+   726→  }
+   727→
+   728→  return (
+   729→    <div className="min-h-screen flex flex-col bg-background">
+   730→      <Header />
+   731→
+   732→      <main className="flex-1">
+   733→        {/* ═══ BANNIÈRE PROMO ═══ */}
+   734→        <AnimatePresence>
+   735→          {showBanner && (
+   736→            <motion.div
+   737→              initial={{ height: 0, opacity: 0 }}
+   738→              animate={{ height: 'auto', opacity: 1 }}
+   739→              exit={{ height: 0, opacity: 0 }}
+   740→              className="overflow-hidden bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white"
+   741→            >
+   742→              <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-4">
+   743→                <p className="text-xs sm:text-sm font-medium text-center sm:text-left flex-1">
+   744→                  <Flame className="h-3.5 w-3.5 inline mr-1" />
+   745→                  Bienvenue ! Offre spéciale pour nouveaux clients — <strong>Réduction de 10%</strong> sur votre première commande
+   746→                </p>
+   747→                <div className="flex items-center gap-2 flex-shrink-0">
+   748→                  <a href="#services">
+   749→                    <Button size="sm" variant="secondary" className="h-7 text-xs bg-white text-amber-600 hover:bg-white/90 font-semibold px-3">
+   750→                      En profiter
+   751→                    </Button>
+   752→                  </a>
+   753→                  <button onClick={() => setShowBanner(false)} className="text-white/80 hover:text-white transition-colors" aria-label="Fermer">
+   754→                    <X className="h-4 w-4" />
+   755→                  </button>
+   756→                </div>
+   757→              </div>
+   758→            </motion.div>
+   759→          )}
+   760→        </AnimatePresence>
+   761→
+   762→        {/* ═══ BANNIÈRE PARRAINAGE RÉFÉRÉ ═══ */}
+   763→        <AnimatePresence>
+   764→          {showReferralBanner && (
+   765→            <motion.div
+   766→              initial={{ height: 0, opacity: 0 }}
+   767→              animate={{ height: 'auto', opacity: 1 }}
+   768→              exit={{ height: 0, opacity: 0 }}
+   769→              className="overflow-hidden bg-gradient-to-r from-emerald-600 via-teal-500 to-cyan-500 text-white relative"
+   770→            >
+   771→              <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIxIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMSkiLz48L3N2Zz4=')] opacity-50" />
+   772→              <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
+   773→                <div className="flex items-center gap-3 flex-1">
+   774→                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm flex-shrink-0">
+   775→                    <Gift className="h-5 w-5" />
+   776→                  </div>
+   777→                  <div>
+   778→                    <p className="text-sm font-bold flex items-center gap-1.5">
+   779→                      <Sparkles className="h-3.5 w-3.5" /> Vous avez été invité par un ami !
+   780→                    </p>
+   781→                    <p className="text-xs text-white/80 mt-0.5">
+   782→                      Code <strong className="bg-white/20 px-1.5 py-0.5 rounded font-mono text-[11px]">{activeReferralCode}</strong> appliqué automatiquement — <strong>10% de réduction</strong> sur votre commande
+   783→                    </p>
+   784→                  </div>
+   785→                </div>
+   786→                <div className="flex items-center gap-2 flex-shrink-0">
+   787→                  <a href="#services">
+   788→                    <Button size="sm" className="h-8 text-xs bg-white text-emerald-600 hover:bg-white/90 font-bold px-4 shadow-md">
+   789→                      Commander avec réduction
+   790→                    </Button>
+   791→                  </a>
+   792→                  <button onClick={() => setShowReferralBanner(false)} className="text-white/80 hover:text-white transition-colors ml-1" aria-label="Fermer">
+   793→                    <X className="h-4 w-4" />
+   794→                  </button>
+   795→                </div>
+   796→              </div>
+   797→            </motion.div>
+   798→          )}
+   799→        </AnimatePresence>
+   800→
+   801→        {/* ═══ ACTIVE REFERRAL INDICATOR (sticky below header when code is applied) ═══ */}
+   802→        <AnimatePresence>
+   803→          {activeReferralCode && !showReferralBanner && (
+   804→            <motion.div
+   805→              initial={{ height: 0, opacity: 0 }}
+   806→              animate={{ height: 'auto', opacity: 1 }}
+   807→              exit={{ height: 0, opacity: 0 }}
+   808→              className="overflow-hidden bg-emerald-50 dark:bg-emerald-950/20 border-b border-emerald-200 dark:border-emerald-800"
+   809→            >
+   810→              <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-center gap-3">
+   811→                <CheckCircle2 className="h-4 w-4 text-emerald-600 flex-shrink-0" />
+   812→                <p className="text-xs text-emerald-700 dark:text-emerald-400 font-medium">
+   813→                  Code parrainage <strong className="font-mono">{activeReferralCode}</strong> actif — <strong>10% de réduction</strong> appliquée automatiquement sur votre commande
+   814→                </p>
+   815→                <button onClick={() => setActiveReferralCode('')} className="text-emerald-600 hover:text-emerald-800 transition-colors" aria-label="Retirer le code">
+   816→                  <X className="h-3.5 w-3.5" />
+   817→                </button>
+   818→              </div>
+   819→            </motion.div>
+   820→          )}
+   821→        </AnimatePresence>
+   822→
+   823→        {/* ═══ HERO ═══ */}
+   824→        <section id="accueil" className="relative overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-white dark:from-amber-950/20 dark:via-orange-950/10 dark:to-background">
+   825→          <div className="absolute top-0 -right-40 h-[500px] w-[500px] rounded-full bg-amber-200/40 dark:bg-amber-800/10 blur-3xl" />
+   826→          <div className="absolute -bottom-20 -left-40 h-[400px] w-[400px] rounded-full bg-orange-200/30 dark:bg-orange-800/10 blur-3xl" />
+   827→          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[300px] w-[300px] rounded-full bg-red-100/30 dark:bg-red-900/10 blur-3xl" />
+   828→
+   829→          <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
+   830→            <div className="grid lg:grid-cols-2 gap-12 items-center">
+   831→              <div>
+   832→                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+   833→                  <Badge variant="secondary" className="mb-4 px-3 py-1 text-xs font-medium bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800 shadow-sm">
+   834→                    <Sparkles className="h-3 w-3 mr-1" /> Studio Créatif Indépendant
+   835→                  </Badge>
+   836→                </motion.div>
+   837→
+   838→                <motion.h1
+   839→                  className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight"
+   840→                  initial={{ opacity: 0, y: 20 }}
+   841→                  animate={{ opacity: 1, y: 0 }}
+   842→                  transition={{ duration: 0.5, delay: 0.1 }}
+   843→                >
+   844→                  Donnez vie à vos projets digitaux et{' '}
+   845→                  <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 bg-clip-text text-transparent">
+   846→                    démarquez-vous.
+   847→                  </span>
+   848→
+   849→                </motion.h1>
+   850→
+   851→                <motion.p
+   852→                  className="mt-6 text-lg text-muted-foreground leading-relaxed max-w-lg"
+   853→                  initial={{ opacity: 0, y: 20 }}
+   854→                  animate={{ opacity: 1, y: 0 }}
+   855→                  transition={{ duration: 0.5, delay: 0.2 }}
+   856→                >
+   857→                  Création de logos, sites web et visuels sur-mesure pour propulser les entrepreneurs et créateurs de Bamako et d'ailleurs. Chaque projet est une opportunité de transformer votre vision en une réalité qui attire et fidélise.
+   858→                </motion.p>
+   859→
+   860→                <motion.div
+   861→                  className="mt-8 flex flex-wrap gap-3"
+   862→                  initial={{ opacity: 0, y: 20 }}
+   863→                  animate={{ opacity: 1, y: 0 }}
+   864→                  transition={{ duration: 0.5, delay: 0.3 }}
+   865→                >
+   866→                  <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20discuter%20de%20mon%20projet." target="_blank" rel="noopener noreferrer">
+   867→                    <Button size="lg" className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 hover:from-amber-600 hover:via-orange-600 hover:to-red-600 text-white font-semibold shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 transition-all transition-transform duration-200 hover:scale-105 active:scale-95">
+   868→                      <Rocket className="mr-2 h-4 w-4" /> Lancer mon projet
+   869→                    </Button>
+   870→                  </a>
+   871→                  <a href="https://wa.me/22397787244?text=Bonjour%20!%20J%27aimerais%20obtenir%20un%20devis%20gratuit%20pour%20mon%20projet." target="_blank" rel="noopener noreferrer">
+   872→                    <Button size="lg" variant="outline" className="font-semibold hover:bg-accent transition-transform duration-200 hover:scale-105 active:scale-95">
+   873→                      Obtenir un devis gratuit <ArrowRight className="ml-2 h-4 w-4" />
+   874→                    </Button>
+   875→                  </a>
+   876→                </motion.div>
+   877→
+   878→                <motion.div
+   879→                  className="mt-10 flex flex-wrap gap-3"
+   880→                  initial={{ opacity: 0 }}
+   881→                  animate={{ opacity: 1 }}
+   882→                  transition={{ duration: 0.5, delay: 0.5 }}
+   883→                >
+   884→                  {['Design Graphique', 'Sites Web', 'Montage Vidéo', 'Marketing Digital'].map((tag) => (
+   885→                    <span key={tag} className="inline-flex items-center gap-1.5 rounded-full bg-white/80 dark:bg-white/5 border px-3.5 py-1.5 text-xs font-medium text-amber-700 dark:text-amber-400 border-amber-200/80 dark:border-amber-800 shadow-sm">
+   886→                      <CheckCircle2 className="h-3 w-3 text-emerald-500" /> {tag}
+   887→                    </span>
+   888→                  ))}
+   889→                </motion.div>
+   890→
+   891→                {/* Trust badges */}
+   892→                <motion.div
+   893→                  className="mt-8 flex items-center gap-4"
+   894→                  initial={{ opacity: 0 }}
+   895→                  animate={{ opacity: 1 }}
+   896→                  transition={{ duration: 0.5, delay: 0.7 }}
+   897→                >
+   898→                  <div className="flex -space-x-2">
+   899→                    {['from-amber-400 to-orange-500','from-emerald-400 to-teal-500','from-purple-400 to-pink-500','from-blue-400 to-cyan-500'].map((g, i) => (
+   900→                      <div key={i} className={`h-8 w-8 rounded-full border-2 border-white bg-gradient-to-br ${g}`} />
+   901→                    ))}
+   902→                  </div>
+   903→                  <div>
+   904→                    <p className="text-xs font-bold">50+ Marques propulsées</p>
+   905→                    <div className="flex gap-0.5">
+   906→                      {[1,2,3,4,5].map((s) => (
+   907→                        <Star key={s} className="h-3 w-3 fill-amber-400 text-amber-400" />
+   908→                      ))}
+   909→                    </div>
+   910→                  </div>
+   911→                </motion.div>
+   912→              </div>
+   913→
+   914→              {/* Hero Visual - Real Images */}
+   915→              <motion.div
+   916→                className="hidden lg:block"
+   917→                initial={{ opacity: 0, scale: 0.9 }}
+   918→                animate={{ opacity: 1, scale: 1 }}
+   919→                transition={{ duration: 0.7, delay: 0.2 }}
+   920→              >
+   921→                <div className="relative">
+   922→                  <div className="absolute -inset-4 bg-gradient-to-r from-amber-400/20 via-orange-400/20 to-red-400/20 rounded-3xl blur-2xl" />
+   923→                  <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/20">
+   924→                    <img src="/demo-photo.png" alt="SK Designer Luxe - Studio Créatif" className="w-full h-[420px] object-cover" />
+   925→                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+   926→                    <div className="absolute bottom-0 left-0 right-0 p-6">
+   927→                      <div className="flex gap-2 flex-wrap">
+   928→                        {['Design Graphique', 'Sites Web', 'Montage Vidéo', 'Formations'].map((t) => (
+   929→                          <span key={t} className="px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-white text-xs font-medium border border-white/10">{t}</span>
+   930→                        ))}
+   931→                      </div>
+   932→                    </div>
+   933→                  </div>
+   934→                  {/* Floating cards */}
+   935→                  <div className="absolute -bottom-6 -left-6 bg-white dark:bg-card rounded-xl shadow-xl p-3 border flex items-center gap-3 hover:scale-105 transition-transform cursor-default">
+   936→                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
+   937→                        <Award className="h-5 w-5 text-amber-500" />
+   938→                      </div>
+   939→                    <div>
+   940→                      <p className="text-xs font-bold">50+ Marques</p>
+   941→                      <p className="text-[10px] text-muted-foreground">Propulsées</p>
+   942→                    </div>
+   943→                  </div>
+   944→                  <div className="absolute -top-4 -right-4 bg-white dark:bg-card rounded-xl shadow-xl p-3 border hover:scale-105 transition-transform cursor-default">
+   945→                    <div className="flex items-center gap-2">
+   946→                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30">
+   947→                        <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+   948→                      </div>
+   949→                      <div>
+   950→                        <p className="text-xs font-bold">100% Sur-mesure</p>
+   951→                        <p className="text-[10px] text-muted-foreground">Chaque pixel pensé pour vous</p>
+   952→                      </div>
+   953→                    </div>
+   954→                  </div>
+   955→                </div>
+   956→              </motion.div>
+   957→            </div>
+   958→          </div>
+   959→        </section>
+   960→
+   961→        {/* ═══ STATISTIQUES ═══ */}
+   962→        <section className="py-12 sm:py-16 bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 relative overflow-hidden">
+   963→          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIxIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMSkiLz48L3N2Zz4=')] opacity-50" />
+   964→          <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+   965→            <FadeIn className="text-center mb-10">
+   966→              <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">Ce que je fais, en chiffres</h2>
+   967→              <p className="mt-2 text-white/80 text-sm">Transparent, impactant, à taille humaine</p>
+   968→            </FadeIn>
+   969→            <StaggerContainer className="grid grid-cols-3 gap-6 sm:gap-12">
+   970→              {[
+   971→                { value: 50, suffix: '+', label: 'Marques propulsées', icon: Award, desc: 'Logos, affiches et identités créées avec soin' },
+   972→                { value: 100, suffix: '%', label: 'Sur-mesure', icon: Palette, desc: 'Aucun template pré-fait, chaque pixel est pensé pour vous' },
+   973→                { value: 5, suffix: '/5', label: 'Satisfaction client', icon: ThumbsUp, desc: 'Une collaboration basée sur l\'écoute et le résultat' },
+   974→              ].map((stat) => (
+   975→                <motion.div key={stat.label} variants={cardVariants} className="text-center">
+   976→                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mx-auto mb-3">
+   977→                    <stat.icon className="h-6 w-6 text-white" />
+   978→                  </div>
+   979→                  <div className="text-3xl sm:text-4xl font-extrabold text-white mb-1">
+   980→                    <Counter target={stat.value} suffix={stat.suffix} />
+   981→                  </div>
+   982→                  <p className="text-sm font-semibold text-white/90">{stat.label}</p>
+   983→                  <p className="text-xs text-white/60 mt-1 leading-relaxed hidden sm:block">{stat.desc}</p>
+   984→                </motion.div>
+   985→              ))}
+   986→            </StaggerContainer>
+   987→          </div>
+   988→        </section>
+   989→
+   990→        {/* ═══ BARRE DE CONFIANCE ═══ */}
+   991→        <section className="py-6 border-b bg-background">
+   992→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+   993→            <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10">
+   994→              {[
+   995→                { icon: Shield, label: 'Paiement Sécurisé' },
+   996→                { icon: Zap, label: 'Livraison 24h' },
+   997→                { icon: CheckCircle2, label: 'Satisfaction Garantie' },
+   998→                { icon: CreditCard, label: 'Wave Accepté' },
+   999→                { icon: Headphones, label: 'Qualité Professionnelle' },
+  1000→              ].map((item) => (
+  1001→                <div key={item.label} className="flex items-center gap-2 text-muted-foreground">
+  1002→                  <item.icon className="h-4 w-4 text-amber-500" />
+  1003→                  <span className="text-xs font-medium whitespace-nowrap">{item.label}</span>
+  1004→                </div>
+  1005→              ))}
+  1006→            </div>
+  1007→          </div>
+  1008→        </section>
+  1009→
+  1010→        {/* ═══ COMMENT ÇA MARCHE ═══ */}
+  1011→        <section className="py-16 sm:py-20 relative overflow-hidden bg-gradient-to-b from-white to-amber-50/30 dark:from-background dark:to-amber-950/10">
+  1012→          <div className="absolute top-20 left-10 h-64 w-64 bg-amber-100/40 dark:bg-amber-900/10 rounded-full blur-3xl" />
+  1013→          <div className="absolute bottom-20 right-10 h-64 w-64 bg-orange-100/30 dark:bg-orange-900/10 rounded-full blur-3xl" />
+  1014→          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  1015→            <FadeIn className="text-center mb-14">
+  1016→              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+  1017→                <Rocket className="h-3 w-3 mr-1" /> Processus
+  1018→              </Badge>
+  1019→              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Comment Ça Marche ?</h2>
+  1020→              <p className="mt-4 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+  1021→                Travailler avec moi est simple et direct. Voici comment votre projet passe de l'idée à la réalité en quelques étapes.
+  1022→              </p>
+  1023→            </FadeIn>
+  1024→
+  1025→            <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+  1026→              {/* Connector line (desktop only) */}
+  1027→              <div className="hidden lg:block absolute top-16 left-[12.5%] right-[12.5%] h-0.5 bg-gradient-to-r from-amber-300 via-orange-400 to-red-400 z-0" />
+  1028→
+  1029→              {[
+  1030→                { step: '01', icon: ClipboardCheck, title: 'Découvrez mes services', desc: 'Explorez mes services de design, sites web, vidéo et formations. Identifiez ce qui correspond à votre projet et à vos objectifs.', color: 'from-amber-400 to-orange-500' },
+  1031→                { step: '02', icon: MessageCircle, title: 'Discutons de votre projet', desc: 'Envoyez-moi un message sur WhatsApp pour me présenter votre vision. Je vous écoute et vous guide vers la meilleure solution.', color: 'from-orange-400 to-red-500' },
+  1032→                { step: '03', icon: RefreshCw, title: 'Création & Production', desc: 'Je conçois votre projet avec les meilleurs outils professionnels. Chaque détail est peaufiné pour un résultat qui vous ressemble.', color: 'from-red-400 to-pink-500' },
+  1033→                { step: '04', icon: Award, title: 'Livraison & Satisfaction', desc: 'Recevez votre création et validez. Révisions gratuites jusqu\'à ce que le résultat vous convienne parfaitement.', color: 'from-pink-400 to-purple-500' },
+  1034→              ].map((item) => (
+  1035→                <motion.div key={item.step} variants={cardVariants} className="relative z-10">
+  1036→                  <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full text-center group pt-8 pb-6">
+  1037→                    <div className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${item.color} text-white mx-auto shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+  1038→                      <item.icon className="h-6 w-6" />
+  1039→                    </div>
+  1040→                    <div className="mt-4 text-xs font-extrabold text-amber-500 tracking-widest">ÉTAPE {item.step}</div>
+  1041→                    <h3 className="mt-2 font-bold text-base">{item.title}</h3>
+  1042→                    <p className="mt-2 text-xs text-muted-foreground leading-relaxed px-2">{item.desc}</p>
+  1043→                  </Card>
+  1044→                </motion.div>
+  1045→              ))}
+  1046→            </StaggerContainer>
+  1047→          </div>
+  1048→        </section>
+  1049→
+  1050→        {/* ═══ OUTILS DÉFILANT ═══ */}
+  1051→        <section className="py-4 border-b overflow-hidden bg-muted/20">
+  1052→          <div className="flex animate-marquee">
+  1053→            {[...Array(2)].map((_, i) => (
+  1054→              <div key={i} className="flex items-center gap-8 px-8 min-w-max">
+  1055→                {['CapCut Pro', 'Canva Pro', 'PicsArt Pro', 'IPTV Pro', 'Google Drive', 'Next.js', 'Tailwind CSS', 'Figma', 'Photoshop', 'Premiere Pro'].map((tool) => (
+  1056→                  <span key={`${tool}-${i}`} className="text-sm font-semibold text-muted-foreground/50 whitespace-nowrap flex items-center gap-2">
+  1057→                    <Wrench className="h-3.5 w-3.5" /> {tool}
+  1058→                  </span>
+  1059→                ))}
+  1060→              </div>
+  1061→            ))}
+  1062→          </div>
+  1063→        </section>
+  1064→
+  1065→        {/* ═══ OFFRES LIMITÉES (URGENCE) ═══ */}
+  1066→        <section className="py-10 sm:py-14">
+  1067→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  1068→            <FadeIn>
+  1069→              <Card className="border-2 border-red-200 dark:border-red-800 bg-gradient-to-r from-red-50 via-amber-50 to-orange-50 dark:from-red-950/20 dark:via-amber-950/10 dark:to-orange-950/20 overflow-hidden relative">
+  1070→                <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+  1071→                <CardContent className="p-6 sm:p-8 relative z-10">
+  1072→                  <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
+  1073→                    <div className="flex items-center gap-3 flex-shrink-0">
+  1074→                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-red-500 text-white">
+  1075→                        <AlertTriangle className="h-7 w-7" />
+  1076→                      </div>
+  1077→                      <div>
+  1078→                        <h3 className="text-lg sm:text-xl font-extrabold text-red-600 dark:text-red-400">Offres Limitées</h3>
+  1079→                        <p className="text-xs text-muted-foreground">Ne manquez pas cette opportunité</p>
+  1080→                      </div>
+  1081→                    </div>
+  1082→                    <div className="flex-1 text-center sm:text-left">
+  1083→                      <p className="text-2xl sm:text-3xl font-extrabold">
+  1084→                        <span className="bg-gradient-to-r from-red-500 to-amber-500 bg-clip-text text-transparent">Seulement 5 commandes par jour</span>
+  1085→                      </p>
+  1086→                      <p className="text-sm text-muted-foreground mt-1">Offre valable 24h — Réservez votre place maintenant</p>
+  1087→                      <div className="flex items-center justify-center sm:justify-start gap-2 mt-3">
+  1088→                        <span className="text-xs text-muted-foreground">Expire dans :</span>
+  1089→                        {[
+  1090→                          { val: countdown.hours, label: 'h' },
+  1091→                          { val: countdown.minutes, label: 'm' },
+  1092→                          { val: countdown.seconds, label: 's' },
+  1093→                        ].map((t, i) => (
+  1094→                          <div key={i} className="flex items-center gap-1">
+  1095→                            <span className="bg-red-500 text-white text-sm font-bold px-2 py-0.5 rounded">
+  1096→                              {String(t.val).padStart(2, '0')}
+  1097→                            </span>
+  1098→                            <span className="text-xs font-bold text-red-500">{t.label}</span>
+  1099→                          </div>
+  1100→                        ))}
+  1101→                      </div>
+  1102→                    </div>
+  1103→                    <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20réserver%20ma%20commande%20du%20jour." target="_blank" rel="noopener noreferrer" className="flex-shrink-0">
+  1104→                      <Button className="bg-red-500 hover:bg-red-600 text-white font-bold text-sm shadow-lg shadow-red-500/25 whitespace-nowrap">
+  1105→                        <Flame className="h-4 w-4 mr-2" /> Réserver ma place
+  1106→                      </Button>
+  1107→                    </a>
+  1108→                  </div>
+  1109→                </CardContent>
+  1110→              </Card>
+  1111→            </FadeIn>
+  1112→          </div>
+  1113→        </section>
+  1114→
+  1115→        
+  1116→        {/* ═══ CE QUE VOUS OBTENEZ ═══ */}
+  1117→        <section className="py-16 sm:py-20 bg-muted/30">
+  1118→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  1119→            <FadeIn className="text-center mb-14">
+  1120→              <Badge variant="secondary" className="mb-3 bg-blue-100 text-blue-700 border-blue-200">
+  1121→                <TrendingUp className="h-3 w-3 mr-1" /> Résultats
+  1122→              </Badge>
+  1123→              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Ce que vous obtenez concrètement</h2>
+  1124→              <p className="mt-4 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+  1125→                Chaque service est conçu pour vous apporter un bénéfice réel et mesurable. Voici ce que mes clients obtiennent après avoir travaillé avec moi.
+  1126→              </p>
+  1127→            </FadeIn>
+  1128→
+  1129→            <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+  1130→              {[
+  1131→                {
+  1132→                  icon: Palette,
+  1133→                  title: 'Création de Logos & Identité Visuelle',
+  1134→                  desc: "Votre logo est l'âme de votre entreprise. Obtenez un design unique, moderne et professionnel qui capte immédiatement l'attention et inspire confiance à vos futurs clients.",
+  1135→                  color: 'from-amber-400 to-orange-500',
+  1136→                },
+  1137→                {
+  1138→                  icon: PenTool,
+  1139→                  title: 'Affiches Publicitaires & Visuels',
+  1140→                  desc: "Communiquez sur vos événements, vos produits ou vos promotions avec des visuels percutants conçus pour maximiser votre impact sur les réseaux sociaux et en format physique.",
+  1141→                  color: 'from-emerald-400 to-teal-500',
+  1142→                },
+  1143→                {
+  1144→                  icon: Globe,
+  1145→                  title: 'Création de Sites Web Professionnels',
+  1146→                  desc: "Offrez à votre entreprise une vitrine ouverte 24h/24. Des sites web rapides, fluides et adaptés aux mobiles pour renforcer votre crédibilité et augmenter vos ventes en ligne.",
+  1147→                  color: 'from-blue-400 to-indigo-500',
+  1148→                },
+  1149→                {
+  1150→                  icon: GraduationCap,
+  1151→                  title: 'Formations Digitales Pratiques',
+  1152→                  desc: "Prenez le contrôle de votre communication numérique. Des formations pratiques et accessibles pour maîtriser les outils digitaux essentiels à votre croissance.",
+  1153→                  color: 'from-purple-400 to-pink-500',
+  1154→                },
+  1155→              ].map((item) => (
+  1156→                <motion.div key={item.title} variants={cardVariants}>
+  1157→                  <Card className="h-full border-0 shadow-md hover:shadow-xl transition-all duration-300 group hover:-translate-y-1">
+  1158→                    <CardContent className="p-6">
+  1159→                      <div className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${item.color} text-white mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
+  1160→                        <item.icon className="h-6 w-6" />
+  1161→                      </div>
+  1162→                      <h3 className="font-bold text-sm mb-3">{item.title}</h3>
+  1163→                      <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
+  1164→                      <a href="#services" className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-amber-600 hover:text-amber-700 transition-colors">
+  1165→                        En savoir plus <ArrowUpRight className="h-3 w-3" />
+  1166→                      </a>
+  1167→                    </CardContent>
+  1168→                  </Card>
+  1169→                </motion.div>
+  1170→              ))}
+  1171→            </StaggerContainer>
+  1172→          </div>
+  1173→        </section>
+  1174→
+  1175→{/* ═══ SERVICES & TARIFS PAR CATÉGORIE ═══ */}
+  1176→        <section id="services" className="py-20 sm:py-24">
+  1177→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  1178→            <FadeIn className="text-center mb-10">
+  1179→              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+  1180→                <Sparkles className="h-3 w-3 mr-1" /> Ce que je propose
+  1181→              </Badge>
+  1182→              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Mes Services</h2>
+  1183→              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+  1184→                Découvrez comment chaque service peut transformer votre activité. Du logo qui capte l'attention au site web qui convertit, chaque création est conçue pour vous apporter des résultats concrets.
+  1185→              </p>
+  1186→            </FadeIn>
+  1187→
+  1188→            {/* Category tabs */}
+  1189→            <FadeIn delay={0.05} className="flex flex-wrap justify-center gap-2 mb-10">
+  1190→              {[
+  1191→                { key: 'all', label: 'Tous les services', icon: Layers },
+  1192→                { key: 'design', label: 'Design Graphique', icon: Palette },
+  1193→                { key: 'web', label: 'Sites Web', icon: Globe },
+  1194→                { key: 'video', label: 'Montage Vidéo', icon: MonitorPlay },
+  1195→                { key: 'outil', label: 'Outils & Ressources', icon: Wrench },
+  1196→                { key: 'formation', label: 'Formations', icon: GraduationCap },
+  1197→              ].map((cat) => (
+  1198→                <button
+  1199→                  key={cat.key}
+  1200→                  onClick={() => setServiceCategory(cat.key)}
+  1201→                  className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold transition-all duration-200 border ${
+  1202→                    serviceCategory === cat.key
+  1203→                      ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white border-transparent shadow-md shadow-amber-500/20'
+  1204→                      : 'bg-card text-muted-foreground hover:text-foreground hover:border-amber-300 dark:hover:border-amber-700'
+  1205→                  }`}
+  1206→                >
+  1207→                  <cat.icon className="h-3.5 w-3.5" /> {cat.label}
+  1208→                </button>
+  1209→              ))}
+  1210→            </FadeIn>
+  1211→
+  1212→            <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  1213→              {products
+  1214→                .filter((p) => {
+  1215→                  if (serviceCategory === 'all') return true
+  1216→                  if (serviceCategory === 'design') return p.category === 'service' && ['Affiche', 'Logo', 'Contenu'].some(k => p.name.includes(k))
+  1217→                  if (serviceCategory === 'web') return p.category === 'service' && p.name.includes('Site')
+  1218→                  if (serviceCategory === 'video') return p.category === 'service' && p.name.includes('Vidéo')
+  1219→                  if (serviceCategory === 'outil') return p.category === 'outil'
+  1220→                  if (serviceCategory === 'formation') return p.name.includes('Formation')
+  1221→                  return true
+  1222→                })
+  1223→                .map((product) => {
+  1224→                  const iconMap: Record<string, React.ElementType> = {
+  1225→                    'Formation Designer Graphique': Palette, 'Affiche Professionnelle': PenTool, 'Logo Professionnel': Sparkles,
+  1226→                    'Site Web Simple': Globe, 'Site Web Professionnel': Globe, 'Montage Vidéo Pro': MonitorPlay,
+  1227→                    'Contenu Réseaux Sociaux': Target, 'CapCut Pro': MonitorPlay, 'PicsArt Pro': PenTool,
+  1228→                    'IPTV Pro': Tv, 'Livres Professionnels': BookOpen, 'Canva Pro': Palette,
+  1229→                  }
+  1230→                  return <ServiceCard key={product.id} product={product} icon={iconMap[product.name] || Zap} />
+  1231→                })
+  1232→              }
+  1233→            </StaggerContainer>
+  1234→          </div>
+  1235→        </section>
+  1236→
+  1237→        {/* ═══ OUTILS & RESSOURCES ═══ */}
+  1238→        <section className="py-16 sm:py-20 bg-muted/30">
+  1239→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  1240→            <FadeIn className="text-center mb-12">
+  1241→              <Badge variant="secondary" className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200">
+  1242→                <Zap className="h-3 w-3 mr-1" /> Disponibles
+  1243→              </Badge>
+  1244→              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Outils & Ressources</h2>
+  1245→              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
+  1246→                Accédez aux meilleurs outils numériques et ressources professionnelles pour booster votre productivité.
+  1247→              </p>
+  1248→            </FadeIn>
+  1249→
+  1250→            <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+  1251→              {loading
+  1252→                ? Array.from({ length: 4 }).map((_, i) => (
+  1253→                    <Card key={i} className="overflow-hidden border-0 shadow-md">
+  1254→                      <Skeleton className="aspect-[4/3] w-full" />
+  1255→                      <CardContent className="p-4 space-y-2">
+  1256→                        <Skeleton className="h-4 w-3/4" />
+  1257→                        <Skeleton className="h-3 w-full" />
+  1258→                        <Skeleton className="h-5 w-1/3 mt-2" />
+  1259→                      </CardContent>
+  1260→                    </Card>
+  1261→                  ))
+  1262→                : outils.map((product) => {
+  1263→                    const iconMap: Record<string, React.ElementType> = {
+  1264→                      'CapCut Pro': MonitorPlay,
+  1265→                      'PicsArt Pro': PenTool,
+  1266→                      'IPTV Pro': Tv,
+  1267→                      'Livres Professionnels': BookOpen,
+  1268→                    }
+  1269→                    return <ServiceCard key={product.id} product={product} icon={iconMap[product.name] || Zap} />
+  1270→                  })
+  1271→              }
+  1272→            </StaggerContainer>
+  1273→          </div>
+  1274→        </section>
+  1275→
+  1276→        {/* ═══ TOUTES LES OFFRES ═══ */}
+  1277→        <section id="produits" className="py-16 sm:py-20">
+  1278→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  1279→            <FadeIn className="text-center mb-10">
+  1280→              <Badge variant="secondary" className="mb-3">Boutique</Badge>
+  1281→              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Tous les Services</h2>
+  1282→              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
+  1283→                Explorez l&apos;ensemble de mes services, outils et ressources. Filtrer par catégorie pour trouver exactement ce dont votre projet a besoin.
+  1284→              </p>
+  1285→            </FadeIn>
+  1286→
+  1287→            {/* Filters */}
+  1288→            <FadeIn delay={0.1} className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+  1289→              <div className="relative w-full sm:w-80">
+  1290→                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+  1291→                <Input
+  1292→                  placeholder="Rechercher un service ou outil..."
+  1293→                  value={searchQuery}
+  1294→                  onChange={(e) => setSearchQuery(e.target.value)}
+  1295→                  className="h-10 pl-10 bg-white dark:bg-background"
+  1296→                />
+  1297→              </div>
+  1298→              <div className="inline-flex rounded-full border bg-muted/50 p-1 gap-1">
+  1299→                {filters.map((f) => (
+  1300→                  <button
+  1301→                    key={f.key}
+  1302→                    onClick={() => setActiveFilter(f.key)}
+  1303→                    className={`rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200 ${
+  1304→                      activeFilter === f.key
+  1305→                        ? 'bg-amber-500 text-white shadow-sm'
+  1306→                        : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+  1307→                    }`}
+  1308→                  >
+  1309→                    {f.label}
+  1310→                  </button>
+  1311→                ))}
+  1312→              </div>
+  1313→            </FadeIn>
+  1314→
+  1315→            <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5">
+  1316→              {loading
+  1317→                ? Array.from({ length: 6 }).map((_, i) => (
+  1318→                    <Card key={i} className="overflow-hidden border-0 shadow-md">
+  1319→                      <Skeleton className="aspect-[4/3] w-full" />
+  1320→                      <CardContent className="p-4 space-y-2">
+  1321→                        <Skeleton className="h-4 w-3/4" />
+  1322→                        <Skeleton className="h-3 w-full" />
+  1323→                        <Skeleton className="h-5 w-1/3 mt-2" />
+  1324→                      </CardContent>
+  1325→                    </Card>
+  1326→                  ))
+  1327→                : filteredProducts.map((product) => {
+  1328→                    const iconMap: Record<string, React.ElementType> = {
+  1329→                      'Formation Designer Graphique': Palette,
+  1330→                      'Affiche Professionnelle': PenTool,
+  1331→                      'Logo Professionnel': Sparkles,
+  1332→                      'Site Web Simple': Globe,
+  1333→                      'Site Web Professionnel': Globe,
+  1334→                      'CapCut Pro': MonitorPlay,
+  1335→                      'PicsArt Pro': PenTool,
+  1336→                      'IPTV Pro': Tv,
+  1337→                      'Livres Professionnels': BookOpen,
+  1338→                    }
+  1339→                    return <ServiceCard key={product.id} product={product} icon={iconMap[product.name] || Zap} />
+  1340→                  })
+  1341→              }
+  1342→            </StaggerContainer>
+  1343→            {!loading && filteredProducts.length === 0 && (
+  1344→              <FadeIn className="text-center py-12">
+  1345→                <Search className="h-12 w-12 text-muted-foreground/30 mx-auto mb-3" />
+  1346→                <p className="text-sm font-medium text-muted-foreground">Aucun résultat trouvé</p>
+  1347→                <p className="text-xs text-muted-foreground/60 mt-1">Essayez avec d&apos;autres mots-clés ou filtres</p>
+  1348→              </FadeIn>
+  1349→            )}
+  1350→          </div>
+  1351→        </section>
+  1352→
+  1353→        {/* ═══ PORTFOLIO / RÉALISATIONS ═══ */}
+  1354→        <section id="portfolio" className="py-16 sm:py-20">
+  1355→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  1356→            <FadeIn className="text-center mb-12">
+  1357→              <Badge variant="secondary" className="mb-3 bg-purple-100 text-purple-700 border-purple-200">
+  1358→                <Eye className="h-3 w-3 mr-1" /> Portfolio
+  1359→              </Badge>
+  1360→              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Nos Réalisations</h2>
+  1361→              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
+  1362→                Découvrez une sélection de nos meilleurs travaux. Chaque projet est unique et réalisé avec passion pour nos clients.
+  1363→              </p>
+  1364→            </FadeIn>
+  1365→
+  1366→            {/* Filter tabs */}
+  1367→            <FadeIn delay={0.1} className="flex flex-wrap items-center justify-center gap-2 mb-8">
+  1368→              {['Tous', 'Logo', 'Affiche', 'Site Web', 'Vidéo', 'Identité'].map((cat) => (
+  1369→                <button
+  1370→                  key={cat}
+  1371→                  onClick={() => setPortfolioFilter(cat)}
+  1372→                  className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${portfolioFilter === cat ? 'bg-amber-500 text-white shadow-md shadow-amber-500/25' : 'bg-muted text-muted-foreground hover:bg-accent'}`}
+  1373→                >
+  1374→                  {cat}
+  1375→                </button>
+  1376→              ))}
+  1377→            </FadeIn>
+  1378→
+  1379→            <StaggerContainer className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+  1380→              {[
+  1381→                { title: 'Logo Restaurant Le Baobab', category: 'Logo', image: 'https://sfile.chatglm.cn/images-ppt/3e8dbebc34bb.jpg', desc: 'Identité visuelle complète pour un restaurant traditionnel malien' },
+  1382→                { title: 'Affiche Festival Bamako', category: 'Affiche', image: 'https://sfile.chatglm.cn/images-ppt/0c5c9b1b948b.jpg', desc: 'Affiche événementielle pour un festival culturel à Bamako' },
+  1383→                { title: 'Site Web MaliTech Solutions', category: 'Site Web', image: 'https://sfile.chatglm.cn/images-ppt/1b5dd4b88cdf.png', desc: 'Site vitrine professionnel pour une entreprise tech malienne' },
+  1384→                { title: 'Logo Afro Fashion Store', category: 'Logo', image: 'https://sfile.chatglm.cn/images-ppt/57c1b49a60ba.jpg', desc: 'Logo moderne pour une boutique de mode africaine' },
+  1385→                { title: 'Montage Promo Produit', category: 'Vidéo', image: 'https://sfile.chatglm.cn/images-ppt/190eb04b2085.jpg', desc: 'Montage vidéo promotionnel pour un lancement de produit' },
+  1386→                { title: 'Identité ESIA Business', category: 'Identité', image: 'https://sfile.chatglm.cn/images-ppt/7bfadf1e1582.jpg', desc: 'Charte graphique complète pour une école de business' },
+  1387→              ].filter((item) => portfolioFilter === 'Tous' || item.category === portfolioFilter).map((item) => (
+  1388→                <motion.div key={item.title} variants={cardVariants}>
+  1389→                  <Card className="overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 h-full group cursor-pointer">
+  1390→                    <div className="relative h-48 sm:h-56 overflow-hidden">
+  1391→                      <img src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+  1392→                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+  1393→                      <div className="absolute bottom-0 left-0 right-0 p-4 z-10">
+  1394→                        <h3 className="font-bold text-sm sm:text-base text-white">{item.title}</h3>
+  1395→                        <p className="text-white/70 text-xs mt-1 line-clamp-2">{item.desc}</p>
+  1396→                      </div>
+  1397→                      <div className="absolute top-3 left-3">
+  1398→                        <Badge className="bg-amber-500/90 text-white border-0 text-[10px] font-semibold backdrop-blur-sm">{item.category}</Badge>
+  1399→                      </div>
+  1400→                    </div>
+  1401→                  </Card>
+  1402→                </motion.div>
+  1403→              ))}
+  1404→            </StaggerContainer>
+  1405→
+  1406→            {/* Avant / Après Section */}
+  1407→            <FadeIn delay={0.4} className="mt-14">
+  1408→              <h3 className="text-xl font-bold text-center mb-2">Avant / Après</h3>
+  1409→              <p className="text-sm text-muted-foreground text-center mb-8 max-w-xl mx-auto">Voici quelques exemples concrets de transformations réalisées pour nos clients. Chaque projet est unique et pensé pour maximiser l'impact visuel.</p>
+  1410→              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  1411→                {[
+  1412→                  { title: 'Refonte Logo Boutique', before: 'https://sfile.chatglm.cn/images-ppt/f972157605f2.jpg', after: 'https://sfile.chatglm.cn/images-ppt/082b6f181c95.jpg', desc: 'Logo basique transformé en identité premium' },
+  1413→                  { title: 'Affiche Événement', before: 'https://sfile.chatglm.cn/images-ppt/d2c6b53ee01b.jpg', after: 'https://sfile.chatglm.cn/images-ppt/d247ebeec9b2.jpg', desc: 'Affiche simple devenue visuel professionnel' },
+  1414→                  { title: 'Identité Complète', before: 'https://sfile.chatglm.cn/images-ppt/6c9261ec8848.jpg', after: 'https://sfile.chatglm.cn/images-ppt/0c5c9b1b948b.jpg', desc: 'De l\'amateur au professionnalisme total' },
+  1415→                ].map((item, i) => (
+  1416→                  <Card key={i} className="overflow-hidden border-0 shadow-lg group hover:shadow-xl transition-all duration-300">
+  1417→                    <div className="grid grid-cols-2 h-56">
+  1418→                      <div className="relative overflow-hidden">
+  1419→                        <img src={item.before} alt="Avant" className="w-full h-full object-cover" />
+  1420→                        <div className="absolute top-2 left-2">
+  1421→                          <span className="bg-red-500/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-full backdrop-blur-sm">AVANT</span>
+  1422→                        </div>
+  1423→                      </div>
+  1424→                      <div className="relative overflow-hidden">
+  1425→                        <img src={item.after} alt="Après" className="w-full h-full object-cover" />
+  1426→                        <div className="absolute top-2 left-2">
+  1427→                          <span className="bg-emerald-500/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-full backdrop-blur-sm">APRÈS</span>
+  1428→                        </div>
+  1429→                      </div>
+  1430→                    </div>
+  1431→                    <CardContent className="p-4">
+  1432→                      <h4 className="font-bold text-sm">{item.title}</h4>
+  1433→                      <p className="text-xs text-muted-foreground mt-1">{item.desc}</p>
+  1434→                    </CardContent>
+  1435→                  </Card>
+  1436→                ))}
+  1437→              </div>
+  1438→            </FadeIn>
+  1439→
+  1440→            <FadeIn delay={0.3} className="mt-8 text-center">
+  1441→              <p className="text-sm text-muted-foreground">
+  1442→                Envie d&apos;un projet similaire ?{' '}
+  1443→                <a href="https://wa.me/22397787244?text=Bonjour%20!%20J%27ai%20vu%20vos%20réalisations%20et%20je%20souhaite%20un%20projet%20similaire." target="_blank" rel="noopener noreferrer" className="text-amber-600 font-semibold hover:underline">
+  1444→                  Contactez-nous
+  1445→                </a>{' '}et discutons de votre projet !
+  1446→              </p>
+  1447→            </FadeIn>
+  1448→          </div>
+  1449→        </section>
+  1450→
+  1451→        {/* ═══ NEWSLETTER ═══ */}
+  1452→        <section className="py-16 sm:py-20">
+  1453→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  1454→            <FadeIn>
+  1455→              <Card className="border-0 shadow-xl overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 dark:from-amber-950/10 dark:via-orange-950/10 dark:to-red-950/10">
+  1456→                <CardContent className="p-8 sm:p-12">
+  1457→                  <div className="grid lg:grid-cols-2 gap-8 items-center">
+  1458→                    <div>
+  1459→                      <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+  1460→                        <Mail className="h-3 w-3 mr-1" /> Newsletter
+  1461→                      </Badge>
+  1462→                      <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">Restez Informé</h2>
+  1463→                      <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+  1464→                        Inscrivez-vous à notre newsletter pour recevoir nos dernières offres, des conseils en design et digital, et être informé en avant-première de nos promotions exclusives. Rejoignez notre communauté de créateurs et d&apos;entrepreneurs.
+  1465→                      </p>
+  1466→                      <div className="mt-6 space-y-3">
+  1467→                        {[
+  1468→                          'Offres exclusives réservées aux abonnés',
+  1469→                          'Conseils et astuces design chaque semaine',
+  1470→                          'Accès prioritaire aux nouvelles promotions',
+  1471→                        ].map((item, i) => (
+  1472→                          <div key={i} className="flex items-center gap-2">
+  1473→                            <CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" />
+  1474→                            <span className="text-xs text-muted-foreground">{item}</span>
+  1475→                          </div>
+  1476→                        ))}
+  1477→                      </div>
+  1478→                    </div>
+  1479→                    <div className="space-y-4">
+  1480→                      <div className="space-y-2">
+  1481→                        <Input placeholder="Votre nom" className="h-11 bg-white dark:bg-background" />
+  1482→                        <Input type="email" placeholder="Votre email" className="h-11 bg-white dark:bg-background" />
+  1483→                      </div>
+  1484→                      <Button className="w-full bg-amber-500 hover:bg-amber-600 text-white font-semibold h-11">
+  1485→                        <Send className="h-4 w-4 mr-2" /> S&apos;inscrire gratuitement
+  1486→                      </Button>
+  1487→                      <p className="text-[10px] text-muted-foreground text-center">
+  1488→                        En vous inscrivant, vous acceptez de recevoir nos communications. Désabonnement possible à tout moment.
+  1489→                      </p>
+  1490→                    </div>
+  1491→                  </div>
+  1492→                </CardContent>
+  1493→              </Card>
+  1494→            </FadeIn>
+  1495→          </div>
+  1496→        </section>
+  1497→
+  1498→        {/* ═══ COMPÉTENCES ═══ */}
+  1499→        <section id="competences" className="py-16 sm:py-20 bg-muted/30">
+  1500→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  1501→            <div className="grid lg:grid-cols-2 gap-12 items-start">
+  1502→              <FadeIn>
+  1503→                <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+  1504→                  <Star className="h-3 w-3 mr-1" /> Expertise
+  1505→                </Badge>
+  1506→                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Mes Compétences</h2>
+  1507→                <p className="mt-4 text-muted-foreground leading-relaxed">
+  1508→                  Spécialisé dans le domaine du design graphique, du développement web et du digital avec une expertise avancée dans plusieurs outils et services numériques professionnels. Une maîtrise complète qui va de la création visuelle à la formation en passant par les outils digitaux premium.
+  1509→                </p>
+  1510→
+  1511→                <div className="mt-8 grid grid-cols-2 gap-3">
+  1512→                  {[
+  1513→                    { label: 'Qualité', icon: Star },
+  1514→                    { label: 'Créativité', icon: Sparkles },
+  1515→                    { label: 'Satisfaction', icon: Heart },
+  1516→                    { label: 'Rapidité', icon: Zap },
+  1517→                  ].map((item) => (
+  1518→                    <div key={item.label} className="flex items-center gap-2 p-3 rounded-lg bg-card border">
+  1519→                      <item.icon className="h-4 w-4 text-amber-500" />
+  1520→                      <span className="text-sm font-medium">{item.label}</span>
+  1521→                    </div>
+  1522→                  ))}
+  1523→                </div>
+  1524→              </FadeIn>
+  1525→
+  1526→              <div className="space-y-1">
+  1527→                {competences.map((comp, i) => (
+  1528→                  <CompetenceItem key={i} text={comp.text} icon={comp.icon} delay={i * 0.05} />
+  1529→                ))}
+  1530→              </div>
+  1531→            </div>
+  1532→          </div>
+  1533→        </section>
+  1534→
+  1535→        {/* ═══ FORMATIONS DISPONIBLES ═══ */}
+  1536→        <section id="formations" className="py-16 sm:py-20 relative overflow-hidden text-white" style={{background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)'}}>
+  1537→          <div className="absolute inset-0">
+  1538→            <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1400&h=800&fit=crop" alt="" className="w-full h-full object-cover opacity-10" />
+  1539→            <div className="absolute top-10 right-10 h-72 w-72 bg-amber-500/15 rounded-full blur-3xl" />
+  1540→            <div className="absolute bottom-10 left-10 h-72 w-72 bg-orange-500/15 rounded-full blur-3xl" />
+  1541→            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-96 w-96 bg-purple-500/10 rounded-full blur-3xl" />
+  1542→          </div>
+  1543→          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  1544→            <FadeIn>
+  1545→              <div className="text-center mb-12">
+  1546→                <Badge className="mb-3 bg-amber-500/20 text-amber-300 border-amber-500/30 hover:bg-amber-500/30">
+  1547→                  <GraduationCap className="h-3 w-3 mr-1" /> Formations
+  1548→                </Badge>
+  1549→                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Formations Disponibles</h2>
+  1550→                <p className="mt-4 text-slate-300 max-w-2xl mx-auto leading-relaxed">
+  1551→                  Nous aidons les entrepreneurs, étudiants et créateurs à développer leurs compétences digitales avec des formations modernes et accessibles. Chaque formation est conçue pour vous donner des compétences pratiques et immédiatement applicables.
+  1552→                </p>
+  1553→              </div>
+  1554→            </FadeIn>
+  1555→
+  1556→            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+  1557→              {formations.map((form, i) => (
+  1558→                <motion.a
+  1559→                  key={i}
+  1560→                  href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je suis intéressé(e) par la formation : ${form.text}. Pouvez-vous me donner plus de détails et comment y accéder ? Merci !`)}`}
+  1561→                  target="_blank"
+  1562→                  rel="noopener noreferrer"
+  1563→                  initial={{ opacity: 0, y: 20 }}
+  1564→                  whileInView={{ opacity: 1, y: 0 }}
+  1565→                  viewport={{ once: true, margin: '-40px' }}
+  1566→                  transition={{ duration: 0.4, delay: i * 0.04, ease: 'easeOut' }}
+  1567→                  className="group flex items-center gap-4 p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-emerald-500/40 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/5 cursor-pointer"
+  1568→                >
+  1569→                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 flex-shrink-0 group-hover:from-emerald-500/30 group-hover:to-teal-500/30 transition-colors">
+  1570→                    <form.icon className="h-5 w-5 text-amber-400 group-hover:text-emerald-400 transition-colors" />
+  1571→                  </div>
+  1572→                  <div className="flex-1 min-w-0">
+  1573→                    <p className="text-sm font-medium text-slate-200 leading-relaxed group-hover:text-white transition-colors">{form.text}</p>
+  1574→                    <span className="text-[11px] text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity mt-1 flex items-center gap-1">
+  1575→                      <MessageCircle className="h-3 w-3" /> Cliquer pour commander via WhatsApp
+  1576→                    </span>
+  1577→                  </div>
+  1578→                  <ArrowRight className="h-4 w-4 text-white/30 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all flex-shrink-0" />
+  1579→                </motion.a>
+  1580→              ))}
+  1581→            </div>
+  1582→          </div>
+  1583→        </section>
+  1584→
+  1585→        {/* ═══ POURQUOI NOUS CHOISIR ═══ */}
+  1586→        <section className="py-16 sm:py-20 bg-gradient-to-br from-amber-50 via-orange-50/50 to-white dark:from-amber-950/10 dark:via-orange-950/5 dark:to-background relative overflow-hidden">
+  1587→          <div className="absolute -top-20 -left-20 h-80 w-80 bg-amber-200/30 dark:bg-amber-900/10 rounded-full blur-3xl" />
+  1588→          <div className="absolute -bottom-20 -right-20 h-80 w-80 bg-orange-200/20 dark:bg-orange-900/10 rounded-full blur-3xl" />
+  1589→          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  1590→            <FadeIn className="text-center mb-14">
+  1591→              <Badge variant="secondary" className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200">
+  1592→                <ThumbsUp className="h-3 w-3 mr-1" /> Collaboration
+  1593→              </Badge>
+  1594→              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Pourquoi Collaborer Ensemble ?</h2>
+  1595→              <p className="mt-4 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+  1596→                  Au-delà des compétences techniques, c'est une approche humaine et personnalisée qui fait la différence. Voici ce qui rend chaque collaboration unique et efficace.
+  1597→              </p>
+  1598→            </FadeIn>
+  1599→
+  1600→            <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  1601→              {[
+  1602→                { icon: Zap, title: 'Créativité sur-mesure', desc: "Chaque projet est conçu selon vos besoins spécifiques. Aucun template pré-fait, aucune copie : votre identité visuelle sera unique et reflétera parfaitement l'essence de votre marque. Du premier croquis au fichier final, chaque détail est pensé pour vous.", color: 'bg-amber-100 dark:bg-amber-900/30', iconColor: 'text-amber-600' },
+  1603→                { icon: ShieldCheck, title: 'Rapidité & Efficacité', desc: "Des délais respectés pour que vous puissiez lancer vos campagnes à temps. Je comprends que le temps est précieux pour un entrepreneur : c'est pourquoi chaque projet est livré rapidement sans jamais compromettre la qualité.", color: 'bg-emerald-100 dark:bg-emerald-900/30', iconColor: 'text-emerald-600' },
+  1604→                { icon: Wallet, title: 'Accompagnement de A à Z', desc: "Une écoute attentive pour garantir un résultat qui dépasse vos attentes. De la première discussion sur WhatsApp à la livraison finale, je vous guide à chaque étape et j'ajuste jusqu'à ce que vous soyez entièrement satisfait.", color: 'bg-blue-100 dark:bg-blue-900/30', iconColor: 'text-blue-600' },
+  1605→                { icon: ShieldCheck, title: 'Qualité Professionnelle', desc: 'Chaque création est réalisée avec les meilleurs outils du marché : Canva Pro, CapCut Pro, PicsArt Pro. Le résultat est un visuel qui rivalise avec ceux des grandes agences, à une fraction du prix.', color: 'bg-purple-100 dark:bg-purple-900/30', iconColor: 'text-purple-600' },
+  1606→                { icon: RefreshCw, title: 'Révisions Gratuites', desc: "Non satisfait ? J'effectue des révisions gratuites jusqu'à ce que le résultat vous convienne parfaitement. Votre satisfaction n'est pas une option, c'est mon engagement.", color: 'bg-orange-100 dark:bg-orange-900/30', iconColor: 'text-orange-600' },
+  1607→                { icon: Wallet, title: 'Paiement Flexible Wave', desc: 'Payez facilement via Wave au +223 97 78 72 44. Pas besoin de compte bancaire, juste votre téléphone. Simple, rapide et 100% sécurisé.', color: 'bg-red-100 dark:bg-red-900/30', iconColor: 'text-red-600' },
+  1608→              ].map((item) => (
+  1609→                <motion.div key={item.title} variants={cardVariants}>
+  1610→                  <Card className="h-full border-0 shadow-md hover:shadow-xl transition-all duration-300 group hover:-translate-y-1">
+  1611→                    <CardContent className="p-6">
+  1612→                      <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${item.color} mb-4 group-hover:scale-110 transition-transform duration-300`}>
+  1613→                        <item.icon className={`h-6 w-6 ${item.iconColor}`} />
+  1614→                      </div>
+  1615→                      <h3 className="font-bold text-base mb-2">{item.title}</h3>
+  1616→                      <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
+  1617→                    </CardContent>
+  1618→                  </Card>
+  1619→                </motion.div>
+  1620→              ))}
+  1621→            </StaggerContainer>
+  1622→
+  1623→            {/* Garantie badge */}
+  1624→            <FadeIn delay={0.3} className="mt-12">
+  1625→              <div className="mx-auto max-w-2xl">
+  1626→                <Card className="border-2 border-emerald-200 dark:border-emerald-800 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20 overflow-hidden">
+  1627→                  <CardContent className="p-6 sm:p-8 text-center">
+  1628→                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30 mx-auto mb-4">
+  1629→                      <BadgeCheck className="h-8 w-8 text-emerald-600" />
+  1630→                    </div>
+  1631→                    <h3 className="text-xl font-extrabold text-emerald-700 dark:text-emerald-400 mb-2">Garantie 100% Satisfaction</h3>
+  1632→                    <p className="text-sm text-muted-foreground leading-relaxed">
+  1633→                      Je garantis votre satisfaction. Si le résultat ne correspond pas à votre commande, je reprends le travail gratuitement. Aucun risque pour vous.
+  1634→                    </p>
+  1635→                    <div className="flex flex-wrap items-center justify-center gap-4 mt-5">
+  1636→                      {['Gratuit', 'Révisions illimitées', 'Support permanent'].map((tag) => (
+  1637→                        <span key={tag} className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 px-3 py-1 text-xs font-medium text-emerald-700 dark:text-emerald-400">
+  1638→                          <CheckCircle2 className="h-3 w-3" /> {tag}
+  1639→                        </span>
+  1640→                      ))}
+  1641→                    </div>
+  1642→                  </CardContent>
+  1643→                </Card>
+  1644→              </div>
+  1645→            </FadeIn>
+  1646→          </div>
+  1647→        </section>
+  1648→
+  1649→        {/* ═══ DÉPÔT ET RETRAIT ═══ */}
+  1650→        <section id="wallet" className="py-16 sm:py-20 bg-muted/30">
+  1651→          <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+  1652→            <FadeIn>
+  1653→              <div className="text-center mb-10">
+  1654→                <Badge variant="secondary" className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200">
+  1655→                  <Wallet className="h-3 w-3 mr-1" /> Portefeuille
+  1656→                </Badge>
+  1657→                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Dépôt et Retrait</h2>
+  1658→                <p className="mt-3 text-muted-foreground leading-relaxed max-w-xl mx-auto">
+  1659→                  Gérez vos paiements facilement via Wave. Effectuez un dépôt pour commander nos services ou demandez un retrait. Simple, rapide et sécurisé.
+  1660→                </p>
+  1661→              </div>
+  1662→            </FadeIn>
+  1663→
+  1664→            <FadeIn delay={0.15}>
+  1665→              <Card className="border-0 shadow-xl overflow-hidden">
+  1666→                {/* Tabs */}
+  1667→                <div className="flex border-b">
+  1668→                  <button
+  1669→                    onClick={() => setWalletTab('depot')}
+  1670→                    className={`flex-1 flex items-center justify-center gap-2 py-4 text-sm font-semibold transition-all duration-200 ${
+  1671→                      walletTab === 'depot'
+  1672→                        ? 'text-emerald-600 border-b-2 border-emerald-500 bg-emerald-50/50'
+  1673→                        : 'text-muted-foreground hover:text-foreground'
+  1674→                    }`}
+  1675→                  >
+  1676→                    <ArrowDown className="h-4 w-4" />
+  1677→                    Dépôt
+  1678→                  </button>
+  1679→                  <button
+  1680→                    onClick={() => setWalletTab('retrait')}
+  1681→                    className={`flex-1 flex items-center justify-center gap-2 py-4 text-sm font-semibold transition-all duration-200 ${
+  1682→                      walletTab === 'retrait'
+  1683→                        ? 'text-orange-600 border-b-2 border-orange-500 bg-orange-50/50'
+  1684→                        : 'text-muted-foreground hover:text-foreground'
+  1685→                    }`}
+  1686→                  >
+  1687→                    <ArrowUp className="h-4 w-4" />
+  1688→                    Retrait
+  1689→                  </button>
+  1690→                </div>
+  1691→
+  1692→                <CardContent className="p-6 sm:p-8">
+  1693→                  <AnimatePresence mode="wait">
+  1694→                    {walletTab === 'depot' ? (
+  1695→                      <motion.div
+  1696→                        key="depot"
+  1697→                        initial={{ opacity: 0, x: -20 }}
+  1698→                        animate={{ opacity: 1, x: 0 }}
+  1699→                        exit={{ opacity: 0, x: 20 }}
+  1700→                        transition={{ duration: 0.3 }}
+  1701→                      >
+  1702→                        <div className="mb-6 p-4 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800">
+  1703→                          <div className="flex items-center gap-3 mb-2">
+  1704→                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/40">
+  1705→                              <ArrowDown className="h-5 w-5 text-emerald-600" />
+  1706→                            </div>
+  1707→                            <div>
+  1708→                              <p className="font-bold text-emerald-700 dark:text-emerald-400">Effectuer un Dépôt</p>
+  1709→                              <p className="text-xs text-emerald-600/70 dark:text-emerald-400/70">Envoyez le montant via Wave pour activer votre commande</p>
+  1710→                            </div>
+  1711→                          </div>
+  1712→                        </div>
+  1713→
+  1714→                        <form
+  1715→                          onSubmit={(e) => {
+  1716→                            e.preventDefault()
+  1717→                            if (!walletAmount || !walletName || !walletPhone) {
+  1718→                              toast({ title: 'Champs requis', description: 'Veuillez remplir tous les champs.', variant: 'destructive' })
+  1719→                              return
+  1720→                            }
+  1721→                            const now = new Date().toLocaleString('fr-FR')
+  1722→                            setWalletTransactions(prev => [{ type: 'depot', amount: walletAmount, date: now, status: 'En attente' }, ...prev])
+  1723→                            toast({ title: 'Dépôt enregistré !', description: `Votre dépôt de ${formatPrice(Number(walletAmount))} a été soumis. Envoyez le montant via Wave.` })
+  1724→                            setWalletAmount('')
+  1725→                            setWalletName('')
+  1726→                            setWalletPhone('')
+  1727→                          }}
+  1728→                          className="space-y-4"
+  1729→                        >
+  1730→                          <div className="space-y-2">
+  1731→                            <Label htmlFor="wname">Nom complet *</Label>
+  1732→                            <Input id="wname" placeholder="Votre nom complet" value={walletName} onChange={(e) => setWalletName(e.target.value)} />
+  1733→                          </div>
+  1734→                          <div className="space-y-2">
+  1735→                            <Label htmlFor="wphone">Numéro Wave *</Label>
+  1736→                            <Input id="wphone" type="tel" placeholder="+223 XX XX XX XX" value={walletPhone} onChange={(e) => setWalletPhone(e.target.value)} />
+  1737→                          </div>
+  1738→                          <div className="space-y-2">
+  1739→                            <Label htmlFor="wamount">Montant (FCFA) *</Label>
+  1740→                            <div className="relative">
+  1741→                              <Input id="wamount" type="number" placeholder="Entrez le montant" value={walletAmount} onChange={(e) => setWalletAmount(e.target.value)} className="pr-20" />
+  1742→                              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-medium">FCFA</span>
+  1743→                            </div>
+  1744→                            <div className="flex gap-2 mt-2">
+  1745→                              {[{ label: '5 000', value: '5000' }, { label: '10 000', value: '10000' }, { label: '25 000', value: '25000' }, { label: '50 000', value: '50000' }].map((preset) => (
+  1746→                                <button key={preset.value} type="button" onClick={() => setWalletAmount(preset.value)}
+  1747→                                  className="flex-1 text-xs py-2 rounded-lg border hover:bg-accent transition-colors font-medium">
+  1748→                                  {preset.label}
+  1749→                                </button>
+  1750→                              ))}
+  1751→                            </div>
+  1752→                          </div>
+  1753→
+  1754→                          <div className="p-3 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
+  1755→                            <p className="text-xs text-amber-700 dark:text-amber-400 font-medium mb-1">Envoyez le montant à ce numéro :</p>
+  1756→                            <div className="flex items-center justify-between">
+  1757→                              <p className="text-lg font-bold text-amber-800 dark:text-amber-300">+223 97 78 72 44</p>
+  1758→                              <button type="button" onClick={() => { navigator.clipboard.writeText('+22397787244'); toast({ title: 'Copié !', description: 'Numéro copié dans le presse-papier.' }) }}
+  1759→                                className="flex items-center gap-1 text-xs text-amber-600 hover:text-amber-800 dark:text-amber-400 transition-colors">
+  1760→                                <Copy className="h-3.5 w-3.5" /> Copier
+  1761→                              </button>
+  1762→                            </div>
+  1763→                          </div>
+  1764→
+  1765→                          <Button type="submit" className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-5 text-base">
+  1766→                            <ArrowDown className="h-4 w-4 mr-2" /> Confirmer le dépôt
+  1767→                          </Button>
+  1768→                        </form>
+  1769→                      </motion.div>
+  1770→                    ) : (
+  1771→                      <motion.div
+  1772→                        key="retrait"
+  1773→                        initial={{ opacity: 0, x: 20 }}
+  1774→                        animate={{ opacity: 1, x: 0 }}
+  1775→                        exit={{ opacity: 0, x: -20 }}
+  1776→                        transition={{ duration: 0.3 }}
+  1777→                      >
+  1778→                        <div className="mb-6 p-4 rounded-xl bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800">
+  1779→                          <div className="flex items-center gap-3 mb-2">
+  1780→                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-100 dark:bg-orange-900/40">
+  1781→                              <ArrowUp className="h-5 w-5 text-orange-600" />
+  1782→                            </div>
+  1783→                            <div>
+  1784→                              <p className="font-bold text-orange-700 dark:text-orange-400">Demander un Retrait</p>
+  1785→                              <p className="text-xs text-orange-600/70 dark:text-orange-400/70">Vos gains seront envoyés sur votre numéro Wave</p>
+  1786→                            </div>
+  1787→                          </div>
+  1788→                        </div>
+  1789→
+  1790→                        <form
+  1791→                          onSubmit={(e) => {
+  1792→                            e.preventDefault()
+  1793→                            if (!walletAmount || !walletName || !walletPhone) {
+  1794→                              toast({ title: 'Champs requis', description: 'Veuillez remplir tous les champs.', variant: 'destructive' })
+  1795→                              return
+  1796→                            }
+  1797→                            const now = new Date().toLocaleString('fr-FR')
+  1798→                            setWalletTransactions(prev => [{ type: 'retrait', amount: walletAmount, date: now, status: 'En traitement' }, ...prev])
+  1799→                            toast({ title: 'Retrait demandé !', description: `Votre demande de retrait de ${formatPrice(Number(walletAmount))} a été soumise. Traitement sous 24h.` })
+  1800→                            setWalletAmount('')
+  1801→                            setWalletName('')
+  1802→                            setWalletPhone('')
+  1803→                          }}
+  1804→                          className="space-y-4"
+  1805→                        >
+  1806→                          <div className="space-y-2">
+  1807→                            <Label htmlFor="rname">Nom complet *</Label>
+  1808→                            <Input id="rname" placeholder="Votre nom complet" value={walletName} onChange={(e) => setWalletName(e.target.value)} />
+  1809→                          </div>
+  1810→                          <div className="space-y-2">
+  1811→                            <Label htmlFor="rphone">Numéro Wave *</Label>
+  1812→                            <Input id="rphone" type="tel" placeholder="+223 XX XX XX XX" value={walletPhone} onChange={(e) => setWalletPhone(e.target.value)} />
+  1813→                          </div>
+  1814→                          <div className="space-y-2">
+  1815→                            <Label htmlFor="ramount">Montant (FCFA) *</Label>
+  1816→                            <div className="relative">
+  1817→                              <Input id="ramount" type="number" placeholder="Entrez le montant" value={walletAmount} onChange={(e) => setWalletAmount(e.target.value)} className="pr-20" />
+  1818→                              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-medium">FCFA</span>
+  1819→                            </div>
+  1820→                          </div>
+  1821→
+  1822→                          <div className="p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
+  1823→                            <p className="text-xs text-blue-700 dark:text-blue-400 leading-relaxed">
+  1824→                              <ShieldCheck className="h-3.5 w-3.5 inline mr-1" />
+  1825→                              Le retrait sera traité sous 24 heures ouvrables. Assurez-vous que votre numéro Wave est correct.
+  1826→                            </p>
+  1827→                          </div>
+  1828→
+  1829→                          <Button type="submit" className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-5 text-base">
+  1830→                            <ArrowUp className="h-4 w-4 mr-2" /> Confirmer le retrait
+  1831→                          </Button>
+  1832→                        </form>
+  1833→                      </motion.div>
+  1834→                    )}
+  1835→                  </AnimatePresence>
+  1836→
+  1837→                  {/* Historique des transactions */}
+  1838→                  {walletTransactions.length > 0 && (
+  1839→                    <div className="mt-8 pt-6 border-t">
+  1840→                      <div className="flex items-center gap-2 mb-4">
+  1841→                        <History className="h-4 w-4 text-muted-foreground" />
+  1842→                        <h4 className="font-semibold text-sm">Historique des transactions</h4>
+  1843→                      </div>
+  1844→                      <div className="space-y-2">
+  1845→                        {walletTransactions.map((tx, i) => (
+  1846→                          <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-muted/50 border">
+  1847→                            <div className="flex items-center gap-3">
+  1848→                              <div className={`flex h-8 w-8 items-center justify-center rounded-full ${tx.type === 'depot' ? 'bg-emerald-100 dark:bg-emerald-900/30' : 'bg-orange-100 dark:bg-orange-900/30'}`}>
+  1849→                                {tx.type === 'depot' ? <ArrowDown className="h-4 w-4 text-emerald-600" /> : <ArrowUp className="h-4 w-4 text-orange-600" />}
+  1850→                              </div>
+  1851→                              <div>
+  1852→                                <p className="text-sm font-medium">{tx.type === 'depot' ? 'Dépôt' : 'Retrait'} — {formatPrice(Number(tx.amount))}</p>
+  1853→                                <p className="text-xs text-muted-foreground">{tx.date}</p>
+  1854→                              </div>
+  1855→                            </div>
+  1856→                            <Badge variant={tx.status === 'En attente' ? 'secondary' : 'outline'} className="text-xs">
+  1857→                              {tx.status}
+  1858→                            </Badge>
+  1859→                          </div>
+  1860→                        ))}
+  1861→                      </div>
+  1862→                    </div>
+  1863→                  )}
+  1864→                </CardContent>
+  1865→              </Card>
+  1866→            </FadeIn>
+  1867→          </div>
+  1868→        </section>
+  1869→
+  1870→        {/* ═══ POUR QUI + OUTILS + LIVRAISON ═══ */}
+  1871→        <section className="py-16 sm:py-20 bg-muted/30">
+  1872→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  1873→            {/* Pour qui */}
+  1874→            <FadeIn className="mb-12">
+  1875→              <div className="text-center mb-8">
+  1876→                <Badge variant="secondary" className="mb-3 bg-blue-100 text-blue-700 border-blue-200">
+  1877→                  <UserCheck className="h-3 w-3 mr-1" /> Cible
+  1878→                </Badge>
+  1879→                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Pour Qui Sont Nos Services ?</h2>
+  1880→              </div>
+  1881→              <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+  1882→                {[
+  1883→                  { icon: Target, title: 'Entrepreneurs', desc: 'Créez une identité visuelle forte pour votre business et attirez plus de clients avec des designs professionnels.', image: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=300&h=200&fit=crop' },
+  1884→                  { icon: GraduationCap, title: 'Étudiants', desc: 'Développez vos compétences en design et digital avec nos formations abordables et nos outils pro.', image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=300&h=200&fit=crop' },
+  1885→                  { icon: Building2, title: 'Entreprises', desc: 'Renforcez votre image de marque avec des supports de communication professionnels et modernes.', image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=300&h=200&fit=crop' },
+  1886→                  { icon: Sparkles, title: 'Créateurs de contenu', desc: 'Boostez votre production de contenu avec du montage vidéo pro, des visuels réseaux sociaux et des outils premium.', image: 'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=300&h=200&fit=crop' },
+  1887→                ].map((item) => (
+  1888→                  <motion.div key={item.title} variants={cardVariants}>
+  1889→                    <Card className="h-full border-0 shadow-md text-center hover:shadow-xl transition-all duration-300 overflow-hidden group">
+  1890→                      <div className="relative h-32 overflow-hidden">
+  1891→                        <img src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+  1892→                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+  1893→                        <div className="absolute bottom-3 left-1/2 -translate-x-1/2">
+  1894→                          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white shadow-lg">
+  1895→                            <item.icon className="h-6 w-6 text-amber-600" />
+  1896→                          </div>
+  1897→                        </div>
+  1898→                      </div>
+  1899→                      <CardContent className="p-5">
+  1900→                        <h3 className="font-bold text-sm mb-2">{item.title}</h3>
+  1901→                        <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
+  1902→                      </CardContent>
+  1903→                    </Card>
+  1904→                  </motion.div>
+  1905→                ))}
+  1906→              </StaggerContainer>
+  1907→            </FadeIn>
+  1908→
+  1909→            <div className="grid lg:grid-cols-2 gap-8 mt-12">
+  1910→              {/* Outils utilisés */}
+  1911→              <FadeIn>
+  1912→                <Card className="border-0 shadow-lg h-full">
+  1913→                  <CardContent className="p-6 sm:p-8">
+  1914→                    <h3 className="text-lg font-bold mb-2 flex items-center gap-2">
+  1915→                      <Wrench className="h-5 w-5 text-amber-500" /> Outils Utilisés
+  1916→                    </h3>
+  1917→                    <p className="text-xs text-muted-foreground mb-5">Les outils professionnels qui garantissent la qualité de mes créations.</p>
+  1918→                    <div className="grid grid-cols-2 gap-3">
+  1919→                      {[
+  1920→                        { name: 'CapCut Pro', desc: 'Montage vidéo' },
+  1921→                        { name: 'Canva Pro', desc: 'Design rapide' },
+  1922→                        { name: 'PicsArt Pro', desc: 'Design mobile' },
+  1923→                        { name: 'Outils web pro', desc: 'Sites web' },
+  1924→                      ].map((outil) => (
+  1925→                        <div key={outil.name} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border">
+  1926→                          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 flex-shrink-0">
+  1927→                            <Wrench className="h-4 w-4 text-amber-600" />
+  1928→                          </div>
+  1929→                          <div>
+  1930→                            <p className="text-xs font-bold">{outil.name}</p>
+  1931→                            <p className="text-[10px] text-muted-foreground">{outil.desc}</p>
+  1932→                          </div>
+  1933→                        </div>
+  1934→                      ))}
+  1935→                    </div>
+  1936→                  </CardContent>
+  1937→                </Card>
+  1938→              </FadeIn>
+  1939→
+  1940→              {/* Livraison numérique */}
+  1941→              <FadeIn delay={0.1}>
+  1942→                <Card className="border-0 shadow-lg h-full">
+  1943→                  <CardContent className="p-6 sm:p-8">
+  1944→                    <h3 className="text-lg font-bold mb-2 flex items-center gap-2">
+  1945→                      <FolderDown className="h-5 w-5 text-emerald-500" /> Livraison Numérique
+  1946→                    </h3>
+  1947→                    <p className="text-xs text-muted-foreground mb-5">Vos fichiers livrés rapidement et en toute sécurité.</p>
+  1948→                    <div className="space-y-3">
+  1949→                      {[
+  1950→                        { icon: MessageCircle, label: 'Fichiers envoyés via WhatsApp', detail: 'Réception instantanée' },
+  1951→                        { icon: Globe, label: 'Google Drive', detail: 'Dossier partagé sécurisé' },
+  1952→                        { icon: Zap, label: 'Devis gratuit', detail: 'Selon le délai annoncé' },
+  1953→                        { icon: Shield, label: 'Fichiers haute qualité', detail: 'Format source + export' },
+  1954→                      ].map((item) => (
+  1955→                        <div key={item.label} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border">
+  1956→                          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex-shrink-0">
+  1957→                            <item.icon className="h-4 w-4 text-emerald-600" />
+  1958→                          </div>
+  1959→                          <div className="flex-1">
+  1960→                            <p className="text-xs font-bold">{item.label}</p>
+  1961→                            <p className="text-[10px] text-muted-foreground">{item.detail}</p>
+  1962→                          </div>
+  1963→                          <CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" />
+  1964→                        </div>
+  1965→                      ))}
+  1966→                    </div>
+  1967→                  </CardContent>
+  1968→                </Card>
+  1969→              </FadeIn>
+  1970→            </div>
+  1971→          </div>
+  1972→        </section>
+  1973→
+  1974→        {/* ═══ À PROPOS ═══ */}
+  1975→        <section id="apropos" className="py-16 sm:py-20">
+  1976→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  1977→            <div className="grid lg:grid-cols-2 gap-12 items-center">
+  1978→              <FadeIn>
+  1979→                <div className="relative">
+  1980→                  <div className="rounded-2xl overflow-hidden shadow-xl h-[400px] relative">
+  1981→                    <img src="/demo-photo.png" alt="SK Designer Luxe par Sacko - À propos" className="w-full h-full object-cover" />
+  1982→                    <div className="absolute inset-0 bg-gradient-to-t from-amber-900/80 via-amber-900/30 to-transparent" />
+  1983→                    <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+  1984→                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mb-3">
+  1985→                        <Palette className="h-7 w-7" />
+  1986→                      </div>
+  1987→                      <h3 className="text-2xl font-bold">SK Designer Luxe</h3>
+  1988→                      <p className="mt-1 text-white/80 text-sm">Créateur Digital &bull; Bamako, Mali</p>
+  1989→                    </div>
+  1990→                  </div>
+  1991→                  <div className="absolute -bottom-6 -right-6 bg-white dark:bg-card rounded-2xl p-5 shadow-xl border hidden sm:block">
+  1992→                    <div className="flex items-center gap-3">
+  1993→                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
+  1994→                        <Zap className="h-5 w-5 text-amber-600" />
+  1995→                      </div>
+  1996→                      <div>
+  1997→                        <p className="text-lg font-bold">50+ Projets livrés</p>
+  1998→                        <p className="text-xs text-muted-foreground">À Bamako et au-delà</p>
+  1999→                      </div>
+  2000→                    </div>
+
+[showing lines 1-2000 of 3586; use offset=2001 with limit to continue reading]

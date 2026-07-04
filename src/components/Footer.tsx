@@ -64,7 +64,7 @@ export default function Footer() {
           <div>
             <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">Navigation</h3>
             <ul className="space-y-2.5">
-              {['Accueil', 'Services', 'Formations', 'Portfolio', 'Blog', 'FAQ', 'Parrainage', 'Contact'].map((item) => (
+              {['Accueil', 'Services', 'Formations', 'Portfolio', 'Blog', 'FAQ', 'Contact'].map((item) => (
                 <li key={item}>
                   <a
                     href={`#${item.toLowerCase()}`}
@@ -79,7 +79,7 @@ export default function Footer() {
 
           {/* Services */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">Nos Services</h3>
+            <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">Mes Services</h3>
             <ul className="space-y-2.5">
               {['Design Graphique', 'Création de Logo', 'Site Web', 'Montage Vidéo', 'Marketing Digital', 'Formation Design', 'CapCut Pro', 'PicsArt Pro'].map((item) => (
                 <li key={item}>
@@ -114,13 +114,7 @@ export default function Footer() {
                 </a>
               </li>
             </ul>
-            <div className="mt-4 p-3.5 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/10 dark:to-orange-900/10 border border-amber-200/60 dark:border-amber-800/40">
-              <p className="text-xs font-semibold text-amber-700 dark:text-amber-400 flex items-center gap-1.5">
-                <span className="flex h-5 w-5 items-center justify-center rounded-md bg-amber-500 text-white text-[10px] font-bold">W</span>
-                Paiement via Wave
-              </p>
-              <p className="text-xs text-muted-foreground mt-1 font-mono">+223 97 78 72 44</p>
-            </div>
+
           </div>
         </div>
 

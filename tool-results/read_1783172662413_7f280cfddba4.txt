@@ -1,0 +1,302 @@
+   200→              )}
+   201→            </div>
+   202→            <div className="absolute bottom-3 right-3">
+   203→              <span className={`font-bold text-lg drop-shadow-lg ${product.price === 0 ? 'text-emerald-300' : 'text-white'}`}>{formatPrice(product.price)}</span>
+   204→            </div>
+   205→            {/* Hover overlay */}
+   206→            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100">
+   207→              <Button size="sm" variant="secondary" className="rounded-full shadow-lg" onClick={() => setSelected(product)}>
+   208→                <Eye className="h-4 w-4 mr-1" /> Détails
+   209→              </Button>
+   210→              <Button size="sm" className="rounded-full shadow-lg bg-emerald-500 hover:bg-emerald-600 text-white" onClick={() => handleWhatsApp(product)}>
+   211→                <MessageCircle className="h-4 w-4 mr-1" /> Obtenir
+   212→              </Button>
+   213→            </div>
+   214→          </div>
+   215→          {/* Content */}
+   216→          <CardContent className="flex-1 p-4 flex flex-col gap-2">
+   217→            <h3 className="font-semibold text-sm leading-snug">{product.name}</h3>
+   218→            <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed flex-1">{product.description}</p>
+   219→            <div className="flex items-center justify-between pt-1">
+   220→              <span className={`text-base font-bold ${product.price === 0 ? 'text-emerald-600' : 'text-amber-600'}`}>{formatPrice(product.price)}</span>
+   221→              <Button
+   222→                variant="ghost"
+   223→                size="sm"
+   224→                className="h-8 text-emerald-500 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 md:hidden"
+   225→                onClick={() => handleWhatsApp(product)}
+   226→              >
+   227→                <MessageCircle className="h-4 w-4" />
+   228→              </Button>
+   229→            </div>
+   230→          </CardContent>
+   231→        </Card>
+   232→      </motion.div>
+   233→
+   234→      {/* Detail Dialog */}
+   235→      <Dialog open={!!selected} onOpenChange={() => setSelected(null)}>
+   236→        <DialogContent className="sm:max-w-lg">
+   237→          <DialogHeader>
+   238→            <DialogTitle className="text-xl flex items-center gap-2">
+   239→              <Icon className="h-5 w-5 text-amber-500" />
+   240→              {selected?.name}
+   241→            </DialogTitle>
+   242→            <DialogDescription>{selected ? categoryLabel : ''} — SK Designer Luxe</DialogDescription>
+   243→          </DialogHeader>
+   244→          {selected && (
+   245→            <div className="space-y-4">
+   246→              {selected.image && (
+   247→                <div className="rounded-lg overflow-hidden aspect-video bg-muted">
+   248→                  <img src={selected.image} alt={selected.name} className="w-full h-full object-cover" />
+   249→                </div>
+   250→              )}
+   251→              <p className="text-sm text-muted-foreground leading-relaxed">{selected.description}</p>
+   252→              <div className="flex items-center justify-between pt-2">
+   253→                <span className={`text-2xl font-bold ${selected.price === 0 ? 'text-emerald-600' : 'text-amber-600'}`}>{formatPrice(selected.price)}</span>
+   254→                <a href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je souhaite obtenir : ${selected.name}.\n\nDescription : ${selected.description || ''}\nPrix : ${formatPrice(selected.price)}\n\nMerci !`)}`} target="_blank" rel="noopener noreferrer" onClick={() => setSelected(null)}>
+   255→                  <Button
+   256→                    className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold"
+   257→                  >
+   258→                    <MessageCircle className="h-4 w-4 mr-2" /> Obtenir via WhatsApp
+   259→                  </Button>
+   260→                </a>
+   261→              </div>
+   262→            </div>
+   263→          )}
+   264→        </DialogContent>
+   265→      </Dialog>
+   266→    </>
+   267→  )
+   268→}
+   269→
+   270→/* ─── Competence Item ─── */
+   271→function CompetenceItem({ text, icon: Icon, delay = 0 }: { text: string; icon: React.ElementType; delay?: number }) {
+   272→  const ref = useRef(null)
+   273→  const isInView = useInView(ref, { once: true, margin: '-30px' })
+   274→  return (
+   275→    <motion.div
+   276→      ref={ref}
+   277→      initial={{ opacity: 0, x: -20 }}
+   278→      animate={isInView ? { opacity: 1, x: 0 } : {}}
+   279→      transition={{ duration: 0.4, delay, ease: 'easeOut' }}
+   280→      className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent/50 transition-colors"
+   281→    >
+   282→      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 flex-shrink-0 mt-0.5">
+   283→        <Icon className="h-4 w-4 text-amber-600" />
+   284→      </div>
+   285→      <p className="text-sm leading-relaxed">{text}</p>
+   286→    </motion.div>
+   287→  )
+   288→}
+   289→
+   290→/* ─── Pricing Card ─── */
+   291→function PricingCard({ name, price, description, icon: Icon, delay = 0 }: { name: string; price: number; description: string; icon: React.ElementType; delay?: number }) {
+   292→  return (
+   293→    <FadeIn delay={delay}>
+   294→      <Card className="relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 group">
+   295→        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-400 to-orange-500" />
+   296→        <CardContent className="p-6">
+   297→          <div className="flex items-start justify-between mb-4">
+   298→            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30 group-hover:bg-amber-500 group-hover:text-white transition-colors duration-300">
+   299→              <Icon className="h-6 w-6 text-amber-600 group-hover:text-white transition-colors duration-300" />
+   300→            </div>
+   301→            <Badge variant="secondary" className={price === 0 ? 'text-emerald-600 font-medium bg-emerald-100 dark:bg-emerald-900/30' : 'text-amber-600 font-medium'}>
+   302→              {formatPrice(price)}
+   303→            </Badge>
+   304→          </div>
+   305→          <h3 className="font-bold text-lg mb-2">{name}</h3>
+   306→          <p className="text-sm text-muted-foreground leading-relaxed mb-4">{description}</p>
+   307→          <a href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je souhaite obtenir : ${name} (${formatPrice(price)}). Merci !`)}`} target="_blank" rel="noopener noreferrer">
+   308→            <Button className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold">
+   309→              <MessageCircle className="h-4 w-4 mr-2" /> Obtenir via WhatsApp
+   310→            </Button>
+   311→          </a>
+   312→        </CardContent>
+   313→      </Card>
+   314→    </FadeIn>
+   315→  )
+   316→}
+   317→
+   318→/* ─── Animated Counter ─── */
+   319→function Counter({ target, duration = 1500, suffix = '', prefix = '' }: { target: number; duration?: number; suffix?: string; prefix?: string }) {
+   320→  const [count, setCount] = useState(0)
+   321→  const elementRef = useRef<HTMLSpanElement>(null)
+   322→  const hasAnimated = useRef(false)
+   323→
+   324→  useEffect(() => {
+   325→    const observer = new IntersectionObserver(
+   326→      ([entry]) => {
+   327→        if (entry.isIntersecting && !hasAnimated.current) {
+   328→          hasAnimated.current = true
+   329→          let startTime: number | null = null
+   330→          const startValue = 0
+   331→
+   332→          const animate = (timestamp: number) => {
+   333→            if (!startTime) startTime = timestamp
+   334→            const progress = Math.min((timestamp - startTime) / duration, 1)
+   335→            const easeProgress = progress * (2 - progress)
+   336→            const currentValue = Math.floor(easeProgress * (target - startValue) + startValue)
+   337→            setCount(currentValue)
+   338→
+   339→            if (progress < 1) {
+   340→              requestAnimationFrame(animate)
+   341→            }
+   342→          }
+   343→
+   344→          requestAnimationFrame(animate)
+   345→        }
+   346→      },
+   347→      { threshold: 0.2 }
+   348→    )
+   349→
+   350→    if (elementRef.current) {
+   351→      observer.observe(elementRef.current)
+   352→    }
+   353→
+   354→    return () => observer.disconnect()
+   355→  }, [target, duration])
+   356→
+   357→  return (
+   358→    <span ref={elementRef} className="tabular-nums">
+   359→      {prefix}{count.toLocaleString('fr-FR')}{suffix}
+   360→    </span>
+   361→  )
+   362→}
+   363→
+   364→/* ═══════════════════════════════════════════════
+   365→   MAIN PAGE
+   366→   ═══════════════════════════════════════════════ */
+   367→export default function Home() {
+   368→  const [products, setProducts] = useState<Product[]>([])
+   369→  const [loading, setLoading] = useState(true)
+   370→  const [activeFilter, setActiveFilter] = useState('all')
+   371→  const [searchQuery, setSearchQuery] = useState('')
+   372→  const [contactData, setContactData] = useState({ name: '', email: '', subject: '', message: '' })
+   373→  const [sending, setSending] = useState(false)
+   374→  const [showBanner, setShowBanner] = useState(true)
+   375→  const [showBackToTop, setShowBackToTop] = useState(false)
+   376→  const [showChatPopup, setShowChatPopup] = useState(true)
+   377→  const [countdown, setCountdown] = useState({ hours: 23, minutes: 59, seconds: 59 })
+   378→  const [walletTab, setWalletTab] = useState<'depot' | 'retrait'>('depot')
+   379→  const [walletAmount, setWalletAmount] = useState('')
+   380→  const [walletName, setWalletName] = useState('')
+   381→  const [walletPhone, setWalletPhone] = useState('')
+   382→  const [walletTransactions, setWalletTransactions] = useState<{type: 'depot' | 'retrait'; amount: string; date: string; status: string}[]>([])
+   383→  const [serviceCategory, setServiceCategory] = useState('all')
+   384→  const [portfolioFilter, setPortfolioFilter] = useState('Tous')
+   385→  const [quickOrder, setQuickOrder] = useState({ service: '', name: '', phone: '', description: '' })
+   386→  const [selectedArticle, setSelectedArticle] = useState<typeof blogArticles[number] | null>(null)
+   387→  const [legalPage, setLegalPage] = useState<'mentions' | 'confidentialite' | null>(null)
+   388→  const { toast } = useToast()
+   389→
+   390→  // ═══ BLOG ARTICLES DATA ═══
+   391→  const blogArticles = [
+   392→    {
+   393→      title: '5 conseils pour créer un logo mémorable',
+   394→      excerpt: "Découvrez les règles essentielles pour concevoir un logo qui marque les esprits et reste gravé dans la mémoire de votre audience.",
+   395→      category: 'Design',
+   396→      date: '28 Juin 2026',
+   397→      readTime: '4 min',
+   398→      color: 'bg-amber-100 text-amber-700',
+   399→      image: 'https://sfile.chatglm.cn/images-ppt/b90eaf7f2e0c.jpg',
+   400→      content: `Un logo est bien plus qu'une simple image : c'est le visage de votre marque, le premier contact visuel avec votre public. Voici cinq conseils fondamentaux pour créer un logo qui reste gravé dans les mémoires.\n\n**1. La simplicité avant tout**\nLes meilleurs logos sont ceux qui sont simples et immédiatement reconnaissables. Pensez au logo d'Apple, de Nike ou de McDonald's : des formes épurées, sans surcharge visuelle. Un logo trop complexe est difficile à mémoriser et à reproduire sur différents supports. Limitez-vous à deux ou trois couleurs maximum et évitez les détails superflus qui ne seront pas visibles en petite taille.\n\n**2. Pensez à la polyvalence**\nVotre logo doit fonctionner sur tous les supports : cartes de visite, affiches, site web, réseaux sociaux, tee-shirts, et même en noir et blanc. Testez toujours votre création à différentes tailles et sur différents fonds pour vérifier sa lisibilité et son impact visuel. Un bon logo reste efficace qu'il soit affiché sur un écran géant ou imprimé sur un stylo.\n\n**3. Choisissez les bonnes couleurs**\nChaque couleur évoque une émotion différente. Le bleu inspire la confiance, le rouge l'urgence et la passion, le vert la nature et la croissance, le jaune l'optimisme. Pour une entreprise au Mali, pensez également aux couleurs qui résonnent avec votre public cible et votre secteur d'activité. La cohérence chromatique est essentielle pour renforcer l'identité de votre marque.\n\n**4. La typographie compte**\nLa police de caractère que vous choisissez pour votre logo en dit long sur votre marque. Une police serif classique évoque le prestige et la tradition, tandis qu'une police sans-serif moderne communique l'innovation et la simplicité. Évitez les polices trop décoratives qui peuvent devenir illisibles. L'idéal est d'utiliser une police unique ou d'en combiner deux au maximum.\n\n**5. Rendez-le intemporel**\nÉvitez de suivre les tendances éphémères qui datent rapidement. Un bon logo doit rester pertinent pendant des années, voire des décennies. Regardez les marques les plus prestigieuses : leur logo a peu changé depuis leur création. Concentrez-vous sur l'essence de votre marque plutôt que sur les effets de mode du moment.\n\nChez SK Designer Luxe, nous appliquons ces principes à chaque création. Chaque logo est conçu sur mesure pour refléter l'identité unique de votre entreprise et marquer les esprits de votre audience. Discutons de votre projet pour discuter de votre projet !`
+   401→    },
+   402→    {
+   403→      title: 'Comment réussir en digital en 2026',
+   404→      excerpt: "Les stratégies clés pour se démarquer dans le monde du digital cette année. Marketing, design et présence en ligne.",
+   405→      category: 'Digital',
+   406→      date: '25 Juin 2026',
+   407→      readTime: '6 min',
+   408→      color: 'bg-emerald-100 text-emerald-700',
+   409→      image: 'https://sfile.chatglm.cn/images-ppt/6345c222842a.jpg',
+   410→      content: `Le paysage digital évolue à une vitesse vertigineuse, et 2026 n'est pas une exception. Que vous soyez entrepreneur, freelancer ou créateur de contenu à Bamako, voici les stratégies essentielles pour réussir votre transition numérique et vous démarquer de la concurrence.\n\n**1. Investissez dans une identité visuelle forte**\nDans un monde saturé de contenus visuels, votre identité graphique est votre meilleur atout. Un logo professionnel, une charte graphique cohérente et des visuels de qualité sont indispensables pour inspirer confiance et attirer des clients. Les entreprises qui investissent dans leur branding voient en moyenne une augmentation de 23% de leurs revenus. Ne sous-estimez jamais le pouvoir d'un premier visuel impactant.\n\n**2. Maîtrisez les réseaux sociaux**\nLes réseaux sociaux sont le canal d'acquisition client le plus efficace au Mali en 2026. Instagram, TikTok et Facebook dominent le marché. Créez du contenu régulier, authentique et engageant. Utilisez des outils professionnels comme CapCut Pro et PicsArt Pro pour des visuels et vidéos qui sortent du lot. La constance est la clé : publiez au minimum trois fois par semaine et interagissez avec votre communauté quotidiennement.\n\n**3. Ayez un site web professionnel**\nUn site web est votre vitrine ouverte 24h/24. En 2026, ne pas avoir de site web professionnel, c'est comme avoir un magasin sans enseigne. Un site vitrine bien conçu booste votre crédibilité et vous permet de toucher des clients au-delà de Bamako, dans tout le Mali et même en Afrique de l'Ouest. Optez pour un design moderne, rapide sur mobile et optimisé pour les moteurs de recherche.\n\n**4. Le marketing digital accessible à tous**\nVous n'avez pas besoin d'un gros budget pour faire du marketing digital efficace. Commencez par optimiser vos profils sociaux, créez du contenu à valeur ajoutée, et utilisez les publicités ciblées avec un petit budget. Les stories Instagram, les reels TikTok et les publications Facebook restent les formats les plus performants pour atteindre votre audience cible au Mali.\n\n**5. Automatisez et optimisez**\nUtilisez les outils numériques pour gagner du temps : planification des publications, réponses automatiques, gestion de la relation client. Plus vous automatisez les tâches répétitives, plus vous pouvez vous concentrer sur la création de valeur et le développement de votre activité. C'est un investissement qui paie rapidement.\n\nChez SK Designer Luxe, nous vous accompagnons dans chacune de ces étapes. De la création de votre identité visuelle au développement de votre site web, nous avons les outils et l'expertise pour propulser votre présence digitale. Contactez-nous pour un diagnostic gratuit de votre présence en ligne !`
+   411→    },
+   412→    {
+   413→      title: 'Les tendances design graphique à suivre',
+   414→      excerpt: "Minimalisme, gradients, typographies audacieuses... Tour d'horizon des tendances qui dominent le design cette année.",
+   415→      category: 'Tendances',
+   416→      date: '22 Juin 2026',
+   417→      readTime: '5 min',
+   418→      color: 'bg-purple-100 text-purple-700',
+   419→      image: 'https://sfile.chatglm.cn/images-ppt/d247ebeec9b2.jpg',
+   420→      content: `Le design graphique est en constante évolution, et rester à jour avec les dernières tendances est essentiel pour tout créateur ou entrepreneur soucieux de l'image de sa marque. Voici les tendances qui dominent le design graphique en 2026.\n\n**1. Le néo-minimalisme**\nLe minimalisme revient en force, mais avec une touche moderne. Fini les designs trop froids et stériles : le néo-minimalisme intègre des textures subtiles, des gradients doux et des micro-animations qui apportent de la vie sans surcharger. L'idée est de communiquer un maximum d'information avec un minimum d'éléments, tout en créant une expérience visuelle agréable et mémorable.\n\n**2. Les typographies audacieuses**\nEn 2026, la typographie devient le protagoniste du design. Les polices surdimensionnées, les lettres déformées, les mots disposés verticalement ou en spirale : tout est permis tant que le message reste lisible. Cette tendance est particulièrement visible sur les affiches événementielles et les visuels pour les réseaux sociaux, où l'impact immédiat est primordial.\n\n**3. Les gradients évolués**\nLes gradients ne sont pas nouveaux, mais en 2026, ils se font plus sophistiqués. On voit des dégradés de couleurs inattendues (mélange de pastel et de néon), des mesh gradients qui simulent des effets 3D, et des transitions de couleurs fluides qui créent de la profondeur. Cette technique est parfaite pour les fonds de site web, les affiches et les identités de marque dynamiques.\n\n**4. Le design inclusif et culturel**\nUne tendance forte en Afrique et particulièrement au Mali : l'intégration d'éléments culturels dans le design moderne. Les motifs traditionnels réinterprétés, les couleurs inspirées du patrimoine local, les typographies qui rendent hommage aux langues africaines. C'est une façon de créer des designs uniques qui racontent une histoire et renforcent l'identité culturelle tout en restant contemporains et professionnels.\n\n**5. L'intelligence artificielle comme outil créatif**\nL'IA est devenue un outil incontournable pour les designers. Elle permet de générer des concepts rapides, d'explorer des directions créatives et d'accélérer les processus de production. Cependant, la touche humaine reste irremplaçable pour le raffinement, la cohérence et l'émotion. Les meilleurs designers en 2026 sont ceux qui combinent la puissance de l'IA avec leur sensibilité artistique.\n\nCes tendances inspirent chacune de nos créations chez SK Designer Luxe. Nous intégrons les meilleures pratiques actuelles tout en adaptant chaque projet au contexte local et aux besoins spécifiques de nos clients. Envie d'un design tendance et unique ? Parlons de votre projet !`
+   421→    },
+   422→    {
+   423→      title: "Pourquoi votre entreprise a besoin d'un site web",
+   424→      excerpt: "Un site web professionnel est devenu indispensable pour toute entreprise. Découvrez pourquoi investir dans un site vitrine.",
+   425→      category: 'Site Web',
+   426→      date: '18 Juin 2026',
+   427→      readTime: '5 min',
+   428→      color: 'bg-blue-100 text-blue-700',
+   429→      image: 'https://sfile.chatglm.cn/images-ppt/1e6a7645314b.png',
+   430→      content: `En 2026, ne pas avoir de site web professionnel équivaut à être invisible pour une grande partie de votre marché potentiel. Voici pourquoi chaque entreprise, même la plus petite, a besoin d'une présence en ligne structurée et professionnelle.\n\n**1. Une vitrine ouverte 24h/24 et 7j/7**\nVotre site web travaille pour vous même quand vous dormez. Un client potentiel peut découvrir vos services, consulter votre portfolio, lire vos tarifs et vous contacter à tout moment. Au Mali, de plus en plus de consommateurs utilisent internet pour rechercher des services locaux avant de prendre une décision d'achat. Sans site web, vous perdez ces clients au profit de concurrents qui ont compris l'importance du digital.\n\n**2. Crédibilité et professionnalisme**\nUn site web bien conçu renforce instantanément la crédibilité de votre entreprise. Lorsqu'un client potentiel recherche votre nom ou votre activité et trouve un site professionnel avec des informations claires, des témoignages et un portfolio de qualité, il est beaucoup plus enclin à faire confiance. À l'inverse, l'absence de site web peut susciter des doutes sur le sérieux de l'entreprise.\n\n**3. Atteindre au-delà de Bamako**\nUn site web vous permet de toucher des clients dans tout le Mali, en Afrique de l'Ouest et même dans le monde entier. Vos services de design, création de logos ou montage vidéo ne sont pas limités géographiquement. Un portfolio en ligne bien organisé est votre meilleur outil de vente, accessible depuis n'importe où. C'est particulièrement vrai pour les freelancers et les petites entreprises qui cherchent à élargir leur clientèle.\n\n**4. Un investissement rentable**\nContrairement à ce que beaucoup pensent, créer un site web professionnel n'est pas un luxe réservé aux grandes entreprises. Avec des solutions modernes et des créateurs talentueux à Bamako, vous pouvez avoir un site vitrine de qualité à partir de 25 000 FCFA. C'est un investissement qui se rentabilise rapidement grâce aux nouveaux clients qu'il génère et à l'image professionnelle qu'il projette.\n\n**5. Optimisation pour les réseaux sociaux**\nVotre site web est le hub central de votre présence digitale. Tous vos profils sur les réseaux sociaux (Instagram, Facebook, TikTok) doivent renvoyer vers votre site web. C'est là que les clients trouvent toutes les informations détaillées, passent commande et vous contactent directement. Un site web structuré avec des appels à l'action clairs transforme les visiteurs en clients.\n\nChez SK Designer Luxe, nous créons des sites web professionnels, modernes et optimisés pour convertir les visiteurs en clients. Chaque site est conçu sur mesure avec un design responsive, une navigation intuitive et un temps de chargement rapide. Contactez-nous pour donner à votre entreprise la présence en ligne qu'elle mérite !`
+   431→    },
+   432→    {
+   433→      title: 'Les outils indispensables pour un créateur de contenu',
+   434→      excerpt: "CapCut Pro, PicsArt Pro, Canva... Découvrez les outils qui feront la différence dans votre production de contenu.",
+   435→      category: 'Outils',
+   436→      date: '15 Juin 2026',
+   437→      readTime: '7 min',
+   438→      color: 'bg-red-100 text-red-700',
+   439→      image: 'https://sfile.chatglm.cn/images-ppt/0dcd8f4f7dd4.jpeg',
+   440→      content: `La création de contenu de qualité nécessite les bons outils. Que vous soyez créateur de contenu sur les réseaux sociaux, entrepreneur ou passionné de design, voici les outils indispensables qui feront la différence dans votre production.\n\n**1. CapCut Pro : le roi du montage vidéo**\nCapCut Pro est devenu l'outil de montage vidéo incontournable pour les créateurs de contenu. Sa version Pro débloque des fonctionnalités avancées : effets spéciaux premium, transitions cinématiques, suppression automatique de fond, templates professionnels et export en haute qualité. Pour les créateurs maliens qui produisent du contenu pour TikTok, Instagram Reels ou YouTube, CapCut Pro est un investissement qui transforme la qualité de vos vidéos.\n\n**2. PicsArt Pro : l'atelier de design mobile**\nPicsArt Pro offre des centaines d'outils de retouche photo, de création graphique et de montage. Avec la version Pro, vous accédez à des filtres premium, des stickers exclusifs, des outils AI de suppression d'arrière-plan et des templates professionnels. C'est l'outil parfait pour créer des visuels de qualité pour les réseaux sociaux, des affiches promotionnelles ou des stories engageantes directement depuis votre téléphone.\n\n**3. Canva : le design accessible à tous**\nCanva a révolutionné le design graphique en le rendant accessible à tous. Avec son interface intuitive et ses milliers de templates, même sans compétences en design, vous pouvez créer des visuels professionnels. La version Pro offre encore plus de possibilités : images premium, outils de branding, planification des publications et collaboration en équipe. C'est l'outil idéal pour les entrepreneurs qui veulent gérer eux-mêmes leur communication visuelle.\n\n**4. Les outils de gestion et planification**\nAu-delà de la création, la planification est essentielle. Des outils comme Buffer, Later ou Planoly vous permettent de programmer vos publications à l'avance, d'analyser vos performances et d'optimiser votre stratégie de contenu. Une bonne organisation est souvent ce qui sépare les créateurs qui réussissent de ceux qui abandonnent.\n\n**5. L'importance d'avoir les versions Pro**\nLes versions gratuites de ces outils sont utiles, mais les versions Pro font une réelle différence dans la qualité finale de votre contenu. Les effets premium, l'absence de filigrane, les exports en haute résolution et les templates exclusifs justifient largement l'investissement. Chez SK Designer Luxe, nous proposons l'activation de CapCut Pro et PicsArt Pro à des prix accessibles pour tous les créateurs au Mali.\n\nInvestir dans les bons outils, c'est investir dans la qualité de votre contenu et, ultimement, dans la croissance de votre audience et de votre entreprise. SK Designer Luxe vous aide à accéder à ces outils premium à des tarifs imbattables. Contactez-nous pour en savoir plus !`
+   441→    },
+   442→    {
+   443→      title: 'Comment attirer des clients avec le marketing digital',
+   444→      excerpt: "Réseaux sociaux, publicité en ligne, branding... Les techniques éprouvées pour développer votre clientèle.",
+   445→      category: 'Marketing',
+   446→      date: '10 Juin 2026',
+   447→      readTime: '6 min',
+   448→      color: 'bg-teal-100 text-teal-700',
+   449→      image: 'https://sfile.chatglm.cn/images-ppt/b994c44a4327.jpg',
+   450→      content: `Le marketing digital est le levier de croissance le plus puissant et le plus accessible pour les entreprises au Mali. Voici les techniques éprouvées pour attirer des clients et développer votre activité, même avec un petit budget.\n\n**1. Construisez une marque forte**\nTout commence par l'identité visuelle. Un logo professionnel, des couleurs cohérentes et un ton de communication défini sont les fondations de votre stratégie marketing. Les clients font confiance aux marques qui ont une identité claire et cohérente. Investissez dans un logo de qualité, créez une charte graphique et appliquez-la systématiquement sur tous vos supports de communication. C'est la base de toute stratégie digitale réussie.\n\n**2. Le contenu est roi**\nCréez du contenu qui apporte de la valeur à votre audience. Tutoriels, avant-après, coulisses de votre travail, témoignages clients, conseils professionnels : chaque publication doit donner envie à votre audience de revenir et de s'engager. Au Mali, le contenu vidéo est particulièrement efficace sur TikTok et Instagram. Montrez votre savoir-faire, partagez vos réalisations et racontez l'histoire de votre entreprise.\n\n**3. Exploitez la publicité ciblée**\nMême avec un petit budget de 5 000 à 10 000 FCFA par semaine, vous pouvez atteindre des milliers de personnes grâce à la publicité Facebook et Instagram. Ciblez votre audience par localisation (Bamako, Mali), par centres d'intérêt et par démographie. Testez différentes créations publicitaires et mesurez les résultats pour optimiser vos campagnes. Le retour sur investissement peut être spectaculaire.\n\n**4. Le bouche-à-oreille digital**\nEncouragez vos clients satisfaits à laisser des avis, à taguer votre entreprise sur leurs publications et à recommander vos services. Un système de parrainage, comme celui proposé par SK Designer Luxe, est un excellent moyen de transformer vos clients existants en ambassadeurs de votre marque. Chaque client satisfait peut vous apporter 2 à 3 nouveaux clients grâce aux recommandations.\n\n**5. Soyez présent là où vos clients sont**\nIdentifiez les plateformes où votre audience cible passe le plus de temps. Pour le marché malien, Facebook et Instagram sont incontournables, TikTok est en forte croissance, et WhatsApp reste le canal de communication directe le plus utilisé. Adaptez votre contenu à chaque plateforme et soyez régulier dans vos publications. La constance bat l'intensité : mieux vaut publier trois fois par semaine pendant un an qu'une fois par jour pendant un mois.\n\nLe marketing digital n'est pas réservé aux grandes entreprises avec des budgets importants. Avec les bonnes stratégies, les bons outils et un peu de créativité, toute entreprise au Mali peut attirer des clients et croître grâce au digital. SK Designer Luxe vous accompagne avec des outils premium, des formations pratiques et des services de qualité pour booster votre présence en ligne !`
+   451→    },
+   452→  ]
+   453→
+   454→  // ═══ REAL REFERRAL SYSTEM ═══
+   455→  const REFERRAL_CODE = 'CB-IBRA-2024'
+   456→  const REFERRAL_KEY = 'createur-boutique-referral'
+   457→  const REFERRAL_VISITOR_KEY = 'createur-boutique-referred-visit'
+   458→
+   459→  interface ReferredPerson {
+   460→    name: string
+   461→    date: string
+   462→    status: 'En attente' | 'Validé' | 'Annulé'
+   463→    validatedAt?: string
+   464→  }
+   465→  const [referralData, setReferralData] = useState<{ referred: ReferredPerson[]; totalEarned: number; totalReferred: number; totalValidated: number; totalVisits: number }>({ referred: [], totalEarned: 0, totalReferred: 0, totalValidated: 0, totalVisits: 0 })
+   466→  const [referralName, setReferralName] = useState('')
+   467→  const [activeReferralCode, setActiveReferralCode] = useState('')
+   468→  const [showReferralBanner, setShowReferralBanner] = useState(false)
+   469→  const [referralCodeInput, setReferralCodeInput] = useState('')
+   470→
+   471→  // Load referral data from localStorage
+   472→  useEffect(() => {
+   473→    const saved = localStorage.getItem(REFERRAL_KEY)
+   474→    if (saved) {
+   475→      try {
+   476→        const parsed = JSON.parse(saved)
+   477→        // Migration: ensure new fields exist
+   478→        setReferralData({
+   479→          referred: parsed.referred || [],
+   480→          totalEarned: parsed.totalEarned || 0,
+   481→          totalReferred: parsed.totalReferred || 0,
+   482→          totalValidated: parsed.totalValidated || 0,
+   483→          totalVisits: parsed.totalVisits || 0,
+   484→        })
+   485→      } catch {}
+   486→    }
+   487→  }, [])
+   488→
+   489→  // Detect referral code from URL (?ref=CB-IBRA-2024)
+   490→  useEffect(() => {
+   491→    if (typeof window === 'undefined') return
+   492→    const params = new URLSearchParams(window.location.search)
+   493→    const refCode = params.get('ref')
+   494→    if (refCode && refCode === REFERRAL_CODE) {
+   495→      // Check if this visit was already counted
+   496→      const visitData = localStorage.getItem(REFERRAL_VISITOR_KEY)
+   497→      if (!visitData) {
+   498→        // First visit via referral - show banner and track
+   499→        setActiveReferralCode(refCode)
+
+[showing lines 200-499 of 3586; use offset=500 with limit to continue reading]

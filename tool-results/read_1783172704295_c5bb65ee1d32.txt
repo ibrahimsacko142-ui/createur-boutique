@@ -1,0 +1,402 @@
+  2600→                      </div>
+  2601→                    </div>
+  2602→                  </div>
+  2603→
+  2604→                  {/* Tier cards grid */}
+  2605→                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+  2606→                    {tiers.map((tier) => {
+  2607→                      const unlocked = referralData.totalReferred >= tier.at
+  2608→                      const isNext = next && next.at === tier.at
+  2609→                      return (
+  2610→                        <div key={tier.at} className={`relative rounded-xl p-4 border-2 transition-all duration-300 ${unlocked ? 'border-emerald-300 dark:border-emerald-700 bg-emerald-50/80 dark:bg-emerald-950/20 shadow-md' : isNext ? 'border-amber-400 dark:border-amber-600 bg-amber-50/80 dark:bg-amber-950/20 shadow-md ring-2 ring-amber-200 dark:ring-amber-800' : 'border-border bg-muted/30 opacity-60'}`}>
+  2611→                          {unlocked && (
+  2612→                            <div className="absolute -top-2 -right-2">
+  2613→                              <Badge className="bg-emerald-500 text-white border-0 text-[9px] px-1.5 shadow-md">Débloqué</Badge>
+  2614→                            </div>
+  2615→                          )}
+  2616→                          {isNext && (
+  2617→                            <div className="absolute -top-2 -right-2">
+  2618→                              <Badge className="bg-amber-500 text-white border-0 text-[9px] px-1.5 shadow-md">Prochain</Badge>
+  2619→                            </div>
+  2620→                          )}
+  2621→                          <div className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${tier.color} text-white mb-3 shadow-md ${!unlocked ? 'grayscale opacity-50' : ''}`}>
+  2622→                            <tier.icon className="h-6 w-6" />
+  2623→                          </div>
+  2624→                          <div className="text-sm font-extrabold">{tier.at} parrainage{tier.at > 1 ? 's' : ''}</div>
+  2625→                          <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">{tier.label}</p>
+  2626→                          {isNext && (
+  2627→                            <div className="mt-3">
+  2628→                              <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+  2629→                                <motion.div
+  2630→                                  initial={{ width: 0 }}
+  2631→                                  whileInView={{ width: `${progress}%` }}
+  2632→                                  viewport={{ once: true }}
+  2633→                                  transition={{ duration: 1, ease: 'easeOut', delay: 0.3 }}
+  2634→                                  className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full"
+  2635→                                />
+  2636→                              </div>
+  2637→                              <p className="text-[9px] text-amber-600 font-bold mt-1 text-center">{Math.round(progress)}%</p>
+  2638→                            </div>
+  2639→                          )}
+  2640→                        </div>
+  2641→                      )
+  2642→                    })}
+  2643→                  </div>
+  2644→
+  2645→                  {next && (
+  2646→                    <div className="mt-5 p-4 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/15 dark:to-orange-900/15 border border-amber-200 dark:border-amber-800 flex items-center gap-3">
+  2647→                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30 flex-shrink-0">
+  2648→                        <Target className="h-5 w-5 text-amber-600" />
+  2649→                      </div>
+  2650→                      <div className="flex-1">
+  2651→                        <p className="text-sm font-bold">Objectif : {next.label}</p>
+  2652→                        <p className="text-xs text-muted-foreground">Encore {next.at - referralData.totalReferred} parrainage(s) pour débloquer cette récompense</p>
+  2653→                      </div>
+  2654→                      <div className="text-right">
+  2655→                        <span className="text-lg font-extrabold text-amber-600">{Math.round(progress)}%</span>
+  2656→                      </div>
+  2657→                    </div>
+  2658→                  )}
+  2659→                  {!next && referralData.totalReferred > 0 && (
+  2660→                    <div className="mt-5 p-4 rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/15 dark:to-teal-900/15 border border-emerald-200 dark:border-emerald-800 text-center">
+  2661→                      <Crown className="h-6 w-6 text-amber-500 mx-auto mb-1" />
+  2662→                      <p className="text-sm font-bold text-emerald-700 dark:text-emerald-400">Félicitations ! Tous les paliers débloqués</p>
+  2663→                      <p className="text-xs text-muted-foreground mt-1">Vous êtes un parraineur légende. Contactez-nous sur WhatsApp pour récupérer votre récompense maximale.</p>
+  2664→                    </div>
+  2665→                  )}
+  2666→                </CardContent>
+  2667→              </Card>
+  2668→            </FadeIn>
+  2669→
+  2670→            {/* Classement des meilleurs parraineurs */}
+  2671→            <FadeIn delay={0.28}>
+  2672→              <Card className="border-0 shadow-lg overflow-hidden mb-8">
+  2673→                <CardContent className="p-6">
+  2674→                  <h3 className="font-bold text-sm mb-4 flex items-center gap-2">
+  2675→                    <Crown className="h-4 w-4 text-amber-500" /> Classement des parraineurs
+  2676→                  </h3>
+  2677→                  <div className="space-y-2">
+  2678→                    {[
+  2679→                      { rank: 1, name: 'Amadou D.', referrals: 12, earned: '6 000', gradient: 'from-amber-400 to-yellow-500', badge: 'bg-amber-100 dark:bg-amber-900/30 text-amber-700' },
+  2680→                      { rank: 2, name: 'Fatoumata T.', referrals: 8, earned: '4 000', gradient: 'from-gray-300 to-gray-400', badge: 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300' },
+  2681→                      { rank: 3, name: 'Ibrahim S.', referrals: 5, earned: '2 500', gradient: 'from-orange-400 to-amber-600', badge: 'bg-orange-100 dark:bg-orange-900/30 text-orange-700' },
+  2682→                    ].map((leader) => (
+  2683→                      <div key={leader.rank} className={`flex items-center gap-4 p-3 rounded-xl border transition-all ${leader.rank === 1 ? 'bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/10 dark:to-yellow-900/10 border-amber-200 dark:border-amber-800 shadow-sm' : 'bg-card border-border hover:shadow-sm'}`}>
+  2684→                        <div className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br ${leader.gradient} text-white font-extrabold text-sm shadow-md`}>
+  2685→                          {leader.rank}
+  2686→                        </div>
+  2687→                        <div className="flex-1">
+  2688→                          <p className="text-sm font-bold">{leader.name}</p>
+  2689→                          <p className="text-[10px] text-muted-foreground">{leader.referrals} personne(s) parrainée(s)</p>
+  2690→                        </div>
+  2691→                        <div className="text-right">
+  2692→                          <p className="text-sm font-extrabold text-emerald-600">{leader.earned} FCFA</p>
+  2693→                          <Badge variant="secondary" className={`text-[9px] ${leader.badge}`}>
+  2694→                            {leader.rank === 1 ? 'Champion' : leader.rank === 2 ? 'Vice-champion' : 'Troisième'}
+  2695→                          </Badge>
+  2696→                        </div>
+  2697→                      </div>
+  2698→                    ))}
+  2699→
+  2700→                    {referralData.totalReferred > 0 && (
+  2701→                      <div className="mt-2 p-3 rounded-xl bg-purple-50 dark:bg-purple-900/10 border-2 border-dashed border-purple-300 dark:border-purple-700">
+  2702→                        <div className="flex items-center gap-4">
+  2703→                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500 text-white font-extrabold text-sm shadow-md">
+  2704→                            Vous
+  2705→                          </div>
+  2706→                          <div className="flex-1">
+  2707→                            <p className="text-sm font-bold">Votre position</p>
+  2708→                            <p className="text-[10px] text-muted-foreground">{referralData.totalReferred} personne(s) parrainée(s)</p>
+  2709→                          </div>
+  2710→                          <div className="text-right">
+  2711→                            <p className="text-sm font-extrabold text-emerald-600">{referralData.totalEarned.toLocaleString('fr-FR')} FCFA</p>
+  2712→                            <Badge className="bg-purple-500 text-white border-0 text-[9px]">Parraineur actif</Badge>
+  2713→                          </div>
+  2714→                        </div>
+  2715→                      </div>
+  2716→                    )}
+  2717→                  </div>
+  2718→                </CardContent>
+  2719→              </Card>
+  2720→            </FadeIn>
+  2721→
+  2722→            {/* Formulaire d'ajout + Historique */}
+  2723→            <div className="grid lg:grid-cols-2 gap-6">
+  2724→              <FadeIn delay={0.3}>
+  2725→                <Card className="border-0 shadow-xl h-full">
+  2726→                  <CardContent className="p-6">
+  2727→                    <h3 className="font-bold text-sm mb-4 flex items-center gap-2">
+  2728→                      <UserCheck className="h-4 w-4 text-purple-500" /> Enregistrer un parrainage
+  2729→                    </h3>
+  2730→                    <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
+  2731→                      Lorsqu&apos;une personne vous a été référé(e) et a commandé, enregistrez-la ici pour suivre vos gains. Le parrainage est validé après confirmation du paiement.
+  2732→                    </p>
+  2733→                    <div className="flex gap-2">
+  2734→                      <Input
+  2735→                        placeholder="Nom de la personne parrainée"
+  2736→                        value={referralName}
+  2737→                        onChange={(e) => setReferralName(e.target.value)}
+  2738→                        onKeyDown={(e) => e.key === 'Enter' && addReferral()}
+  2739→                        className="h-11"
+  2740→                      />
+  2741→                      <Button onClick={addReferral} className="bg-purple-500 hover:bg-purple-600 text-white font-semibold h-11 px-5 flex-shrink-0 shadow-md hover:shadow-lg transition-all hover:scale-[1.02] active:scale-95">
+  2742→                        <Plus className="h-4 w-4 mr-1" /> Ajouter
+  2743→                      </Button>
+  2744→                    </div>
+  2745→
+  2746→                    {/* Comment ça marche - Amélioré */}
+  2747→                    <div className="mt-6 pt-5 border-t">
+  2748→                      <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-4">Comment ça marche en 3 étapes</h4>
+  2749→                      <div className="space-y-4">
+  2750→                        {[
+  2751→                          { step: '1', title: 'Partagez votre code ou lien', desc: 'Envoyez CB-IBRA-2024 via WhatsApp, Facebook, Twitter ou SMS. Utilisez les boutons de partage ci-dessus.', color: 'bg-purple-500', icon: Share2 },
+  2752→                          { step: '2', title: 'Votre ami commande', desc: "Votre ami mentionne votre code lors de sa commande et obtient 10% de réduction immédiate sur tout service.", color: 'bg-amber-500', icon: ShoppingCart },
+  2753→                          { step: '3', title: 'Vous gagnez des récompenses', desc: "Chaque parrainage validé vous crédite 500 FCFA cumulables. Débloquez des paliers : service gratuit, logo offert, et même un site web !", color: 'bg-emerald-500', icon: Gift },
+  2754→                        ].map((item, idx) => (
+  2755→                          <div key={item.step} className="flex items-start gap-3">
+  2756→                            <div className="relative flex-shrink-0">
+  2757→                              <div className={`flex h-8 w-8 items-center justify-center rounded-full ${item.color} text-white text-xs font-bold shadow-md`}>{item.step}</div>
+  2758→                              {idx < 2 && <div className="absolute top-8 left-1/2 -translate-x-1/2 w-0.5 h-4 bg-border" />}
+  2759→                            </div>
+  2760→                            <div className="pt-0.5">
+  2761→                              <p className="text-xs font-semibold flex items-center gap-1.5">{item.title}</p>
+  2762→                              <p className="text-[11px] text-muted-foreground leading-relaxed mt-0.5">{item.desc}</p>
+  2763→                            </div>
+  2764→                          </div>
+  2765→                        ))}
+  2766→                      </div>
+  2767→                    </div>
+  2768→
+  2769→                    {/* Conditions */}
+  2770→                    <div className="mt-5 p-3 rounded-xl bg-muted/50 border">
+  2771→                      <div className="flex items-start gap-2">
+  2772→                        <Lock className="h-3.5 w-3.5 text-muted-foreground mt-0.5 flex-shrink-0" />
+  2773→                        <div className="text-[10px] text-muted-foreground leading-relaxed space-y-1">
+  2774→                          <p className="font-semibold text-foreground/70">Conditions du programme</p>
+  2775→                          <p>Le client doit payer un service complet pour que le parrainage soit validé. Les réductions sont cumulables et applicables sur toute commande future. Les récompenses ne sont pas échangeables en argent. Le code est valable pour une utilisation unique par nouvelle personne.</p>
+  2776→                        </div>
+  2777→                      </div>
+  2778→                    </div>
+  2779→                  </CardContent>
+  2780→                </Card>
+  2781→              </FadeIn>
+  2782→
+  2783→              <FadeIn delay={0.35}>
+  2784→                <Card className="border-0 shadow-xl h-full">
+  2785→                  <CardContent className="p-6">
+  2786→                    <div className="flex items-center justify-between mb-4">
+  2787→                      <h3 className="font-bold text-sm flex items-center gap-2">
+  2788→                        <History className="h-4 w-4 text-amber-500" /> Historique des parrainages
+  2789→                      </h3>
+  2790→                      {referralData.totalReferred > 0 && (
+  2791→                        <Badge variant="secondary" className="text-[10px]">{referralData.totalReferred} entrée(s)</Badge>
+  2792→                      )}
+  2793→                    </div>
+  2794→                    {referralData.referred.length === 0 ? (
+  2795→                      <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
+  2796→                        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-muted/50 mb-4">
+  2797→                          <Users className="h-8 w-8 opacity-20" />
+  2798→                        </div>
+  2799→                        <p className="text-sm font-medium">Aucun parrainage encore</p>
+  2800→                        <p className="text-xs text-muted-foreground/60 mt-1 mb-4">Partagez votre code pour commencer à gagner</p>
+  2801→                        <button
+  2802→                          onClick={() => {
+  2803→                            const text = encodeURIComponent(`Salut ! Profite de 10% de réduction chez SK Designer Luxe avec mon code ${REFERRAL_CODE}.`)
+  2804→                            window.open(`https://wa.me/?text=${text}`, '_blank')
+  2805→                          }}
+  2806→                          className="flex items-center gap-2 text-xs font-semibold text-emerald-600 hover:text-emerald-700 transition-colors"
+  2807→                        >
+  2808→                          <MessageCircle className="h-3.5 w-3.5" /> Inviter maintenant sur WhatsApp
+  2809→                        </button>
+  2810→                      </div>
+  2811→                    ) : (
+  2812→                      <div className="space-y-2 max-h-[400px] overflow-y-auto pr-1">
+  2813→                        {referralData.referred.map((ref, i) => (
+  2814→                          <motion.div
+  2815→                            key={i}
+  2816→                            initial={{ opacity: 0, x: -10 }}
+  2817→                            animate={{ opacity: 1, x: 0 }}
+  2818→                            transition={{ duration: 0.3, delay: i * 0.05 }}
+  2819→                            className="flex items-center justify-between p-3 rounded-xl bg-muted/50 border hover:shadow-sm transition-shadow"
+  2820→                          >
+  2821→                            <div className="flex items-center gap-3">
+  2822→                              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-purple-100 to-amber-100 dark:from-purple-900/30 dark:to-amber-900/30">
+  2823→                                <UserCheck className="h-4 w-4 text-purple-600" />
+  2824→                              </div>
+  2825→                              <div>
+  2826→                                <p className="text-sm font-medium">{ref.name}</p>
+  2827→                                <p className="text-[10px] text-muted-foreground">{ref.date}</p>
+  2828→                              </div>
+  2829→                            </div>
+  2830→                            <div className="text-right">
+  2831→                              <p className="text-xs font-bold text-emerald-600 flex items-center gap-1">
+  2832→                                <span>+500 FCFA</span>
+  2833→                                {ref.status === 'Validé' && <CheckCircle2 className="h-3 w-3" />}
+  2834→                              </p>
+  2835→                              <Badge variant={ref.status === 'Validé' ? 'default' : 'secondary'} className="text-[9px]">
+  2836→                                {ref.status}
+  2837→                              </Badge>
+  2838→                            </div>
+  2839→                          </motion.div>
+  2840→                        ))}
+  2841→                      </div>
+  2842→                    )}
+  2843→
+  2844→                    {referralData.totalReferred > 0 && (
+  2845→                      <div className="mt-4 pt-4 border-t space-y-2">
+  2846→                        <div className="flex items-center justify-between text-sm">
+  2847→                          <span className="text-muted-foreground">Total cumulé</span>
+  2848→                          <span className="font-extrabold text-emerald-600">{referralData.totalEarned.toLocaleString('fr-FR')} FCFA</span>
+  2849→                        </div>
+  2850→                        <a href={`https://wa.me/22397787244?text=Bonjour ! J'ai parrainé ${referralData.totalReferred} personne(s) avec le code ${REFERRAL_CODE}. Mes réductions cumulées : ${referralData.totalEarned} FCFA. Je souhaite les utiliser.`} target="_blank" rel="noopener noreferrer">
+  2851→                          <Button className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold shadow-md hover:shadow-lg transition-all">
+  2852→                            <MessageCircle className="h-4 w-4 mr-2" /> Réclamer mes récompenses via WhatsApp
+  2853→                          </Button>
+  2854→                        </a>
+  2855→                      </div>
+  2856→                    )}
+  2857→                  </CardContent>
+  2858→                </Card>
+  2859→              </FadeIn>
+  2860→            </div>
+  2861→          </div>
+  2862→        </section>
+  2863→
+  2864→        {/* ═══ BLOG ═══ */}
+  2865→        <section id="blog" className="py-16 sm:py-20">
+  2866→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  2867→            <FadeIn className="text-center mb-12">
+  2868→              <Badge variant="secondary" className="mb-3 bg-blue-100 text-blue-700 border-blue-200">
+  2869→                <BookOpen className="h-3 w-3 mr-1" /> Blog
+  2870→              </Badge>
+  2871→              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Guides, Articles & Ressources</h2>
+  2872→              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
+  2873→                Des articles approfondis, des guides pratiques et des ressources pour vous aider à maîtriser le design et le digital. Tout ce qu'il faut savoir, gratuitement.
+  2874→              </p>
+  2875→            </FadeIn>
+  2876→
+  2877→            <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  2878→              {blogArticles.map((article) => (
+  2879→                <motion.div key={article.title} variants={cardVariants}>
+  2880→                  <Card className="overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 h-full flex flex-col group cursor-pointer" onClick={() => setSelectedArticle(article)}>
+  2881→                    <div className="relative h-44 overflow-hidden">
+  2882→                      <img src={article.image} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+  2883→                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+  2884→                      <div className="absolute top-3 left-3">
+  2885→                        <Badge className={article.color}>{article.category}</Badge>
+  2886→                      </div>
+  2887→                    </div>
+  2888→                    <CardContent className="p-5 flex flex-col flex-1">
+  2889→                      <div className="flex items-center gap-3 text-xs text-muted-foreground mb-2">
+  2890→                        <span className="flex items-center gap-1"><Calendar className="h-3 w-3" />{article.date}</span>
+  2891→                        <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{article.readTime}</span>
+  2892→                      </div>
+  2893→                      <h3 className="font-semibold leading-snug mb-2 group-hover:text-amber-600 transition-colors">{article.title}</h3>
+  2894→                      <p className="text-xs text-muted-foreground leading-relaxed flex-1 line-clamp-3">{article.excerpt}</p>
+  2895→                      <div className="mt-3 pt-3 border-t">
+  2896→                        <span className="text-xs font-medium text-amber-600 flex items-center gap-1 group-hover:gap-2 transition-all">
+  2897→                          Lire l'article <ArrowUpRight className="h-3 w-3" />
+  2898→                        </span>
+  2899→                      </div>
+  2900→                    </CardContent>
+  2901→                  </Card>
+  2902→                </motion.div>
+  2903→              ))}
+  2904→            </StaggerContainer>
+  2905→          </div>
+  2906→        </section>
+  2907→
+  2908→        {/* ═══ NOS VALEURS ═══ */}
+  2909→        <section id="valeurs" className="py-16 sm:py-20 bg-muted/30">
+  2910→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  2911→            <FadeIn className="text-center mb-12">
+  2912→              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+  2913→                <Trophy className="h-3 w-3 mr-1" /> Promesses
+  2914→              </Badge>
+  2915→              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Nos Valeurs</h2>
+  2916→              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
+  2917→                Ce qui guide mon travail et mon engagement envers chaque projet.
+  2918→              </p>
+  2919→            </FadeIn>
+  2920→
+  2921→            <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+  2922→              {[
+  2923→                {
+  2924→                  icon: Shield,
+  2925→                  title: 'Sérieux',
+  2926→                  desc: "Chaque projet est traité avec le plus grand professionnalisme. Respect des délais, communication transparente et engagement total. Nous ne promettons que ce que nous pouvons tenir, et nous tenons tout ce que nous promettons.",
+  2927→                  gradient: 'from-emerald-500 to-teal-600',
+  2928→                },
+  2929→                {
+  2930→                  icon: Sparkles,
+  2931→                  title: 'Créativité',
+  2932→                  desc: "Des idées originales et des designs uniques pour chaque client. Chaque création est pensée pour se démarquer et marquer les esprits. Nous repoussons les limites du design pour offrir des visuels qui captivent.",
+  2933→                  gradient: 'from-amber-500 to-orange-600',
+  2934→                },
+  2935→                {
+  2936→                  icon: Zap,
+  2937→                  title: 'Rapidité',
+  2938→                  desc: "Des délais de livraison respectés sans compromis sur la qualité. Affiches et logos en 1 à 24h, sites web en 1 à 3 jours. Nous comprenons que votre temps est précieux et nous y répondons.",
+  2939→                  gradient: 'from-purple-500 to-pink-600',
+  2940→                },
+  2941→                {
+  2942→                  icon: Heart,
+  2943→                  title: 'Satisfaction Client',
+  2944→                  desc: "Votre satisfaction est notre priorité numéro un. Nous travaillons main dans la main avec vous jusqu'au résultat parfait. Des révisions sont incluses pour garantir que chaque détail correspond à votre vision.",
+  2945→                  gradient: 'from-red-500 to-rose-600',
+  2946→                },
+  2947→              ].map((valeur) => (
+  2948→                <motion.div key={valeur.title} variants={cardVariants}>
+  2949→                  <Card className="border-0 shadow-md hover:shadow-xl transition-all duration-300 h-full overflow-hidden group">
+  2950→                    <div className={`h-2 bg-gradient-to-r ${valeur.gradient}`} />
+  2951→                    <CardContent className="p-6 pt-8 text-center">
+  2952→                      <div className={`flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${valeur.gradient} text-white mx-auto mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+  2953→                        <valeur.icon className="h-7 w-7" />
+  2954→                      </div>
+  2955→                      <h3 className="font-bold text-lg mb-2">{valeur.title}</h3>
+  2956→                      <p className="text-xs text-muted-foreground leading-relaxed">{valeur.desc}</p>
+  2957→                    </CardContent>
+  2958→                  </Card>
+  2959→                </motion.div>
+  2960→              ))}
+  2961→            </StaggerContainer>
+  2962→          </div>
+  2963→        </section>
+  2964→
+  2965→        {/* ═══ POLITIQUE DE SERVICE + MENTIONS LÉGALES ═══ */}
+  2966→        <section id="politique" className="py-16 sm:py-20">
+  2967→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  2968→            <FadeIn className="text-center mb-12">
+  2969→              <Badge variant="secondary" className="mb-3 bg-gray-100 text-gray-700 border-gray-200">
+  2970→                <FileCheck className="h-3 w-3 mr-1" /> Informations Légales
+  2971→              </Badge>
+  2972→              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Mentions Légales & Politiques</h2>
+  2973→              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
+  2974→                Transparence totale sur nos conditions de service, nos mentions légales et notre politique de confidentialité.
+  2975→              </p>
+  2976→            </FadeIn>
+  2977→
+  2978→            {/* Tab navigation */}
+  2979→            <FadeIn delay={0.1} className="flex flex-wrap items-center justify-center gap-3 mb-10">
+  2980→              <button onClick={() => setLegalPage(null)} className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${!legalPage ? 'bg-amber-500 text-white shadow-md' : 'bg-muted text-muted-foreground hover:bg-accent'}`}>
+  2981→                Conditions de Service
+  2982→              </button>
+  2983→              <button onClick={() => setLegalPage('mentions')} className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${legalPage === 'mentions' ? 'bg-amber-500 text-white shadow-md' : 'bg-muted text-muted-foreground hover:bg-accent'}`}>
+  2984→                Mentions Légales
+  2985→              </button>
+  2986→              <button onClick={() => setLegalPage('confidentialite')} className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${legalPage === 'confidentialite' ? 'bg-amber-500 text-white shadow-md' : 'bg-muted text-muted-foreground hover:bg-accent'}`}>
+  2987→                Politique de Confidentialité
+  2988→              </button>
+  2989→            </FadeIn>
+  2990→
+  2991→            {legalPage === null && (
+  2992→              <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  2993→                {[
+  2994→                  {
+  2995→                    icon: ShieldCheck,
+  2996→                    title: 'Satisfaction ou remboursement',
+  2997→                    desc: "Si le résultat ne correspond pas à votre commande, nous reprenons le travail gratuitement ou vous remboursons via Wave sous 48h.",
+  2998→                    color: 'text-emerald-500',
+  2999→                    bg: 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800',
+
+[showing lines 2600-2999 of 3586; use offset=3000 with limit to continue reading]

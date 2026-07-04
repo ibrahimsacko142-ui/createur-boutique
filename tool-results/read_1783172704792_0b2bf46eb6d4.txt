@@ -1,0 +1,502 @@
+  3000→                  },
+  3001→                  {
+  3002→                    icon: CreditCard,
+  3003→                    title: 'Travail livré après paiement',
+  3004→                    desc: "Le travail est livré uniquement après confirmation complète du paiement. Cela garantit la sécurité des deux parties.",
+  3005→                    color: 'text-emerald-500',
+  3006→                    bg: 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800',
+  3007→                  },
+  3008→                  {
+  3009→                    icon: Timer,
+  3010→                    title: 'Délais respectés',
+  3011→                    desc: "Chaque délai annoncé est respecté scrupuleusement. Affiches et logos : 1-24h. Sites web : 1-3 jours. Formations : selon programme.",
+  3012→                    color: 'text-amber-500',
+  3013→                    bg: 'bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800',
+  3014→                  },
+  3015→                  {
+  3016→                    icon: Shield,
+  3017→                    title: 'Paiement sécurisé',
+  3018→                    desc: "Toutes les transactions passent par Wave de manière sécurisée. Paiement 50/50 ou total selon le service convenu.",
+  3019→                    color: 'text-blue-500',
+  3020→                    bg: 'bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800',
+  3021→                  },
+  3022→                  {
+  3023→                    icon: Lock,
+  3024→                    title: 'Propriété intellectuelle',
+  3025→                    desc: "Après livraison finale et paiement complet, les droits de propriété intellectuelle du travail sont transférés au client.",
+  3026→                    color: 'text-purple-500',
+  3027→                    bg: 'bg-purple-50 dark:bg-purple-950/20 border-purple-200 dark:border-purple-800',
+  3028→                  },
+  3029→                  {
+  3030→                    icon: CheckCircle2,
+  3031→                    title: 'Révisions incluses',
+  3032→                    desc: "Des révisions sont possibles avant validation finale pour s'assurer que le résultat correspond parfaitement à vos attentes.",
+  3033→                    color: 'text-teal-500',
+  3034→                    bg: 'bg-teal-50 dark:bg-teal-950/20 border-teal-200 dark:border-teal-800',
+  3035→                  },
+  3036→                ].map((rule) => (
+  3037→                  <motion.div key={rule.title} variants={cardVariants}>
+  3038→                    <Card className={`h-full border ${rule.bg}`}>
+  3039→                      <CardContent className="p-5">
+  3040→                        <div className="flex items-center gap-3 mb-3">
+  3041→                          <rule.icon className={`h-5 w-5 ${rule.color}`} />
+  3042→                          <h3 className="font-bold text-sm">{rule.title}</h3>
+  3043→                        </div>
+  3044→                        <p className="text-xs text-muted-foreground leading-relaxed">{rule.desc}</p>
+  3045→                      </CardContent>
+  3046→                    </Card>
+  3047→                  </motion.div>
+  3048→                ))}
+  3049→              </StaggerContainer>
+  3050→            )}
+  3051→
+  3052→            {legalPage === 'mentions' && (
+  3053→              <FadeIn>
+  3054→                <Card className="border-0 shadow-lg max-w-4xl mx-auto">
+  3055→                  <CardContent className="p-6 sm:p-10 space-y-6">
+  3056→                    <h3 className="text-2xl font-bold">Mentions Légales</h3>
+  3057→                    <div className="space-y-5 text-sm text-muted-foreground leading-relaxed">
+  3058→                      <div>
+  3059→                        <h4 className="font-bold text-foreground text-base mb-2">1. Éditeur du site</h4>
+  3060→                        <p>Le site Créateur Boutique (createur-boutique.vercel.app) est édité par Sacko Ibrahim, freelance exerçant sous la marque commerciale SK Designer Luxe. L'activité est enregistrée à Bamako, République du Mali. L'éditeur peut être contacté par les moyens suivants : téléphone au +223 97 78 72 44, email à contact@skdesignerluxe.com, ou via WhatsApp au même numéro. Le siège social est situé à Bamako, Mali.</p>
+  3061→                      </div>
+  3062→                      <div>
+  3063→                        <h4 className="font-bold text-foreground text-base mb-2">2. Activité</h4>
+  3064→                        <p>SK Designer Luxe propose des services de design graphique (création de logos, affiches, identités visuelles), de développement web (sites vitrines, sites e-commerce), de montage vidéo, de marketing digital, et de formation aux outils numériques professionnels (CapCut Pro, PicsArt Pro). Les services sont proposés en ligne et livrés numériquement aux clients situés au Mali et à l'international.</p>
+  3065→                      </div>
+  3066→                      <div>
+  3067→                        <h4 className="font-bold text-foreground text-base mb-2">3. Hébergement</h4>
+  3068→                        <p>Le site est hébergé par Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, États-Unis. L'hébergeur assure la disponibilité et la sécurité technique du site web conformément à ses conditions générales d'utilisation. Vercel est un fournisseur d'hébergement reconnu et respecte les normes de sécurité internationales.</p>
+  3069→                      </div>
+  3070→                      <div>
+  3071→                        <h4 className="font-bold text-foreground text-base mb-2">4. Propriété intellectuelle</h4>
+  3072→                        <p>L'ensemble du contenu du site (textes, images, graphismes, logos, icônes, mises en page, design) est la propriété exclusive de SK Designer Luxe ou de ses partenaires, et est protégé par les lois malienes et internationales relatives à la propriété intellectuelle. Toute reproduction, représentation, modification, publication, adaptation de tout ou partie des éléments du site, quel que soit le moyen ou le procédé utilisé, est interdite sans l'autorisation écrite préalable de SK Designer Luxe. Les travaux commandés par les clients deviennent leur propriété après paiement intégral de la facture correspondante.</p>
+  3073→                      </div>
+  3074→                      <div>
+  3075→                        <h4 className="font-bold text-foreground text-base mb-2">5. Responsabilité</h4>
+  3076→                        <p>SK Designer Luxe s'efforce de fournir des informations aussi précises que possible sur le site. Toutefois, l'éditeur ne saurait être tenu responsable des omissions, des inexactitudes et des carences dans la mise à jour de ces informations, qu'elles soient de son fait ou du fait des tiers partenaires qui lui fournissent ces informations. Les informations et services proposés sur le site le sont à titre indicatif et sont susceptibles d'évoluer. L'éditeur ne garantit pas l'exactitude, la complétude ou l'actualité des informations diffusées sur le site.</p>
+  3077→                      </div>
+  3078→                      <div>
+  3079→                        <h4 className="font-bold text-foreground text-base mb-2">6. Prix et paiement</h4>
+  3080→                        <p>Les prix affichés sur le site sont exprimés en FCFA (Franc CFA) et incluent les taxes applicables. Le paiement s'effectue exclusivement via l'application mobile Wave au numéro +223 97 78 72 44. Les modalités de paiement (50/50 ou intégral) sont convenues avec le client avant le début de chaque commande. Aucun travail n'est entamé sans confirmation préalable du paiement par le client.</p>
+  3081→                      </div>
+  3082→                      <div>
+  3083→                        <h4 className="font-bold text-foreground text-base mb-2">7. Droit applicable et juridiction</h4>
+  3084→                        <p>Les présentes mentions légales sont régies par le droit malien. En cas de litige, les tribunaux de Bamako, République du Mali, seront seuls compétents. Avant toute action en justice, les parties s'engagent à rechercher une solution amiable par le biais de la médiation ou de la négociation directe via WhatsApp ou email.</p>
+  3085→                      </div>
+  3086→                      <div>
+  3087→                        <h4 className="font-bold text-foreground text-base mb-2">8. Contact</h4>
+  3088→                        <p>Pour toute question relative aux présentes mentions légales, vous pouvez contacter SK Designer Luxe par email à contact@skdesignerluxe.com, par téléphone au +223 97 78 72 44, ou via le formulaire de contact du site. Nous nous engageons à répondre dans les meilleurs délais, sous 24 heures ouvrables.</p>
+  3089→                      </div>
+  3090→                    </div>
+  3091→                  </CardContent>
+  3092→                </Card>
+  3093→              </FadeIn>
+  3094→            )}
+  3095→
+  3096→            {legalPage === 'confidentialite' && (
+  3097→              <FadeIn>
+  3098→                <Card className="border-0 shadow-lg max-w-4xl mx-auto">
+  3099→                  <CardContent className="p-6 sm:p-10 space-y-6">
+  3100→                    <h3 className="text-2xl font-bold">Politique de Confidentialité</h3>
+  3101→                    <p className="text-sm text-muted-foreground leading-relaxed">Dernière mise à jour : 1er juillet 2026</p>
+  3102→                    <div className="space-y-5 text-sm text-muted-foreground leading-relaxed">
+  3103→                      <div>
+  3104→                        <h4 className="font-bold text-foreground text-base mb-2">1. Introduction</h4>
+  3105→                        <p>SK Designer Luxe s'engage à protéger la vie privée de ses utilisateurs. La présente politique de confidentialité explique comment nous collectons, utilisons, stockons et protégeons vos données personnelles lorsque vous visitez notre site web createur-boutique.vercel.app ou que vous utilisez nos services. En utilisant notre site, vous acceptez les pratiques décrites dans cette politique.</p>
+  3106→                      </div>
+  3107→                      <div>
+  3108→                        <h4 className="font-bold text-foreground text-base mb-2">2. Données collectées</h4>
+  3109→                        <p>Nous pouvons collecter les données personnelles suivantes : votre nom complet, votre adresse email, votre numéro de téléphone, votre numéro Wave, les messages que vous nous envoyez via le formulaire de contact ou WhatsApp, votre adresse IP (collectée automatiquement par notre hébergeur), le type de navigateur et d'appareil utilisé, les pages visitées et la durée de la visite. Ces données sont collectées uniquement lorsque vous les fournissez volontairement via nos formulaires ou lors de votre interaction avec nos services.</p>
+  3110→                      </div>
+  3111→                      <div>
+  3112→                        <h4 className="font-bold text-foreground text-base mb-2">3. Utilisation des données</h4>
+  3113→                        <p>Vos données personnelles sont utilisées exclusivement pour les finalités suivantes : répondre à vos demandes de contact et de devis, traiter vos commandes et assurer le suivi de la livraison, vous envoyer des informations relatives à vos commandes en cours, améliorer nos services et l'expérience utilisateur sur notre site, vous envoyer notre newsletter (uniquement si vous vous êtes inscrit volontairement), gérer le programme de parrainage et le suivi des transactions de dépôt/retrait dans le portefeuille. Nous ne vendons, ne louons et ne partageons jamais vos données personnelles avec des tiers à des fins commerciales.</p>
+  3114→                      </div>
+  3115→                      <div>
+  3116→                        <h4 className="font-bold text-foreground text-base mb-2">4. Stockage et sécurité des données</h4>
+  3117→                        <p>Vos données sont stockées localement dans votre navigateur (localStorage) pour les fonctionnalités du site telles que le panier, les préférences d'affichage et le programme de parrainage. Les données de contact et de commande sont traitées principalement via WhatsApp pour garantir une communication directe et sécurisée. Nous mettons en oeuvre des mesures de sécurité techniques et organisationnelles appropriées pour protéger vos données contre tout accès non autorisé, toute modification, divulgation ou destruction. Cependant, aucune méthode de transmission sur Internet n'est totalement sécurisée, et nous ne pouvons garantir une sécurité absolue.</p>
+  3118→                      </div>
+  3119→                      <div>
+  3120→                        <h4 className="font-bold text-foreground text-base mb-2">5. Cookies et technologies similaires</h4>
+  3121→                        <p>Notre site utilise le stockage local du navigateur (localStorage) pour mémoriser vos préférences (mode sombre/clair), le contenu de votre panier, les données du programme de parrainage et les paramètres de navigation. Contrairement aux cookies traditionnels, le localStorage ne transmet pas de données à des serveurs externes à chaque requête. Les données stockées localement restent sur votre appareil et ne sont accessibles que par notre site web. Vous pouvez effacer ces données à tout moment via les paramètres de votre navigateur.</p>
+  3122→                      </div>
+  3123→                      <div>
+  3124→                        <h4 className="font-bold text-foreground text-base mb-2">6. Vos droits</h4>
+  3125→                        <p>Conformément à la législation malienne en vigueur, vous disposez des droits suivants concernant vos données personnelles : droit d'accès (obtenir une copie de vos données), droit de rectification (corriger des données inexactes), droit de suppression (demander la suppression de vos données), droit d'opposition (vous opposer au traitement de vos données), droit à la portabilité (recevoir vos données dans un format structuré). Pour exercer ces droits, contactez-nous à contact@skdesignerluxe.com ou au +223 97 78 72 44. Nous répondrons à votre demande dans un délai de 30 jours.</p>
+  3126→                      </div>
+  3127→                      <div>
+  3128→                        <h4 className="font-bold text-foreground text-base mb-2">7. Services tiers</h4>
+  3129→                        <p>Notre site peut contenir des liens vers des services tiers (WhatsApp de Meta, Instagram, Facebook, YouTube, TikTok). Ces services ont leurs propres politiques de confidentialité, que nous vous encourageons à consulter. SK Designer Luxe n'est pas responsable des pratiques de confidentialité de ces sites tiers. L'utilisation de Wave pour les paiements est soumise aux conditions générales de Wave (Wave Financial, Inc.), qui est un service de paiement tiers indépendant.</p>
+  3130→                      </div>
+  3131→                      <div>
+  3132→                        <h4 className="font-bold text-foreground text-base mb-2">8. Modifications de la politique</h4>
+  3133→                        <p>Nous nous réservons le droit de modifier la présente politique de confidentialité à tout moment. Toute modification sera publiée sur cette page avec la date de mise à jour. Nous vous encourageons à consulter cette page régulièrement pour rester informé de tout changement. L'utilisation continue de notre site après la publication de modifications constitue votre acceptation de ces modifications.</p>
+  3134→                      </div>
+  3135→                      <div>
+  3136→                        <h4 className="font-bold text-foreground text-base mb-2">9. Contact</h4>
+  3137→                        <p>Pour toute question concernant la présente politique de confidentialité ou pour exercer vos droits, veuillez nous contacter par email à contact@skdesignerluxe.com, par téléphone au +223 97 78 72 44, ou via le formulaire de contact disponible sur notre site. SK Designer Luxe, Bamako, République du Mali.</p>
+  3138→                      </div>
+  3139→                    </div>
+  3140→                  </CardContent>
+  3141→                </Card>
+  3142→              </FadeIn>
+  3143→            )}
+  3144→          </div>
+  3145→        </section>
+  3146→
+  3147→        {/* ═══ FAQ ═══ */}
+  3148→        <section id="faq" className="py-16 sm:py-20 bg-muted/30">
+  3149→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  3150→            <FadeIn className="text-center mb-12">
+  3151→              <Badge variant="secondary" className="mb-3 bg-blue-100 text-blue-700 border-blue-200">
+  3152→                <Headphones className="h-3 w-3 mr-1" /> Support
+  3153→              </Badge>
+  3154→              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Questions Fréquentes</h2>
+  3155→              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
+  3156→                Trouvez rapidement les réponses aux questions les plus posées par nos clients. Si votre question n&apos;est pas ici, contactez-nous directement.
+  3157→              </p>
+  3158→            </FadeIn>
+  3159→
+  3160→            <div className="max-w-3xl mx-auto space-y-3">
+  3161→              {[
+  3162→                {
+  3163→                  q: "Quels modes de paiement acceptez-vous ?",
+  3164→                  a: "Tous les services sont actuellement gratuits. Pour les services payants à l'avenir, le paiement s'effectuera via l'application mobile Wave au numéro +223 97 78 72 44. C'est un moyen de paiement rapide, sécurisé et accessible à tous au Mali."
+  3165→                },
+  3166→                {
+  3167→                  q: "Combien de temps faut-il pour recevoir mon projet ?",
+  3168→                  a: "Les délais dépendent du type de service. Pour les affiches et logos, la livraison se fait entre 1 et 24 heures. Pour les outils comme CapCut Pro et PicsArt Pro, c'est également 1 à 24 heures. Les sites web nécessitent 1 à 3 jours ouvrables, et les formations suivent un programme spécifique communiqué à l'avance."
+  3169→                },
+  3170→                {
+  3171→                  q: "Puis-je demander des révisions sur mon projet ?",
+  3172→                  a: "Oui, absolument ! Des révisions sont incluses avant la validation finale. Nous travaillons avec vous pour nous assurer que le résultat correspond parfaitement à vos attentes. Votre satisfaction est notre priorité et nous ne validons pas un projet tant que vous n'êtes pas pleinement satisfait du rendu."
+  3173→                },
+  3174→                {
+  3175→                  q: "Comment se passe la livraison de mon travail ?",
+  3176→                  a: "Les fichiers sont livrés en haute qualité via WhatsApp pour une réception instantanée, ou via Google Drive pour les fichiers volumineux. Vous recevez les fichiers sources et les exports dans les formats souhaités. Tout est fait pour que vous puissiez utiliser votre création immédiatement."
+  3177→                },
+  3178→                {
+  3179→                  q: "Y a-t-il un système de parrainage ?",
+  3180→                  a: "Oui ! Notre programme de parrainage vous permet de gagner des récompenses en recommandant nos services. Pour 1 client parrainé, recevez 500 FCFA de réduction. Pour 2 clients, un service gratuit (affiche ou logo). Pour 5 clients, un logo ou mini projet entièrement offert. Pour 10 clients, un site web simple gratuitement !"
+  3181→                },
+  3182→                {
+  3183→                  q: "Le paiement est-il sécurisé ?",
+  3184→                  a: "Oui, toutes les transactions passent par Wave, un moyen de paiement sécurisé et fiable. Chaque paiement est confirmé avant le début du travail, garantissant la sécurité des deux parties. Nous ne commençons aucun travail sans confirmation claire du paiement."
+  3185→                },
+  3186→                {
+  3187→                  q: "Quels outils numériques proposez-vous ?",
+  3188→                  a: "Nous proposons CapCut Pro pour le montage vidéo professionnel, PicsArt Pro pour le design mobile, IPTV Pro pour les chaînes TV en streaming, et des livres professionnels et éducatifs pour développer vos compétences. Tous les outils sont livrés avec leur compte activé et prêt à l'emploi."
+  3189→                },
+  3190→                {
+  3191→                  q: "Proposez-vous des formations ?",
+  3192→                  a: "Oui ! Nous proposons une formation complète en design graphique à 20 000 FCFA. Cette formation couvre les bases et techniques avancées pour créer des visuels professionnels. C'est idéal pour les étudiants, les entrepreneurs et toute personne souhaitant développer des compétences en design."
+  3193→                },
+  3194→              ].map((faq, i) => (
+  3195→                <FadeIn key={i} delay={i * 0.05}>
+  3196→                  <Card className="border-0 shadow-sm hover:shadow-md transition-shadow duration-200">
+  3197→                    <CardContent className="p-5">
+  3198→                      <div className="flex items-start gap-3">
+  3199→                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 flex-shrink-0 mt-0.5">
+  3200→                          <span className="text-xs font-bold text-amber-600">Q</span>
+  3201→                        </div>
+  3202→                        <div>
+  3203→                          <h3 className="font-semibold text-sm mb-2">{faq.q}</h3>
+  3204→                          <p className="text-xs text-muted-foreground leading-relaxed">{faq.a}</p>
+  3205→                        </div>
+  3206→                      </div>
+  3207→                    </CardContent>
+  3208→                  </Card>
+  3209→                </FadeIn>
+  3210→              ))}
+  3211→            </div>
+  3212→
+  3213→            <FadeIn className="mt-8 text-center">
+  3214→              <p className="text-sm text-muted-foreground">
+  3215→                Vous avez d&apos;autres questions ?{' '}
+  3216→                <a href="#contact" className="text-amber-600 font-medium hover:underline">Contactez-nous</a> ou écrivez-nous directement sur{' '}
+  3217→                <a href="https://wa.me/22397787244" target="_blank" rel="noopener noreferrer" className="text-emerald-600 font-medium hover:underline">WhatsApp</a>.
+  3218→              </p>
+  3219→            </FadeIn>
+  3220→          </div>
+  3221→        </section>
+  3222→
+  3223→        {/* ═══ COMMANDE RAPIDE ═══ */}
+  3224→        <section id="commande-rapide" className="py-20 sm:py-24">
+  3225→          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+  3226→            <FadeIn>
+  3227→              <Card className="border-0 shadow-2xl overflow-hidden">
+  3228→                <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 p-1">
+  3229→                  <div className="bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 text-white p-6 sm:p-8 relative overflow-hidden">
+  3230→                    <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIzMCIgY3k9IjMwIiByPSIxLjUiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wOCkiLz48L3N2Zz4=')] opacity-50" />
+  3231→                    <div className="relative z-10 text-center">
+  3232→                      <Zap className="h-8 w-8 mx-auto mb-2" />
+  3233→                      <h2 className="text-2xl sm:text-3xl font-extrabold">Commander un Service</h2>
+  3234→                      <p className="mt-2 text-white/80 text-sm">Remplissez le formulaire et recevez votre service gratuitement via WhatsApp.</p>
+  3235→                    </div>
+  3236→                  </div>
+  3237→                </div>
+  3238→                <CardContent className="p-6 sm:p-8 space-y-4">
+  3239→                  <div className="space-y-2">
+  3240→                    <Label className="text-sm font-semibold">Service souhaité *</Label>
+  3241→                    <select
+  3242→                      value={quickOrder.service}
+  3243→                      onChange={(e) => setQuickOrder(prev => ({ ...prev, service: e.target.value }))}
+  3244→                      className="w-full h-11 rounded-md border border-input bg-background px-3 text-sm"
+  3245→                    >
+  3246→                      <option value="">Sélectionnez un service...</option>
+  3247→                      <option value="Affiche Professionnelle — Gratuit">Affiche Professionnelle — Gratuit</option>
+  3248→                      <option value="Logo Professionnel — Gratuit">Logo Professionnel — Gratuit</option>
+  3249→                      <option value="Site Web Simple — Gratuit">Site Web Simple — Gratuit</option>
+  3250→                      <option value="Site Web Professionnel — Gratuit">Site Web Professionnel — Gratuit</option>
+  3251→                      <option value="Montage Vidéo Pro — Gratuit">Montage Vidéo Pro — Gratuit</option>
+  3252→                      <option value="Contenu Réseaux Sociaux — Gratuit">Contenu Réseaux Sociaux — Gratuit</option>
+  3253→                      <option value="Formation Designer Graphique — Gratuit">Formation Designer Graphique — Gratuit</option>
+  3254→                      <option value="CapCut Pro — Gratuit">CapCut Pro — Gratuit</option>
+  3255→                      <option value="PicsArt Pro — Gratuit">PicsArt Pro — Gratuit</option>
+  3256→                      <option value="IPTV Pro — Gratuit">IPTV Pro — Gratuit</option>
+  3257→                      <option value="Canva Pro — Gratuit">Canva Pro — Gratuit</option>
+  3258→                      <option value="Livres Professionnels — Gratuit">Livres Professionnels — Gratuit</option>
+  3259→                    </select>
+  3260→                  </div>
+  3261→                  <div className="grid sm:grid-cols-2 gap-4">
+  3262→                    <div className="space-y-2">
+  3263→                      <Label className="text-sm font-semibold">Votre nom *</Label>
+  3264→                      <Input placeholder="Votre nom complet" value={quickOrder.name} onChange={(e) => setQuickOrder(prev => ({ ...prev, name: e.target.value }))} className="h-11" />
+  3265→                    </div>
+  3266→                    <div className="space-y-2">
+  3267→                      <Label className="text-sm font-semibold">Téléphone *</Label>
+  3268→                      <Input type="tel" placeholder="+223 XX XX XX XX" value={quickOrder.phone} onChange={(e) => setQuickOrder(prev => ({ ...prev, phone: e.target.value }))} className="h-11" />
+  3269→                    </div>
+  3270→                  </div>
+  3271→                  <div className="space-y-2">
+  3272→                    <Label className="text-sm font-semibold">Description du projet</Label>
+  3273→                    <Textarea placeholder="Décrivez votre projet en quelques mots..." rows={3} value={quickOrder.description} onChange={(e) => setQuickOrder(prev => ({ ...prev, description: e.target.value }))} />
+  3274→                  </div>
+  3275→                  <Button
+  3276→                    onClick={() => {
+  3277→                      if (!quickOrder.service || !quickOrder.name || !quickOrder.phone) {
+  3278→                        toast({ title: 'Champs requis', description: 'Service, nom et téléphone sont obligatoires.', variant: 'destructive' })
+  3279→                        return
+  3280→                      }
+  3281→                      const msg = encodeURIComponent(`Bonjour ! Je souhaite commander :\n\nService : ${quickOrder.service}\nNom : ${quickOrder.name}\nTéléphone : ${quickOrder.phone}\nDescription : ${quickOrder.description || 'Aucune description fournie.'}\n\nMerci !`)
+  3282→                      window.open(`https://wa.me/22397787244?text=${msg}`, '_blank')
+  3283→                      toast({ title: 'Redirection WhatsApp', description: 'Votre demande de commande est envoyée !' })
+  3284→                    }}
+  3285→                    className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold h-12 text-sm shadow-lg shadow-emerald-500/20"
+  3286→                  >
+  3287→                    <Send className="h-4 w-4 mr-2" /> Envoyer ma commande via WhatsApp
+  3288→                  </Button>
+  3289→                  <p className="text-[10px] text-muted-foreground text-center">Réponse garantie en moins de 30 minutes. Tous les services sont gratuits.</p>
+  3290→                </CardContent>
+  3291→              </Card>
+  3292→            </FadeIn>
+  3293→          </div>
+  3294→        </section>
+  3295→
+  3296→        {/* ═══ CTA FINAL ═══ */}
+  3297→        <section className="py-16 sm:py-20 bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 relative overflow-hidden">
+  3298→          <div className="absolute inset-0">
+  3299→            <div className="absolute top-0 left-1/4 h-64 w-64 bg-white/10 rounded-full blur-3xl" />
+  3300→            <div className="absolute bottom-0 right-1/4 h-64 w-64 bg-white/10 rounded-full blur-3xl" />
+  3301→          </div>
+  3302→          <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
+  3303→            <FadeIn>
+  3304→              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
+  3305→                Prêt à faire passer votre communication au niveau supérieur ?
+  3306→              </h2>
+  3307→              <p className="mt-4 text-lg text-white/90 max-w-2xl mx-auto leading-relaxed">
+  3308→                N'attendez plus pour donner à votre entreprise l'image qu'elle mérite. Contactez-moi dès aujourd'hui pour discuter de votre projet et obtenir un devis gratuit.
+  3309→              </p>
+  3310→              <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+  3311→                <a href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20suis%20pr%C3%AAt%20%C3%A0%20lancer%20mon%20projet%20de%20communication." target="_blank" rel="noopener noreferrer">
+  3312→                  <Button size="lg" className="bg-white text-amber-600 hover:bg-white/90 font-bold shadow-xl text-base px-8">
+  3313→                    <MessageCircle className="h-5 w-5 mr-2" /> Commander via WhatsApp
+  3314→                  </Button>
+  3315→                </a>
+  3316→                <a href="https://wa.me/22397787244?text=Bonjour%20!%20J%27aimerais%20discuter%20de%20mon%20projet%20avec%20vous." target="_blank" rel="noopener noreferrer">
+  3317→                  <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 font-semibold text-base px-8">
+  3318→                    M'envoyer un message <Send className="ml-2 h-4 w-4" />
+  3319→                  </Button>
+  3320→                </a>
+  3321→              </div>
+  3322→              <div className="mt-8 flex items-center justify-center gap-6 text-white/80 text-sm">
+  3323→                <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4" /> Livraison rapide</span>
+  3324→                <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4" /> Satisfaction garantie</span>
+  3325→                <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4" /> Paiement sécurisé</span>
+  3326→              </div>
+  3327→            </FadeIn>
+  3328→          </div>
+  3329→        </section>
+  3330→
+  3331→        {/* ═══ CONTACT ═══ */}
+  3332→        <section id="contact" className="py-16 sm:py-20 bg-muted/30">
+  3333→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  3334→            <div className="grid lg:grid-cols-2 gap-12">
+  3335→              <FadeIn>
+  3336→                <Badge variant="secondary" className="mb-3">
+  3337→                  <Send className="h-3 w-3 mr-1" /> Contact
+  3338→                </Badge>
+  3339→                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Contactez-Moi</h2>
+  3340→                <p className="mt-3 text-muted-foreground leading-relaxed max-w-md">
+  3341→                  Vous avez un projet, une question ou besoin d&apos;un service ? N&apos;hésitez pas à me contacter. Je réponds rapidement.
+  3342→                </p>
+  3343→
+  3344→                <div className="mt-8 space-y-6">
+  3345→                  <div className="flex items-center gap-4">
+  3346→                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30">
+  3347→                      <Mail className="h-5 w-5 text-amber-600" />
+  3348→                    </div>
+  3349→                    <div>
+  3350→                      <p className="text-sm font-medium">Email</p>
+  3351→                      <p className="text-sm text-muted-foreground">contact@createurboutique.com</p>
+  3352→                    </div>
+  3353→                  </div>
+  3354→                  <div className="flex items-center gap-4">
+  3355→                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30">
+  3356→                      <Phone className="h-5 w-5 text-amber-600" />
+  3357→                    </div>
+  3358→                    <div>
+  3359→                      <p className="text-sm font-medium">Téléphone</p>
+  3360→                      <p className="text-sm text-muted-foreground">+223 97 78 72 44</p>
+  3361→                    </div>
+  3362→                  </div>
+  3363→                  <div className="flex items-center gap-4">
+  3364→                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30">
+  3365→                      <MapPin className="h-5 w-5 text-amber-600" />
+  3366→                    </div>
+  3367→                    <div>
+  3368→                      <p className="text-sm font-medium">Localisation</p>
+  3369→                      <p className="text-sm text-muted-foreground">Bamako, Mali</p>
+  3370→                    </div>
+  3371→                  </div>
+  3372→                </div>
+  3373→
+  3374→                <div className="mt-8 flex gap-3">
+  3375→                  <a href="https://www.instagram.com/sk_designer_luxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors" aria-label="Instagram">
+  3376→                    <Instagram className="h-5 w-5 text-amber-600" />
+  3377→                  </a>
+  3378→                  <a href="https://www.facebook.com/skdesignerluxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors" aria-label="Facebook">
+  3379→                    <Facebook className="h-5 w-5 text-amber-600" />
+  3380→                  </a>
+  3381→                  <a href="https://www.tiktok.com/@sk_designer_luxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors" aria-label="TikTok">
+  3382→                    <Youtube className="h-5 w-5 text-amber-600" />
+  3383→                  </a>
+  3384→                </div>
+  3385→              </FadeIn>
+  3386→
+  3387→              <FadeIn delay={0.2}>
+  3388→                <form onSubmit={handleSubmitContact} className="space-y-4 rounded-2xl border bg-card p-6 sm:p-8 shadow-sm">
+  3389→                  <div className="grid sm:grid-cols-2 gap-4">
+  3390→                    <div className="space-y-2">
+  3391→                      <Label htmlFor="name">Nom *</Label>
+  3392→                      <Input
+  3393→                        id="name"
+  3394→                        placeholder="Votre nom"
+  3395→                        value={contactData.name}
+  3396→                        onChange={(e) => setContactData({ ...contactData, name: e.target.value })}
+  3397→                      />
+  3398→                    </div>
+  3399→                    <div className="space-y-2">
+  3400→                      <Label htmlFor="email">Email *</Label>
+  3401→                      <Input
+  3402→                        id="email"
+  3403→                        type="email"
+  3404→                        placeholder="votre@email.com"
+  3405→                        value={contactData.email}
+  3406→                        onChange={(e) => setContactData({ ...contactData, email: e.target.value })}
+  3407→                      />
+  3408→                    </div>
+  3409→                  </div>
+  3410→                  <div className="space-y-2">
+  3411→                    <Label htmlFor="subject">Sujet</Label>
+  3412→                    <Input
+  3413→                      id="subject"
+  3414→                      placeholder="Quel service vous intéresse ?"
+  3415→                      value={contactData.subject}
+  3416→                      onChange={(e) => setContactData({ ...contactData, subject: e.target.value })}
+  3417→                    />
+  3418→                  </div>
+  3419→                  <div className="space-y-2">
+  3420→                    <Label htmlFor="message">Message *</Label>
+  3421→                    <Textarea
+  3422→                      id="message"
+  3423→                      placeholder="Décrivez votre projet ou votre demande..."
+  3424→                      rows={5}
+  3425→                      value={contactData.message}
+  3426→                      onChange={(e) => setContactData({ ...contactData, message: e.target.value })}
+  3427→                    />
+  3428→                  </div>
+  3429→                  <Button
+  3430→                    type="submit"
+  3431→                    className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold shadow-lg shadow-amber-500/20"
+  3432→                    disabled={sending}
+  3433→                  >
+  3434→                    {sending ? (
+  3435→                      <span className="flex items-center gap-2">
+  3436→                        <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>
+  3437→                        Envoi en cours...
+  3438→                      </span>
+  3439→                    ) : (
+  3440→                      <span className="flex items-center gap-2">
+  3441→                        <MessageCircle className="h-4 w-4" /> Envoyer via WhatsApp
+  3442→                      </span>
+  3443→                    )}
+  3444→                  </Button>
+  3445→                </form>
+  3446→              </FadeIn>
+  3447→            </div>
+  3448→          </div>
+  3449→        </section>
+  3450→      </main>
+  3451→
+  3452→      <Footer />
+  3453→
+  3454→      {/* ═══ WHATSAPP FLOTTANT + BACK TO TOP ═══ */}
+  3455→      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+  3456→        {/* Back to top button with scroll progress */}
+  3457→        <AnimatePresence>
+  3458→          {showBackToTop && (
+  3459→            <motion.button
+  3460→              initial={{ opacity: 0, scale: 0.8 }}
+  3461→              animate={{ opacity: 1, scale: 1 }}
+  3462→              exit={{ opacity: 0, scale: 0.8 }}
+  3463→              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+  3464→              className="flex h-11 w-11 items-center justify-center rounded-full bg-gray-800 dark:bg-gray-700 text-white shadow-lg hover:bg-gray-700 dark:hover:bg-gray-600 transition-all duration-300 hover:scale-110"
+  3465→              aria-label="Retour en haut"
+  3466→            >
+  3467→              <ChevronUp className="h-5 w-5" />
+  3468→            </motion.button>
+  3469→          )}
+  3470→        </AnimatePresence>
+  3471→        {/* Chat automatique popup - with auto dismiss */}
+  3472→        <AnimatePresence>
+  3473→          {showChatPopup && (
+  3474→            <motion.div
+  3475→              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+  3476→              animate={{ opacity: 1, y: 0, scale: 1 }}
+  3477→              exit={{ opacity: 0, y: 10, scale: 0.95 }}
+  3478→              transition={{ delay: 3, duration: 0.4 }}
+  3479→              className="bg-white dark:bg-card border shadow-xl rounded-2xl p-4 w-72 hidden sm:block relative"
+  3480→            >
+  3481→              <button
+  3482→                onClick={() => setShowChatPopup(false)}
+  3483→                className="absolute top-2 right-2 text-muted-foreground hover:text-foreground transition-colors"
+  3484→                aria-label="Fermer"
+  3485→              >
+  3486→                <X className="h-3.5 w-3.5" />
+  3487→              </button>
+  3488→              <div className="flex items-center gap-2 mb-2">
+  3489→                <div className="relative">
+  3490→                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30">
+  3491→                    <Headphones className="h-4 w-4 text-emerald-600" />
+  3492→                  </div>
+  3493→                  <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 bg-emerald-500 rounded-full border-2 border-white dark:border-card" />
+  3494→                </div>
+  3495→                <div>
+  3496→                  <p className="text-xs font-bold">Écrivez-moi maintenant</p>
+  3497→                  <p className="text-[10px] text-emerald-600 font-medium">En ligne — réponse rapide</p>
+  3498→                </div>
+  3499→              </div>
+
+[showing lines 3000-3499 of 3586; use offset=3500 with limit to continue reading]
