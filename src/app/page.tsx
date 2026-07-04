@@ -2204,36 +2204,33 @@ export default function Home() {
                     <h3 className="text-2xl font-bold">Mentions Légales</h3>
                     <div className="space-y-5 text-sm text-muted-foreground leading-relaxed">
                       <div>
-                        <h4 className="font-bold text-foreground text-base mb-2">1. Éditeur du site</h4>
-                        <p>Le site Créateur Boutique (createur-boutique.vercel.app) est édité par Sacko Ibrahim, freelance exerçant sous la marque commerciale SK Designer Luxe. L'activité est enregistrée à Bamako, République du Mali. L'éditeur peut être contacté par les moyens suivants : téléphone au +223 97 78 72 44, email à contact@skdesignerluxe.com, ou via WhatsApp au même numéro. Le siège social est situé à Bamako, Mali.</p>
+                        <h4 className="font-bold text-foreground text-base mb-2">Éditeur du site</h4>
+                        <p>Nom / Raison sociale : SK Designer Luxe (Créateur Boutique)<br />
+                        Responsable : Ibrahim Sacko<br />
+                        Localisation : Bamako, Mali<br />
+                        Contact : contact@createurboutique.com / +223 97 78 72 44 (WhatsApp)</p>
                       </div>
                       <div>
-                        <h4 className="font-bold text-foreground text-base mb-2">2. Activité</h4>
-                        <p>SK Designer Luxe propose des services de design graphique (création de logos, affiches, identités visuelles), de développement web (sites vitrines, sites e-commerce), de montage vidéo, de marketing digital, et de formation aux outils numériques professionnels (CapCut Pro, PicsArt Pro). Les services sont proposés en ligne et livrés numériquement aux clients situés au Mali et à l'international.</p>
+                        <h4 className="font-bold text-foreground text-base mb-2">Hébergement</h4>
+                        <p>Ce site est hébergé par Vercel Inc.<br />
+                        Adresse : 340 S Lemon Ave #4133, Walnut, CA 91789, États-Unis<br />
+                        Site web : vercel.com</p>
                       </div>
                       <div>
-                        <h4 className="font-bold text-foreground text-base mb-2">3. Hébergement</h4>
-                        <p>Le site est hébergé par Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, États-Unis. L'hébergeur assure la disponibilité et la sécurité technique du site web conformément à ses conditions générales d'utilisation. Vercel est un fournisseur d'hébergement reconnu et respecte les normes de sécurité internationales.</p>
+                        <h4 className="font-bold text-foreground text-base mb-2">Propriété intellectuelle</h4>
+                        <p>L&rsquo;ensemble des contenus présents sur ce site (textes, images, logos, vidéos, créations graphiques) est la propriété de SK Designer Luxe, sauf mention contraire. Toute reproduction, distribution ou utilisation sans autorisation préalable est interdite.</p>
                       </div>
                       <div>
-                        <h4 className="font-bold text-foreground text-base mb-2">4. Propriété intellectuelle</h4>
-                        <p>L'ensemble du contenu du site (textes, images, graphismes, logos, icônes, mises en page, design) est la propriété exclusive de SK Designer Luxe ou de ses partenaires, et est protégé par les lois malienes et internationales relatives à la propriété intellectuelle. Toute reproduction, représentation, modification, publication, adaptation de tout ou partie des éléments du site, quel que soit le moyen ou le procédé utilisé, est interdite sans l'autorisation écrite préalable de SK Designer Luxe. Les travaux commandés par les clients deviennent leur propriété après paiement intégral de la facture correspondante.</p>
+                        <h4 className="font-bold text-foreground text-base mb-2">Responsabilité</h4>
+                        <p>SK Designer Luxe s&rsquo;efforce d&rsquo;assurer l&rsquo;exactitude des informations diffusées sur ce site, mais ne peut garantir l&rsquo;absence d&rsquo;erreurs ou d&rsquo;omissions. L&rsquo;utilisateur du site est seul responsable de l&rsquo;usage qu&rsquo;il fait des informations fournies.</p>
                       </div>
                       <div>
-                        <h4 className="font-bold text-foreground text-base mb-2">5. Responsabilité</h4>
-                        <p>SK Designer Luxe s'efforce de fournir des informations aussi précises que possible sur le site. Toutefois, l'éditeur ne saurait être tenu responsable des omissions, des inexactitudes et des carences dans la mise à jour de ces informations, qu'elles soient de son fait ou du fait des tiers partenaires qui lui fournissent ces informations. Les informations et services proposés sur le site le sont à titre indicatif et sont susceptibles d'évoluer. L'éditeur ne garantit pas l'exactitude, la complétude ou l'actualité des informations diffusées sur le site.</p>
+                        <h4 className="font-bold text-foreground text-base mb-2">Liens externes</h4>
+                        <p>Ce site peut contenir des liens vers des sites tiers (WhatsApp, réseaux sociaux, plateformes de paiement). SK Designer Luxe n&rsquo;est pas responsable du contenu ou des pratiques de confidentialité de ces sites externes.</p>
                       </div>
                       <div>
-                        <h4 className="font-bold text-foreground text-base mb-2">6. Prix et paiement</h4>
-                        <p>Les prix affichés sur le site sont exprimés en FCFA (Franc CFA) et incluent les taxes applicables. Le paiement s'effectue exclusivement via l'application mobile Wave au numéro +223 97 78 72 44. Les modalités de paiement (50/50 ou intégral) sont convenues avec le client avant le début de chaque commande. Aucun travail n'est entamé sans confirmation préalable du paiement par le client.</p>
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-foreground text-base mb-2">7. Droit applicable et juridiction</h4>
-                        <p>Les présentes mentions légales sont régies par le droit malien. En cas de litige, les tribunaux de Bamako, République du Mali, seront seuls compétents. Avant toute action en justice, les parties s'engagent à rechercher une solution amiable par le biais de la médiation ou de la négociation directe via WhatsApp ou email.</p>
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-foreground text-base mb-2">8. Contact</h4>
-                        <p>Pour toute question relative aux présentes mentions légales, vous pouvez contacter SK Designer Luxe par email à contact@skdesignerluxe.com, par téléphone au +223 97 78 72 44, ou via le formulaire de contact du site. Nous nous engageons à répondre dans les meilleurs délais, sous 24 heures ouvrables.</p>
+                        <h4 className="font-bold text-foreground text-base mb-2">Droit applicable</h4>
+                        <p>Les présentes mentions légales sont soumises au droit malien.</p>
                       </div>
                     </div>
                   </CardContent>
@@ -2246,43 +2243,44 @@ export default function Home() {
                 <Card className="border-0 shadow-lg max-w-4xl mx-auto">
                   <CardContent className="p-6 sm:p-10 space-y-6">
                     <h3 className="text-2xl font-bold">Politique de Confidentialité</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">Dernière mise à jour : 1er juillet 2026</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">Dernière mise à jour : 5 juillet 2026</p>
                     <div className="space-y-5 text-sm text-muted-foreground leading-relaxed">
                       <div>
-                        <h4 className="font-bold text-foreground text-base mb-2">1. Introduction</h4>
-                        <p>SK Designer Luxe s'engage à protéger la vie privée de ses utilisateurs. La présente politique de confidentialité explique comment nous collectons, utilisons, stockons et protégeons vos données personnelles lorsque vous visitez notre site web createur-boutique.vercel.app ou que vous utilisez nos services. En utilisant notre site, vous acceptez les pratiques décrites dans cette politique.</p>
+                        <h4 className="font-bold text-foreground text-base mb-2">1. Informations collectées</h4>
+                        <p>Lorsque vous utilisez ce site, je peux collecter :<br />
+                        - Les informations que vous fournissez via mes formulaires de contact (nom, numéro WhatsApp, email, description de votre projet)<br />
+                        - Des données de navigation anonymes (pages visitées, durée de visite, type d&rsquo;appareil) via des outils d&rsquo;analyse<br />
+                        - Des cookies pour améliorer votre expérience de navigation</p>
                       </div>
                       <div>
-                        <h4 className="font-bold text-foreground text-base mb-2">2. Données collectées</h4>
-                        <p>Nous pouvons collecter les données personnelles suivantes : votre nom complet, votre adresse email, votre numéro de téléphone, votre numéro Wave, les messages que vous nous envoyez via le formulaire de contact ou WhatsApp, votre adresse IP (collectée automatiquement par notre hébergeur), le type de navigateur et d'appareil utilisé, les pages visitées et la durée de la visite. Ces données sont collectées uniquement lorsque vous les fournissez volontairement via nos formulaires ou lors de votre interaction avec nos services.</p>
+                        <h4 className="font-bold text-foreground text-base mb-2">2. Utilisation des informations</h4>
+                        <p>Les informations collectées servent à :<br />
+                        - Répondre à vos demandes de devis ou de service<br />
+                        - Améliorer la qualité de mes services et de mon site<br />
+                        - Vous contacter au sujet de votre commande ou formation<br />
+                        - Afficher des publicités pertinentes (si applicable)</p>
                       </div>
                       <div>
-                        <h4 className="font-bold text-foreground text-base mb-2">3. Utilisation des données</h4>
-                        <p>Vos données personnelles sont utilisées exclusivement pour les finalités suivantes : répondre à vos demandes de contact et de devis, traiter vos commandes et assurer le suivi de la livraison, vous envoyer des informations relatives à vos commandes en cours, améliorer nos services et l'expérience utilisateur sur notre site, vous envoyer notre newsletter (uniquement si vous vous êtes inscrit volontairement), gérer le programme de parrainage et le suivi des transactions de dépôt/retrait dans le portefeuille. Nous ne vendons, ne louons et ne partageons jamais vos données personnelles avec des tiers à des fins commerciales.</p>
+                        <h4 className="font-bold text-foreground text-base mb-2">3. Partage des informations</h4>
+                        <p>Je ne vends ni ne loue vos informations personnelles à des tiers. Elles peuvent être partagées uniquement :<br />
+                        - Avec des prestataires techniques nécessaires au fonctionnement du site (hébergement)<br />
+                        - Si la loi l&rsquo;exige</p>
                       </div>
                       <div>
-                        <h4 className="font-bold text-foreground text-base mb-2">4. Stockage et sécurité des données</h4>
-                        <p>Vos données sont stockées localement dans votre navigateur (localStorage) pour les fonctionnalités du site telles que le panier, les préférences d'affichage et le programme de parrainage. Les données de contact et de commande sont traitées principalement via WhatsApp pour garantir une communication directe et sécurisée. Nous mettons en oeuvre des mesures de sécurité techniques et organisationnelles appropriées pour protéger vos données contre tout accès non autorisé, toute modification, divulgation ou destruction. Cependant, aucune méthode de transmission sur Internet n'est totalement sécurisée, et nous ne pouvons garantir une sécurité absolue.</p>
+                        <h4 className="font-bold text-foreground text-base mb-2">4. Cookies et publicité</h4>
+                        <p>Ce site peut utiliser des cookies, y compris ceux de services publicitaires tiers (comme Google AdSense), pour proposer des annonces adaptées à vos centres d&rsquo;intérêt. Vous pouvez désactiver les cookies dans les paramètres de votre navigateur à tout moment.</p>
                       </div>
                       <div>
-                        <h4 className="font-bold text-foreground text-base mb-2">5. Cookies et technologies similaires</h4>
-                        <p>Notre site utilise le stockage local du navigateur (localStorage) pour mémoriser vos préférences (mode sombre/clair), le contenu de votre panier, les données du programme de parrainage et les paramètres de navigation. Contrairement aux cookies traditionnels, le localStorage ne transmet pas de données à des serveurs externes à chaque requête. Les données stockées localement restent sur votre appareil et ne sont accessibles que par notre site web. Vous pouvez effacer ces données à tout moment via les paramètres de votre navigateur.</p>
+                        <h4 className="font-bold text-foreground text-base mb-2">5. Sécurité</h4>
+                        <p>Je mets en oeuvre des mesures raisonnables pour protéger vos informations, mais aucun système n&rsquo;est totalement sécurisé à 100%.</p>
                       </div>
                       <div>
                         <h4 className="font-bold text-foreground text-base mb-2">6. Vos droits</h4>
-                        <p>Conformément à la législation malienne en vigueur, vous disposez des droits suivants concernant vos données personnelles : droit d'accès (obtenir une copie de vos données), droit de rectification (corriger des données inexactes), droit de suppression (demander la suppression de vos données), droit d'opposition (vous opposer au traitement de vos données), droit à la portabilité (recevoir vos données dans un format structuré). Pour exercer ces droits, contactez-nous à contact@skdesignerluxe.com ou au +223 97 78 72 44. Nous répondrons à votre demande dans un délai de 30 jours.</p>
+                        <p>Vous pouvez à tout moment demander la suppression de vos données personnelles en me contactant via WhatsApp ou email.</p>
                       </div>
                       <div>
-                        <h4 className="font-bold text-foreground text-base mb-2">7. Services tiers</h4>
-                        <p>Notre site peut contenir des liens vers des services tiers (WhatsApp de Meta, Instagram, Facebook, YouTube, TikTok). Ces services ont leurs propres politiques de confidentialité, que nous vous encourageons à consulter. SK Designer Luxe n'est pas responsable des pratiques de confidentialité de ces sites tiers. L'utilisation de Wave pour les paiements est soumise aux conditions générales de Wave (Wave Financial, Inc.), qui est un service de paiement tiers indépendant.</p>
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-foreground text-base mb-2">8. Modifications de la politique</h4>
-                        <p>Nous nous réservons le droit de modifier la présente politique de confidentialité à tout moment. Toute modification sera publiée sur cette page avec la date de mise à jour. Nous vous encourageons à consulter cette page régulièrement pour rester informé de tout changement. L'utilisation continue de notre site après la publication de modifications constitue votre acceptation de ces modifications.</p>
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-foreground text-base mb-2">9. Contact</h4>
-                        <p>Pour toute question concernant la présente politique de confidentialité ou pour exercer vos droits, veuillez nous contacter par email à contact@skdesignerluxe.com, par téléphone au +223 97 78 72 44, ou via le formulaire de contact disponible sur notre site. SK Designer Luxe, Bamako, République du Mali.</p>
+                        <h4 className="font-bold text-foreground text-base mb-2">7. Contact</h4>
+                        <p>Pour toute question concernant cette politique : contact@createurboutique.com</p>
                       </div>
                     </div>
                   </CardContent>
