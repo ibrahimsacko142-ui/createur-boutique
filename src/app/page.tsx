@@ -328,6 +328,7 @@ export default function Home() {
   const [serviceCategory, setServiceCategory] = useState('all')
   const [portfolioFilter, setPortfolioFilter] = useState('Tous')
   const [quickOrder, setQuickOrder] = useState({ service: '', name: '', phone: '', description: '' })
+  const [inscriptionData, setInscriptionData] = useState({ name: '', phone: '', formation: '' })
   const [selectedArticle, setSelectedArticle] = useState<typeof blogArticles[number] | null>(null)
   const [faqOpen, setFaqOpen] = useState<string | null>(null)
   const [legalPage, setLegalPage] = useState<'mentions' | 'confidentialite' | null>(null)
@@ -1166,6 +1167,121 @@ export default function Home() {
                 </motion.a>
               ))}
             </div>
+
+            {/* CTA vers inscription */}
+            <FadeIn delay={0.2} className="mt-8 text-center">
+              <a href="#inscription">
+                <Button size="lg" className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-semibold shadow-lg shadow-emerald-500/20 transition-transform duration-200 hover:scale-105 active:scale-95">
+                  <UserCheck className="h-4 w-4 mr-2" /> Je veux m'inscrire maintenant
+                </Button>
+              </a>
+              <p className="mt-3 text-slate-400 text-xs">Remplissez le formulaire d'inscription ci-dessous</p>
+            </FadeIn>
+          </div>
+        </section>
+
+        {/* ═══ INSCRIPTION AUX FORMATIONS ═══ */}
+        <section id="inscription" className="py-16 sm:py-20 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 dark:from-emerald-950/20 dark:via-teal-950/10 dark:to-cyan-950/10 relative overflow-hidden">
+          <div className="absolute -top-20 -right-20 h-80 w-80 bg-emerald-200/30 dark:bg-emerald-900/10 rounded-full blur-3xl" />
+          <div className="absolute -bottom-20 -left-20 h-80 w-80 bg-teal-200/20 dark:bg-teal-900/10 rounded-full blur-3xl" />
+          <div className="relative mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+            <FadeIn>
+              <div className="text-center mb-10">
+                <Badge variant="secondary" className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800">
+                  <UserCheck className="h-3 w-3 mr-1" /> Inscription
+                </Badge>
+                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Inscrivez-vous à une Formation</h2>
+                <p className="mt-4 text-muted-foreground max-w-xl mx-auto leading-relaxed">
+                  Remplissez vos informations et choisissez la formation qui vous intéresse. Votre demande d&apos;inscription sera envoyée directement via WhatsApp pour un traitement rapide.
+                </p>
+              </div>
+            </FadeIn>
+
+            <FadeIn delay={0.15}>
+              <Card className="border-0 shadow-xl overflow-hidden">
+                <div className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 p-1">
+                  <div className="bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-600 text-white p-6 sm:p-8 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIzMCIgY3k9IjMwIiByPSIxLjUiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wOCkiLz48L3N2Zz4=')] opacity-50" />
+                    <div className="relative z-10 text-center">
+                      <GraduationCap className="h-8 w-8 mx-auto mb-2" />
+                      <h3 className="text-xl sm:text-2xl font-extrabold">Formulaire d&apos;Inscription</h3>
+                      <p className="mt-1.5 text-white/80 text-sm">Gratuit — Réponse rapide via WhatsApp</p>
+                    </div>
+                  </div>
+                </div>
+                <CardContent className="p-6 sm:p-8 space-y-5">
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-sm font-semibold flex items-center gap-1.5">
+                        <UserCheck className="h-3.5 w-3.5 text-emerald-600" /> Votre nom complet *
+                      </Label>
+                      <Input
+                        placeholder="Ex: Amadou Diallo"
+                        value={inscriptionData.name}
+                        onChange={(e) => setInscriptionData(prev => ({ ...prev, name: e.target.value }))}
+                        className="h-11 bg-white dark:bg-background"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-semibold flex items-center gap-1.5">
+                        <Phone className="h-3.5 w-3.5 text-emerald-600" /> Votre numéro de téléphone *
+                      </Label>
+                      <Input
+                        type="tel"
+                        placeholder="Ex: +223 70 00 00 00"
+                        value={inscriptionData.phone}
+                        onChange={(e) => setInscriptionData(prev => ({ ...prev, phone: e.target.value }))}
+                        className="h-11 bg-white dark:bg-background"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-sm font-semibold flex items-center gap-1.5">
+                      <GraduationCap className="h-3.5 w-3.5 text-emerald-600" /> Formation souhaitée *
+                    </Label>
+                    <select
+                      value={inscriptionData.formation}
+                      onChange={(e) => setInscriptionData(prev => ({ ...prev, formation: e.target.value }))}
+                      className="w-full h-12 rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500"
+                    >
+                      <option value="">— Choisissez une formation —</option>
+                      {formations.map((form, i) => (
+                        <option key={i} value={form.text}>{form.text}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <Button
+                    onClick={() => {
+                      if (!inscriptionData.name || !inscriptionData.phone || !inscriptionData.formation) {
+                        toast({ title: 'Champs requis', description: 'Veuillez remplir votre nom, numéro et choisir une formation.', variant: 'destructive' })
+                        return
+                      }
+                      const msg = encodeURIComponent(
+                        `Bonjour Sacko ! Je souhaite m'inscrire à une formation.\n\n` +
+                        `Nom : ${inscriptionData.name}\n` +
+                        `Téléphone : ${inscriptionData.phone}\n` +
+                        `Formation choisie : ${inscriptionData.formation}\n\n` +
+                        `Merci de me confirmer mon inscription et de me donner les prochaines étapes !`
+                      )
+                      window.open(`https://wa.me/22397787244?text=${msg}`, '_blank')
+                      toast({ title: 'Inscription envoyée !', description: 'Votre demande d\'inscription a été envoyée via WhatsApp. Vous recevrez une confirmation rapidement.' })
+                      setInscriptionData({ name: '', phone: '', formation: '' })
+                    }}
+                    className="w-full bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-600 hover:via-teal-600 hover:to-cyan-600 text-white font-bold h-12 text-sm shadow-lg shadow-emerald-500/20 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99]"
+                  >
+                    <MessageCircle className="h-4 w-4 mr-2" /> M'inscrire via WhatsApp
+                  </Button>
+
+                  <div className="flex items-center justify-center gap-4 pt-2 text-xs text-muted-foreground">
+                    <span className="flex items-center gap-1"><Gift className="h-3 w-3 text-emerald-500" /> 100% Gratuit</span>
+                    <span className="flex items-center gap-1"><Zap className="h-3 w-3 text-emerald-500" /> Réponse rapide</span>
+                    <span className="flex items-center gap-1"><Shield className="h-3 w-3 text-emerald-500" /> Données sécurisées</span>
+                  </div>
+                </CardContent>
+              </Card>
+            </FadeIn>
           </div>
         </section>
 

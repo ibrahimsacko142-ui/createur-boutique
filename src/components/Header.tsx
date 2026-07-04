@@ -11,6 +11,7 @@ const navLinks = [
   { label: 'Services', href: '#services' },
   { label: 'Résultats', href: '#ce-que-vous-obtenez' },
   { label: 'Portfolio', href: '#portfolio' },
+  { label: 'Inscription', href: '#inscription' },
   { label: 'À propos', href: '#apropos' },
   { label: 'Témoignages', href: '#temoignages' },
   { label: 'FAQ', href: '#faq' },
