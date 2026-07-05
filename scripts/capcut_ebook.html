@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide Complet du Montage Video avec CapCut - Studio Creatif</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+    <style>
+        @page {
+            size: 720px 1020px;
+            margin: 0;
+        }
+
+        :root {
+            --c-bg: #0a0a0f;
+            --c-bg-card: #13131a;
+            --c-bg-card2: #1a1a24;
+            --c-text: #e8e6e3;
+            --c-text-dim: #9ca3af;
+            --c-accent: #8b5cf6;
+            --c-accent2: #a78bfa;
+            --c-accent-glow: rgba(139, 92, 246, 0.15);
+            --c-border: rgba(139, 92, 246, 0.2);
+            --c-highlight: #c4b5fd;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 720px;
+            background: var(--c-bg);
+            color: var(--c-text);
+            font-family: 'Inter', sans-serif;
+        }
+
+        @media screen {
+            html {
+                height: auto;
+                display: flex;
+                justify-content: center;
+                background: #111;
+            }
+            body {
+                transform-origin: top center;
+                margin: 20px auto;
+            }
+        }
+
+        /* ===== COVER ===== */
+        .cover {
+            width: 720px;
+            height: 1020px;
+            box-sizing: border-box;
+            break-after: page;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(160deg, #0a0a0f 0%, #1a0a2e 40%, #0a0a0f 100%);
+            padding: 60px 55px;
+        }
+
+        .cover::before {
+            display: none;
+        }
+
+        .cover::after {
+            display: none;
+        }
+
+        .cover-badge {
+            display: inline-block;
+            padding: 8px 24px;
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid var(--c-border);
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--c-accent2);
+            margin-bottom: 30px;
+            z-index: 1;
+        }
+
+        .cover-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 52px;
+            font-weight: 900;
+            line-height: 1.1;
+            text-align: center;
+            color: #ffffff;
+            z-index: 1;
+            margin-bottom: 16px;
+        }
+
+        .cover-title span {
+            background: linear-gradient(135deg, var(--c-accent), var(--c-accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cover-subtitle {
+            font-size: 18px;
+            font-weight: 300;
+            color: var(--c-text-dim);
+            text-align: center;
+            z-index: 1;
+            margin-bottom: 50px;
+            line-height: 1.5;
+            max-width: 480px;
+        }
+
+        .cover-line {
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--c-accent), var(--c-accent2));
+            border-radius: 2px;
+            margin-bottom: 40px;
+            z-index: 1;
+        }
+
+        .cover-meta {
+            font-size: 12px;
+            color: var(--c-text-dim);
+            z-index: 1;
+            letter-spacing: 1px;
+        }
+
+        .cover-meta strong {
+            color: var(--c-accent2);
+            font-weight: 600;
+        }
+
+        .cover-decoration {
+            position: absolute;
+            top: 30px;
+            left: 55px;
+            right: 55px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.15), transparent);
+            z-index: 0;
+        }
+
+        .cover-bottom {
+            position: absolute;
+            bottom: 40px;
+            left: 55px;
+            right: 55px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cover-bottom-text {
+            font-size: 10px;
+            color: #4b5563;
+            letter-spacing: 1px;
+        }
+
+        .cover-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .cover-dots span {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--c-accent);
+            opacity: 0.5;
+        }
+
+        .cover-dots span:first-child {
+            opacity: 1;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            padding: 55px 60px 40px 60px;
+        }
+
+        .section-tag {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--c-accent);
+            margin-bottom: 8px;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.2;
+            margin-bottom: 6px;
+        }
+
+        .divider {
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--c-accent), transparent);
+            margin-bottom: 20px;
+            border-radius: 1px;
+        }
+
+        .chapter-header {
+            break-after: avoid;
+            break-inside: avoid;
+            margin-top: 28px;
+        }
+
+        .body-text {
+            font-size: 15px;
+            font-weight: 400;
+            line-height: 1.75;
+            color: var(--c-text);
+            margin-bottom: 14px;
+        }
+
+        .body-text strong {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .body-text .accent {
+            color: var(--c-accent2);
+            font-weight: 500;
+        }
+
+        /* ===== CARDS ===== */
+        .card {
+            background: var(--c-bg-card);
+            border: 1px solid var(--c-border);
+            border-radius: 12px;
+            padding: 20px 22px;
+            margin-bottom: 12px;
+            break-inside: avoid;
+        }
+
+        .card-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .card-text {
+            font-size: 13.5px;
+            line-height: 1.65;
+            color: var(--c-text-dim);
+        }
+
+        .card-number {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            line-height: 28px;
+            text-align: center;
+            background: var(--c-accent-glow);
+            border: 1px solid var(--c-border);
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--c-accent2);
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        /* ===== TIP BOX ===== */
+        .tip-box {
+            background: rgba(139, 92, 246, 0.06);
+            border-left: 3px solid var(--c-accent);
+            border-radius: 0 10px 10px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            break-inside: avoid;
+        }
+
+        .tip-label {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--c-accent2);
+            margin-bottom: 6px;
+        }
+
+        .tip-text {
+            font-size: 13.5px;
+            line-height: 1.6;
+            color: var(--c-text);
+        }
+
+        /* ===== QUOTE ===== */
+        .quote-block {
+            border-left: 2px solid var(--c-accent);
+            padding: 12px 20px;
+            margin: 18px 0;
+            break-inside: avoid;
+        }
+
+        .quote-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            font-style: italic;
+            color: var(--c-highlight);
+            line-height: 1.6;
+        }
+
+        /* ===== LIST ===== */
+        .styled-list {
+            margin: 12px 0 16px 0;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .styled-list li {
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--c-text);
+            padding: 4px 0 4px 20px;
+            position: relative;
+        }
+
+        .styled-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 13px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--c-accent);
+        }
+
+        /* ===== TWO COLUMN ===== */
+        .two-col {
+            display: flex;
+            gap: 14px;
+            margin: 14px 0;
+        }
+
+        .two-col .col {
+            flex: 1;
+            background: var(--c-bg-card);
+            border: 1px solid var(--c-border);
+            border-radius: 12px;
+            padding: 18px;
+            break-inside: avoid;
+        }
+
+        .col-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--c-accent2);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .col-text {
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--c-text-dim);
+        }
+
+        /* ===== ENDING ===== */
+        .ending {
+            width: 720px;
+            height: 1020px;
+            box-sizing: border-box;
+            break-before: page;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(160deg, #0a0a0f 0%, #1a0a2e 50%, #0a0a0f 100%);
+            padding: 60px 55px;
+        }
+
+        .ending-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-weight: 700;
+            color: #ffffff;
+            text-align: center;
+            line-height: 1.3;
+            margin-bottom: 24px;
+        }
+
+        .ending-sub {
+            font-size: 16px;
+            color: var(--c-text-dim);
+            text-align: center;
+            line-height: 1.6;
+            max-width: 420px;
+        }
+
+        .ending-contact {
+            margin-top: 40px;
+            padding: 14px 32px;
+            background: var(--c-accent-glow);
+            border: 1px solid var(--c-border);
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--c-accent2);
+        }
+
+        .ending-line {
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--c-accent), transparent);
+            margin: 24px auto;
+            border-radius: 1px;
+        }
+
+        .ending-footer {
+            position: absolute;
+            bottom: 40px;
+            font-size: 10px;
+            color: #4b5563;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- ==================== COVER ==================== -->
+<div class="cover">
+    <div class="cover-badge">Formation Studio Creatif</div>
+    <div class="cover-title">Guide Complet du<br><span>Montage Video</span></div>
+    <div class="cover-subtitle">Maitrisez CapCut de A a Z : de l'import a l'export, en passant par les effets, transitions, textes et techniques professionnelles.</div>
+    <div class="cover-meta" style="margin-top: 30px;">Par <strong>Sacko</strong> &mdash; Studio Creatif Bamako</div>
+    <div class="cover-bottom-text" style="position: absolute; bottom: 40px; left: 55px; font-size: 10px; color: #4b5563; letter-spacing: 1px;">EDITION 2025</div>
+</div>
+
+<!-- ==================== MAIN CONTENT ==================== -->
+<div class="main-content">
+
+    <!-- ===== INTRODUCTION ===== -->
+    <div class="chapter-header">
+        <div class="section-tag">Introduction</div>
+        <div class="section-title">Pourquoi Apprendre le Montage Video ?</div>
+        <div class="divider"></div>
+    </div>
+
+    <div class="body-text">
+        La video est devenue le format le plus consomme sur internet. Chaque jour, des milliards de videos sont regardees sur YouTube, TikTok, Instagram, Facebook et bien d'autres plateformes. Que vous soyez entrepreneur, creatif, etudiant ou simplement passionne par la creation de contenu, savoir monter une video est une competence indispensable en 2025. Le montage video vous permet de transformer des images brutes en un contenu captivant, capable d'attirer l'attention, de transmettre un message clair et de susciter l'emotion chez votre public.
+    </div>
+
+    <div class="body-text">
+        <strong>CapCut</strong> est l'outil ideal pour debuter et meme progresser dans le montage video. Developpe par ByteDance (la meme entreprise qui a cree TikTok), CapCut offre une interface intuitive, des fonctionnalites professionnelles et un accès gratuit a une immense bibliotheque d'effets, de musiques et de templates. Contrairement a des logiciels complexes comme Adobe Premiere Pro ou DaVinci Resolve, CapCut a ete concu pour etre accessible a tous, tout en offrant des resultats visuellement impressionnants qui rivalisent avec ceux des logiciels professionnels.
+    </div>
+
+    <div class="body-text">
+        Dans ce guide complet, vous allez decouvrir toutes les techniques et astuces pour maitriser CapCut. Nous commencerons par les bases de l'interface, puis nous explorerons progressivement les fonctionnalites avancees. Que vous souhaitiez creer du contenu pour les reseaux sociaux, monter des videos pour votre entreprise, ou simplement exprimer votre creativite, ce livre vous accompagnera pas a pas dans votre apprentissage. Chaque chapitre est construit de maniere pratique, avec des explications detaillees et des conseils applicables immediatement.
+    </div>
+
+    <div class="tip-box">
+        <div class="tip-label">Conseil</div>
+        <div class="tip-text">
+            Pour tirer le meilleur parti de ce guide, ouvrez CapCut sur votre telephone ou votre ordinateur et pratiquez chaque technique au fur et a mesure de votre lecture. Le montage video est un art qui s'apprend principalement par la pratique reguliere et l'experimentation.
+        </div>
+    </div>
+
+    <!-- ===== CHAPITRE 1 ===== -->
+    <div class="chapter-header">
+        <div class="section-tag">Chapitre 1</div>
+        <div class="section-title">Decouvrir CapCut : Interface et Premiers Pas</div>
+        <div class="divider"></div>
+    </div>
+
+    <div class="body-text">
+        Avant de plonger dans le montage, il est essentiel de bien comprendre l'interface de CapCut. Que vous utilisiez la version mobile (Android ou iOS) ou la version bureau (Windows ou Mac), l'interface reste globalement similaire dans sa logique. L'ecran principal se divise en plusieurs zones distinctes, chacune ayant un role specifique dans votre flux de travail. Prendre le temps de se familiariser avec ces zones vous fera gagner un temps considerable par la suite.
+    </div>
+
+    <div class="body-text">
+        <strong>La zone de previsualisation</strong> occupe la partie superieure de l'ecran. C'est ici que vous visualisez le rendu de votre video en temps reel. Chaque modification que vous apportez (ajout d'un effet, coupe d'un plan, insertion d'un texte) se reflète immediatement dans cette zone. Vous pouvez lire, mettre en pause, avancer ou reculer dans votre video a l'aide des controles de lecture. Sur la version bureau, cette zone est plus grande et offre une meilleure precision pour evaluer les details de votre montage, ce qui est particulierement utile pour les ajustements fins de synchronisation et de timing.
+    </div>
+
+    <div class="body-text">
+        <strong>La timeline</strong> est le coeur de votre montage. Elle se situe en bas de l'ecran et affiche toutes vos pistes video et audio sous forme de bandes horizontales. Chaque clip, chaque morceau de musique, chaque texte apparait comme un segment sur cette timeline. Vous pouvez deplacer ces segments, les redimensionner, les couper et les organiser selon l'ordre souhaité. Sur la version mobile, vous naviguez horizontalement en faisant glisser votre doigt, tandis que sur la version bureau, vous pouvez utiliser le zoom pour travailler avec plus de precision sur des sections specifiques.
+    </div>
+
+    <div class="body-text">
+        <strong>La barre d'outils</strong> regroupe toutes les fonctionnalites de montage accessibles en un tap ou un clic. Elle comprend les outils de coupe, les effets visuels, les filtres, les transitions, les textes, les autocollants, la musique, les ajustements audio et bien plus encore. L'organisation de ces outils peut varier legerement entre la version mobile et bureau, mais la logique reste la meme : vous selectionnez d'abord un clip sur la timeline, puis vous choisissez l'outil souhaite dans la barre d'outils pour lui appliquer une modification.
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span class="card-number">1</span> Creer votre premier projet</div>
+        <div class="card-text">
+            Ouvrez CapCut et appuyez sur le bouton <strong>"Nouveau projet"</strong>. Selectionnez une ou plusieurs videos depuis votre galerie. CapCut va les importer sur la timeline. Vous verrez vos clips apparaitre sous forme de rectangles avec des vignettes d'apercu. Pour l'instant, ne vous souciez pas de l'ordre ou des decoupes : l'objectif est simplement de comprendre comment les elements s'affichent sur la timeline et dans la zone de previsualisation. Appuyez sur le bouton de lecture pour voir le resultat brut de vos clips enchaines.
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span class="card-number">2</span> Naviguer sur la timeline</div>
+        <div class="card-text">
+            Pour vous deplacer sur la timeline, appuyez longuement sur un clip et faites-le glisser vers la gauche ou la droite. Pour effectuer un zoom avant ou arriere sur la timeline (utile pour travailler avec precision), pincez l'ecran sur mobile ou utilisez la molette de la souris sur bureau. Cette fonctionnalite est cruciale lorsque vous devez synchroniser un effet avec un moment precis de la video ou decouper un clip a la milliseconde pres.
+        </div>
+    </div>
+
+    <div class="tip-box">
+        <div class="tip-label">Astuce Pro</div>
+        <div class="tip-text">
+            Sur la version bureau de CapCut, utilisez les raccourcis clavier pour accelerer votre workflow. La barre d'espace permet de lire/pauser, Ctrl+Z pour annuler, Ctrl+C / Ctrl+V pour copier/coller un clip. Ces raccourcis vous feront gagner un temps considerable une fois que vous les aurez integres dans vos habitudes de travail.
+        </div>
+    </div>
+
+    <!-- ===== CHAPITRE 2 ===== -->
+    <div class="chapter-header">
+        <div class="section-tag">Chapitre 2</div>
+        <div class="section-title">Importer et Gerer vos Medias</div>
+        <div class="divider"></div>
+    </div>
+
+    <div class="body-text">
+        L'importation des medias est la premiere etape concrete de tout projet de montage. CapCut prend en charge une grande variete de formats video (MP4, MOV, AVI, MKV), audio (MP3, WAV, AAC) et image (JPG, PNG, WEBP). Cette compatibilite etendue vous permet de travailler avec presque tous les fichiers que vous possedez, sans avoir a les convertir au prealable. Vous pouvez importer des videos tournees avec votre telephone, des images telechargees, des enregistrements audio, des captures d'ecran et meme des fichiers provenant d'autres appareils ou logiciels.
+    </div>
+
+    <div class="body-text">
+        Pour importer des medias, deux methodes s'offrent a vous. La premiere consiste a creer un nouveau projet et a selectionner directement les fichiers depuis votre galerie ou votre explorateur de fichiers. La seconde methode, plus flexible, permet d'ajouter des medias a un projet existant : il suffit d'appuyer sur le bouton d'ajout (represente par un signe "+" ou une icone de mediatheque) pour acceder a vos fichiers et les inserer sur la timeline. Vous pouvez egalement utiliser le presse-papiers pour coller des images ou des videos copiees depuis d'autres applications.
+    </div>
+
+    <div class="body-text">
+        <strong>L'organisation des medias</strong> est une competence souvent negligee par les debutants, mais elle fait toute la difference dans un projet serieux. Avant meme de commencer a monter, prenez l'habitude de nommer clairement vos fichiers source et de les organiser dans des dossiers logiques (par exemple : "Interviews", "Plans larges", "Musiques", "Effets sonores"). Dans CapCut, vous pouvez utiliser la fonctionnalite de favoris pour marquer les medias que vous utilisez frequemment, ce qui evite de les rechercher a chaque nouveau projet. Une bonne organisation vous fera gagner des heures de travail, surtout lorsque vos projets deviennent plus complexes et contiennent des dizaines de fichiers differents.
+    </div>
+
+    <div class="two-col">
+        <div class="col">
+            <div class="col-title">Format Video Recommandes</div>
+            <div class="col-text">
+                MP4 (H.264) est le format le plus universel et le mieux supporte par CapCut. Pour une qualite optimale, privilegiez une resolution de 1080p (1920x1080) a 30 images par seconde. Le format MOV d'Apple est egalement excellent si vous travaillez sur iPhone ou Mac, car il preserve une qualite d'image superieure grace au codec H.265 (HEVC).
+            </div>
+        </div>
+        <div class="col">
+            <div class="col-title">Format Audio Recommandes</div>
+            <div class="col-text">
+                Le MP3 est le format audio le plus courant et le plus leger. Cependant, pour une qualite sonore superieure, preferez le WAV qui est un format non compresse. CapCut gere les deux formats sans probleme. Si vous utilisez de la musique libre de droits, verifiez toujours la licence d'utilisation pour eviter tout probleme de droits d'auteur.
+            </div>
+        </div>
+    </div>
+
+    <div class="tip-box">
+        <div class="tip-label">Bonnes Pratiques</div>
+        <div class="tip-text">
+            Avant d'importer vos fichiers dans CapCut, assurez-vous qu'ils sont stockes dans un dossier facilement accessible sur votre appareil. Evitez d'importer des fichiers depuis des services cloud (Google Drive, iCloud) directement, car cela peut ralentir le chargement et provoquer des erreurs de synchronisation. Telechargez d'abord vos fichiers localement, puis importez-les dans CapCut.
+        </div>
+    </div>
+
+    <!-- ===== CHAPITRE 3 ===== -->
+    <div class="chapter-header">
+        <div class="section-tag">Chapitre 3</div>
+        <div class="section-title">Les Coupes de Base : Decouper, Fractionner, Supprimer</div>
+        <div class="divider"></div>
+    </div>
+
+    <div class="body-text">
+        La coupe est l'operation la plus fondamentale du montage video. C'est elle qui vous permet de ne garder que les meilleures parties de vos images et d'eliminer les erreurs, les temps morts et les prises ratées. Maitriser les differentes techniques de coupe est absolument essentiel, car tout le reste de votre montage (effets, transitions, synchronisation musicale) repose sur des clips bien decoupes. Un bon montage commence toujours par une solide structure de coupe qui donne du rythme et de la fluidite a votre video.
+    </div>
+
+    <div class="body-text">
+        <strong>La coupe simple</strong> est la technique la plus utilisee. Placez le curseur de lecture a l'endroit souhaite sur la timeline, puis appuyez sur l'outil de coupe (l'icone de ciseaux ou de scie). Votre clip sera separe en deux parties a cet endroit precis. Vous pouvez ensuite supprimer la partie non desiree en la selectionnant et en appuyant sur supprimer. Cette technique est ideale pour retirer les debuts et fins inutiles de vos clips, ou pour eliminer les moments ou vous hesitez, oubliez votre texte, ou capturez des plans instables.
+    </div>
+
+    <div class="body-text">
+        <strong>Le fractionnement multiple</strong> vous permet de decouper un clip en plusieurs segments en une seule operation. C'est particulierement utile lorsque vous souhaitez isoler plusieurs extraits d'une meme video source. Sur CapCut, vous pouvez fractionner un clip en placant le curseur et en appuyant sur couper, puis repeter l'operation autant de fois que necessaire. Chaque segment obtenu peut etre deplace, supprime ou traite independamment sur la timeline, ce qui vous donne un controle total sur la structure narrative de votre video.
+    </div>
+
+    <div class="body-text">
+        <strong>Le rognage et le recadrage</strong> sont deux operations complementaires de la coupe. Le rognage consiste a reduire la duree d'un clip en le faisant glisser depuis ses bords (debut ou fin), tandis que le recadrage modifie le cadre visuel (zoom, deplacement du cadre). CapCut propose des ratios predéfinis (16:9 pour YouTube, 9:16 pour TikTok/Reels, 1:1 pour Instagram) qui adaptent automatiquement le cadre a la plateforme cible. Vous pouvez egalement recadrer manuellement en deplacant et en redimensionnant le cadre pour mettre en valeur un sujet specifique dans l'image.
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span class="card-number">3</span> Technique de la coupe J-Cut et L-Cut</div>
+        <div class="card-text">
+            Les coupes J et L sont des techniques avancees qui rendent vos transitions plus fluides et professionnelles. Un <strong>J-Cut</strong> consiste a faire commencer l'audio du clip suivant avant que l'image n'apparaisse (la forme en J represente l'audio qui depasse). Un <strong>L-Cut</strong> fait l'inverse : l'audio du clip precedent continue pendant que l'image du clip suivant est deja affichee. Ces techniques creent un lien auditif entre les scenes et evitent les transitions brutales qui perturbent le spectateur.
+        </div>
+    </div>
+
+    <div class="tip-box">
+        <div class="tip-label">Astuce de Rythme</div>
+        <div class="tip-text">
+            Pour un montage dynamique sur de la musique, effectuez vos coupes en synchronisation avec les temps de la musique. Ecoutez votre morceau plusieurs fois et identifiez les changements de rythme, les drops et les temps forts. Alignez vos coupes sur ces moments pour creer un effet visuel qui suit naturellement l'energie de la musique. Cette technique est la base du montage musical et des videos virales sur les reseaux sociaux.
+        </div>
+    </div>
+
+    <!-- ===== CHAPITRE 4 ===== -->
+    <div class="chapter-header">
+        <div class="section-tag">Chapitre 4</div>
+        <div class="section-title">Transitions et Effets Visuels</div>
+        <div class="divider"></div>
+    </div>
+
+    <div class="body-text">
+        Les transitions sont les elements de liaison entre vos differents clips. Elles jouent un role crucial dans la perception globale de votre video : une bonne transition passe inapercue et guide naturellement le regard du spectateur d'une scene a l'autre, tandis qu'une mauvaise transition peut rompre l'immersion et donner un aspect amateur a votre travail. CapCut propose une bibliotheque impressionnante de transitions, allant des plus simples (fondu, fondu enchaine) aux plus elaborees (glissement, zoom, effets de page). Le choix de la transition doit etre coherent avec le ton et le style de votre video.
+    </div>
+
+    <div class="body-text">
+        <strong>Le fondu</strong> est la transition la plus classique et la plus polyvalente. Il existe en deux variantes principales : le fondu au noir (l'image s'eteint progressivement vers le noir avant que la scene suivante n'apparaisse) et le fondu enchaine (les deux images se superposent pendant une fraction de seconde). Le fondu au noir est ideal pour marquer un changement de chapitre, un passage du temps ou une pause dans le recit. Le fondu enchaine, plus subtil, est parfait pour les transitions douces entre des scenes qui ont une continuite thematique ou emotionnelle.
+    </div>
+
+    <div class="body-text">
+        <strong>Les transitions dynamiques</strong> (glissement, balayage, zoom) apportent de l'energie et du mouvement a votre montage. Elles sont particulierement efficaces dans les videos destinees aux reseaux sociaux (TikTok, Reels, Shorts), ou l'attention du spectateur doit etre captee en permanence. CapCut propose egalement des transitions thematiques (science-fiction, romantique, vintage, sportif) qui ajoutent une touche de style specifique a votre video. Cependant, attention a ne pas en abuser : un montage professionnel utilise les transitions avec parcimonie, uniquement lorsqu'elles servent le recit ou l'esthetique globale.
+    </div>
+
+    <div class="body-text">
+        <strong>Les effets visuels</strong> vont au-dela des simples transitions. CapCut offre une large gamme d'effets que vous pouvez appliquer a des clips individuels ou a des segments specifiques de votre timeline. Parmi les effets les plus populaires, on trouve le flou dynamique (qui attire l'attention sur un sujet en floutant l'arriere-plan), le ralenti et l'accelere (qui modifient la vitesse de lecture), la stabilisation (qui reduit les tremblements de camera), et les effets de style (retro, cine, neon, glitch). Chaque effet dispose de parametres ajustables (intensite, duree, zone d'application) qui vous permettent de le personnaliser selon vos besoins precis.
+    </div>
+
+    <div class="two-col">
+        <div class="col">
+            <div class="col-title">Transitions a Privilegier</div>
+            <div class="col-text">
+                Fondu au noir pour les changements de scene. Fondu enchaine pour les enchainements fluides. Glissement pour les comparaisons (avant/apres). Cut direct (sans transition) pour les montages rythmes sur la musique. Mix pour les videos artistiques et cinematographiques.
+            </div>
+        </div>
+        <div class="col">
+            <div class="col-title">Transitions a Eviter</div>
+            <div class="col-text">
+                Les transitions trop extravagantes (etoiles, feux d'artifice, pages qui tournent) sont generalement perçues comme amateur. Utilisez-les uniquement si elles correspondent a un style deliberé (video enfantine, parodie). Pour un rendu professionnel, privilegiez la simplicite et la coherence.
+            </div>
+        </div>
+    </div>
+
+    <div class="tip-box">
+        <div class="tip-label">Raccourci Efficace</div>
+        <div class="tip-text">
+            Pour ajouter rapidement une transition entre deux clips, appuyez sur l'espace blanc qui separe les deux clips sur la timeline. Un menu de transitions apparaitra. Selectionnez la transition souhaitee et ajustez sa duree a l'aide du curseur. La duree ideale d'une transition est generalement comprise entre 0.3 et 0.8 secondes pour un resultat naturel et professionnel.
+        </div>
+    </div>
+
+    <!-- ===== CHAPITRE 5 ===== -->
+    <div class="chapter-header">
+        <div class="section-tag">Chapitre 5</div>
+        <div class="section-title">Textes et Sous-titres</div>
+        <div class="divider"></div>
+    </div>
+
+    <div class="body-text">
+        Le texte est un element essentiel du montage video. Il sert a multiples fins : transmettre des informations complementaires, afficher le nom du speaker, presenter des chapitres, ajouter des sous-titres pour l'accessibilite, ou simplement renforcer l'impact visuel d'un message cle. CapCut offre un systeme de texte complet et flexible qui vous permet de creer des titres, des sous-titres, des legendes et des credits avec une grande variete de styles typographiques, d'animations et d'effets. Que vous creiez un tutoriel, une publicite, un vlog ou une video narrative, la maitrise du texte est indispensable.
+    </div>
+
+    <div class="body-text">
+        <strong>L'ajout de texte</strong> se fait en appuyant sur l'outil "Texte" dans la barre d'outils. CapCut vous propose plusieurs categories : texte simple, titre, sous-titre, texte anime et templates de texte predéfinis. Une fois votre texte insere, vous pouvez le personnaliser dans les moindres details : police de caractere (avec des centaines de polices disponibles, y compris des polices stylisees et des polices adaptees a differentes langues), taille, couleur, ombre, contour, arriere-plan, espacement des lettres et alignement. Vous pouvez egalement ajuster la duree d'affichage du texte en faisant glisser ses bords sur la timeline pour qu'il apparaisse et disparaisse au moment exact souhaite.
+    </div>
+
+    <div class="body-text">
+        <strong>Les sous-titres automatiques</strong> constituent l'une des fonctionnalites les plus puissantes de CapCut. Grâce a l'intelligence artificielle, CapCut peut generer automatiquement des sous-titres en analysant la parole de votre video. Cette fonction est particulierement utile pour les tutoriels, les interviews et les videos destinees aux reseaux sociaux, ou une grande partie du public regarde les videos sans son. Vous pouvez choisir parmi plusieurs styles de sous-titres (classique, karaoke, mot par mot) et personnaliser leur apparence. Apres generation, il est recommande de relire et de corriger les sous-titres, car la reconnaissance vocale n'est pas toujours parfaite, surtout avec les noms propres ou le jargon technique.
+    </div>
+
+    <div class="body-text">
+        <strong>Les animations de texte</strong> apportent du dynamisme a vos titres et sous-titres. CapCut propose des dizaines d'animations d'entree (le texte apparait en glissant, en zoomant, en s'effaçant progressivement), d'animations en boucle (le texte pulse, clignote ou se deplace en continu) et d'animations de sortie. Vous pouvez egalement combiner plusieurs animations pour creer des effets uniques. Par exemple, un titre qui apparait avec un effet de machine a ecrire, reste affiche quelques secondes, puis s'efface lettre par lettre, cree une esthetique cinematique elegante et memorisable.
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span class="card-number">4</span> Creer des textes stylises</div>
+        <div class="card-text">
+            Pour un texte qui capte l'attention, combinez une police audacieuse avec un contour sombre et une ombre legere. Utilisez des couleurs contrastantes par rapport a votre video : du texte blanc avec un contour noir sur un fond sombre, ou du texte noir avec un contour blanc sur un fond clair. Cette technique garantit que votre texte reste lisible quelle que soit l'image de fond, ce qui est crucial pour les videos destinees aux reseaux sociaux ou les conditions de visualisation varient enormement.
+        </div>
+    </div>
+
+    <div class="tip-box">
+        <div class="tip-label">Accessibilite</div>
+        <div class="tip-text">
+            Ajoutez toujours des sous-titres a vos videos. Selon les statistiques, plus de 80% des utilisateurs de reseaux sociaux regardent des videos sans son au moins une fois par jour. Les sous-titres augmentent non seulement l'accessibilite pour les personnes malentendantes, mais aussi l'engagement global de votre contenu. Les videos avec sous-titres generent en moyenne 15% de vues supplementaires par rapport aux videos sans sous-titres.
+        </div>
+    </div>
+
+    <!-- ===== CHAPITRE 6 ===== -->
+    <div class="chapter-header">
+        <div class="section-tag">Chapitre 6</div>
+        <div class="section-title">Musique et Effets Sonores</div>
+        <div class="divider"></div>
+    </div>
+
+    <div class="body-text">
+        L'audio represente au moins 50% de l'impact d'une video. Une image magnifique avec un son mediocre donnera une impression moyenne, tandis qu'une image correcte avec un audio impeccable creera une experience captivante. La musique, en particulier, joue un role fondamental dans la perception emotionnelle de votre video : elle peut creer du suspense, de la joie, de la melancolie, de l'urgence ou de la serenite. CapCut integre une immense bibliotheque de musiques et d'effets sonores libres de droits, ce qui vous permet d'habiller sonorement vos videos sans avoir a chercher des fichiers externes.
+    </div>
+
+    <div class="body-text">
+        <strong>L'ajout de musique</strong> se fait via l'outil "Audio" dans la barre d'outils. CapCut organise sa bibliotheque musicale par categories (tendance, vlog, joyeux, dramatique, cinematique, lo-fi, etc.) et par ambiances, ce qui facilite la recherche du morceau ideal pour votre video. Vous pouvez egalement importer vos propres fichiers musicaux si vous possedez des morceaux sous licence. Une fois la musique ajoutee, elle apparait sur une piste audio separee en dessous de votre piste video. Vous pouvez la couper, la deplacer, ajuster son volume et meme la faire varier progressivement (fade in / fade out) pour des enchainements fluides.
+    </div>
+
+    <div class="body-text">
+        <strong>Les effets sonores</strong> sont les details audio qui donnent vie a votre video. Un whoosh lors d'une transition, un pop quand un texte apparait, un son de clap entre deux scenes, un bruit de clic pour un bouton : ces petits elements sonores font toute la difference entre un montage amateur et un montage professionnel. CapCut propose une vaste collection d'effets sonores organises par categories (transitions, interface, nature, ambiance, humour, etc.). L'astuce est d'utiliser ces effets avec moderation et precision : un effet sonore bien place a un impact considerable, tandis qu'une surcharge d'effets sonores fatigue rapidement le spectateur.
+    </div>
+
+    <div class="body-text">
+        <strong>Le mixage audio</strong> est l'art d'equilibrer les differents niveaux sonores de votre video. Dans un projet bien mixe, la voix du speaker est toujours claire et comprehensible, la musique soutient l'ambiance sans couvrir la parole, et les effets sonores ajoutent de la texture sans dominer le tout. CapCut permet de regler individuellement le volume de chaque piste audio. Une bonne pratique consiste a regler la voix principale entre -12 dB et -6 dB, la musique d'ambiance entre -20 dB et -15 dB, et les effets sonores entre -10 dB et -5 dB. Ces valeurs sont des points de depart : ajustez-les en fonction du contenu specifique de votre video.
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span class="card-number">5</span> Synchronisation musique-montage</div>
+        <div class="card-text">
+            Pour creer un montage synchronise sur la musique, commencez par importer votre morceau et ecoutez-le attentivement. Identifiez les temps forts (beats), les changements de rythme et les moments calmes. Placez vos coupes video sur les temps forts, ajoutez des effets visuels sur les changements de rythme, et laissez des moments de respiration pendant les passages calmes. Cette technique, appelee "montage sur le beat", est la base des videos virales sur TikTok et Instagram Reels.
+        </div>
+    </div>
+
+    <div class="tip-box">
+        <div class="tip-label">Droits d'Auteur</div>
+        <div class="tip-text">
+            Utilisez toujours de la musique libre de droits ou sous licence Creative Commons pour vos videos. Les musiques de la bibliotheque CapCut sont generalement libres de droits pour un usage personnel et commercial sur les reseaux sociaux. Cependant, si vous utilisez une musique protegee par des droits d'auteur, votre video pourrait etre demontisee, limitee ou supprimee par les plateformes. Verifiez toujours les conditions de licence avant d'utiliser un morceau.
+        </div>
+    </div>
+
+    <!-- ===== CHAPITRE 7 ===== -->
+    <div class="chapter-header">
+        <div class="section-tag">Chapitre 7</div>
+        <div class="section-title">Filtres et Ajustements Couleur</div>
+        <div class="divider"></div>
+    </div>
+
+    <div class="body-text">
+        L'etalonnage couleur est l'un des aspects les plus puissants du montage video, souvent sous-estime par les debutants. C'est le processus qui transforme des images brutes en un visuel coerent, professionnel et esthetiquement plaisant. Imaginez deux videos tournees a des heures differentes de la journee avec des telephones differents : sans etalonnage, le spectateur remarquera immediatement les differences de couleur et d'exposition entre les deux scenes. Avec un etalonnage approprie, vous unifiez l'ensemble pour creer une experience visuelle fluide et harmonieuse.
+    </div>
+
+    <div class="body-text">
+        <strong>Les filtres</strong> de CapCut sont des presets de couleur preconfigures que vous pouvez appliquer en un seul tap. Ils sont organises par categories (Portrait, Paysage, Alimentation, Vintage, Cinematique, Retro, etc.) et offrent un point de depart rapide pour ameliorer l'apparence de vos images. Chaque filtre peut etre ajuste en intensite a l'aide d'un curseur, ce qui vous permet de l'adapter subtilement a votre video sans qu'il paraisse artificiel. Les filtres sont parfaits pour les utilisateurs qui veulent un beau rendu sans avoir a comprendre les parametres techniques de la couleur.
+    </div>
+
+    <div class="body-text">
+        <strong>Les ajustements manuels</strong> vous donnent un controle total sur l'image. CapCut propose un ensemble complet de parametres : luminosite, contraste, saturation, temperature (chaud/froid), teinte, nettete, vignettage, grains, hautes lumieres, ombres et bien d'autres. Comprendre ces parametres est essentiel pour passer au niveau superieur en montage. La <strong>luminosite</strong> controle la quantite globale de lumiere dans l'image. Le <strong>contraste</strong> definit la difference entre les zones claires et sombres. La <strong>saturation</strong> regroupe l'intensite des couleurs. La <strong>temperature</strong> fait basculer l'image vers des tons chauds (jaune/orange) ou froids (bleu). La <strong>teinte</strong> modifie la couleur globale (vers le vert ou le magenta).
+    </div>
+
+    <div class="body-text">
+        <strong>La correction couleur vs l'etalonnage</strong> sont deux etapes distinctes mais complementaires. La correction couleur consiste a corriger les problemes techniques de l'image : compenser une exposition trop sombre ou trop claire, corriger un equilibre des blancs trop chaud ou trop froid, ajuster la saturation excessive d'une image surexposee. L'etalonnage, quant a lui, est un choix creatif : c'est l'etape ou vous decidez de l'ambiance visuelle globale de votre video. Vous pouvez choisir un look froid et bleute pour une ambiance serieuse, un look chaud et orange pour une ambiance chaleureuse, ou un look desature pour un style cinematique. L'ideal est d'abord de corriger chaque clip individuellement, puis d'appliquer un etalonnage coherent a l'ensemble du projet.
+    </div>
+
+    <div class="two-col">
+        <div class="col">
+            <div class="col-title">Parametres Cles</div>
+            <div class="col-text">
+                <strong>Exposition :</strong> Ajuste la luminosite globale. <strong>Contraste :</strong> Augmente la difference entre clair et sombre. <strong>Hautes lumieres :</strong> Controle les zones les plus claires. <strong>Ombres :</strong> Controle les zones les plus sombres. <strong>Saturation :</strong> Intensite des couleurs. <strong>Temperature :</strong> Balance chaud/froid de l'image.
+            </div>
+        </div>
+        <div class="col">
+            <div class="col-title">Looks Populaires</div>
+            <div class="col-text">
+                <strong>Cinematique :</strong> Teal et orange, contraste eleve. <strong>Retro :</strong> Desaturation, grains, vignettage. <strong>Clean :</strong> Luminosite legerement augmentee, saturation reduite. <strong>Moody :</strong> Baisse des ombres, teinte froide, contraste modere. <strong>Vibrant :</strong> Saturation elevee, netteté augmentee.
+            </div>
+        </div>
+    </div>
+
+    <div class="tip-box">
+        <div class="tip-label">Conseil Pro</div>
+        <div class="tip-text">
+            Pour un etalonnage professionnel, commencez par regler l'exposition et la temperature de chaque clip pour obtenir une base neutre et coherente. Ensuite, appliquez votre style creatif (filtre ou ajustements manuels) a l'ensemble du projet. Cette approche en deux etapes (correction puis etalonnage) garantit un resultat plus professionnel qu'une application aleatoire de filtres sans coherence entre les clips.
+        </div>
+    </div>
+
+    <!-- ===== CHAPITRE 8 ===== -->
+    <div class="chapter-header">
+        <div class="section-tag">Chapitre 8</div>
+        <div class="section-title">Effets Speciaux et Animations</div>
+        <div class="divider"></div>
+    </div>
+
+    <div class="body-text">
+        Les effets speciaux et les animations sont les outils qui transforment une video ordinaire en une creation visuellement impressionnante. CapCut propose une boite a outils remarquablement riche dans ce domaine, avec des centaines d'effets classes par categories : particules, lumieres, distorsions, mouvements, styles retro, glitch, effets de camera, et bien d'autres. Ces effets, utilises avec intelligence et moderation, peuvent elever considerablement la qualite perçue de vos videos et vous distinguer de la concurrence sur les reseaux sociaux.
+    </div>
+
+    <div class="body-text">
+        <strong>Les effets de vitesse</strong> sont parmi les plus utilises et les plus impactants. Le ralenti (slow motion) dramatise un moment en etirant le temps, parfait pour capturer un geste important, une reaction emotionnelle ou un mouvement esthetique. L'accelere (speed ramp) est l'effet inverse : il compresse le temps pour montrer un processus long en quelques secondes, ideal pour les videos de type "time-lapse" ou pour dynamiser des passages moins interessants. CapCut permet egalement de creer des courbes de vitesse variables (speed ramping) : la video commence lentement, accelere progressivement, puis ralentit a nouveau. Cette technique, popularisee par le cinema d'action, ajoute une dimension cinematique impressionnante a vos montages.
+    </div>
+
+    <div class="body-text">
+        <strong>Les effets de suivi (Keyframe)</strong> sont une fonctionnalite avancee extremement puissante. Les keyframes (images cles) vous permettent d'animer n'importe quelle propriete d'un element au fil du temps : position, echelle, rotation, opacite, flou, etc. Par exemple, vous pouvez faire en sorte qu'un texte apparaisse en bas de l'ecran, monte progressivement vers le centre, grossisse, puis disparaisse en fondu. Le principe est simple : vous placez une keyframe au debut de l'animation avec les valeurs initiales, puis une autre keyframe a la fin avec les valeurs finales. CapCut interpole automatiquement les valeurs intermediaires pour creer une animation fluide et naturelle.
+    </div>
+
+    <div class="body-text">
+        <strong>L'ecran vert (Chroma Key)</strong> est une technique emblematique du montage video qui permet de remplacer un fond vert (ou bleu) par n'importe quelle image ou video. CapCut integre cette fonctionnalite directement dans ses outils d'effets. Pour l'utiliser, il suffit de filmer votre sujet devant un fond vert uni, d'importer la video dans CapCut, de selectionner l'outil d'ecran vert et d'ajuster le seuil de couleur pour supprimer le fond vert. Vous pouvez ensuite placer n'importe quel contenu derriere votre sujet : un paysage, une ville, un graphique anime, ou meme une autre video. Cette technique ouvre des possibilites creatives illimitees et est utilisee dans les films, les emissions televisees et bien sur les videos pour les reseaux sociaux.
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span class="card-number">6</span> Effet Glitch : tutorial rapide</div>
+        <div class="card-text">
+            L'effet glitch simule une erreur numerique (comme un bug video) pour creer une esthetique moderne et percutante. Dans CapCut, selectionnez un clip, allez dans "Effets" puis "Video effects". Cherchez la categorie "Glitch" et choisissez un style. Ajustez l'intensite pour un resultat subtil ou prononce selon votre style. Appliquez-le sur des moments courts (0.5 a 1 seconde) pour un impact maximal. Combinez-le avec un effet sonore de type "digital error" pour renforcer l'immersion.
+        </div>
+    </div>
+
+    <div class="tip-box">
+        <div class="tip-label">Regle d'Or</div>
+        <div class="tip-text">
+        Moins c'est plus. Les effets speciaux sont comme des epices en cuisine : une pincee rehausse le plat, une quantite excessive le ruine. Utilisez 2 a 3 effets maximum par clip et assurez-vous que chaque effet sert un objectif precis (mettre en valeur un element, creer une transition, renforcer une emotion). Un montage surcharge d'effets donne une impression d'amateurisme, tandis qu'un montage epure avec quelques effets bien places demontre une veritable maitrise.
+        </div>
+    </div>
+
+    <!-- ===== CHAPITRE 9 ===== -->
+    <div class="chapter-header">
+        <div class="section-tag">Chapitre 9</div>
+        <div class="section-title">Exporter et Partager vos Videos</div>
+        <div class="divider"></div>
+    </div>
+
+    <div class="body-text">
+        L'exportation est la derniere etape du processus de montage, mais elle est tout aussi importante que les etapes precedentes. Un mauvais reglage d'export peut ruiner des heures de travail minutieux en produisant un fichier de mauvaise qualite, trop lourd ou incompatible avec votre plateforme de diffusion. Comprendre les parametres d'export vous permet de produire des videos optimisees pour chaque usage, que ce soit pour YouTube, TikTok, Instagram, Facebook ou tout autre support de diffusion.
+    </div>
+
+    <div class="body-text">
+        <strong>La resolution</strong> determine le nombre de pixels qui composent votre image. Les resolutions les plus courantes sont la HD (1280x720), la Full HD (1920x1080) et la 4K (3840x2160). Pour les reseaux sociaux, la Full HD est generalement suffisante et offre un bon equilibre entre qualite et taille de fichier. Pour YouTube, la 4K est recommandee si votre video source est en 4K, car la plateforme la prend en charge nativement. Attention cependant : exporter en 4K un video tournee en 720p n'ameliorera pas la qualite, cela augmentera simplement la taille du fichier inutilement.
+    </div>
+
+    <div class="body-text">
+        <strong>Le format d'export</strong> par defaut de CapCut est le MP4 avec le codec H.264, qui est le format le plus universel et le mieux supporte par toutes les plateformes. Le debit binaire (bitrate) influence directement la qualite de l'image : plus le bitrate est eleve, meilleure sera la qualite, mais le fichier sera aussi plus lourd. CapCut propose generalement des presets de qualite (Standard, Recommande, Eleve) qui ajustent automatiquement le bitrate. Pour un usage sur les reseaux sociaux, le preset "Recommande" offre un excellent compromis entre qualite et poids du fichier.
+    </div>
+
+    <div class="body-text">
+        <strong>Le ratio d'aspect</strong> doit etre adapte a la plateforme cible. Chaque plateforme a ses propres specifications : YouTube et Facebook privilegient le 16:9 (horizontal), TikTok et Instagram Reels utilisent le 9:16 (vertical), et Instagram Feed accepte le 1:1 (carre) ou le 4:5 (vertical reduit). CapCut vous permet de definir le ratio au debut de votre projet ou de le modifier a l'export. Une bonne pratique est de creer votre projet directement dans le bon ratio pour eviter les problemes de recadrage a posteriori. Si vous devez adapter une video horizontale pour TikTok, envisagez de recadrer les elements importants au centre de l'image pour qu'ils restent visibles en format vertical.
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span class="card-number">7</span> Parametres d'export recommandes</div>
+        <div class="card-text">
+            <strong>YouTube :</strong> 1920x1080, 30 fps, bitrate eleve, format MP4. <strong>TikTok / Reels :</strong> 1080x1920, 30 fps, bitrate recommande, format MP4. <strong>Instagram Feed :</strong> 1080x1350 (4:5), 30 fps, bitrate recommande. <strong>Stories :</strong> 1080x1920, 30 fps. <strong>Facebook :</strong> 1920x1080, 30 fps, bitrate recommande. Gardez toujours le meme ratio tout au long du projet pour eviter les decalages a l'export.
+        </div>
+    </div>
+
+    <div class="tip-box">
+        <div class="tip-label">Avant d'Exporter</div>
+        <div class="tip-text">
+            Regardez votre video en entier au moins deux fois avant d'exporter. Verifiez la coherence des transitions, la synchronisation audio, l'orthographe des textes, et la qualite generale. Il est beaucoup plus rapide de corriger une erreur avant l'export que de devoir refaire un export apres avoir decouvert un probleme. Prenez egalement l'habitude de sauvegarder votre projet regulierement pendant le montage pour ne pas perdre votre travail en cas de probleme technique.
+        </div>
+    </div>
+
+    <!-- ===== CHAPITRE 10 ===== -->
+    <div class="chapter-header">
+        <div class="section-tag">Chapitre 10</div>
+        <div class="section-title">Astuces Pro et Bonnes Pratiques</div>
+        <div class="divider"></div>
+    </div>
+
+    <div class="body-text">
+        Ce dernier chapitre rassemble les astuces, les bonnes pratiques et les conseils avancees qui feront passer vos montages au niveau superieur. Ces recommendations sont issues de l'experience des monteurs professionnels et de l'observation des tendances actuelles sur les reseaux sociaux. Les appliquer systematiquement vous permettra de produire des videos de qualite professionnelle de maniere consistante, tout en gagnant du temps dans votre workflow de montage.
+    </div>
+
+    <div class="body-text">
+        <strong>La regle des 3 secondes</strong> est la premiere regle a maitriser pour les reseaux sociaux. Dans les trois premieres secondes de votre video, vous devez capter l'attention du spectateur avec un visuel percutant, une question provocatrice, un mouvement inattendu ou un son surprenant. Si les trois premieres secondes sont ennuyeuses ou lentes, la majorite des spectateurs fermeront votre video avant meme d'avoir vu le contenu principal. Structurez toujours votre video en placant l'element le plus impactant au tout debut, puis developpez votre contenu ensuite. Cette technique est validee par toutes les statistiques d'engagement des plateformes sociales.
+    </div>
+
+    <div class="body-text">
+        <strong>Le workflow organise</strong> est la cle de l'efficacite en montage. Adoptez une methode systematique pour chaque projet : commencez par l'importation et le tri des medias, puis effectuez une premiere passe de coupe grossiere (supprimez tout ce qui est inutile), ensuite affinez les coupes et ajoutez la musique, puis les textes et sous-titres, ensuite les effets et transitions, et enfin les ajustements couleur et l'export. Travailler de maniere lineaire et systematique vous evite de revenir en arriere constamment et vous fait gagner un temps considerable. Ne cherchez pas la perfection pendant la premiere passe : chaque etape se raffine au fur et a mesure.
+    </div>
+
+    <div class="body-text">
+        <strong>L'apprentissage continu</strong> est indispensable dans un domaine aussi dynamique que le montage video. Les tendances evoluent rapidement, de nouveaux effets apparaissent regulierement, et les algorithmes des plateformes changent constamment. Pour rester a jour, observez les videos qui performent bien sur votre niche, analysez les techniques utilisees par les createurs populaires, et experimentez regulierement de nouvelles fonctionnalites dans CapCut. Chaque nouveau projet est une opportunite d'essayer quelque chose de different et d'elargir votre repertoire technique.
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span class="card-number">8</span> Checklist avant publication</div>
+        <div class="card-text">
+            1) La video capture l'attention dans les 3 premieres secondes. 2) L'audio est clair et bien equilibre. 3) Les textes sont sans fautes d'orthographe. 4) Les transitions sont fluides et coherentes. 5) La couleur est unifiee sur l'ensemble du projet. 6) Le ratio correspond a la plateforme cible. 7) La duree est adaptee au format (court pour TikTok, moyen pour YouTube). 8) Vous avez regarde la video en entier avant d'exporter.
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span class="card-number">9</span> Erreurs courantes a eviter</div>
+        <div class="card-text">
+            Ne pas planifier avant de monter. Utiliser trop de transitions differentes. Négliger la qualite audio. laisser des silences gênants. Utiliser des polices illisibles. Surcharger la video d'effets. Oublier les sous-titres. Exporter avec un mauvais ratio. Ne pas respecter les droits d'auteur. Publier sans relire la video. Eviter ces erreurs vous mettra deja au-dessus de la majorite des createurs amateurs.
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span class="card-number">10</span> Passer au niveau superieur</div>
+        <div class="card-text">
+            Une fois que vous maitrisez les bases de CapCut, vous pouvez explorer des fonctionnalites avancees comme le montage multi-pistes (superposer plusieurs videos), les animations de keyframe complexes, les effets de composition (picture-in-picture), les templates de montage automatique, et l'integration avec d'autres outils creatifs. Le passage a Premiere Pro ou DaVinci Resolve sera d'autant plus facile que vous aurez acquis les bases solides avec CapCut.
+        </div>
+    </div>
+
+    <div class="quote-block">
+        <div class="quote-text">
+            "Le montage video n'est pas juste une technique, c'est un art de raconter des histoires. Chaque coupe, chaque transition, chaque effet sonore contribue a l'emotion que vous voulez transmettre a votre public."
+        </div>
+    </div>
+
+</div>
+
+<!-- ==================== ENDING ==================== -->
+<div class="ending">
+    <div class="cover-badge" style="margin-bottom: 40px;">Studio Creatif</div>
+    <div class="ending-text">Pret a creer<br>vos premieres videos ?</div>
+    <div class="ending-line"></div>
+    <div class="ending-sub">
+        Ce guide vous a donne toutes les bases pour maitriser CapCut.<br>
+        La pratique reguliere est la cle de la progression.<br>
+        Commencez a monter vos premieres videos aujourd'hui.
+    </div>
+    <div class="ending-contact">Contactez-nous sur WhatsApp</div>
+    <div class="ending-footer">Studio Creatif &mdash; Bamako, Mali &mdash; 2025</div>
+</div>
+
+</body>
+</html>
