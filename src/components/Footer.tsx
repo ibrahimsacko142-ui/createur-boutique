@@ -64,13 +64,18 @@ export default function Footer() {
           <div>
             <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">Navigation</h3>
             <ul className="space-y-2.5">
-              {['Accueil', 'Services', 'Formations', 'Portfolio', 'Blog', 'FAQ', 'Contact'].map((item) => (
-                <li key={item}>
-                  <a
-                    href={`#${item.toLowerCase()}`}
-                    className="text-sm text-muted-foreground hover:text-amber-600 transition-colors"
-                  >
-                    {item}
+              {[
+                { label: 'Accueil', href: '#accueil' },
+                { label: 'Services', href: '#services' },
+                { label: 'Carrière Pro', href: '#carriere-pro' },
+                { label: 'Formations', href: '#formations' },
+                { label: 'Portfolio', href: '#portfolio' },
+                { label: 'FAQ', href: '#faq' },
+                { label: 'Contact', href: '#contact' },
+              ].map((item) => (
+                <li key={item.label}>
+                  <a href={item.href} className="text-sm text-muted-foreground hover:text-amber-600 transition-colors">
+                    {item.label}
                   </a>
                 </li>
               ))}
@@ -105,7 +110,7 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-2.5 text-sm text-muted-foreground">
                 <Mail className="h-4 w-4 flex-shrink-0 text-amber-500" />
-                <span>contact@skdesignerluxe.com</span>
+                <span>contact@createurboutique.com</span>
               </li>
               <li className="flex items-center gap-2.5 text-sm text-muted-foreground">
                 <MessageCircle className="h-4 w-4 flex-shrink-0 text-emerald-500" />
@@ -114,7 +119,6 @@ export default function Footer() {
                 </a>
               </li>
             </ul>
-
           </div>
         </div>
 
@@ -123,9 +127,7 @@ export default function Footer() {
             &copy; {new Date().getFullYear()} SK Designer Luxe. Tous droits réservés. Fait avec <Heart className="h-3 w-3 text-red-500 fill-red-500" /> à Bamako, Mali.
           </p>
           <div className="flex items-center gap-4 text-xs text-muted-foreground">
-            <a href="#politique" className="hover:text-amber-600 transition-colors">Mentions légales</a>
-            <span className="text-border">|</span>
-            <a href="#politique" className="hover:text-amber-600 transition-colors">Confidentialité</a>
+            <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20consulter%20vos%20mentions%20l%C3%A9gales." target="_blank" rel="noopener noreferrer" className="hover:text-amber-600 transition-colors">Mentions légales</a>
             <span className="text-border">|</span>
             <a href="#faq" className="hover:text-amber-600 transition-colors">FAQ</a>
             <span className="text-border">|</span>

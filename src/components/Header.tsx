@@ -9,29 +9,30 @@ import { motion, AnimatePresence } from 'framer-motion'
 const navLinks = [
   { label: 'Accueil', href: '#accueil' },
   { label: 'Services', href: '#services' },
-  { label: 'Résultats', href: '#ce-que-vous-obtenez' },
   { label: 'Carrière Pro', href: '#carriere-pro' },
+  { label: "Gagner de l'argent", href: '#gagner-argent' },
+  { label: 'Formations', href: '#formations' },
   { label: 'Portfolio', href: '#portfolio' },
-  { label: 'Inscription', href: '#inscription' },
-  { label: 'Espace Client', href: '#espace-client' },
-  { label: 'À propos', href: '#apropos' },
-  { label: 'Témoignages', href: '#temoignages' },
-  { label: 'FAQ', href: '#faq' },
-  { label: 'Guides', href: '#blog' },
   { label: 'Générateur IA', href: '#generateur' },
   { label: 'Contact', href: '#contact' },
 ]
 
 function useTheme() {
-  const [dark, setDark] = useState(false)
+  const [dark, setDark] = useState(() => {
+    if (typeof window === 'undefined') return false
+    const saved = localStorage.getItem('theme')
+    if (saved === 'dark') return true
+    if (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches) return true
+    return false
+  })
 
   useEffect(() => {
-    const saved = localStorage.getItem('theme')
-    if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      setDark(true)
+    if (dark) {
       document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
     }
-  }, [])
+  }, [dark])
 
   const toggle = () => {
     setDark(prev => {
@@ -56,7 +57,6 @@ export default function Header() {
   const [scrollProgress, setScrollProgress] = useState(0)
   const [activeSection, setActiveSection] = useState('')
 
-  // ═══ Scroll Progress ═══
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY
@@ -68,7 +68,6 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // ═══ Intersection Observer for Scroll Spy ═══
   useEffect(() => {
     const sectionIds = navLinks.map(l => l.href.replace('#', '')).filter(Boolean)
     const observers: IntersectionObserver[] = []
@@ -93,14 +92,12 @@ export default function Header() {
     return () => observers.forEach(o => o.disconnect())
   }, [])
 
-  // Close mobile menu on scroll spy change
   const handleNavClick = useCallback((href: string) => {
     setMobileOpen(false)
   }, [])
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 shadow-sm">
-      {/* ═══ Progress Bar ═══ */}
       <div className="absolute top-0 left-0 right-0 h-[2px] bg-transparent z-[1]">
         <motion.div
           className="h-full bg-gradient-to-r from-amber-400 via-orange-500 to-red-500"
@@ -110,7 +107,6 @@ export default function Header() {
       </div>
 
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Logo */}
         <a href="#accueil" className="flex items-center gap-2.5 group">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 text-white font-bold text-lg shadow-lg shadow-amber-500/25 group-hover:shadow-amber-500/40 transition-shadow">
             S
@@ -120,7 +116,6 @@ export default function Header() {
           </span>
         </a>
 
-        {/* Desktop Nav */}
         <nav className="hidden xl:flex items-center gap-0.5">
           {navLinks.map((link) => {
             const isActive = activeSection === link.href.replace('#', '')
@@ -145,44 +140,22 @@ export default function Header() {
           })}
         </nav>
 
-        {/* Actions + Mobile menu */}
         <div className="flex items-center gap-1.5">
-          {/* Dark mode toggle */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggle}
-            className="hover:bg-accent"
-            aria-label="Changer le thème"
-          >
+          <Button variant="ghost" size="icon" onClick={toggle} className="hover:bg-accent" aria-label="Changer le thème">
             <AnimatePresence mode="wait">
               {dark ? (
-                <motion.div
-                  key="sun"
-                  initial={{ rotate: -90, opacity: 0, scale: 0.5 }}
-                  animate={{ rotate: 0, opacity: 1, scale: 1 }}
-                  exit={{ rotate: 90, opacity: 0, scale: 0.5 }}
-                  transition={{ duration: 0.2 }}
-                >
+                <motion.div key="sun" initial={{ rotate: -90, opacity: 0, scale: 0.5 }} animate={{ rotate: 0, opacity: 1, scale: 1 }} exit={{ rotate: 90, opacity: 0, scale: 0.5 }} transition={{ duration: 0.2 }}>
                   <Sun className="h-5 w-5 text-amber-500" />
                 </motion.div>
               ) : (
-                <motion.div
-                  key="moon"
-                  initial={{ rotate: 90, opacity: 0, scale: 0.5 }}
-                  animate={{ rotate: 0, opacity: 1, scale: 1 }}
-                  exit={{ rotate: -90, opacity: 0, scale: 0.5 }}
-                  transition={{ duration: 0.2 }}
-                >
+                <motion.div key="moon" initial={{ rotate: 90, opacity: 0, scale: 0.5 }} animate={{ rotate: 0, opacity: 1, scale: 1 }} exit={{ rotate: -90, opacity: 0, scale: 0.5 }} transition={{ duration: 0.2 }}>
                   <Moon className="h-5 w-5" />
                 </motion.div>
               )}
             </AnimatePresence>
           </Button>
 
-          {/* CTA Button Desktop + Disponibilité Badge */}
           <div className="hidden sm:flex items-center gap-2.5">
-            {/* Disponibilité Live Badge */}
             <div className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
               <span className="relative flex h-2.5 w-2.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
@@ -197,7 +170,6 @@ export default function Header() {
             </a>
           </div>
 
-          {/* Mobile Menu */}
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild className="xl:hidden">
               <Button variant="ghost" size="icon" className="hover:bg-accent">
@@ -231,11 +203,7 @@ export default function Header() {
                 })}
               </nav>
               <div className="mt-6 px-3 space-y-2">
-                <Button
-                  variant="outline"
-                  className="w-full justify-start text-sm"
-                  onClick={() => { toggle(); setMobileOpen(false) }}
-                >
+                <Button variant="outline" className="w-full justify-start text-sm" onClick={() => { toggle(); setMobileOpen(false) }}>
                   {dark ? <Sun className="h-4 w-4 mr-2 text-amber-500" /> : <Moon className="h-4 w-4 mr-2" />}
                   {dark ? 'Mode clair' : 'Mode sombre'}
                 </Button>
