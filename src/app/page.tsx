@@ -637,12 +637,8 @@ export default function Home() {
         </section>
 
         {/* ═══ 7. CARRIÈRE PRO ═══ */}
-        <section id="carriere-pro" className="py-16 sm:py-20 bg-gradient-to-b from-slate-900 via-slate-900 to-background text-white relative overflow-hidden">
-          <div className="absolute inset-0">
-            <div className="absolute top-20 left-10 h-72 w-72 bg-blue-500/10 rounded-full blur-3xl" />
-            <div className="absolute bottom-20 right-10 h-72 w-72 bg-purple-500/10 rounded-full blur-3xl" />
-          </div>
-          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <section id="carriere-pro" className="py-16 sm:py-20 bg-gradient-to-b from-slate-900 via-slate-900 to-background text-white">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <Badge className="mb-3 bg-blue-500/20 text-blue-300 border-blue-500/30 hover:bg-blue-500/30">
                 <GraduationCap className="h-3 w-3 mr-1" /> Carrière Pro
@@ -661,7 +657,7 @@ export default function Home() {
                 { icon: Target, name: 'Objectif Entretien', sub: 'Préparation entretien', price: '500', hook: "Les questions pièges de votre secteur, décortiquées.", color: 'from-amber-500 to-orange-500' },
                 { icon: BadgeCheck, name: 'Réseautage Pro', sub: 'Carte de visite', price: '1 500', hook: 'Un premier contact, une impression durable.', color: 'from-rose-500 to-pink-500' },
               ].map((s) => (
-                <Card key={s.name} className="h-full bg-white/[0.07] border border-white/10 hover:border-white/20 transition-all duration-300 hover:-translate-y-0.5">
+                <Card key={s.name} className="h-full bg-slate-800/80 border border-white/10 hover:border-white/20 transition-all duration-300 hover:-translate-y-0.5">
                   <CardContent className="p-6">
                     <div className="flex items-start justify-between mb-4">
                       <div className={`flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br ${s.color} text-white shadow-lg`}>
@@ -810,12 +806,7 @@ export default function Home() {
         </section>
 
         {/* ═══ 9. FORMATIONS ═══ */}
-        <section id="formations" className="py-16 sm:py-20 relative overflow-hidden text-white" style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)' }}>
-          <div className="absolute inset-0">
-            <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1400&h=800&fit=crop" alt="" className="w-full h-full object-cover opacity-10" />
-            <div className="absolute top-10 right-10 h-72 w-72 bg-amber-500/15 rounded-full blur-3xl" />
-            <div className="absolute bottom-10 left-10 h-72 w-72 bg-orange-500/15 rounded-full blur-3xl" />
-          </div>
+        <section id="formations" className="py-16 sm:py-20 text-white" style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)' }}>
           <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <Badge className="mb-3 bg-amber-500/20 text-amber-300 border-amber-500/30 hover:bg-amber-500/30">
@@ -835,7 +826,7 @@ export default function Home() {
                   href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je suis intéressé(e) par la formation : ${form.text} (${form.price} FCFA). Comment y accéder ?`)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group relative rounded-2xl bg-white/[0.07] border border-white/10 hover:border-amber-400/50 transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/10 cursor-pointer overflow-hidden"
+                  className="group relative rounded-2xl bg-slate-800/80 border border-white/10 hover:border-amber-400/50 transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/10 cursor-pointer overflow-hidden"
                 >
                   <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full -translate-y-1/2 translate-x-1/2" />
                   <div className="relative p-5 sm:p-6">
@@ -874,7 +865,7 @@ export default function Home() {
                     key={i}
                     href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je suis intéressé(e) par la formation : ${form.text}. Pouvez-vous me donner plus de détails ?`)}`}
                     target="_blank" rel="noopener noreferrer"
-                    className="group flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-emerald-500/40 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-emerald-500/5 transition-all duration-300 cursor-pointer"
+                    className="group flex items-center gap-3 p-3 rounded-xl bg-slate-800/80 border border-white/10 hover:bg-slate-700/80 hover:border-emerald-500/40 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-emerald-500/5 transition-all duration-300 cursor-pointer"
                   >
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/5 flex-shrink-0">
                       <form.icon className="h-4 w-4 text-slate-400 group-hover:text-emerald-400 transition-colors" />
@@ -904,12 +895,8 @@ export default function Home() {
         </section>
 
         {/* ═══ 10. COLLECTIF ═══ */}
-        <section id="collectif" className="py-16 sm:py-20 bg-gradient-to-br from-purple-950 via-slate-900 to-indigo-950 text-white relative overflow-hidden">
-          <div className="absolute inset-0">
-            <div className="absolute top-0 left-1/3 h-80 w-80 bg-purple-500/10 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 right-1/4 h-64 w-64 bg-indigo-500/10 rounded-full blur-3xl" />
-          </div>
-          <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <section id="collectif" className="py-16 sm:py-20 bg-gradient-to-br from-purple-950 via-slate-900 to-indigo-950 text-white">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-10">
               <Badge className="mb-3 bg-purple-500/20 text-purple-300 border-purple-500/30 hover:bg-purple-500/30">
                 <Users className="h-3 w-3 mr-1" /> Collectif
