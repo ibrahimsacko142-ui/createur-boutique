@@ -91,6 +91,7 @@ export default function Home() {
   const [quickOrder, setQuickOrder] = useState({ service: '', name: '', phone: '', description: '' })
   const [inscriptionData, setInscriptionData] = useState({ name: '', phone: '', formation: '' })
   const [faqOpen, setFaqOpen] = useState<string | null>(null)
+  const [leadMagnet, setLeadMagnet] = useState({ name: '', contact: '' })
   const { toast } = useToast()
 
   // ── Before / After Slider (CSS-only pointer-based) ──
@@ -455,7 +456,7 @@ export default function Home() {
                   premium: { title: 'Offre Premium', desc: 'Parcours de formation complet avec suivi personnalisé, support après formation, et certificat de participation.' },
                 },
               ].map((section) => (
-                <Card key={section.cat} className={`border ${section.borderColor} overflow-hidden`}>
+                <Card key={section.cat} className={`border ${section.borderColor} overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5`}>
                   <div className={`h-1.5 bg-gradient-to-r ${section.color}`} />
                   <CardContent className="p-5 sm:p-7">
                     <div className="flex items-center gap-3 mb-5">
@@ -657,7 +658,7 @@ export default function Home() {
                   revenus: '50 000 – 300 000 FCFA/mois',
                 },
               ].map((d) => (
-                <Card key={d.title} className="overflow-hidden border-0 shadow-md hover:shadow-lg transition-shadow duration-300">
+                <Card key={d.title} className="overflow-hidden border-0 shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
                   <div className={`h-1 bg-gradient-to-r ${d.color}`} />
                   <CardContent className="p-5">
                     <div className="flex items-center gap-3 mb-3">
@@ -1279,12 +1280,10 @@ export default function Home() {
             </div>
             <div className="space-y-3">
               {[
-                { q: "Est-ce que les services sont vraiment gratuits ?", a: "Oui, tous les services sont actuellement offerts gratuitement. C'est ma façon de vous permettre de découvrir la qualité de mon travail sans aucun engagement financier." },
-                { q: "Comment recevoir ma commande ?", a: "Après avoir discuté de votre projet sur WhatsApp, je crée votre design et vous l'envoie directement via WhatsApp ou Google Drive. La livraison se fait généralement entre 1 et 24 heures selon le service." },
-                { q: "Quels outils utilisez-vous ?", a: "J'utilise les meilleurs outils professionnels du marché : Canva Pro pour le design, CapCut Pro pour le montage vidéo, PicsArt Pro pour le design mobile, et des outils web professionnels pour les sites." },
-                { q: "Combien de révisions sont incluses ?", a: "Les révisions sont illimitées et gratuites. Je travaille jusqu'à ce que vous soyez entièrement satisfait du résultat. Votre satisfaction est ma priorité absolue." },
-                { q: "Comment suivre une formation ?", a: "Cliquez simplement sur la formation qui vous intéresse. Vous serez redirigé vers WhatsApp où je vous expliquerai le contenu et comment y accéder. Simple et direct." },
-                { q: "Travaillez-vous avec des clients en dehors de Bamako ?", a: "Absolument ! Je travaille avec des clients partout au Mali et en Afrique. Toutes les communications et livraisons se font en ligne via WhatsApp et Google Drive." },
+                { q: "L'Offre Découverte est-elle vraiment 100% gratuite ?", a: "Oui, totalement. C'est ma manière de vous prouver la qualité de mon travail avant que vous ne décidiez de passer à une offre Premium payante. Aucun engagement requis, aucun frais caché." },
+                { q: "Quels sont les délais de livraison ?", a: "Les services \"Carrière Pro\" (CV, Lettres) sont livrés en moins de 24h. Pour les logos simples, comptez 48h, et pour un site web complet, entre 3 et 7 jours selon la complexité. Chaque projet a un suivi personnalisé." },
+                { q: "Comment se déroule le paiement pour les offres payantes ?", a: "Pour vous faciliter la tâche, j'accepte les paiements locaux et sécurisés : Orange Money, Moov Money, Wave, ainsi que les cartes virtuelles. Simple, rapide et adapté à vos habitudes." },
+                { q: "Pourquoi limitez-vous les commandes à 5 par jour ?", a: "Je privilégie la qualité à la quantité. Travailler avec un nombre limité de clients me permet de dédier toute mon attention et mon expertise à chaque pixel de votre projet. Le résultat : des créations qui convertissent." },
               ].map((faq, i) => {
                 const isOpen = faqOpen === `faq-${i}`
                 return (
@@ -1329,6 +1328,63 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ═══ LEAD MAGNET — Cadeau Exclusif ═══ */}
+        <section className="py-16 sm:py-20">
+          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+            <Card className="border-0 shadow-xl overflow-hidden">
+              <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white p-8 sm:p-10 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-40 h-40 bg-amber-500/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+                <div className="absolute bottom-0 left-0 w-32 h-32 bg-emerald-500/10 rounded-full translate-y-1/2 -translate-x-1/2" />
+                <div className="relative z-10 text-center mb-8">
+                  <div className="inline-flex items-center gap-2 bg-amber-500/20 rounded-full px-4 py-1.5 text-amber-300 text-xs font-semibold mb-4 border border-amber-500/20">
+                    <Gift className="h-3.5 w-3.5" /> Cadeau Exclusif pour les Entrepreneurs
+                  </div>
+                  <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-3">
+                    10 Templates Canva <span className="text-amber-400">Gratuits</span>
+                  </h2>
+                  <p className="text-slate-300 leading-relaxed max-w-md mx-auto text-sm">
+                    <strong className="text-white">Boostez la visibilité de votre business dès aujourd&apos;hui.</strong> Rejoignez ma liste de contacts et recevez instantanément un <strong className="text-white">pack de 10 templates Canva exclusifs</strong> conçus pour les boutiques et créateurs de Bamako.
+                  </p>
+                </div>
+                <div className="relative z-10 flex flex-col sm:flex-row gap-3">
+                  <Input
+                    placeholder="Votre prénom"
+                    value={leadMagnet.name}
+                    onChange={(e) => setLeadMagnet(prev => ({ ...prev, name: e.target.value }))}
+                    className="h-11 bg-white/10 border-white/20 text-white placeholder:text-slate-500 focus:border-amber-500/50"
+                  />
+                  <Input
+                    placeholder="Votre numéro WhatsApp ou email"
+                    value={leadMagnet.contact}
+                    onChange={(e) => setLeadMagnet(prev => ({ ...prev, contact: e.target.value }))}
+                    className="h-11 bg-white/10 border-white/20 text-white placeholder:text-slate-500 focus:border-amber-500/50"
+                  />
+                  <Button
+                    onClick={() => {
+                      if (!leadMagnet.name || !leadMagnet.contact) {
+                        toast({ title: 'Champs requis', description: 'Prénom et contact sont obligatoires.', variant: 'destructive' })
+                        return
+                      }
+                      const msg = encodeURIComponent(
+                        `Bonjour Sacko ! Je souhaite recevoir le pack de 10 templates Canva gratuit.\n\nPrénom : ${leadMagnet.name}\nContact : ${leadMagnet.contact}\n\nMerci !`
+                      )
+                      window.open(`https://wa.me/22397787244?text=${msg}`, '_blank')
+                      toast({ title: 'Demande envoyée !', description: 'Vous recevrez votre pack de templates très rapidement.' })
+                      setLeadMagnet({ name: '', contact: '' })
+                    }}
+                    className="h-11 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-sm shadow-lg shadow-amber-500/25 whitespace-nowrap px-6"
+                  >
+                    <Gift className="h-4 w-4 mr-1.5" /> Recevoir mon pack
+                  </Button>
+                </div>
+                <p className="relative z-10 text-center text-[11px] text-slate-500 mt-4">
+                  Aucun spam. Uniquement des ressources et opportunités pour votre business.
+                </p>
+              </div>
+            </Card>
+          </div>
+        </section>
+
         {/* ═══ 18. CTA FINAL ═══ */}
         <section className="py-16 sm:py-20 bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 relative overflow-hidden">
           <div className="absolute inset-0">
@@ -1354,10 +1410,17 @@ export default function Home() {
                 </Button>
               </a>
             </div>
-            <div className="mt-8 flex items-center justify-center gap-6 text-white/80 text-sm">
-              <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4" /> Livraison rapide</span>
-              <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4" /> Satisfaction garantie</span>
-              <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4" /> Paiement sécurisé</span>
+            <div className="mt-8 flex flex-col items-center gap-4">
+              <div className="flex items-center gap-5 text-white/80 text-xs font-medium">
+                <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4" /> Livraison rapide</span>
+                <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4" /> Satisfaction garantie</span>
+              </div>
+              <div className="flex items-center gap-3 text-white/70 text-xs">
+                <span className="px-3 py-1 rounded-full bg-white/15 border border-white/20 font-medium">Orange Money</span>
+                <span className="px-3 py-1 rounded-full bg-white/15 border border-white/20 font-medium">Moov Money</span>
+                <span className="px-3 py-1 rounded-full bg-white/15 border border-white/20 font-medium">Wave</span>
+                <span className="px-3 py-1 rounded-full bg-white/15 border border-white/20 font-medium">Cartes Virtuelles</span>
+              </div>
             </div>
           </div>
         </section>
