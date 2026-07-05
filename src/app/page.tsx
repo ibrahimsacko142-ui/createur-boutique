@@ -65,7 +65,6 @@ import { Label } from '@/components/ui/label'
 import { useToast } from '@/hooks/use-toast'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import LoginPage from '@/components/LoginPage'
 
 
 /* ─── Animated Counter Hook ─── */
@@ -203,30 +202,12 @@ export default function Home() {
   const [leadMagnet, setLeadMagnet] = useState({ name: '', contact: '' })
   const { toast } = useToast()
 
-  /* ─── Auth gate ─── */
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [authLoading, setAuthLoading] = useState(true)
+
 
   const stat1 = useCounter(50, 1500)
   const stat3 = useCounter(100, 1500)
 
-  useEffect(() => {
-    const auth = localStorage.getItem('studio_creatif_auth')
-    if (auth === 'true') setIsAuthenticated(true)
-    setAuthLoading(false)
-  }, [])
 
-  const handleLogin = () => {
-    setIsAuthenticated(true)
-  }
-
-  const handleLogout = () => {
-    localStorage.removeItem('studio_creatif_user')
-    localStorage.removeItem('studio_creatif_auth')
-    setIsAuthenticated(false)
-  }
-
-  const userName = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('studio_creatif_user') || '{}').prenom : ''
 
   useEffect(() => {
     const handleScroll = () => {
@@ -236,32 +217,9 @@ export default function Home() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  useEffect(() => {
-    if (!isAuthenticated || sessionStorage.getItem('welcomed')) return
-    sessionStorage.setItem('welcomed', '1')
-    const timer = setTimeout(() => {
-      toast({
-        title: 'Bienvenue chez Studio Créatif !',
-        description: 'Découvrez mes services — tous actuellement gratuits !',
-      })
-    }, 2000)
-    return () => clearTimeout(timer)
-  }, [isAuthenticated])
 
-  if (authLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="flex flex-col items-center gap-3">
-          <div className="h-10 w-10 rounded-full border-3 border-amber-500 border-t-transparent animate-spin" />
-          <p className="text-sm text-muted-foreground">Chargement...</p>
-        </div>
-      </div>
-    )
-  }
 
-  if (!isAuthenticated) {
-    return <LoginPage onLogin={handleLogin} />
-  }
+
 
   const handleSubmitContact = (e: React.FormEvent) => {
     e.preventDefault()
@@ -282,7 +240,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background pb-16 lg:pb-0">
-      <Header onLogout={handleLogout} userName={userName} />
+      <Header />
 
       <main className="flex-1">
 

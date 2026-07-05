@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Menu, X, Sparkles, Sun, Moon, MessageCircle, LogOut, User } from 'lucide-react'
+import { Menu, X, Sparkles, Sun, Moon, MessageCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -42,7 +42,7 @@ function useTheme() {
   return { dark, toggle }
 }
 
-export default function Header({ onLogout, userName }: { onLogout?: () => void; userName?: string }) {
+export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const { dark, toggle } = useTheme()
   const [scrollProgress, setScrollProgress] = useState(0)
@@ -146,18 +146,6 @@ export default function Header({ onLogout, userName }: { onLogout?: () => void; 
             </AnimatePresence>
           </Button>
 
-          {userName && (
-            <span className="hidden md:flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-              <User className="h-3.5 w-3.5" /> {userName}
-            </span>
-          )}
-
-          {onLogout && (
-            <Button variant="ghost" size="icon" onClick={onLogout} className="hover:bg-destructive/10 hover:text-destructive" aria-label="Se déconnecter">
-              <LogOut className="h-4 w-4" />
-            </Button>
-          )}
-
           <div className="hidden sm:flex items-center gap-2.5">
             <div className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
               <span className="relative flex h-2.5 w-2.5">
@@ -206,20 +194,10 @@ export default function Header({ onLogout, userName }: { onLogout?: () => void; 
                 })}
               </nav>
               <div className="mt-6 px-3 space-y-2">
-                {userName && (
-                  <div className="flex items-center gap-2 px-2 py-2 text-sm font-medium text-muted-foreground mb-2">
-                    <User className="h-4 w-4" /> {userName}
-                  </div>
-                )}
                 <Button variant="outline" className="w-full justify-start text-sm" onClick={() => { toggle(); setMobileOpen(false) }}>
                   {dark ? <Sun className="h-4 w-4 mr-2 text-amber-500" /> : <Moon className="h-4 w-4 mr-2" />}
                   {dark ? 'Mode clair' : 'Mode sombre'}
                 </Button>
-                {onLogout && (
-                  <Button variant="outline" className="w-full justify-start text-sm text-destructive hover:text-destructive" onClick={() => { onLogout(); setMobileOpen(false) }}>
-                    <LogOut className="h-4 w-4 mr-2" /> Se déconnecter
-                  </Button>
-                )}
                 <a href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20souhaite%20discuter%20de%20mon%20projet." target="_blank" rel="noopener noreferrer" onClick={() => setMobileOpen(false)}>
                   <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-semibold text-sm">
                     <MessageCircle className="h-4 w-4 mr-2" /> Obtenir un service

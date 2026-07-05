@@ -86,3 +86,21 @@ Stage Summary:
 - 5 catégories × 2 tiers (Découverte/Premium) maintenant complets
 - Build réussi sans erreur
 - Toutes les tâches de la session terminées
+
+---
+Task ID: 1
+Agent: main
+Task: Supprimer tout le système d'inscription/connexion du site
+
+Work Log:
+- Lu page.tsx, Header.tsx, LoginPage.tsx pour identifier tout le code lié à l'auth
+- Supprimé de page.tsx : import LoginPage, state isAuthenticated/authLoading, useEffect auth check, handleLogin/handleLogout, userName, loading spinner, auth gate conditionnel, toast de bienvenue
+- Supprimé de Header.tsx : props onLogout/userName, affichage nom utilisateur, bouton déconnexion (desktop + mobile), imports LogOut/User inutilisés
+- Supprimé les fichiers : LoginPage.tsx, api/send-otp/route.ts, api/verify-otp/route.ts
+- Supprimé du package.json : twilio, input-otp
+- Build réussi sans erreur
+
+Stage Summary:
+- Le site est maintenant accessible directement sans aucune inscription
+- Plus de page de login, plus de OTP, plus de bouton déconnexion
+- Build passe proprement
