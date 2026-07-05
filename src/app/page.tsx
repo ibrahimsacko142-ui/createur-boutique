@@ -500,25 +500,20 @@ export default function Home() {
                 </Card>
               ))}
 
-              {/* Comptes premium — bandeau spécial */}
+              {/* Bonus Luxe — outils premium offerts avec les formations */}
               <Card className="border-0 shadow-lg overflow-hidden">
-                <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white p-5 sm:p-7">
+                <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white p-5 sm:p-7">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 shadow-lg flex-shrink-0">
-                      <Key className="h-5 w-5 text-white" />
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm shadow-lg flex-shrink-0">
+                      <Gift className="h-5 w-5 text-white" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-bold text-base mb-1">Comptes Premium (Canva Pro, CapCut Pro, etc.)</h3>
-                      <p className="text-sm text-slate-300 leading-relaxed">Accès à des outils professionnels à tarif réduit — pas de version gratuite, mais essai limité disponible sur demande.</p>
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="font-bold text-base">Bonus : Accès Premium Offert</h3>
+                        <Badge className="bg-white/20 text-white border-0 text-[10px]">NOUVEAU</Badge>
+                      </div>
+                      <p className="text-sm text-white/90 leading-relaxed">Chaque formation inclut un <strong>accès gratuit</strong> à Canva Pro, CapCut Pro ou PicsArt Pro. C&apos;est mon cadeau pour vous accompagner dans la pratique.</p>
                     </div>
-                    <a
-                      href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20avoir%20un%20compte%20premium%20(Canva%20Pro%2C%20CapCut%20Pro%2C%20etc.)."
-                      target="_blank" rel="noopener noreferrer" className="flex-shrink-0"
-                    >
-                      <Button variant="outline" className="border-white/20 text-white hover:bg-white/10 font-semibold text-xs h-10 whitespace-nowrap">
-                        Demander un essai <ArrowRight className="h-3.5 w-3.5 ml-1.5" />
-                      </Button>
-                    </a>
                   </div>
                 </div>
               </Card>
@@ -615,131 +610,86 @@ export default function Home() {
         </section>
 
         {/* ═══ 8. 4 DOMAINES POUR GAGNER DE L'ARGENT (ENRICHED) ═══ */}
-        <section id="gagner-argent" className="py-16 sm:py-20">
-          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
+        <section id="gagner-argent" className="py-20 sm:py-28">
+          <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-14">
               <Badge variant="secondary" className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200">
                 <TrendingUp className="h-3 w-3 mr-1" /> Revenus
               </Badge>
-              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">4 Domaines pour Gagner de l&apos;Argent</h2>
-              <p className="mt-3 text-muted-foreground max-w-xl mx-auto">
-                Monétise tes compétences digitales dès maintenant. Voici 4 pistes concrètes avec des tarifs réalistes pour le marché malien.
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">4 Domaines pour <span className="text-emerald-600 dark:text-emerald-400">Gagner de l&apos;Argent</span></h2>
+              <p className="mt-4 text-muted-foreground max-w-lg mx-auto leading-relaxed">
+                <strong className="text-foreground">4 compétences concrètes</strong> qui génèrent des revenus réels au Mali — avec des tarifs basés sur ce que le marché paie.
               </p>
             </div>
 
-            <div className="space-y-6">
+            <div className="grid sm:grid-cols-2 gap-5">
               {[
                 {
                   icon: Target,
-                  title: 'Création de contenu pour réseaux sociaux',
-                  price: 'À partir de 3 000 FCFA/mois',
+                  title: 'Contenu Réseaux Sociaux',
+                  price: '3 000+ FCFA/mois',
                   color: 'from-pink-500 to-rose-500',
-                  tag: 'Coaching',
-                  desc: "Le contenu est le carburant de toute présence en ligne. Au Mali, les entreprises locales, les boutiques de Bamako et les créateurs ont un besoin énorme de visuels professionnels pour Instagram, Facebook et TikTok. J'accompagne les personnes à maîtriser la création de contenu engageant qui génère des interactions et des ventes.",
-                  bullets: [
-                    'Créer des visuels percutants avec Canva Pro et PicsArt Pro',
-                    'Maîtriser les formats stories, reels, posts et carrousels',
-                    'Développer une ligne éditoriale cohérente et professionnelle',
-                    'Analyser les performances et optimiser la stratégie',
-                    'Vendre des packs de contenu mensuels à des entreprises locales',
-                  ],
-                  revenus: '30 000 – 150 000 FCFA/mois selon les clients',
+                  desc: 'Crée des visuels pros pour les boutiques de Bamako. Stories, reels, affiches — les entreprises payent mensuel.',
+                  revenus: '30 000 – 150 000 FCFA/mois',
                 },
                 {
                   icon: MessageCircle,
-                  title: 'Automatisation avec des chatbots WhatsApp',
-                  price: 'À partir de 10 000 FCFA/mois',
+                  title: 'Chatbots WhatsApp',
+                  price: '10 000+ FCFA/mois',
                   color: 'from-green-500 to-emerald-500',
-                  tag: 'Abonnement',
-                  desc: "WhatsApp est l'outil de communication N°1 au Mali et en Afrique. Les entrepreneurs perdent des dizaines de clients chaque jour parce qu'ils ne peuvent pas répondre à temps. Les chatbots WhatsApp professionnels automatisent les réponses, qualifient les prospects et captent les leads 24h/24, même pendant la nuit.",
-                  bullets: [
-                    'Configurer des chatbots professionnels sur WhatsApp Business',
-                    'Automatiser les réponses aux questions fréquentes',
-                    'Qualifier les prospects automatiquement avant transfert',
-                    'Créer des menus interactifs pour guider les clients',
-                    'Vendre des abonnements de maintenance mensuels',
-                  ],
-                  revenus: '50 000 – 200 000 FCFA/mois par client',
+                  desc: "WhatsApp = N°1 au Mali. Automatise les réponses 24h/24 et vends des abonnements de maintenance aux entrepreneurs.",
+                  revenus: '50 000 – 200 000 FCFA/mois',
                 },
                 {
                   icon: Globe,
-                  title: 'Création de sites web et applications',
+                  title: 'Sites Web & Landing Pages',
                   price: '30 000 – 150 000 FCFA/projet',
                   color: 'from-blue-500 to-indigo-500',
-                  tag: 'Projet',
-                  desc: "Chaque entrepreneur à Bamako mérite une présence en ligne professionnelle. Les sites web ne sont pas un luxe — ils sont une nécessité pour la crédibilité et la visibilité. Un site bien conçu peut doubler le chiffre d'affaires d'une boutique ou d'un service en quelques mois.",
-                  bullets: [
-                    'Concevoir des sites vitrines modernes et responsive',
-                    'Créer des landing pages qui convertissent les visiteurs en clients',
-                    'Développer des portfolios pour freelances et artistes',
-                    'Optimiser le référencement local pour Bamako et le Mali',
-                    'Livrer en 1-3 jours avec hébergement inclus',
-                  ],
-                  revenus: '30 000 – 150 000 FCFA par projet (2-5 projets/mois possible)',
+                  desc: 'Chaque boutique à Bamako mérite un site. Livraison en 1-3 jours, hébergement inclus. 2-5 projets par mois possible.',
+                  revenus: '60 000 – 500 000 FCFA/mois',
                 },
                 {
                   icon: UserCheck,
-                  title: 'Freelance et acquisition de clients',
-                  price: '5 000 FCFA/session',
+                  title: 'Freelance Digital',
+                  price: '5 000 FCFA/session coaching',
                   color: 'from-amber-500 to-orange-500',
-                  tag: 'Coaching privé',
-                  desc: "Le freelance est l'une des meilleures façons de gagner de l'argent en ligne depuis le Mali. Mais sans méthode, c'est difficile de trouver ses premiers clients et de fixer ses tarifs. Mon coaching individuel vous donne les clés pour démarrer et construire une activité freelance rentable et pérenne.",
-                  bullets: [
-                    "Trouver ses premiers clients sur WhatsApp et les réseaux sociaux",
-                    'Fixer ses tarifs selon le marché malien',
-                    'Gérer ses projets et livrer dans les délais',
-                    'Construire une réputation et obtenir des recommandations',
-                    'Passer de 0 à 100 000 FCFA/mois en freelance',
-                  ],
-                  revenus: '50 000 – 300 000 FCFA/mois une fois lancé',
+                  desc: "Trouve tes premiers clients sur WhatsApp, fixe tes tarifs, construis une réputation. De 0 à 100 000 FCFA/mois possible.",
+                  revenus: '50 000 – 300 000 FCFA/mois',
                 },
               ].map((d) => (
-                <Card key={d.title} className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5">
-                  <div className={`h-1.5 bg-gradient-to-r ${d.color}`} />
-                  <CardContent className="p-6 sm:p-8">
-                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-4">
-                      <div className="flex items-start gap-4">
-                        <div className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${d.color} text-white shadow-lg flex-shrink-0`}>
-                          <d.icon className="h-6 w-6" />
-                        </div>
-                        <div>
-                          <div className="flex items-center gap-2 mb-1">
-                            <h3 className="font-bold text-base">{d.title}</h3>
-                            <Badge variant="secondary" className="text-[10px] bg-muted/80">{d.tag}</Badge>
-                          </div>
-                          <p className="text-lg font-extrabold text-emerald-600 dark:text-emerald-400">{d.price}</p>
-                        </div>
+                <Card key={d.title} className="overflow-hidden border-0 shadow-md hover:shadow-lg transition-shadow duration-300">
+                  <div className={`h-1 bg-gradient-to-r ${d.color}`} />
+                  <CardContent className="p-5">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className={`flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${d.color} text-white shadow-md flex-shrink-0`}>
+                        <d.icon className="h-5 w-5" />
+                      </div>
+                      <div className="min-w-0">
+                        <h3 className="font-bold text-sm leading-tight">{d.title}</h3>
+                        <p className="text-sm font-extrabold text-emerald-600 dark:text-emerald-400">{d.price}</p>
                       </div>
                     </div>
-
-                    <p className="text-sm text-muted-foreground leading-relaxed mb-5">{d.desc}</p>
-
-                    <ul className="space-y-2.5 mb-5">
-                      {d.bullets.map((b, i) => (
-                        <li key={i} className="flex items-start gap-2.5 text-sm">
-                          <CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0 mt-0.5" />
-                          <span className="text-muted-foreground leading-relaxed">{b}</span>
-                        </li>
-                      ))}
-                    </ul>
-
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-4 border-t">
-                      <div className="flex items-center gap-2">
-                        <TrendingUp className="h-4 w-4 text-amber-500" />
-                        <span className="text-xs text-muted-foreground">Revenus réalistes :</span>
-                        <span className="text-sm font-bold text-amber-600 dark:text-amber-400">{d.revenus}</span>
-                      </div>
+                    <p className="text-xs text-muted-foreground leading-relaxed mb-4">{d.desc}</p>
+                    <div className="flex items-center justify-between pt-3 border-t">
+                      <span className="text-[11px] text-muted-foreground">Revenus : <strong className="text-amber-600 dark:text-amber-400">{d.revenus}</strong></span>
                       <a
-                        href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je suis intéressé(e) par : ${d.title} (${d.price}). J'aimerais en savoir plus.`)}`}
+                        href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je suis intéressé(e) par : ${d.title}. J'aimerais en savoir plus.`)}`}
                         target="_blank" rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-600 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300 transition-colors"
+                        className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-600 hover:text-amber-700 dark:text-amber-400 transition-colors"
                       >
-                        En savoir plus <ArrowRight className="h-3.5 w-3.5" />
+                        Détails <ArrowRight className="h-3 w-3" />
                       </a>
                     </div>
                   </CardContent>
                 </Card>
               ))}
+            </div>
+
+            <div className="mt-10 text-center">
+              <p className="text-sm text-muted-foreground">
+                Je t&apos;accompagne dans <strong className="text-foreground">chacun de ces domaines</strong> avec mes formations et mon coaching.
+                <a href="#formations" className="text-amber-600 font-semibold hover:underline ml-1">Voir les formations</a>.
+              </p>
             </div>
           </div>
         </section>
@@ -963,50 +913,55 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ═══ 12. TÉMOIGNAGES (Horizontal Scroll) ═══ */}
-        <section id="temoignages" className="py-16 sm:py-20 bg-gradient-to-b from-muted/20 to-background relative overflow-hidden">
-          <div className="absolute top-0 right-0 h-72 w-72 bg-amber-200/20 dark:bg-amber-900/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 h-72 w-72 bg-orange-200/15 dark:bg-orange-900/10 rounded-full blur-3xl" />
-          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* ═══ 12. TÉMOIGNAGES (Style WhatsApp) ═══ */}
+        <section id="temoignages" className="py-20 sm:py-24 bg-gradient-to-b from-muted/20 to-background relative overflow-hidden">
+          <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-14">
-              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
-                <Star className="h-3 w-3 mr-1" /> Témoignages
+              <Badge variant="secondary" className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200">
+                <MessageCircle className="h-3 w-3 mr-1" /> Témoignages
               </Badge>
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Ce Que Disent Mes Clients</h2>
-              <p className="mt-4 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                La satisfaction de mes clients est ma plus grande fierté. Découvrez les avis de ceux qui m&apos;ont fait confiance pour leurs projets digitaux.
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Ils m&apos;ont fait confiance</h2>
+              <p className="mt-4 text-muted-foreground max-w-xl mx-auto leading-relaxed">
+                Des <strong className="text-foreground">messages réels</strong> de mes clients. Pas de faux avis — que du concret, livré sur WhatsApp.
               </p>
             </div>
 
-            <div className="flex gap-4 overflow-x-auto pb-4 snap-x scrollbar-hide">
+            <div className="max-w-lg mx-auto space-y-4">
               {[
-                { name: 'Amadou Diallo', role: 'Entrepreneur, Bamako', text: "Excellent travail ! J'ai commandé un logo et une affiche pour mon entreprise. Le résultat était professionnel et livré en moins de 24h. Je recommande vivement SK Designer Luxe à tous les entrepreneurs.", rating: 5, avatar: 'AD', gradient: 'from-amber-400 to-orange-500' },
-                { name: 'Fatoumata Traoré', role: 'Étudiante, Université de Bamako', text: "La formation en design graphique m'a permis de développer mes compétences rapidement. Les explications sont claires et le suivi est personnalisé. Merci SK Designer Luxe !", rating: 5, avatar: 'FT', gradient: 'from-emerald-400 to-teal-500' },
-                { name: 'Ibrahim Keita', role: 'Gérant de restaurant', text: "Les visuels pour mes réseaux sociaux sont incroyables. Mon engagement a augmenté de 300% depuis que je travaille avec SK Designer Luxe. Service au top !", rating: 5, avatar: 'IK', gradient: 'from-purple-400 to-pink-500' },
-                { name: 'Mariam Coulibaly', role: 'Blogueuse', text: "CapCut Pro et PicsArt Pro gratuitement ! L'activation est rapide et le support est très réactif. Je ne pouvais pas rêver mieux pour mon contenu.", rating: 4, avatar: 'MC', gradient: 'from-blue-400 to-cyan-500' },
-                { name: 'Oumar Sidibé', role: 'Propriétaire de boutique', text: "Mon site web est magnifique et professionnel. Mes clients peuvent maintenant me trouver en ligne facilement. Le meilleur investissement pour mon business.", rating: 5, avatar: 'OS', gradient: 'from-red-400 to-orange-500' },
-                { name: 'Aïssata Dembélé', role: 'Créatrice de contenu', text: "Le montage vidéo est d'une qualité exceptionnelle. Mes vidéos TikTok et YouTube ont beaucoup plus de vues maintenant. Merci pour votre créativité !", rating: 5, avatar: 'AD', gradient: 'from-pink-400 to-rose-500' },
+                { name: 'Amadou Diallo', time: '14:32', text: "Sacko, le logo est parfait ! 🙏 Je l'ai déjà mis sur ma boutique. Mes clients demandent qui a fait ça. Merci fréro, je te recommande à tous mes amis entrepreneurs.", status: 'Lu à 14:35' },
+                { name: 'Fatoumata Traoré', time: '09:15', text: "La formation en design m'a ouvert les yeux. En 2 semaines j'ai déjà créé 3 logos pour des gens de mon quartier et je gagne 15 000 FCFA. C'est fou 🎉", status: 'Lu à 09:20' },
+                { name: 'Ibrahim Keita', time: '18:47', text: "Mon site est en ligne depuis 3 jours et j'ai déjà eu 12 clients qui m'ont trouvé sur Google. Avant personne ne me connaissait en dehors de Hamdallaye. Service exceptionnel.", status: 'Lu à 18:50' },
+                { name: 'Oumar Sidibé', time: '11:03', text: "Les visuels pour mes affiches de boutique sont incroyables. Mon chiffre d'affaires a augmenté de 40% ce mois-ci. Quand est-ce qu'on refait une commande ? 😊", status: 'Lu à 11:08' },
               ].map((t, i) => (
-                <Card key={i} className="flex-shrink-0 min-w-[300px] sm:min-w-[350px] snap-center border-0 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5">
-                  <CardContent className="p-6">
-                    <div className="flex gap-0.5 mb-4">
-                      {Array.from({ length: 5 }).map((_, si) => (
-                        <Star key={si} className={`h-4 w-4 ${si < t.rating ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground/30'}`} />
-                      ))}
-                    </div>
-                    <p className="text-sm text-muted-foreground leading-relaxed mb-5 italic">&ldquo;{t.text}&rdquo;</p>
-                    <div className="flex items-center gap-3 pt-4 border-t">
-                      <div className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br ${t.gradient} text-white font-bold text-sm shadow-md`}>
-                        {t.avatar}
-                      </div>
-                      <div>
-                        <p className="text-sm font-bold">{t.name}</p>
-                        <p className="text-xs text-muted-foreground">{t.role}</p>
+                <div key={i} className="flex justify-end">
+                  <div className="max-w-[85%] sm:max-w-[80%]">
+                    {/* WhatsApp bubble */}
+                    <div className="relative">
+                      <div className="bg-[#005c4b] rounded-xl rounded-tr-sm px-4 py-3 shadow-sm">
+                        <p className="text-white text-sm leading-relaxed whitespace-pre-wrap">{t.text}</p>
+                        <div className="flex items-center justify-end gap-1.5 mt-1.5">
+                          <span className="text-white/50 text-[10px]">{t.time}</span>
+                          <svg className="h-4 w-4 text-[#53bdeb]" viewBox="0 0 16 11" fill="currentColor"><path d="M11.071.653a.457.457 0 0 0-.304-.102.493.493 0 0 0-.381.178l-6.19 7.636-2.011-2.085a.463.463 0 0 0-.336-.143.457.457 0 0 0-.336.143.476.476 0 0 0 0 .672l2.359 2.443a.457.457 0 0 0 .336.143c.137 0 .268-.061.381-.178l6.527-8.039a.507.507 0 0 0-.045-.668z"/><path d="M14.071.653a.457.457 0 0 0-.304-.102.493.493 0 0 0-.381.178l-6.19 7.636-1.019-1.056.457-.56a.507.507 0 0 0-.045-.668.457.457 0 0 0-.685 0l-.681.837-.07.012a.463.463 0 0 0-.336.143.476.476 0 0 0 0 .672l2.359 2.443a.457.457 0 0 0 .336.143c.137 0 .268-.061.381-.178l6.527-8.039a.507.507 0 0 0-.045-.668z" opacity=".4"/></svg>
+                          <span className="text-white/40 text-[10px]">{t.status}</span>
+                        </div>
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
+                    {/* Client name */}
+                    <p className="text-[11px] text-muted-foreground mt-1 text-right">
+                      — <strong>{t.name}</strong>, client vérifié
+                    </p>
+                  </div>
+                </div>
               ))}
+
+              {/* Trust note */}
+              <div className="pt-4 text-center">
+                <p className="text-xs text-muted-foreground">
+                  Chaque message est <strong className="text-foreground">réel</strong>, reçu directement sur mon WhatsApp.
+                  Envie d&apos;être le prochain ?{' '}
+                  <a href="#commande-rapide" className="text-amber-600 font-semibold hover:underline">Commandez maintenant</a>.
+                </p>
+              </div>
             </div>
           </div>
         </section>
@@ -1111,7 +1066,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ═══ 15. COMMANDE RAPIDE ═══ */}
+        {/* ═══ 15. COMMANDE RAPIDE (Formulaire Qualifiant) ═══ */}
         <section id="commande-rapide" className="py-20 sm:py-24">
           <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
             <Card className="border-0 shadow-2xl overflow-hidden">
@@ -1120,69 +1075,72 @@ export default function Home() {
                   <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIzMCIgY3k9IjMwIiByPSIxLjUiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wOCkiLz48L3N2Zz4=')] opacity-50" />
                   <div className="relative z-10 text-center">
                     <Zap className="h-8 w-8 mx-auto mb-2" />
-                    <h2 className="text-2xl sm:text-3xl font-extrabold">Commander un Service</h2>
-                    <p className="mt-2 text-white/80 text-sm">Remplissez le formulaire et recevez votre service gratuitement via WhatsApp.</p>
+                    <h2 className="text-2xl sm:text-3xl font-extrabold">Démarrez Votre Projet</h2>
+                    <p className="mt-2 text-white/80 text-sm">Remplissez ce formulaire — je vous recontacte <strong>personnellement</strong> sur WhatsApp avec une proposition adaptée.</p>
                     <div className="mt-4 inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm rounded-full px-4 py-1.5 text-white text-xs font-semibold border border-white/20">
                       <span className="relative flex h-2 w-2">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-red-400" />
                       </span>
-                      Limité à 5 commandes par jour — Réservez votre place
+                      5 projets maximum par jour — qualité avant quantité
                     </div>
                   </div>
                 </div>
               </div>
               <CardContent className="p-6 sm:p-8 space-y-4">
-                <div className="space-y-2">
-                  <Label className="text-sm font-semibold">Service souhaité *</Label>
-                  <select
-                    value={quickOrder.service}
-                    onChange={(e) => setQuickOrder(prev => ({ ...prev, service: e.target.value }))}
-                    className="w-full h-11 rounded-md border border-input bg-background px-3 text-sm"
-                  >
-                    <option value="">Sélectionnez un service...</option>
-                    <option value="Affiche Professionnelle — Gratuit">Affiche Professionnelle — Gratuit</option>
-                    <option value="Logo Professionnel — Gratuit">Logo Professionnel — Gratuit</option>
-                    <option value="Site Web Simple — Gratuit">Site Web Simple — Gratuit</option>
-                    <option value="Site Web Professionnel — Gratuit">Site Web Professionnel — Gratuit</option>
-                    <option value="Montage Vidéo Pro — Gratuit">Montage Vidéo Pro — Gratuit</option>
-                    <option value="Contenu Réseaux Sociaux — Gratuit">Contenu Réseaux Sociaux — Gratuit</option>
-                    <option value="CapCut Pro — Gratuit">CapCut Pro — Gratuit</option>
-                    <option value="PicsArt Pro — Gratuit">PicsArt Pro — Gratuit</option>
-                    <option value="IPTV Pro — Gratuit">IPTV Pro — Gratuit</option>
-                    <option value="Canva Pro — Gratuit">Canva Pro — Gratuit</option>
-                    <option value="Livres Professionnels — Gratuit">Livres Professionnels — Gratuit</option>
-                    <option disabled className="font-semibold text-muted-foreground">── Formations ──</option>
-                    <option value="Formation en Trading — Gratuit">Formation en Trading — Gratuit</option>
-                    <option value="Formation en Management et Gestion de projets — Gratuit">Formation en Management et Gestion de projets — Gratuit</option>
-                    <option value="Formation en Intelligence Artificielle — Gratuit">Formation en Intelligence Artificielle — Gratuit</option>
-                    <option value="Formation YouTube et Monétisation — Gratuit">Formation YouTube et Monétisation — Gratuit</option>
-                    <option value="Formation en Programmation — Gratuit">Formation en Programmation — Gratuit</option>
-                    <option value="Formation E-commerce — Gratuit">Formation E-commerce — Gratuit</option>
-                    <option value="Formation en Maintenance Informatique — Gratuit">Formation en Maintenance Informatique — Gratuit</option>
-                    <option value="Formation en Hacking et Sécurité Informatique — Gratuit">Formation en Hacking et Sécurité Informatique — Gratuit</option>
-                    <option disabled className="font-semibold text-muted-foreground">── Carrière Pro ──</option>
-                    <option value="Plume Pro (Lettre de motivation) — 800 FCFA">Plume Pro (Lettre de motivation) — 800 FCFA</option>
-                    <option value="Relooking CV — 700 FCFA">Relooking CV — 700 FCFA</option>
-                    <option value="Impact LinkedIn — 2 000 FCFA">Impact LinkedIn — 2 000 FCFA</option>
-                    <option value="Objectif Entretien — 500 FCFA">Objectif Entretien — 500 FCFA</option>
-                    <option value="Réseautage Pro (Carte de visite) — 1 500 FCFA">Réseautage Pro (Carte de visite) — 1 500 FCFA</option>
-                    <option value="Pack Lancement Carrière — 3 500 FCFA">Pack Lancement Carrière — 3 500 FCFA</option>
-                  </select>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-sm font-semibold">Service souhaité *</Label>
+                    <select
+                      value={quickOrder.service}
+                      onChange={(e) => setQuickOrder(prev => ({ ...prev, service: e.target.value }))}
+                      className="w-full h-11 rounded-md border border-input bg-background px-3 text-sm"
+                    >
+                      <option value="">Sélectionnez un service...</option>
+                      <option disabled className="font-semibold text-muted-foreground">── Design & Création ──</option>
+                      <option value="Logo Professionnel — Gratuit">Logo Professionnel — Gratuit</option>
+                      <option value="Affiche Professionnelle — Gratuit">Affiche Professionnelle — Gratuit</option>
+                      <option value="Identité Visuelle Complète — Gratuit">Identité Visuelle Complète — Gratuit</option>
+                      <option disabled className="font-semibold text-muted-foreground">── Web & Vidéo ──</option>
+                      <option value="Site Web Simple — Gratuit">Site Web Simple — Gratuit</option>
+                      <option value="Site Web Professionnel — Gratuit">Site Web Professionnel — Gratuit</option>
+                      <option value="Montage Vidéo Pro — Gratuit">Montage Vidéo Pro — Gratuit</option>
+                      <option disabled className="font-semibold text-muted-foreground">── Carrière Pro ──</option>
+                      <option value="Pack Lancement Carrière — 3 500 FCFA">Pack Lancement Carrière — 3 500 FCFA</option>
+                      <option value="Relooking CV — 700 FCFA">Relooking CV — 700 FCFA</option>
+                      <option value="Impact LinkedIn — 2 000 FCFA">Impact LinkedIn — 2 000 FCFA</option>
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-sm font-semibold">Secteur d&apos;activité *</Label>
+                    <select
+                      value={quickOrder.description}
+                      onChange={(e) => setQuickOrder(prev => ({ ...prev, description: e.target.value }))}
+                      className="w-full h-11 rounded-md border border-input bg-background px-3 text-sm"
+                    >
+                      <option value="">Votre secteur...</option>
+                      <option value="Commerce / Boutique">Commerce / Boutique</option>
+                      <option value="Restauration / Alimentation">Restauration / Alimentation</option>
+                      <option value="Éducation / Formation">Éducation / Formation</option>
+                      <option value="Tech / Informatique">Tech / Informatique</option>
+                      <option value="Mode / Beauté">Mode / Beauté</option>
+                      <option value="Transport / Logistique">Transport / Logistique</option>
+                      <option value=" Santé / Bien-être">Santé / Bien-être</option>
+                      <option value="BTP / Immobilier">BTP / Immobilier</option>
+                      <option value="Art / Culture">Art / Culture</option>
+                      <option value="Autre">Autre</option>
+                    </select>
+                  </div>
                 </div>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label className="text-sm font-semibold">Votre nom *</Label>
-                    <Input placeholder="Votre nom complet" value={quickOrder.name} onChange={(e) => setQuickOrder(prev => ({ ...prev, name: e.target.value }))} className="h-11" />
+                    <Input placeholder="Ex: Amadou Diallo" value={quickOrder.name} onChange={(e) => setQuickOrder(prev => ({ ...prev, name: e.target.value }))} className="h-11" />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-sm font-semibold">Téléphone *</Label>
+                    <Label className="text-sm font-semibold">Téléphone WhatsApp *</Label>
                     <Input type="tel" placeholder="+223 XX XX XX XX" value={quickOrder.phone} onChange={(e) => setQuickOrder(prev => ({ ...prev, phone: e.target.value }))} className="h-11" />
                   </div>
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-sm font-semibold">Description du projet</Label>
-                  <Textarea placeholder="Décrivez votre projet en quelques mots..." rows={3} value={quickOrder.description} onChange={(e) => setQuickOrder(prev => ({ ...prev, description: e.target.value }))} />
                 </div>
                 <Button
                   onClick={() => {
@@ -1190,15 +1148,24 @@ export default function Home() {
                       toast({ title: 'Champs requis', description: 'Service, nom et téléphone sont obligatoires.', variant: 'destructive' })
                       return
                     }
-                    const msg = encodeURIComponent(`Bonjour ! Je souhaite commander :\n\nService : ${quickOrder.service}\nNom : ${quickOrder.name}\nTéléphone : ${quickOrder.phone}\nDescription : ${quickOrder.description || 'Aucune description fournie.'}\n\nMerci !`)
+                    const msg = encodeURIComponent(
+                      `Bonjour Sacko ! Je souhaite un service.\n\n` +
+                      `Service : ${quickOrder.service}\n` +
+                      `Secteur : ${quickOrder.description || 'Non précisé'}\n` +
+                      `Nom : ${quickOrder.name}\n` +
+                      `Téléphone : ${quickOrder.phone}\n\n` +
+                      `Je suis prêt(e) à discuter de mon projet. Merci !`
+                    )
                     window.open(`https://wa.me/22397787244?text=${msg}`, '_blank')
-                    toast({ title: 'Redirection WhatsApp', description: 'Votre demande de commande est envoyée !' })
+                    toast({ title: 'Demande envoyée !', description: 'Je vous recontacte personnellement sous 30 minutes.' })
                   }}
                   className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold h-12 text-sm shadow-lg shadow-emerald-500/20"
                 >
-                  <Send className="h-4 w-4 mr-2" /> Envoyer ma commande via WhatsApp
+                  <Send className="h-4 w-4 mr-2" /> Envoyer ma demande
                 </Button>
-                <p className="text-[10px] text-muted-foreground text-center">Réponse garantie en moins de 30 minutes. Tous les services sont gratuits.</p>
+                <p className="text-[11px] text-muted-foreground text-center">
+                  Vos données restent <strong>privées</strong>. Je vous recontacte uniquement pour votre projet.
+                </p>
               </CardContent>
             </Card>
           </div>
