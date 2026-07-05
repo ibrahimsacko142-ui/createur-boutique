@@ -62,6 +62,7 @@ import {
   ClipboardCheck,
   Award,
   Plus,
+  Users,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -545,6 +546,10 @@ export default function Home() {
   ]
 
   const formations = [
+    { text: 'Devenir Designer Pro avec Canva & Illustrator', icon: Palette, price: '5 000', duration: '6h', lessons: '9 leçons' },
+    { text: 'Créer et monétiser des vidéos pour réseaux sociaux', icon: MonitorPlay, price: '7 500', duration: '8h', lessons: '15 leçons' },
+    { text: 'Créer un site web professionnel (No-code + Next.js)', icon: Globe, price: '10 000', duration: '10h', lessons: '12 leçons' },
+    { text: 'Devenir Community Manager pour PME locales', icon: Target, price: '6 000', duration: '7h', lessons: '10 leçons' },
     { text: 'Formation complète en Trading', icon: TrendingUp },
     { text: 'Formation en Management et Gestion de projets', icon: Building2 },
     { text: 'Formation en Intelligence Artificielle', icon: Brain },
@@ -1345,32 +1350,65 @@ export default function Home() {
               </div>
             </FadeIn>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {formations.map((form, i) => (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-2 gap-5">
+              {/* 4 formations avec prix — cartes enrichies */}
+              {formations.filter(f => f.price).map((form, i) => (
                 <motion.a
                   key={i}
-                  href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je suis intéressé(e) par la formation : ${form.text}. Pouvez-vous me donner plus de détails et comment y accéder ? Merci !`)}`}
+                  href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je suis intéressé(e) par la formation : ${form.text} (${form.price} FCFA). Comment y accéder ?`)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: '-40px' }}
-                  transition={{ duration: 0.4, delay: i * 0.04, ease: 'easeOut' }}
-                  className="group flex items-center gap-4 p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-emerald-500/40 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/5 cursor-pointer"
+                  transition={{ duration: 0.4, delay: i * 0.06, ease: 'easeOut' }}
+                  className="group relative rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:border-amber-400/50 transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/10 cursor-pointer overflow-hidden"
                 >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 flex-shrink-0 group-hover:from-emerald-500/30 group-hover:to-teal-500/30 transition-colors">
-                    <form.icon className="h-5 w-5 text-amber-400 group-hover:text-emerald-400 transition-colors" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-slate-200 leading-relaxed group-hover:text-white transition-colors">{form.text}</p>
-                    <span className="text-[11px] text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity mt-1 flex items-center gap-1">
-                      <MessageCircle className="h-3 w-3" /> Cliquer pour demander via WhatsApp
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+                  <div className="relative p-5 sm:p-6">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500/30 to-orange-500/30 group-hover:from-amber-500/50 group-hover:to-orange-500/50 transition-colors">
+                        <form.icon className="h-5 w-5 text-amber-400" />
+                      </div>
+                      <span className="text-2xl font-extrabold text-amber-400">{form.price} <span className="text-xs font-normal text-slate-500">FCFA</span></span>
+                    </div>
+                    <h3 className="text-sm font-bold text-white leading-snug mb-2">{form.text}</h3>
+                    <div className="flex items-center gap-3 text-[11px] text-slate-400">
+                      <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{form.duration}</span>
+                      <span className="flex items-center gap-1"><BookOpen className="h-3 w-3" />{form.lessons}</span>
+                    </div>
+                    <span className="text-[11px] text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity mt-3 flex items-center gap-1">
+                      <MessageCircle className="h-3 w-3" /> S'inscrire via WhatsApp
                     </span>
                   </div>
-                  <ArrowRight className="h-4 w-4 text-white/30 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all flex-shrink-0" />
                 </motion.a>
               ))}
             </div>
+
+            {/* Autres formations — grille compacte */}
+            <FadeIn delay={0.15} className="mt-8">
+              <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-3">Autres formations disponibles</p>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {formations.filter(f => !f.price).map((form, i) => (
+                  <motion.a
+                    key={i}
+                    href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je suis intéressé(e) par la formation : ${form.text}. Pouvez-vous me donner plus de détails ?`)}`}
+                    target="_blank" rel="noopener noreferrer"
+                    initial={{ opacity: 0, y: 15 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.3, delay: i * 0.03 }}
+                    className="group flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-emerald-500/40 transition-all duration-300 cursor-pointer"
+                  >
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/5 flex-shrink-0">
+                      <form.icon className="h-4 w-4 text-slate-400 group-hover:text-emerald-400 transition-colors" />
+                    </div>
+                    <p className="text-xs font-medium text-slate-300 group-hover:text-white transition-colors flex-1">{form.text}</p>
+                    <ArrowRight className="h-3.5 w-3.5 text-white/20 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all" />
+                  </motion.a>
+                ))}
+              </div>
+            </FadeIn>
 
             {/* CTA vers inscription */}
             <FadeIn delay={0.2} className="mt-8 text-center">
@@ -1381,6 +1419,141 @@ export default function Home() {
               </a>
               <p className="mt-3 text-slate-400 text-xs">Remplissez le formulaire d'inscription ci-dessous</p>
             </FadeIn>
+          </div>
+        </section>
+
+        {/* ═══ COLLECTIF SK DESIGNER LUXE ═══ */}
+        <section id="collectif" className="py-16 sm:py-20 bg-gradient-to-br from-purple-950 via-slate-900 to-indigo-950 text-white relative overflow-hidden">
+          <div className="absolute inset-0">
+            <div className="absolute top-0 left-1/3 h-80 w-80 bg-purple-500/10 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 right-1/4 h-64 w-64 bg-indigo-500/10 rounded-full blur-3xl" />
+          </div>
+          <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+            <FadeIn className="text-center mb-10">
+              <Badge className="mb-3 bg-purple-500/20 text-purple-300 border-purple-500/30 hover:bg-purple-500/30">
+                <Users className="h-3 w-3 mr-1" /> Collectif
+              </Badge>
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Collectif SK Designer Luxe</h2>
+              <p className="mt-3 text-slate-400 max-w-xl mx-auto">
+                Rejoins une communauté d'entrepreneurs et créateurs qui s'entraident, partagent des opportunités et grandissent ensemble. Accès illimité aux ressources, formations exclusives et soutien personnalisé.
+              </p>
+            </FadeIn>
+
+            <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+              {[
+                { icon: GraduationCap, text: 'Formations exclusives chaque mois' },
+                { icon: MessageCircle, text: 'Support direct via WhatsApp' },
+                { icon: FolderDown, text: 'Templates & ressources premium' },
+                { icon: Users, text: 'Réseau de +200 entrepreneurs' },
+              ].map((b, i) => (
+                <motion.div key={i} variants={cardVariants}>
+                  <div className="flex items-center gap-3 p-4 rounded-xl bg-white/5 border border-white/10">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-500/20 flex-shrink-0">
+                      <b.icon className="h-4 w-4 text-purple-400" />
+                    </div>
+                    <p className="text-xs font-medium text-slate-300">{b.text}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </StaggerContainer>
+
+            <FadeIn delay={0.2}>
+              <Card className="border-2 border-purple-400/30 bg-purple-500/10 backdrop-blur-sm overflow-hidden">
+                <CardContent className="p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+                  <div className="text-center sm:text-left">
+                    <p className="text-sm text-slate-300 mb-1">Abonnement mensuel</p>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-3xl font-extrabold text-white">2 000</span>
+                      <span className="text-slate-500">–</span>
+                      <span className="text-3xl font-extrabold text-white">3 000 FCFA</span>
+                      <span className="text-sm text-slate-400">/mois</span>
+                    </div>
+                    <p className="text-xs text-slate-500 mt-1">Prix d'appel • Se rentabilise par le volume</p>
+                  </div>
+                  <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20veux%20rejoindre%20le%20Collectif%20SK%20Designer%20Luxe." target="_blank" rel="noopener noreferrer" className="flex-shrink-0">
+                    <Button size="lg" className="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-bold shadow-xl shadow-purple-500/25 px-8 whitespace-nowrap">
+                      <MessageCircle className="h-5 w-5 mr-2" /> Rejoindre le Collectif
+                    </Button>
+                  </a>
+                </CardContent>
+              </Card>
+            </FadeIn>
+          </div>
+        </section>
+
+        {/* ═══ 4 DOMAINES POUR GAGNER DE L'ARGENT ═══ */}
+        <section id="gagner-argent" className="py-16 sm:py-20">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+            <FadeIn className="text-center mb-10">
+              <Badge variant="secondary" className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200">
+                <TrendingUp className="h-3 w-3 mr-1" /> Revenus
+              </Badge>
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">4 Domaines pour Gagner de l'Argent</h2>
+              <p className="mt-3 text-muted-foreground max-w-xl mx-auto">
+                Monétise tes compétences digitales dès maintenant. Voici 4 pistes concrètes avec des tarifs réalistes pour le marché malien.
+              </p>
+            </FadeIn>
+
+            <StaggerContainer className="grid sm:grid-cols-2 gap-5">
+              {[
+                {
+                  icon: Target,
+                  title: 'Création de contenu',
+                  price: 'À partir de 3 000 FCFA/mois',
+                  desc: 'Coaching et suivi personnalisé pour créer du contenu engageant sur les réseaux sociaux. Accompagnement stratégique, planning éditorial et feedbacks sur chaque publication.',
+                  color: 'from-pink-500 to-rose-500',
+                  tag: 'Coaching',
+                },
+                {
+                  icon: MessageCircle,
+                  title: 'Automatisation (chatbots WhatsApp)',
+                  price: 'À partir de 10 000 FCFA/mois',
+                  desc: 'Mets en place des chatbots WhatsApp professionnels pour automatiser tes réponses, qualifier tes prospects et ne perdre aucune opportunité commerciale, même la nuit.',
+                  color: 'from-green-500 to-emerald-500',
+                  tag: 'Abonnement',
+                },
+                {
+                  icon: Globe,
+                  title: 'Sites web & apps',
+                  price: '30 000 – 150 000 FCFA/projet',
+                  desc: 'Conception de sites vitrines, landing pages et applications web sur mesure. Design responsive, optimisé pour Google et adapté aux besoins de ton business à Bamako.',
+                  color: 'from-blue-500 to-indigo-500',
+                  tag: 'Projet',
+                },
+                {
+                  icon: UserCheck,
+                  title: 'Freelance & clients',
+                  price: '5 000 FCFA/session',
+                  desc: 'Coaching privé individuel pour trouver tes premiers clients, fixer tes tarifs, gérer tes projets et construire une activité freelance rentable et pérenne.',
+                  color: 'from-amber-500 to-orange-500',
+                  tag: 'Coaching privé',
+                },
+              ].map((d, i) => (
+                <motion.div key={i} variants={cardVariants}>
+                  <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 group hover:-translate-y-1 overflow-hidden">
+                    <div className={`h-1.5 bg-gradient-to-r ${d.color}`} />
+                    <CardContent className="p-6">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className={`flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br ${d.color} text-white shadow-lg`}>
+                          <d.icon className="h-5 w-5" />
+                        </div>
+                        <Badge variant="secondary" className="text-[10px] bg-muted/80">{d.tag}</Badge>
+                      </div>
+                      <h3 className="font-bold text-sm mb-1">{d.title}</h3>
+                      <p className="text-base font-extrabold text-emerald-600 dark:text-emerald-400 mb-3">{d.price}</p>
+                      <p className="text-xs text-muted-foreground leading-relaxed mb-4">{d.desc}</p>
+                      <a
+                        href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je suis intéressé(e) par : ${d.title} (${d.price}). J'aimerais en savoir plus.`)}`}
+                        target="_blank" rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-600 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300 transition-colors"
+                      >
+                        En savoir plus <ArrowRight className="h-3.5 w-3.5" />
+                      </a>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </StaggerContainer>
           </div>
         </section>
 
