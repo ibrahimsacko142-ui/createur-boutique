@@ -81,7 +81,7 @@ export default function LoginPage({ onLogin }: { onLogin: (user: UserData) => vo
   const [inscSending, setInscSending] = useState(false)
   const [inscVerifying, setInscVerifying] = useState(false)
   const [inscSmsInfo, setInscSmsInfo] = useState('')
-  const [inscDevOtp, setInscDevOtp] = useState('')
+  const [inscOtpCode, setInscOtpCode] = useState('')
   const [inscCodeCopied, setInscCodeCopied] = useState(false)
 
   /* ─── Connexion ─── */
@@ -93,7 +93,7 @@ export default function LoginPage({ onLogin }: { onLogin: (user: UserData) => vo
   const [loginSending, setLoginSending] = useState(false)
   const [loginVerifying, setLoginVerifying] = useState(false)
   const [loginSmsInfo, setLoginSmsInfo] = useState('')
-  const [loginDevOtp, setLoginDevOtp] = useState('')
+  const [loginOtpCode, setLoginOtpCode] = useState('')
   const [loginCodeCopied, setLoginCodeCopied] = useState(false)
   const [loginError, setLoginError] = useState('')
 
@@ -151,7 +151,7 @@ export default function LoginPage({ onLogin }: { onLogin: (user: UserData) => vo
       }
 
       setInscSmsInfo(data.message || '')
-      if (data.devOtp) setInscDevOtp(data.devOtp)
+      if (data.otp) setInscOtpCode(data.otp)
       setInscOtp('')
       setInscTimer(300) // 5 min
       setInscStep('otp')
@@ -202,7 +202,7 @@ export default function LoginPage({ onLogin }: { onLogin: (user: UserData) => vo
   const resendInscOtp = useCallback(async () => {
     setInscOtp('')
     setInscOtpError('')
-    setInscDevOtp('')
+    setInscOtpCode('')
     setInscSending(true)
     try {
       const fullPhone = `${codePays}${telephone.replace(/\s/g, '')}`
@@ -214,7 +214,7 @@ export default function LoginPage({ onLogin }: { onLogin: (user: UserData) => vo
       const data = await res.json()
       if (data.success) {
         setInscSmsInfo(data.message || '')
-        if (data.devOtp) setInscDevOtp(data.devOtp)
+        if (data.otp) setInscOtpCode(data.otp)
         setInscTimer(300)
       } else {
         setInscOtpError(data.error || "Erreur d'envoi.")
@@ -234,7 +234,7 @@ export default function LoginPage({ onLogin }: { onLogin: (user: UserData) => vo
     if (!loginPhone.trim()) return
     setLoginSending(true)
     setLoginError('')
-    setLoginDevOtp('')
+    setLoginOtpCode('')
     try {
       const fullPhone = `${loginCode}${loginPhone.replace(/\s/g, '')}`
       const res = await fetch('/api/send-otp', {
@@ -249,7 +249,7 @@ export default function LoginPage({ onLogin }: { onLogin: (user: UserData) => vo
         return
       }
       setLoginSmsInfo(data.message || '')
-      if (data.devOtp) setLoginDevOtp(data.devOtp)
+      if (data.otp) setLoginOtpCode(data.otp)
       setLoginOtp('')
       setLoginOtpError('')
       setLoginTimer(300)
@@ -305,7 +305,7 @@ export default function LoginPage({ onLogin }: { onLogin: (user: UserData) => vo
       const data = await res.json()
       if (data.success) {
         setLoginSmsInfo(data.message || '')
-        if (data.devOtp) setLoginDevOtp(data.devOtp)
+        if (data.otp) setLoginOtpCode(data.otp)
         setLoginTimer(300)
       } else {
         setLoginOtpError(data.error || "Erreur d'envoi.")
@@ -365,15 +365,12 @@ export default function LoginPage({ onLogin }: { onLogin: (user: UserData) => vo
     </div>
   )
 
-  /** Carte dev affichant le code OTP (seulement en mode développement) */
-  const DevOtpCard = ({ code, copied, onCopy, label }: {
+  /** Carte affichant le code OTP */
+  const OtpCodeCard = ({ code, copied, onCopy, label }: {
     code: string; copied: boolean; onCopy: () => void; label: string
   }) => (
-    <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/40 rounded-2xl p-5 text-center space-y-3">
-      <div className="flex items-center justify-center gap-1.5">
-        <AlertCircle className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
-        <p className="text-[11px] font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider">{label}</p>
-      </div>
+    <div className="bg-slate-100 dark:bg-slate-800 rounded-2xl p-5 text-center space-y-3">
+      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{label}</p>
       <div className="flex items-center justify-center gap-2">
         <span className="text-3xl sm:text-4xl font-mono font-extrabold tracking-[0.3em] text-foreground">
           {code.slice(0, 3)}<span className="text-muted-foreground/40 mx-1">-</span>{code.slice(3)}
@@ -382,10 +379,7 @@ export default function LoginPage({ onLogin }: { onLogin: (user: UserData) => vo
           {copied ? <Check className="h-4 w-4 text-emerald-500" /> : <Copy className="h-4 w-4 text-muted-foreground" />}
         </button>
       </div>
-      <p className="text-[11px] text-amber-600 dark:text-amber-500 leading-relaxed">
-        Ce code s&apos;affiche car Twilio n&apos;est pas configuré.<br />
-        En production, il sera envoyé uniquement par SMS.
-      </p>
+      <p className="text-[11px] text-muted-foreground">Copiez ce code et entrez-le ci-dessous pour vérification.</p>
     </div>
   )
 
@@ -524,13 +518,12 @@ export default function LoginPage({ onLogin }: { onLogin: (user: UserData) => vo
                           </p>
                         </div>
 
-                        {/* Dev: afficher le code */}
-                        {inscDevOtp && (
-                          <DevOtpCard
-                            code={inscDevOtp}
+                        {inscOtpCode && (
+                          <OtpCodeCard
+                            code={inscOtpCode}
                             copied={inscCodeCopied}
-                            onCopy={() => copyCode(inscDevOtp, setInscCodeCopied)}
-                            label="Mode développement"
+                            onCopy={() => copyCode(inscOtpCode, setInscCodeCopied)}
+                            label="Votre code de vérification"
                           />
                         )}
 
@@ -663,12 +656,12 @@ export default function LoginPage({ onLogin }: { onLogin: (user: UserData) => vo
                           </p>
                         </div>
 
-                        {loginDevOtp && (
-                          <DevOtpCard
-                            code={loginDevOtp}
+                        {loginOtpCode && (
+                          <OtpCodeCard
+                            code={loginOtpCode}
                             copied={loginCodeCopied}
-                            onCopy={() => copyCode(loginDevOtp, setLoginCodeCopied)}
-                            label="Mode développement"
+                            onCopy={() => copyCode(loginOtpCode, setLoginCodeCopied)}
+                            label="Votre code de vérification"
                           />
                         )}
 

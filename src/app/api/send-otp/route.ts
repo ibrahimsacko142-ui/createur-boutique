@@ -4,9 +4,12 @@ import crypto from 'crypto'
 /*
   ═══════════════════════════════════════════════════════════════
   POST /api/send-otp
-  Envoie un code OTP à 6 chiffres par SMS (Twilio).
-  Le code est stocké dans un cookie httpOnly signé (HMAC-SHA256),
-  pas besoin de base de données.
+  Génère un code OTP à 6 chiffres, le signe avec HMAC-SHA256,
+  le stocke dans un cookie httpOnly (pas de base de données).
+  Le code est renvoyé au frontend pour affichage immédiat.
+
+  Si TWILIO_ACCOUNT_SID est configuré, le code est aussi envoyé
+  par SMS en plus d'être affiché (mode hybride).
 
   Body : { phone: "+22370000000" }
   ═══════════════════════════════════════════════════════════════
@@ -34,12 +37,11 @@ export async function POST(req: NextRequest) {
     const signature = hmac.digest('hex')
     const token = Buffer.from(`${timestamp}:${otp}:${signature}`).toString('base64url')
 
-    /* ── 3. Envoyer le SMS via Twilio ── */
+    /* ── 3. Tenter l'envoi SMS si Twilio est configuré (optionnel) ── */
     const sid = process.env.TWILIO_ACCOUNT_SID
     const token_tw = process.env.TWILIO_AUTH_TOKEN
     const from = process.env.TWILIO_PHONE_NUMBER
     let smsSent = false
-    let smsError = ''
 
     if (sid && token_tw && from) {
       try {
@@ -52,9 +54,7 @@ export async function POST(req: NextRequest) {
         })
         smsSent = true
       } catch (err: unknown) {
-        const msg = err instanceof Error ? err.message : 'Erreur Twilio'
-        smsError = msg
-        console.error('[SMS OTP] Erreur Twilio :', msg)
+        console.error('[SMS OTP] Erreur Twilio (non bloquant) :', err instanceof Error ? err.message : err)
       }
     }
 
@@ -62,14 +62,10 @@ export async function POST(req: NextRequest) {
     const response = NextResponse.json({
       success: true,
       smsSent,
-      devMode: !sid || !token_tw || !from,
+      otp,
       message: smsSent
-        ? 'Code envoy\u00e9 par SMS'
-        : !sid
-          ? 'Mode d\u00e9veloppement : Twilio non configur\u00e9. Le code est retourn\u00e9 ci-dessous.'
-          : `Erreur d\u2019envoi SMS : ${smsError}`,
-      // En mode dev on retourne le code pour tester, en prod il n'est QUE dans le SMS
-      ...(smsSent ? {} : { devOtp: otp }),
+        ? 'Code envoyé par SMS'
+        : 'Code de vérification généré',
     })
 
     response.cookies.set('sc_otp', token, {
@@ -82,7 +78,7 @@ export async function POST(req: NextRequest) {
 
     return response
   } catch (error) {
-    console.error('[SMS OTP] Erreur serveur :', error)
-    return NextResponse.json({ success: false, error: "Erreur serveur. R\u00e9essayez." }, { status: 500 })
+    console.error('[SEND OTP] Erreur serveur :', error)
+    return NextResponse.json({ success: false, error: 'Erreur serveur. Réessayez.' }, { status: 500 })
   }
 }
