@@ -1224,27 +1224,47 @@ export default function Home() {
           <div className="absolute bottom-10 right-10 h-64 w-64 bg-orange-200/15 dark:bg-orange-900/10 rounded-full blur-3xl" />
           <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
-              <div className="relative">
-                <div className="relative rounded-2xl overflow-hidden shadow-2xl border">
-                  <img src="https://sfile.chatglm.cn/images-ppt/3e8dbebc34bb.jpg" alt="SK Designer Luxe" className="w-full h-80 sm:h-96 object-cover" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-amber-900/80 via-amber-900/30 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mb-3">
-                      <Palette className="h-7 w-7" />
+              <div className="space-y-5">
+                {/* Photo de Sacko */}
+                <div className="relative">
+                  <div className="relative rounded-2xl overflow-hidden shadow-2xl border">
+                    <img src="/demo-photo.png" alt="Sacko - SK Designer Luxe" className="w-full h-72 sm:h-80 object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-amber-900/80 via-amber-900/20 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm mb-2">
+                        <Palette className="h-6 w-6" />
+                      </div>
+                      <h3 className="text-xl font-bold">Sacko</h3>
+                      <p className="mt-0.5 text-white/80 text-sm">SK Designer Luxe &bull; Bamako, Mali</p>
                     </div>
-                    <h3 className="text-2xl font-bold">SK Designer Luxe</h3>
-                    <p className="mt-1 text-white/80 text-sm">Créateur Digital &bull; Bamako, Mali</p>
+                  </div>
+                  <div className="absolute -bottom-4 -right-4 bg-white dark:bg-card rounded-xl p-4 shadow-xl border hidden sm:block">
+                    <div className="flex items-center gap-2.5">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
+                        <Zap className="h-4 w-4 text-amber-600" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold">50+ Projets livrés</p>
+                        <p className="text-[10px] text-muted-foreground">À Bamako et au-delà</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div className="absolute -bottom-6 -right-6 bg-white dark:bg-card rounded-2xl p-5 shadow-xl border hidden sm:block">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
-                      <Zap className="h-5 w-5 text-amber-600" />
-                    </div>
-                    <div>
-                      <p className="text-lg font-bold">50+ Projets livrés</p>
-                      <p className="text-xs text-muted-foreground">À Bamako et au-delà</p>
-                    </div>
+                {/* Vidéo de présentation */}
+                <div className="relative rounded-2xl overflow-hidden shadow-xl border">
+                  <video
+                    controls
+                    preload="metadata"
+                    poster="/demo-photo.png"
+                    className="w-full h-48 sm:h-56 object-cover bg-black"
+                  >
+                    <source src="/demo-video.mp4" type="video/mp4" />
+                    Votre navigateur ne supporte pas la lecture vidéo.
+                  </video>
+                  <div className="absolute top-3 left-3">
+                    <Badge className="bg-amber-500/90 text-white border-0 text-[10px] font-semibold backdrop-blur-sm">
+                      <MonitorPlay className="h-3 w-3 mr-1" /> Vidéo de présentation
+                    </Badge>
                   </div>
                 </div>
               </div>
