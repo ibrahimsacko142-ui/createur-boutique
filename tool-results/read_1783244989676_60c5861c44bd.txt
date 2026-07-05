@@ -1,0 +1,502 @@
+     1→   562→              {[
+     2→   563→                {
+     3→   564→                  cat: 'Design Graphique', icon: Palette, color: 'from-pink-500 to-rose-500', borderColor: 'border-pink-200 dark:border-pink-800',
+     4→   565→                  decouverte: { title: 'Offre Découverte — Gratuit', desc: "Un logo simple pour démarrer. Texte stylisé + icône basique, 2 propositions au choix, 1 révision incluse. Idéal pour tester mon style avant de vous engager." },
+     5→   566→                  premium: { title: 'Offre Premium', desc: "Logo professionnel vectorisé, décliné en couleur et noir/blanc, charte graphique complète (couleurs, typographies), fichiers sources livrés (AI, PSD, PNG haute résolution), révisions illimitées jusqu'à satisfaction." },
+     6→   567→                },
+     7→   568→                {
+     8→   569→                  cat: 'Développement Web', icon: Globe, color: 'from-blue-500 to-indigo-500', borderColor: 'border-blue-200 dark:border-blue-800',
+     9→   570→                  decouverte: { title: 'Offre Découverte — Gratuite', desc: 'Une landing page 1 page, responsive (mobile/ordinateur), pour présenter votre activité en ligne rapidement.' },
+    10→   571→                  premium: { title: 'Offre Premium', desc: 'Site multi-pages sur mesure, formulaire de contact fonctionnel, déploiement et hébergement inclus, nom de domaine personnalisé, maintenance mensuelle disponible en option.' },
+    11→   572→                },
+    12→   573→                {
+    13→   574→                  cat: 'Montage Vidéo', icon: MonitorPlay, color: 'from-purple-500 to-violet-500', borderColor: 'border-purple-200 dark:border-purple-800',
+    14→   575→                  decouverte: { title: 'Offre Découverte — Gratuite', desc: "Montage court (moins d'une minute), coupe simple sans effets avancés. Parfait pour un aperçu rapide." },
+    15→   576→                  premium: { title: 'Offre Premium', desc: 'Montage complet avec effets visuels, sous-titres, musique libre de droits, export optimisé pour réseaux sociaux ou YouTube.' },
+    16→   577→                },
+    17→   578→                {
+    18→   579→                  cat: 'Formation', icon: GraduationCap, color: 'from-emerald-500 to-teal-500', borderColor: 'border-emerald-200 dark:border-emerald-800',
+    19→   580→                  decouverte: { title: 'Offre Découverte — Gratuite', desc: "Session d'initiation de 30 minutes pour découvrir mes outils et méthodes." },
+    20→   581→                  premium: { title: 'Offre Premium', desc: 'Parcours de formation complet avec suivi personnalisé, support après formation, et certificat de participation.' },
+    21→   582→                },
+    22→   583→              ].map((section) => (
+    23→   584→                <Card key={section.cat} className={`border ${section.borderColor} overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5`}>
+    24→   585→                  <div className={`h-1.5 bg-gradient-to-r ${section.color}`} />
+    25→   586→                  <CardContent className="p-5 sm:p-7">
+    26→   587→                    <div className="flex items-center gap-3 mb-5">
+    27→   588→                      <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${section.color} text-white shadow-lg`}>
+    28→   589→                        <section.icon className="h-5 w-5" />
+    29→   590→                      </div>
+    30→   591→                      <h3 className="text-lg font-extrabold">{section.cat}</h3>
+    31→   592→                    </div>
+    32→   593→                    <div className="grid sm:grid-cols-2 gap-4">
+    33→   594→                      <div className="rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-950/20 p-4 sm:p-5">
+    34→   595→                        <div className="flex items-center gap-2 mb-2">
+    35→   596→                          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-white text-xs font-bold">✓</span>
+    36→   597→                          <h4 className="text-sm font-bold text-emerald-700 dark:text-emerald-400">{section.decouverte.title}</h4>
+    37→   598→                        </div>
+    38→   599→                        <p className="text-xs text-muted-foreground leading-relaxed mb-4">{section.decouverte.desc}</p>
+    39→   600→                        <a
+    40→   601→                          href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je veux l'Offre Découverte : ${section.cat}. C'est gratuit, je veux tester !`)}`}
+    41→   602→                          target="_blank" rel="noopener noreferrer"
+    42→   603→                        >
+    43→   604→                          <Button variant="outline" className="w-full border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 font-semibold text-xs h-10">
+    44→   605→                            <Gift className="h-3.5 w-3.5 mr-1.5" /> Essayer gratuitement
+    45→   606→                          </Button>
+    46→   607→                        </a>
+    47→   608→                      </div>
+    48→   609→                      <div className="rounded-xl border border-amber-200 dark:border-amber-800 bg-amber-50/50 dark:bg-amber-950/20 p-4 sm:p-5">
+    49→   610→                        <div className="flex items-center gap-2 mb-2">
+    50→   611→                          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-amber-500 to-orange-500 text-white text-xs font-bold">★</span>
+    51→   612→                          <h4 className="text-sm font-bold text-amber-700 dark:text-amber-400">{section.premium.title}</h4>
+    52→   613→                        </div>
+    53→   614→                        <p className="text-xs text-muted-foreground leading-relaxed mb-4">{section.premium.desc}</p>
+    54→   615→                        <a
+    55→   616→                          href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je suis intéressé(e) par l'Offre Premium : ${section.cat}. Pouvez-vous me donner un devis ?`)}`}
+    56→   617→                          target="_blank" rel="noopener noreferrer"
+    57→   618→                        >
+    58→   619→                          <Button className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-10 shadow-md shadow-amber-500/20">
+    59→   620→                            <Rocket className="h-3.5 w-3.5 mr-1.5" /> Passer au Premium
+    60→   621→                          </Button>
+    61→   622→                        </a>
+    62→   623→                      </div>
+    63→   624→                    </div>
+    64→   625→                  </CardContent>
+    65→   626→                </Card>
+    66→   627→              ))}
+    67→   628→
+    68→   629→              {/* Bonus Luxe — outils premium offerts avec les formations */}
+    69→   630→              <Card className="border-0 shadow-lg overflow-hidden">
+    70→   631→                <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white p-5 sm:p-7">
+    71→   632→                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+    72→   633→                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm shadow-lg flex-shrink-0">
+    73→   634→                      <Gift className="h-5 w-5 text-white" />
+    74→   635→                    </div>
+    75→   636→                    <div className="flex-1">
+    76→   637→                      <div className="flex items-center gap-2 mb-1">
+    77→   638→                        <h3 className="font-bold text-base">Bonus : Accès Premium Offert</h3>
+    78→   639→                        <Badge className="bg-white/20 text-white border-0 text-[10px]">NOUVEAU</Badge>
+    79→   640→                      </div>
+    80→   641→                      <p className="text-sm text-white/90 leading-relaxed">Chaque formation inclut un <strong>accès gratuit</strong> à Canva Pro, CapCut Pro ou PicsArt Pro. C&apos;est mon cadeau pour vous accompagner dans la pratique.</p>
+    81→   642→                    </div>
+    82→   643→                  </div>
+    83→   644→                </div>
+    84→   645→              </Card>
+    85→   646→            </div>
+    86→   647→          </div>
+    87→   648→        </section>
+    88→   649→
+    89→   650→        {/* ═══ 7. CARRIÈRE PRO ═══ */}
+    90→   651→        <section id="carriere-pro" className="py-16 sm:py-20 bg-gradient-to-b from-slate-900 via-slate-900 to-background text-white relative overflow-hidden">
+    91→   652→          <div className="absolute inset-0">
+    92→   653→            <div className="absolute top-20 left-10 h-72 w-72 bg-blue-500/10 rounded-full blur-3xl" />
+    93→   654→            <div className="absolute bottom-20 right-10 h-72 w-72 bg-purple-500/10 rounded-full blur-3xl" />
+    94→   655→          </div>
+    95→   656→          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    96→   657→            <div className="text-center mb-12">
+    97→   658→              <Badge className="mb-3 bg-blue-500/20 text-blue-300 border-blue-500/30 hover:bg-blue-500/30">
+    98→   659→                <GraduationCap className="h-3 w-3 mr-1" /> Carrière Pro
+    99→   660→              </Badge>
+   100→   661→              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Offre à la Carte</h2>
+   101→   662→              <p className="mt-3 text-slate-400 max-w-xl mx-auto">
+   102→   663→                5 services clés pour booster votre employabilité. Chaque prestation est livrée sous 24h.
+   103→   664→              </p>
+   104→   665→            </div>
+   105→   666→
+   106→   667→            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
+   107→   668→              {[
+   108→   669→                { icon: PenTool, name: 'Plume Pro', sub: 'Lettre de motivation', price: '800', hook: 'La lettre qui donne envie de lire votre CV.', color: 'from-blue-500 to-cyan-500' },
+   109→   670→                { icon: FileCheck, name: 'Relooking CV', sub: 'Refonte de CV', price: '700', hook: 'Votre parcours, une nouvelle vitrine.', color: 'from-emerald-500 to-teal-500' },
+   110→   671→                { icon: Building2, name: 'Impact LinkedIn', sub: 'Profil LinkedIn', price: '2 000', hook: 'Le profil que les recruteurs remarquent en premier.', color: 'from-indigo-500 to-purple-500' },
+   111→   672→                { icon: Target, name: 'Objectif Entretien', sub: 'Préparation entretien', price: '500', hook: "Les questions pièges de votre secteur, décortiquées.", color: 'from-amber-500 to-orange-500' },
+   112→   673→                { icon: BadgeCheck, name: 'Réseautage Pro', sub: 'Carte de visite', price: '1 500', hook: 'Un premier contact, une impression durable.', color: 'from-rose-500 to-pink-500' },
+   113→   674→              ].map((s) => (
+   114→   675→                <Card key={s.name} className="h-full bg-white/5 border border-white/10 backdrop-blur-sm hover:border-white/20 transition-all duration-300 hover:-translate-y-0.5">
+   115→   676→                  <CardContent className="p-6">
+   116→   677→                    <div className="flex items-start justify-between mb-4">
+   117→   678→                      <div className={`flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br ${s.color} text-white shadow-lg`}>
+   118→   679→                        <s.icon className="h-5 w-5" />
+   119→   680→                      </div>
+   120→   681→                      <span className="text-xl font-extrabold text-white">{s.price} <span className="text-xs font-normal text-slate-400">FCFA</span></span>
+   121→   682→                    </div>
+   122→   683→                    <h3 className="text-lg font-bold text-white">{s.name}</h3>
+   123→   684→                    <p className="text-xs text-slate-500 mb-2">{s.sub}</p>
+   124→   685→                    <p className="text-sm text-slate-300 leading-relaxed mb-4">{s.hook}</p>
+   125→   686→                    <a
+   126→   687→                      href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je souhaite commander : ${s.name} (${s.sub}) — ${s.price} FCFA.`)}`}
+   127→   688→                      target="_blank" rel="noopener noreferrer"
+   128→   689→                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-amber-400 hover:text-amber-300 transition-colors"
+   129→   690→                    >
+   130→   691→                      Commander <ArrowRight className="h-3.5 w-3.5" />
+   131→   692→                    </a>
+   132→   693→                  </CardContent>
+   133→   694→                </Card>
+   134→   695→              ))}
+   135→   696→            </div>
+   136→   697→
+   137→   698→            {/* Pack Lancement Carrière */}
+   138→   699→            <Card className="border-2 border-amber-400/40 bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-red-500/10 backdrop-blur-sm overflow-hidden relative">
+   139→   700→              <div className="absolute top-0 right-0 w-40 h-40 bg-amber-500/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+   140→   701→              <CardContent className="p-6 sm:p-8 relative z-10">
+   141→   702→                <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-10">
+   142→   703→                  <div className="flex-1 text-center lg:text-left">
+   143→   704→                    <Badge className="mb-3 bg-amber-500/20 text-amber-300 border-amber-500/30">
+   144→   705→                      <Trophy className="h-3 w-3 mr-1" /> Pack Lancement Carrière
+   145→   706→                    </Badge>
+   146→   707→                    <h3 className="text-2xl sm:text-3xl font-extrabold text-white mb-3">CV Premium + Lettre + LinkedIn + Guide entretien</h3>
+   147→   708→                    <p className="text-slate-300 leading-relaxed mb-2">
+   148→   709→                      <span className="bg-amber-500/20 text-amber-300 text-xs font-bold px-2 py-0.5 rounded mr-1">Guide entretien offert</span>
+   149→   710→                      Tout ce qu&apos;il faut pour candidater sans stress — et sans mauvaise surprise.
+   150→   711→                    </p>
+   151→   712→                    <div className="flex items-baseline gap-3 mt-4">
+   152→   713→                      <span className="text-xl text-slate-500 line-through">4 800 FCFA</span>
+   153→   714→                      <span className="text-3xl font-extrabold text-white">3 500 FCFA</span>
+   154→   715→                    </div>
+   155→   716→                  </div>
+   156→   717→                  <div className="flex flex-col items-center gap-3 flex-shrink-0">
+   157→   718→                    <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20veux%20le%20Pack%20Lancement%20Carri%C3%A8re%20%C3%A0%203%20500%20FCFA." target="_blank" rel="noopener noreferrer">
+   158→   719→                      <Button size="lg" className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-xl shadow-amber-500/25 px-8 whitespace-nowrap">
+   159→   720→                        <MessageCircle className="h-5 w-5 mr-2" /> Prendre le Pack
+   160→   721→                      </Button>
+   161→   722→                    </a>
+   162→   723→                    <span className="text-[10px] text-slate-500">Économie de 1 300 FCFA</span>
+   163→   724→                  </div>
+   164→   725→                </div>
+   165→   726→              </CardContent>
+   166→   727→            </Card>
+   167→   728→
+   168→   729→            {/* Raréité */}
+   169→   730→            <div className="mt-6 text-center">
+   170→   731→              <p className="text-sm text-slate-400">
+   171→   732→                Qualité avant quantité : <span className="text-white font-bold">5 commandes/jour maximum</span>. Places restantes aujourd&apos;hui : <span className="inline-flex items-center gap-1.5 text-amber-400 font-bold"><span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />2/5</span>
+   172→   733→              </p>
+   173→   734→            </div>
+   174→   735→          </div>
+   175→   736→        </section>
+   176→   737→
+   177→   738→        {/* ═══ 8. 4 DOMAINES POUR GAGNER DE L'ARGENT (ENRICHED) ═══ */}
+   178→   739→        <section id="gagner-argent" className="py-20 sm:py-28">
+   179→   740→          <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+   180→   741→            <div className="text-center mb-14">
+   181→   742→              <Badge variant="secondary" className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200">
+   182→   743→                <TrendingUp className="h-3 w-3 mr-1" /> Revenus
+   183→   744→              </Badge>
+   184→   745→              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">4 Domaines pour <span className="text-emerald-600 dark:text-emerald-400">Gagner de l&apos;Argent</span></h2>
+   185→   746→              <p className="mt-4 text-muted-foreground max-w-lg mx-auto leading-relaxed">
+   186→   747→                <strong className="text-foreground">4 compétences concrètes</strong> qui génèrent des revenus réels au Mali — avec des tarifs basés sur ce que le marché paie.
+   187→   748→              </p>
+   188→   749→            </div>
+   189→   750→
+   190→   751→            <div className="grid sm:grid-cols-2 gap-5">
+   191→   752→              {[
+   192→   753→                {
+   193→   754→                  icon: Target,
+   194→   755→                  title: 'Contenu Réseaux Sociaux',
+   195→   756→                  price: '3 000+ FCFA/mois',
+   196→   757→                  color: 'from-pink-500 to-rose-500',
+   197→   758→                  desc: 'Crée des visuels pros pour les boutiques de Bamako. Stories, reels, affiches — les entreprises payent mensuel.',
+   198→   759→                  revenus: '30 000 – 150 000 FCFA/mois',
+   199→   760→                },
+   200→   761→                {
+   201→   762→                  icon: MessageCircle,
+   202→   763→                  title: 'Chatbots WhatsApp',
+   203→   764→                  price: '10 000+ FCFA/mois',
+   204→   765→                  color: 'from-green-500 to-emerald-500',
+   205→   766→                  desc: "WhatsApp = N°1 au Mali. Automatise les réponses 24h/24 et vends des abonnements de maintenance aux entrepreneurs.",
+   206→   767→                  revenus: '50 000 – 200 000 FCFA/mois',
+   207→   768→                },
+   208→   769→                {
+   209→   770→                  icon: Globe,
+   210→   771→                  title: 'Sites Web & Landing Pages',
+   211→   772→                  price: '30 000 – 150 000 FCFA/projet',
+   212→   773→                  color: 'from-blue-500 to-indigo-500',
+   213→   774→                  desc: 'Chaque boutique à Bamako mérite un site. Livraison en 1-3 jours, hébergement inclus. 2-5 projets par mois possible.',
+   214→   775→                  revenus: '60 000 – 500 000 FCFA/mois',
+   215→   776→                },
+   216→   777→                {
+   217→   778→                  icon: UserCheck,
+   218→   779→                  title: 'Freelance Digital',
+   219→   780→                  price: '5 000 FCFA/session coaching',
+   220→   781→                  color: 'from-amber-500 to-orange-500',
+   221→   782→                  desc: "Trouve tes premiers clients sur WhatsApp, fixe tes tarifs, construis une réputation. De 0 à 100 000 FCFA/mois possible.",
+   222→   783→                  revenus: '50 000 – 300 000 FCFA/mois',
+   223→   784→                },
+   224→   785→              ].map((d) => (
+   225→   786→                <Card key={d.title} className="overflow-hidden border-0 shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+   226→   787→                  <div className={`h-1 bg-gradient-to-r ${d.color}`} />
+   227→   788→                  <CardContent className="p-5">
+   228→   789→                    <div className="flex items-center gap-3 mb-3">
+   229→   790→                      <div className={`flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${d.color} text-white shadow-md flex-shrink-0`}>
+   230→   791→                        <d.icon className="h-5 w-5" />
+   231→   792→                      </div>
+   232→   793→                      <div className="min-w-0">
+   233→   794→                        <h3 className="font-bold text-sm leading-tight">{d.title}</h3>
+   234→   795→                        <p className="text-sm font-extrabold text-emerald-600 dark:text-emerald-400">{d.price}</p>
+   235→   796→                      </div>
+   236→   797→                    </div>
+   237→   798→                    <p className="text-xs text-muted-foreground leading-relaxed mb-4">{d.desc}</p>
+   238→   799→                    <div className="flex items-center justify-between pt-3 border-t">
+   239→   800→                      <span className="text-[11px] text-muted-foreground">Revenus : <strong className="text-amber-600 dark:text-amber-400">{d.revenus}</strong></span>
+   240→   801→                      <a
+   241→   802→                        href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je suis intéressé(e) par : ${d.title}. J'aimerais en savoir plus.`)}`}
+   242→   803→                        target="_blank" rel="noopener noreferrer"
+   243→   804→                        className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-600 hover:text-amber-700 dark:text-amber-400 transition-colors"
+   244→   805→                      >
+   245→   806→                        Détails <ArrowRight className="h-3 w-3" />
+   246→   807→                      </a>
+   247→   808→                    </div>
+   248→   809→                  </CardContent>
+   249→   810→                </Card>
+   250→   811→              ))}
+   251→   812→            </div>
+   252→   813→
+   253→   814→            <div className="mt-10 text-center">
+   254→   815→              <p className="text-sm text-muted-foreground">
+   255→   816→                Je t&apos;accompagne dans <strong className="text-foreground">chacun de ces domaines</strong> avec mes formations et mon coaching.
+   256→   817→                <a href="#formations" className="text-amber-600 font-semibold hover:underline ml-1">Voir les formations</a>.
+   257→   818→              </p>
+   258→   819→            </div>
+   259→   820→          </div>
+   260→   821→        </section>
+   261→   822→
+   262→   823→        {/* ═══ 9. FORMATIONS ═══ */}
+   263→   824→        <section id="formations" className="py-16 sm:py-20 relative overflow-hidden text-white" style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)' }}>
+   264→   825→          <div className="absolute inset-0">
+   265→   826→            <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1400&h=800&fit=crop" alt="" className="w-full h-full object-cover opacity-10" />
+   266→   827→            <div className="absolute top-10 right-10 h-72 w-72 bg-amber-500/15 rounded-full blur-3xl" />
+   267→   828→            <div className="absolute bottom-10 left-10 h-72 w-72 bg-orange-500/15 rounded-full blur-3xl" />
+   268→   829→          </div>
+   269→   830→          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+   270→   831→            <div className="text-center mb-12">
+   271→   832→              <Badge className="mb-3 bg-amber-500/20 text-amber-300 border-amber-500/30 hover:bg-amber-500/30">
+   272→   833→                <GraduationCap className="h-3 w-3 mr-1" /> Expertise & Formations
+   273→   834→              </Badge>
+   274→   835→              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Formations dispensées par un <span className="text-amber-400">Expert Actif</span></h2>
+   275→   836→              <p className="mt-4 text-slate-300 max-w-2xl mx-auto leading-relaxed">
+   276→   837→                Je ne suis pas un simple formateur théorique. Chaque formation est issue de mon expérience terrain à Bamako : vrais projets, vrais clients, vrais revenus. J&apos;aide les entrepreneurs, étudiants et créateurs à développer des compétences immédiatement rentables, avec un suivi personnalisé et des outils professionnels inclus.
+   277→   838→              </p>
+   278→   839→            </div>
+   279→   840→
+   280→   841→            {/* Premium formation cards */}
+   281→   842→            <div className="grid sm:grid-cols-2 lg:grid-cols-2 gap-5">
+   282→   843→              {formations.filter(f => f.price).map((form, i) => (
+   283→   844→                <a
+   284→   845→                  key={i}
+   285→   846→                  href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je suis intéressé(e) par la formation : ${form.text} (${form.price} FCFA). Comment y accéder ?`)}`}
+   286→   847→                  target="_blank"
+   287→   848→                  rel="noopener noreferrer"
+   288→   849→                  className="group relative rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:border-amber-400/50 transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/10 cursor-pointer overflow-hidden"
+   289→   850→                >
+   290→   851→                  <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+   291→   852→                  <div className="relative p-5 sm:p-6">
+   292→   853→                    <div className="flex items-start justify-between mb-3">
+   293→   854→                      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500/30 to-orange-500/30 group-hover:from-amber-500/50 group-hover:to-orange-500/50 transition-colors">
+   294→   855→                        <form.icon className="h-5 w-5 text-amber-400" />
+   295→   856→                      </div>
+   296→   857→                      <div className="flex flex-col items-end gap-1.5">
+   297→   858→                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+   298→   859→                          form.level === 'Débutant' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' :
+   299→   860→                          form.level === 'Intermédiaire' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' :
+   300→   861→                          'bg-violet-500/20 text-violet-400 border border-violet-500/30'
+   301→   862→                        }`}>{form.level}</span>
+   302→   863→                        <span className="text-2xl font-extrabold text-amber-400">{form.price} <span className="text-xs font-normal text-slate-500">FCFA</span></span>
+   303→   864→                      </div>
+   304→   865→                    </div>
+   305→   866→                    <h3 className="text-sm font-bold text-white leading-snug mb-2">{form.text}</h3>
+   306→   867→                    <div className="flex items-center gap-3 text-[11px] text-slate-400">
+   307→   868→                      <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{form.duration}</span>
+   308→   869→                      <span className="flex items-center gap-1"><BookOpen className="h-3 w-3" />{form.lessons}</span>
+   309→   870→                    </div>
+   310→   871→                    <span className="text-[11px] text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity mt-3 flex items-center gap-1">
+   311→   872→                      <MessageCircle className="h-3 w-3" /> S&apos;inscrire via WhatsApp
+   312→   873→                    </span>
+   313→   874→                  </div>
+   314→   875→                </a>
+   315→   876→              ))}
+   316→   877→            </div>
+   317→   878→
+   318→   879→            {/* Compact formation list */}
+   319→   880→            <div className="mt-8">
+   320→   881→              <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-3">Autres formations disponibles</p>
+   321→   882→              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+   322→   883→                {formations.filter(f => !f.price).map((form, i) => (
+   323→   884→                  <a
+   324→   885→                    key={i}
+   325→   886→                    href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je suis intéressé(e) par la formation : ${form.text}. Pouvez-vous me donner plus de détails ?`)}`}
+   326→   887→                    target="_blank" rel="noopener noreferrer"
+   327→   888→                    className="group flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-emerald-500/40 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-emerald-500/5 transition-all duration-300 cursor-pointer"
+   328→   889→                  >
+   329→   890→                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/5 flex-shrink-0">
+   330→   891→                      <form.icon className="h-4 w-4 text-slate-400 group-hover:text-emerald-400 transition-colors" />
+   331→   892→                    </div>
+   332→   893→                    <p className="text-xs font-medium text-slate-300 group-hover:text-white transition-colors flex-1">{form.text}</p>
+   333→   894→                    <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full flex-shrink-0 ${
+   334→   895→                      form.level === 'Débutant' ? 'bg-emerald-500/20 text-emerald-400' :
+   335→   896→                      form.level === 'Intermédiaire' ? 'bg-amber-500/20 text-amber-400' :
+   336→   897→                      form.level === 'Avancé' ? 'bg-violet-500/20 text-violet-400' :
+   337→   898→                      'bg-slate-500/20 text-slate-400'
+   338→   899→                    }`}>{form.level}</span>
+   339→   900→                    <ArrowRight className="h-3.5 w-3.5 text-white/20 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all" />
+   340→   901→                  </a>
+   341→   902→                ))}
+   342→   903→              </div>
+   343→   904→            </div>
+   344→   905→
+   345→   906→            <div className="mt-8 text-center">
+   346→   907→              <a href="#inscription">
+   347→   908→                <Button size="lg" className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-semibold shadow-lg shadow-emerald-500/20 transition-transform duration-200 hover:scale-105 active:scale-95">
+   348→   909→                  <UserCheck className="h-4 w-4 mr-2" /> Je veux m&apos;inscrire maintenant
+   349→   910→                </Button>
+   350→   911→              </a>
+   351→   912→              <p className="mt-3 text-slate-400 text-xs">Remplissez le formulaire d&apos;inscription ci-dessous</p>
+   352→   913→            </div>
+   353→   914→          </div>
+   354→   915→        </section>
+   355→   916→
+   356→   917→        {/* ═══ 10. COLLECTIF ═══ */}
+   357→   918→        <section id="collectif" className="py-16 sm:py-20 bg-gradient-to-br from-purple-950 via-slate-900 to-indigo-950 text-white relative overflow-hidden">
+   358→   919→          <div className="absolute inset-0">
+   359→   920→            <div className="absolute top-0 left-1/3 h-80 w-80 bg-purple-500/10 rounded-full blur-3xl" />
+   360→   921→            <div className="absolute bottom-0 right-1/4 h-64 w-64 bg-indigo-500/10 rounded-full blur-3xl" />
+   361→   922→          </div>
+   362→   923→          <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+   363→   924→            <div className="text-center mb-10">
+   364→   925→              <Badge className="mb-3 bg-purple-500/20 text-purple-300 border-purple-500/30 hover:bg-purple-500/30">
+   365→   926→                <Users className="h-3 w-3 mr-1" /> Collectif
+   366→   927→              </Badge>
+   367→   928→              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Collectif Studio Créatif</h2>
+   368→   929→              <p className="mt-3 text-slate-400 max-w-xl mx-auto">
+   369→   930→                Rejoins une communauté d&apos;entrepreneurs et créateurs qui s&apos;entraident, partagent des opportunités et grandissent ensemble. Accès illimité aux ressources, formations exclusives et soutien personnalisé.
+   370→   931→              </p>
+   371→   932→            </div>
+   372→   933→
+   373→   934→            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+   374→   935→              {[
+   375→   936→                { icon: GraduationCap, text: 'Formations exclusives chaque mois' },
+   376→   937→                { icon: MessageCircle, text: 'Support direct via WhatsApp' },
+   377→   938→                { icon: FolderDown, text: 'Templates & ressources premium' },
+   378→   939→                { icon: Users, text: 'Réseau de +200 entrepreneurs' },
+   379→   940→              ].map((b, i) => (
+   380→   941→                <div key={i} className="flex items-center gap-3 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-500/5 transition-all duration-300">
+   381→   942→                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-500/20 flex-shrink-0">
+   382→   943→                    <b.icon className="h-4 w-4 text-purple-400" />
+   383→   944→                  </div>
+   384→   945→                  <p className="text-xs font-medium text-slate-300">{b.text}</p>
+   385→   946→                </div>
+   386→   947→              ))}
+   387→   948→            </div>
+   388→   949→
+   389→   950→            <Card className="border-2 border-purple-400/30 bg-purple-500/10 backdrop-blur-sm overflow-hidden">
+   390→   951→              <CardContent className="p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+   391→   952→                <div className="text-center sm:text-left">
+   392→   953→                  <p className="text-sm text-slate-300 mb-1">Abonnement mensuel</p>
+   393→   954→                  <div className="flex items-baseline gap-2">
+   394→   955→                    <span className="text-3xl font-extrabold text-white">2 000</span>
+   395→   956→                    <span className="text-slate-500">–</span>
+   396→   957→                    <span className="text-3xl font-extrabold text-white">3 000 FCFA</span>
+   397→   958→                    <span className="text-sm text-slate-400">/mois</span>
+   398→   959→                  </div>
+   399→   960→                  <p className="text-xs text-slate-500 mt-1">Prix d&apos;appel • Se rentabilise par le volume</p>
+   400→   961→                </div>
+   401→   962→                <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20veux%20rejoindre%20le%20Collectif%20SK%20Designer%20Luxe." target="_blank" rel="noopener noreferrer" className="flex-shrink-0">
+   402→   963→                  <Button size="lg" className="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-bold shadow-xl shadow-purple-500/25 px-8 whitespace-nowrap">
+   403→   964→                    <MessageCircle className="h-5 w-5 mr-2" /> Rejoindre le Collectif
+   404→   965→                  </Button>
+   405→   966→                </a>
+   406→   967→              </CardContent>
+   407→   968→            </Card>
+   408→   969→          </div>
+   409→   970→        </section>
+   410→   971→
+   411→   972→        {/* ═══ 11. PORTFOLIO ═══ */}
+   412→   973→        <section id="portfolio" className="py-16 sm:py-20">
+   413→   974→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+   414→   975→            <div className="text-center mb-12">
+   415→   976→              <Badge variant="secondary" className="mb-3 bg-purple-100 text-purple-700 border-purple-200">
+   416→   977→                <Eye className="h-3 w-3 mr-1" /> Portfolio
+   417→   978→              </Badge>
+   418→   979→              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Mes Réalisations</h2>
+   419→   980→              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
+   420→   981→                Découvrez une sélection de mes meilleurs travaux. Chaque projet est unique et réalisé avec passion pour mes clients.
+   421→   982→              </p>
+   422→   983→            </div>
+   423→   984→
+   424→   985→            {/* Filter tabs */}
+   425→   986→            <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
+   426→   987→              {['Tous', 'Logo', 'Affiche', 'Site Web', 'Vidéo', 'Identité'].map((cat) => (
+   427→   988→                <button
+   428→   989→                  key={cat}
+   429→   990→                  onClick={() => setPortfolioFilter(cat)}
+   430→   991→                  className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${portfolioFilter === cat ? 'bg-amber-500 text-white shadow-md shadow-amber-500/25' : 'bg-muted text-muted-foreground hover:bg-accent'}`}
+   431→   992→                >
+   432→   993→                  {cat}
+   433→   994→                </button>
+   434→   995→              ))}
+   435→   996→            </div>
+   436→   997→
+   437→   998→            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+   438→   999→              {[
+   439→  1000→                { title: 'Logo Restaurant Le Baobab', category: 'Logo', image: 'https://sfile.chatglm.cn/images-ppt/3e8dbebc34bb.jpg', desc: 'Identité visuelle complète pour un restaurant traditionnel malien' },
+   440→  1001→                { title: 'Affiche Festival Bamako', category: 'Affiche', image: 'https://sfile.chatglm.cn/images-ppt/0c5c9b1b948b.jpg', desc: 'Affiche événementielle pour un festival culturel à Bamako' },
+   441→  1002→                { title: 'Site Web MaliTech Solutions', category: 'Site Web', image: 'https://sfile.chatglm.cn/images-ppt/1b5dd4b88cdf.png', desc: 'Site vitrine professionnel pour une entreprise tech malienne' },
+   442→  1003→                { title: 'Logo Afro Fashion Store', category: 'Logo', image: 'https://sfile.chatglm.cn/images-ppt/57c1b49a60ba.jpg', desc: 'Logo moderne pour une boutique de mode africaine' },
+   443→  1004→                { title: 'Montage Promo Produit', category: 'Vidéo', image: 'https://sfile.chatglm.cn/images-ppt/190eb04b2085.jpg', desc: 'Montage vidéo promotionnel pour un lancement de produit' },
+   444→  1005→                { title: 'Identité ESIA Business', category: 'Identité', image: 'https://sfile.chatglm.cn/images-ppt/7bfadf1e1582.jpg', desc: 'Charte graphique complète pour une école de business' },
+   445→  1006→              ].filter((item) => portfolioFilter === 'Tous' || item.category === portfolioFilter).map((item) => (
+   446→  1007→                <Card key={item.title} className="overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 h-full group cursor-pointer hover:-translate-y-0.5">
+   447→  1008→                  <div className="relative h-48 sm:h-56 overflow-hidden">
+   448→  1009→                    <img src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+   449→  1010→                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+   450→  1011→                    <div className="absolute bottom-0 left-0 right-0 p-4 z-10">
+   451→  1012→                      <h3 className="font-bold text-sm sm:text-base text-white">{item.title}</h3>
+   452→  1013→                      <p className="text-white/70 text-xs mt-1 line-clamp-2">{item.desc}</p>
+   453→  1014→                    </div>
+   454→  1015→                    <div className="absolute top-3 left-3">
+   455→  1016→                      <Badge className="bg-amber-500/90 text-white border-0 text-[10px] font-semibold backdrop-blur-sm">{item.category}</Badge>
+   456→  1017→                    </div>
+   457→  1018→                  </div>
+   458→  1019→                </Card>
+   459→  1020→              ))}
+   460→  1021→            </div>
+   461→  1022→
+   462→  1023→            {/* Avant / Après — integrated into Portfolio */}
+   463→  1024→            <div className="mt-14">
+   464→  1025→              <h3 className="text-xl font-bold text-center mb-2">Avant / Après</h3>
+   465→  1026→              <p className="text-sm text-muted-foreground text-center mb-8 max-w-xl mx-auto">Glissez le curseur pour comparer mes transformations. Chaque projet est unique et pensé pour maximiser l&apos;impact visuel.</p>
+   466→  1027→              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+   467→  1028→                {[
+   468→  1029→                  { title: 'Refonte Logo Boutique', before: 'https://sfile.chatglm.cn/images-ppt/f972157605f2.jpg', after: 'https://sfile.chatglm.cn/images-ppt/082b6f181c95.jpg', desc: 'Logo basique transformé en identité premium' },
+   469→  1030→                  { title: 'Affiche Événement', before: 'https://sfile.chatglm.cn/images-ppt/d2c6b53ee01b.jpg', after: 'https://sfile.chatglm.cn/images-ppt/d247ebeec9b2.jpg', desc: 'Affiche simple devenue visuel professionnel' },
+   470→  1031→                  { title: 'Identité Complète', before: 'https://sfile.chatglm.cn/images-ppt/6c9261ec8848.jpg', after: 'https://sfile.chatglm.cn/images-ppt/0c5c9b1b948b.jpg', desc: "De l'amateur au professionnalisme total" },
+   471→  1032→                ].map((item, i) => (
+   472→  1033→                  <Card key={i} className="overflow-hidden border-0 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+   473→  1034→                    <CardContent className="p-4 space-y-3">
+   474→  1035→                      <BeforeAfterSlider before={item.before} after={item.after} title={item.title} />
+   475→  1036→                      <h4 className="font-bold text-sm">{item.title}</h4>
+   476→  1037→                      <p className="text-xs text-muted-foreground">{item.desc}</p>
+   477→  1038→                    </CardContent>
+   478→  1039→                  </Card>
+   479→  1040→                ))}
+   480→  1041→              </div>
+   481→  1042→            </div>
+   482→  1043→
+   483→  1044→            <div className="mt-8 text-center">
+   484→  1045→              <p className="text-sm text-muted-foreground">
+   485→  1046→                Envie d&apos;un projet similaire ?{' '}
+   486→  1047→                <a href="https://wa.me/22397787244?text=Bonjour%20!%20J%27ai%20vu%20vos%20réalisations%20et%20je%20souhaite%20un%20projet%20similaire." target="_blank" rel="noopener noreferrer" className="text-amber-600 font-semibold hover:underline">
+   487→  1048→                  Me contacter
+   488→  1049→                </a>{' '}et discutons de votre projet !
+   489→  1050→              </p>
+   490→  1051→            </div>
+   491→  1052→          </div>
+   492→  1053→        </section>
+   493→  1054→
+   494→  1055→        {/* ═══ 12. TÉMOIGNAGES (Style WhatsApp) ═══ */}
+   495→  1056→        <section id="temoignages" className="py-20 sm:py-24 bg-gradient-to-b from-muted/20 to-background relative overflow-hidden">
+   496→  1057→          <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+   497→  1058→            <div className="text-center mb-14">
+   498→  1059→              <Badge variant="secondary" className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200">
+   499→  1060→                <MessageCircle className="h-3 w-3 mr-1" /> Témoignages
+   500→  1061→              </Badge>
+   501→
+   502→[showing lines 562-1061 of 1790; use offset=1062 with limit to continue reading]

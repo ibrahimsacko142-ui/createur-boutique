@@ -27,7 +27,6 @@ import {
   X,
   Gift,
   Shield,
-  CreditCard,
   Timer,
   Lock,
   MessageCircle,
@@ -35,13 +34,10 @@ import {
   Flame,
   Clock,
   FileCheck,
-  ArrowUpRight,
-  Handshake,
   FolderDown,
   GraduationCap,
   Building2,
   UserCheck,
-  Megaphone,
   BadgeCheck,
   Wrench,
   TrendingUp,
@@ -50,20 +46,14 @@ import {
   Youtube,
   ChevronUp,
   ShieldCheck,
-  Laptop,
   ThumbsUp,
   Rocket,
   Layers,
-  RefreshCw,
-  ClipboardCheck,
   Award,
   Users,
-  Key,
   Scissors,
-  Monitor,
   ArrowDown,
   Search,
-  FileText,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -76,18 +66,132 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 
 
-/* ─── Format Price ─── */
-function formatPrice(p: number) {
-  if (p === 0) return 'Gratuit'
-  return p.toLocaleString('fr-FR', { style: 'currency', currency: 'XOF', minimumFractionDigits: 0 })
+/* ─── Animated Counter Hook ─── */
+function useCounter(end: number, duration: number = 2000) {
+  const [count, setCount] = useState(0)
+  const [started, setStarted] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !started) {
+          setStarted(true)
+        }
+      },
+      { threshold: 0.3 }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [started])
+
+  useEffect(() => {
+    if (!started) return
+    let start = 0
+    let frameId: number
+    const step = (timestamp: number) => {
+      if (!start) start = timestamp
+      const progress = Math.min((timestamp - start) / duration, 1)
+      setCount(Math.floor(progress * end))
+      if (progress < 1) frameId = requestAnimationFrame(step)
+    }
+    frameId = requestAnimationFrame(step)
+    return () => cancelAnimationFrame(frameId)
+  }, [started, end, duration])
+
+  return { count, ref }
 }
+
+/* ─── Before / After Slider ─── */
+function BeforeAfterSlider({ before, after }: { before: string; after: string }) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [sliderPos, setSliderPos] = useState(50)
+  const [isDragging, setIsDragging] = useState(false)
+
+  const updatePosition = (clientX: number) => {
+    if (!containerRef.current) return
+    const rect = containerRef.current.getBoundingClientRect()
+    const x = clientX - rect.left
+    const pct = Math.max(0, Math.min(100, (x / rect.width) * 100))
+    setSliderPos(pct)
+  }
+
+  const handlePointerDown = (e: React.PointerEvent) => {
+    setIsDragging(true)
+    ;(e.target as HTMLElement).setPointerCapture(e.pointerId)
+    updatePosition(e.clientX)
+  }
+
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (!isDragging) return
+    updatePosition(e.clientX)
+  }
+
+  const handlePointerUp = () => {
+    setIsDragging(false)
+  }
+
+  return (
+    <div className="space-y-2">
+      <div
+        ref={containerRef}
+        className="relative h-56 sm:h-64 rounded-xl overflow-hidden cursor-col-resize select-none border-2 border-border shadow-lg"
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+      >
+        <img src={after} alt="Après" className="absolute inset-0 w-full h-full object-cover" draggable={false} />
+        <div className="absolute inset-0" style={{ clipPath: `inset(0 ${100 - sliderPos}% 0 0)` }}>
+          <img src={before} alt="Avant" className="w-full h-full object-cover" draggable={false} />
+        </div>
+        <span className="absolute top-3 left-3 z-20 bg-red-500/90 text-white text-[10px] font-bold px-2.5 py-1 rounded-full backdrop-blur-sm">AVANT</span>
+        <span className="absolute top-3 right-3 z-20 bg-emerald-500/90 text-white text-[10px] font-bold px-2.5 py-1 rounded-full backdrop-blur-sm">APRÈS</span>
+        <div className="absolute top-0 bottom-0 z-30 w-0.5 bg-white shadow-[0_0_8px_rgba(0,0,0,0.5)]" style={{ left: `${sliderPos}%` }}>
+          <div className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white shadow-xl flex items-center justify-center border-2 border-white/80">
+            <div className="flex items-center gap-0.5">
+              <div className="w-0 h-0 border-t-[5px] border-b-[5px] border-r-[6px] border-t-transparent border-b-transparent border-r-gray-700" />
+              <div className="w-0 h-0 border-t-[5px] border-b-[5px] border-l-[6px] border-t-transparent border-b-transparent border-l-gray-700" />
+            </div>
+          </div>
+        </div>
+        {!isDragging && (
+          <div className="absolute inset-0 z-10 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity bg-black/20">
+            <div className="bg-white/90 text-gray-800 text-xs font-semibold px-3 py-1.5 rounded-full shadow">
+              Glissez pour comparer
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+/* ─── Static Data ─── */
+const formations = [
+  { text: 'Devenir Designer Pro avec Canva & Illustrator', icon: Palette, price: '5 000', duration: '6h', lessons: '9 leçons', level: 'Débutant' },
+  { text: 'Créer et monétiser des vidéos pour réseaux sociaux', icon: MonitorPlay, price: '7 500', duration: '8h', lessons: '15 leçons', level: 'Intermédiaire' },
+  { text: 'Créer un site web professionnel (No-code + Next.js)', icon: Globe, price: '10 000', duration: '10h', lessons: '12 leçons', level: 'Intermédiaire' },
+  { text: 'Devenir Community Manager pour PME locales', icon: Target, price: '6 000', duration: '7h', lessons: '10 leçons', level: 'Débutant' },
+  { text: 'Formation complète en Trading', icon: TrendingUp, level: 'Avancé' },
+  { text: 'Formation en Management et Gestion de projets', icon: Building2, level: 'Intermédiaire' },
+  { text: 'Formation en Intelligence Artificielle', icon: Brain, level: 'Avancé' },
+  { text: 'Formation YouTube et monétisation', icon: Youtube, level: 'Intermédiaire' },
+  { text: 'Formation complète en Programmation', icon: Code, level: 'Avancé' },
+  { text: 'Formation en Infographie et Design', icon: PenTool, level: 'Débutant' },
+  { text: 'Formation E-commerce', icon: ShoppingCart, level: 'Intermédiaire' },
+  { text: 'Pack 10 000 templates et ressources Canva', icon: FolderDown, level: 'Tous niveaux' },
+  { text: 'Formation en Maintenance informatique', icon: Wrench, level: 'Intermédiaire' },
+  { text: 'Formation en Hacking et Sécurité informatique', icon: ShieldCheck, level: 'Avancé' },
+  { text: 'Formation Revendeur IPTV', icon: Tv, level: 'Débutant' },
+]
 
 /* ═══════════════════════════════════════════════
    MAIN PAGE
    ═══════════════════════════════════════════════ */
 export default function Home() {
   const [contactData, setContactData] = useState({ name: '', email: '', subject: '', message: '' })
-  const [sending, setSending] = useState(false)
   const [showBanner, setShowBanner] = useState(true)
   const [showBackToTop, setShowBackToTop] = useState(false)
   const [portfolioFilter, setPortfolioFilter] = useState('Tous')
@@ -97,151 +201,37 @@ export default function Home() {
   const [leadMagnet, setLeadMagnet] = useState({ name: '', contact: '' })
   const { toast } = useToast()
 
-  // ── Animated Counter Hook ──
-  function useCounter(end: number, duration: number = 2000) {
-    const [count, setCount] = useState(0)
-    const [started, setStarted] = useState(false)
-    const ref = useRef<HTMLDivElement>(null)
-
-    useEffect(() => {
-      const el = ref.current
-      if (!el) return
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting && !started) {
-            setStarted(true)
-          }
-        },
-        { threshold: 0.3 }
-      )
-      observer.observe(el)
-      return () => observer.disconnect()
-    }, [started])
-
-    useEffect(() => {
-      if (!started) return
-      let start = 0
-      const step = (timestamp: number) => {
-        if (!start) start = timestamp
-        const progress = Math.min((timestamp - start) / duration, 1)
-        setCount(Math.floor(progress * end))
-        if (progress < 1) requestAnimationFrame(step)
-      }
-      requestAnimationFrame(step)
-    }, [started, end, duration])
-
-    return { count, ref }
-  }
-
   const stat1 = useCounter(50, 1500)
   const stat3 = useCounter(100, 1500)
 
-  // ── Before / After Slider (CSS-only pointer-based) ──
-  function BeforeAfterSlider({ before, after, title }: { before: string; after: string; title: string }) {
-    const containerRef = useRef<HTMLDivElement>(null)
-    const [sliderPos, setSliderPos] = useState(50)
-    const [isDragging, setIsDragging] = useState(false)
-
-    const updatePosition = (clientX: number) => {
-      if (!containerRef.current) return
-      const rect = containerRef.current.getBoundingClientRect()
-      const x = clientX - rect.left
-      const pct = Math.max(0, Math.min(100, (x / rect.width) * 100))
-      setSliderPos(pct)
-    }
-
-    const handlePointerDown = (e: React.PointerEvent) => {
-      setIsDragging(true)
-      ;(e.target as HTMLElement).setPointerCapture(e.pointerId)
-      updatePosition(e.clientX)
-    }
-
-    const handlePointerMove = (e: React.PointerEvent) => {
-      if (!isDragging) return
-      updatePosition(e.clientX)
-    }
-
-    const handlePointerUp = () => {
-      setIsDragging(false)
-    }
-
-    return (
-      <div className="space-y-2">
-        <div
-          ref={containerRef}
-          className="relative h-56 sm:h-64 rounded-xl overflow-hidden cursor-col-resize select-none border-2 border-border shadow-lg"
-          onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          onPointerUp={handlePointerUp}
-        >
-          <img src={after} alt="Après" className="absolute inset-0 w-full h-full object-cover" draggable={false} />
-          <div className="absolute inset-0" style={{ clipPath: `inset(0 ${100 - sliderPos}% 0 0)` }}>
-            <img src={before} alt="Avant" className="w-full h-full object-cover" draggable={false} />
-          </div>
-          <span className="absolute top-3 left-3 z-20 bg-red-500/90 text-white text-[10px] font-bold px-2.5 py-1 rounded-full backdrop-blur-sm">AVANT</span>
-          <span className="absolute top-3 right-3 z-20 bg-emerald-500/90 text-white text-[10px] font-bold px-2.5 py-1 rounded-full backdrop-blur-sm">APRÈS</span>
-          <div className="absolute top-0 bottom-0 z-30 w-0.5 bg-white shadow-[0_0_8px_rgba(0,0,0,0.5)]" style={{ left: `${sliderPos}%` }}>
-            <div className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white shadow-xl flex items-center justify-center border-2 border-white/80">
-              <div className="flex items-center gap-0.5">
-                <div className="w-0 h-0 border-t-[5px] border-b-[5px] border-r-[6px] border-t-transparent border-b-transparent border-r-gray-700" />
-                <div className="w-0 h-0 border-t-[5px] border-b-[5px] border-l-[6px] border-t-transparent border-b-transparent border-l-gray-700" />
-              </div>
-            </div>
-          </div>
-          {!isDragging && (
-            <div className="absolute inset-0 z-10 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity bg-black/20">
-              <div className="bg-white/90 text-gray-800 text-xs font-semibold px-3 py-1.5 rounded-full shadow">
-                Glissez pour comparer
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    )
-  }
-
-  // ── Formations data ──
-  const formations = [
-    { text: 'Devenir Designer Pro avec Canva & Illustrator', icon: Palette, price: '5 000', duration: '6h', lessons: '9 leçons', level: 'Débutant' },
-    { text: 'Créer et monétiser des vidéos pour réseaux sociaux', icon: MonitorPlay, price: '7 500', duration: '8h', lessons: '15 leçons', level: 'Intermédiaire' },
-    { text: 'Créer un site web professionnel (No-code + Next.js)', icon: Globe, price: '10 000', duration: '10h', lessons: '12 leçons', level: 'Intermédiaire' },
-    { text: 'Devenir Community Manager pour PME locales', icon: Target, price: '6 000', duration: '7h', lessons: '10 leçons', level: 'Débutant' },
-    { text: 'Formation complète en Trading', icon: TrendingUp, level: 'Avancé' },
-    { text: 'Formation en Management et Gestion de projets', icon: Building2, level: 'Intermédiaire' },
-    { text: 'Formation en Intelligence Artificielle', icon: Brain, level: 'Avancé' },
-    { text: 'Formation YouTube et monétisation', icon: Youtube, level: 'Intermédiaire' },
-    { text: 'Formation complète en Programmation', icon: Code, level: 'Avancé' },
-    { text: 'Formation en Infographie et Design', icon: PenTool, level: 'Débutant' },
-    { text: 'Formation E-commerce', icon: ShoppingCart, level: 'Intermédiaire' },
-    { text: 'Pack 10 000 templates et ressources Canva', icon: FolderDown, level: 'Tous niveaux' },
-    { text: 'Formation en Maintenance informatique', icon: Wrench, level: 'Intermédiaire' },
-    { text: 'Formation en Hacking et Sécurité informatique', icon: ShieldCheck, level: 'Avancé' },
-    { text: 'Formation Revendeur IPTV', icon: Tv, level: 'Débutant' },
-  ]
-
-  const handleSubmitContact = async (e: React.FormEvent) => {
+  const handleSubmitContact = (e: React.FormEvent) => {
     e.preventDefault()
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!contactData.name || !contactData.email || !contactData.message) {
       toast({ title: 'Champs requis', description: 'Veuillez remplir tous les champs obligatoires.', variant: 'destructive' })
       return
     }
-    setSending(true)
+    if (!emailRegex.test(contactData.email)) {
+      toast({ title: 'Email invalide', description: 'Veuillez entrer une adresse email valide.', variant: 'destructive' })
+      return
+    }
     const msg = encodeURIComponent(`Bonjour ! Je suis ${contactData.name} (${contactData.email}).\n\nSujet : ${contactData.subject || 'Général'}\n\n${contactData.message}`)
     window.open(`https://wa.me/22397787244?text=${msg}`, '_blank')
     toast({ title: 'Redirection vers WhatsApp', description: 'Votre message sera envoyé via WhatsApp pour une réponse rapide.' })
     setContactData({ name: '', email: '', subject: '', message: '' })
-    setSending(false)
   }
 
   useEffect(() => {
     const handleScroll = () => {
       setShowBackToTop(window.scrollY > 600)
     }
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   useEffect(() => {
+    if (sessionStorage.getItem('welcomed')) return
+    sessionStorage.setItem('welcomed', '1')
     const timer = setTimeout(() => {
       toast({
         title: 'Bienvenue chez Studio Créatif !',
@@ -1251,7 +1241,7 @@ export default function Home() {
                     </select>
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-sm font-semibold">Secteur d&apos;activité *</Label>
+                    <Label className="text-sm font-semibold">Secteur d&apos;activité</Label>
                     <select
                       value={quickOrder.description}
                       onChange={(e) => setQuickOrder(prev => ({ ...prev, description: e.target.value }))}
@@ -1264,7 +1254,7 @@ export default function Home() {
                       <option value="Tech / Informatique">Tech / Informatique</option>
                       <option value="Mode / Beauté">Mode / Beauté</option>
                       <option value="Transport / Logistique">Transport / Logistique</option>
-                      <option value=" Santé / Bien-être">Santé / Bien-être</option>
+                      <option value="Santé / Bien-être">Santé / Bien-être</option>
                       <option value="BTP / Immobilier">BTP / Immobilier</option>
                       <option value="Art / Culture">Art / Culture</option>
                       <option value="Autre">Autre</option>
@@ -1428,6 +1418,7 @@ export default function Home() {
                   <Card key={i} className="border-0 shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
                     <button
                       onClick={() => setFaqOpen(isOpen ? null : `faq-${i}`)}
+                      aria-expanded={isOpen}
                       className="w-full flex items-center justify-between p-5 text-left"
                     >
                       <h3 className="font-semibold text-sm pr-4">{faq.q}</h3>
@@ -1671,7 +1662,7 @@ export default function Home() {
                     <Facebook className="h-5 w-5 text-amber-600" />
                   </a>
                   <a href="https://www.tiktok.com/@sk_designer_luxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors" aria-label="TikTok">
-                    <Youtube className="h-5 w-5 text-amber-600" />
+                    <svg className="h-5 w-5 text-amber-600" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.87a8.16 8.16 0 0 0 4.77 1.52V6.94a4.85 4.85 0 0 1-1.01-.25z" /></svg>
                   </a>
                 </div>
               </div>
@@ -1698,18 +1689,10 @@ export default function Home() {
                 <Button
                   type="submit"
                   className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold shadow-lg shadow-amber-500/20"
-                  disabled={sending}
                 >
-                  {sending ? (
-                    <span className="flex items-center gap-2">
-                      <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>
-                      Envoi en cours...
-                    </span>
-                  ) : (
-                    <span className="flex items-center gap-2">
-                      <MessageCircle className="h-4 w-4" /> Envoyer via WhatsApp
-                    </span>
-                  )}
+                  <span className="flex items-center gap-2">
+                    <MessageCircle className="h-4 w-4" /> Envoyer via WhatsApp
+                  </span>
                 </Button>
               </form>
             </div>
@@ -1750,7 +1733,7 @@ export default function Home() {
 
       {/* ═══ WHATSAPP FLOTTANT + BACK TO TOP ═══ */}
       <div className="fixed bottom-6 right-6 z-40 hidden lg:flex flex-col items-end gap-3">
-        {/* Back to top button */}
+        {/* Back to top button - desktop only */}
         <AnimatePresence>
           {showBackToTop && (
             <motion.button
@@ -1766,7 +1749,7 @@ export default function Home() {
             </motion.button>
           )}
         </AnimatePresence>
-        {/* WhatsApp button */}
+        {/* WhatsApp button - desktop only */}
         <a
           href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20souhaite%20discuter%20d%27un%20projet."
           target="_blank"
@@ -1785,6 +1768,23 @@ export default function Home() {
           </span>
         </a>
       </div>
+
+      {/* Back to top button - mobile only (above bottom nav) */}
+      <AnimatePresence>
+        {showBackToTop && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.5 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="fixed bottom-20 right-4 z-40 flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 text-white shadow-lg shadow-amber-500/30 lg:hidden"
+            aria-label="Retour en haut"
+          >
+            <ChevronUp className="h-4 w-4" />
+          </motion.button>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

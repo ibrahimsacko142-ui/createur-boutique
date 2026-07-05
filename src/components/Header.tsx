@@ -34,17 +34,9 @@ function useTheme() {
   }, [dark])
 
   const toggle = () => {
-    setDark(prev => {
-      const next = !prev
-      if (next) {
-        document.documentElement.classList.add('dark')
-        localStorage.setItem('theme', 'dark')
-      } else {
-        document.documentElement.classList.remove('dark')
-        localStorage.setItem('theme', 'light')
-      }
-      return next
-    })
+    const next = !dark
+    localStorage.setItem('theme', next ? 'dark' : 'light')
+    setDark(next)
   }
 
   return { dark, toggle }

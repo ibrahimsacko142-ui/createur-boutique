@@ -1,6 +1,6 @@
 import { Instagram, Facebook, Mail, MapPin, Phone, MessageCircle, Sparkles, Heart } from 'lucide-react'
 // TikTok SVG icon component
-function TikTokIcon({ className = 'h-4.5 w-4.5' }: { className?: string }) {
+function TikTokIcon({ className = 'h-[1.125rem] w-[1.125rem]' }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="currentColor">
       <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.87a8.16 8.16 0 0 0 4.77 1.52V6.94a4.85 4.85 0 0 1-1.01-.25z" />
@@ -21,11 +21,9 @@ export default function Footer() {
             </p>
             <p className="text-white/80 text-sm">Réponse rapide sur WhatsApp — Disponible 7j/7</p>
           </div>
-          <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20avoir%20des%20informations." target="_blank" rel="noopener noreferrer">
-            <button className="bg-white text-emerald-600 hover:bg-white/90 font-bold text-sm px-6 py-2.5 rounded-full shadow-lg flex items-center gap-2 transition-all hover:scale-105">
+          <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20avoir%20des%20informations." target="_blank" rel="noopener noreferrer" className="bg-white text-emerald-600 hover:bg-white/90 font-bold text-sm px-6 py-2.5 rounded-full shadow-lg flex items-center gap-2 transition-all hover:scale-105">
               <MessageCircle className="h-4 w-4" /> WhatsApp
-            </button>
-          </a>
+            </a>
         </div>
       </div>
 
@@ -46,16 +44,16 @@ export default function Footer() {
             </p>
             <div className="flex gap-2.5 pt-1">
               <a href="https://www.instagram.com/sk_designer_luxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted hover:bg-amber-100 dark:hover:bg-amber-900/30 hover:text-amber-500 transition-all group" aria-label="Instagram">
-                <Instagram className="h-4.5 w-4.5" />
+                <Instagram className="h-[1.125rem] w-[1.125rem]" />
               </a>
               <a href="https://www.facebook.com/skdesignerluxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted hover:bg-amber-100 dark:hover:bg-amber-900/30 hover:text-amber-500 transition-all group" aria-label="Facebook">
-                <Facebook className="h-4.5 w-4.5" />
+                <Facebook className="h-[1.125rem] w-[1.125rem]" />
               </a>
               <a href="https://www.tiktok.com/@sk_designer_luxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted hover:bg-amber-100 dark:hover:bg-amber-900/30 hover:text-amber-500 transition-all group" aria-label="TikTok">
                 <TikTokIcon />
               </a>
               <a href="https://wa.me/22397787244" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted hover:bg-emerald-100 dark:hover:bg-emerald-900/30 hover:text-emerald-500 transition-all group" aria-label="WhatsApp">
-                <MessageCircle className="h-4.5 w-4.5" />
+                <MessageCircle className="h-[1.125rem] w-[1.125rem]" />
               </a>
             </div>
           </div>
