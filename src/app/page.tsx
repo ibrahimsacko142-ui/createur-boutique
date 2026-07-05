@@ -61,6 +61,9 @@ import {
   Key,
   Scissors,
   Monitor,
+  ArrowDown,
+  Search,
+  FileText,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -93,6 +96,45 @@ export default function Home() {
   const [faqOpen, setFaqOpen] = useState<string | null>(null)
   const [leadMagnet, setLeadMagnet] = useState({ name: '', contact: '' })
   const { toast } = useToast()
+
+  // ── Animated Counter Hook ──
+  function useCounter(end: number, duration: number = 2000) {
+    const [count, setCount] = useState(0)
+    const [started, setStarted] = useState(false)
+    const ref = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+      const el = ref.current
+      if (!el) return
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting && !started) {
+            setStarted(true)
+          }
+        },
+        { threshold: 0.3 }
+      )
+      observer.observe(el)
+      return () => observer.disconnect()
+    }, [started])
+
+    useEffect(() => {
+      if (!started) return
+      let start = 0
+      const step = (timestamp: number) => {
+        if (!start) start = timestamp
+        const progress = Math.min((timestamp - start) / duration, 1)
+        setCount(Math.floor(progress * end))
+        if (progress < 1) requestAnimationFrame(step)
+      }
+      requestAnimationFrame(step)
+    }, [started, end, duration])
+
+    return { count, ref }
+  }
+
+  const stat1 = useCounter(50, 1500)
+  const stat3 = useCounter(100, 1500)
 
   // ── Before / After Slider (CSS-only pointer-based) ──
   function BeforeAfterSlider({ before, after, title }: { before: string; after: string; title: string }) {
@@ -160,21 +202,21 @@ export default function Home() {
 
   // ── Formations data ──
   const formations = [
-    { text: 'Devenir Designer Pro avec Canva & Illustrator', icon: Palette, price: '5 000', duration: '6h', lessons: '9 leçons' },
-    { text: 'Créer et monétiser des vidéos pour réseaux sociaux', icon: MonitorPlay, price: '7 500', duration: '8h', lessons: '15 leçons' },
-    { text: 'Créer un site web professionnel (No-code + Next.js)', icon: Globe, price: '10 000', duration: '10h', lessons: '12 leçons' },
-    { text: 'Devenir Community Manager pour PME locales', icon: Target, price: '6 000', duration: '7h', lessons: '10 leçons' },
-    { text: 'Formation complète en Trading', icon: TrendingUp },
-    { text: 'Formation en Management et Gestion de projets', icon: Building2 },
-    { text: 'Formation en Intelligence Artificielle', icon: Brain },
-    { text: 'Formation YouTube et monétisation', icon: Youtube },
-    { text: 'Formation complète en Programmation', icon: Code },
-    { text: 'Formation en Infographie et Design', icon: PenTool },
-    { text: 'Formation E-commerce', icon: ShoppingCart },
-    { text: 'Pack 10 000 templates et ressources Canva', icon: FolderDown },
-    { text: 'Formation en Maintenance informatique', icon: Wrench },
-    { text: 'Formation en Hacking et Sécurité informatique', icon: ShieldCheck },
-    { text: 'Formation Revendeur IPTV', icon: Tv },
+    { text: 'Devenir Designer Pro avec Canva & Illustrator', icon: Palette, price: '5 000', duration: '6h', lessons: '9 leçons', level: 'Débutant' },
+    { text: 'Créer et monétiser des vidéos pour réseaux sociaux', icon: MonitorPlay, price: '7 500', duration: '8h', lessons: '15 leçons', level: 'Intermédiaire' },
+    { text: 'Créer un site web professionnel (No-code + Next.js)', icon: Globe, price: '10 000', duration: '10h', lessons: '12 leçons', level: 'Intermédiaire' },
+    { text: 'Devenir Community Manager pour PME locales', icon: Target, price: '6 000', duration: '7h', lessons: '10 leçons', level: 'Débutant' },
+    { text: 'Formation complète en Trading', icon: TrendingUp, level: 'Avancé' },
+    { text: 'Formation en Management et Gestion de projets', icon: Building2, level: 'Intermédiaire' },
+    { text: 'Formation en Intelligence Artificielle', icon: Brain, level: 'Avancé' },
+    { text: 'Formation YouTube et monétisation', icon: Youtube, level: 'Intermédiaire' },
+    { text: 'Formation complète en Programmation', icon: Code, level: 'Avancé' },
+    { text: 'Formation en Infographie et Design', icon: PenTool, level: 'Débutant' },
+    { text: 'Formation E-commerce', icon: ShoppingCart, level: 'Intermédiaire' },
+    { text: 'Pack 10 000 templates et ressources Canva', icon: FolderDown, level: 'Tous niveaux' },
+    { text: 'Formation en Maintenance informatique', icon: Wrench, level: 'Intermédiaire' },
+    { text: 'Formation en Hacking et Sécurité informatique', icon: ShieldCheck, level: 'Avancé' },
+    { text: 'Formation Revendeur IPTV', icon: Tv, level: 'Débutant' },
   ]
 
   const handleSubmitContact = async (e: React.FormEvent) => {
@@ -210,7 +252,7 @@ export default function Home() {
   }, [])
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="min-h-screen flex flex-col bg-background pb-16 lg:pb-0">
       <Header />
 
       <main className="flex-1">
@@ -378,20 +420,30 @@ export default function Home() {
               <p className="mt-2 text-white/80 text-sm">Transparent, impactant, à taille humaine</p>
             </div>
             <div className="grid grid-cols-3 gap-6 sm:gap-12">
-              {[
-                { value: '50+', label: 'Marques propulsées', icon: Award, desc: 'Logos, affiches et identités créées avec soin' },
-                { value: '100%', label: 'Sur-mesure', icon: Palette, desc: 'Aucun template pré-fait, chaque pixel est pensé pour vous' },
-                { value: '5/5', label: 'Satisfaction client', icon: ThumbsUp, desc: "Une collaboration basée sur l'écoute et le résultat" },
-              ].map((stat) => (
-                <div key={stat.label} className="text-center">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mx-auto mb-3">
-                    <stat.icon className="h-6 w-6 text-white" />
-                  </div>
-                  <div className="text-3xl sm:text-4xl font-extrabold text-white mb-1">{stat.value}</div>
-                  <p className="text-sm font-semibold text-white/90">{stat.label}</p>
-                  <p className="text-xs text-white/60 mt-1 leading-relaxed hidden sm:block">{stat.desc}</p>
+              <div key="stat-1" ref={stat1.ref} className="text-center">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mx-auto mb-3">
+                  <Award className="h-6 w-6 text-white" />
                 </div>
-              ))}
+                <div className="text-3xl sm:text-4xl font-extrabold text-white mb-1">{stat1.count}+</div>
+                <p className="text-sm font-semibold text-white/90">Marques propulsées</p>
+                <p className="text-xs text-white/60 mt-1 leading-relaxed hidden sm:block">Logos, affiches et identités créées avec soin</p>
+              </div>
+              <div className="text-center">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mx-auto mb-3">
+                  <Palette className="h-6 w-6 text-white" />
+                </div>
+                <div className="text-3xl sm:text-4xl font-extrabold text-white mb-1">100%</div>
+                <p className="text-sm font-semibold text-white/90">Sur-mesure</p>
+                <p className="text-xs text-white/60 mt-1 leading-relaxed hidden sm:block">Aucun template pré-fait, chaque pixel est pensé pour vous</p>
+              </div>
+              <div key="stat-3" ref={stat3.ref} className="text-center">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mx-auto mb-3">
+                  <ThumbsUp className="h-6 w-6 text-white" />
+                </div>
+                <div className="text-3xl sm:text-4xl font-extrabold text-white mb-1">{stat3.count}%</div>
+                <p className="text-sm font-semibold text-white/90">Satisfaction client</p>
+                <p className="text-xs text-white/60 mt-1 leading-relaxed hidden sm:block">Une collaboration basée sur l'écoute et le résultat</p>
+              </div>
             </div>
           </div>
         </section>
@@ -412,6 +464,79 @@ export default function Home() {
                   <span className="text-xs font-medium whitespace-nowrap">{item.label}</span>
                 </div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ═══ 5.5 COMMENT ÇA MARCHE ═══ */}
+        <section className="py-16 sm:py-20 bg-gradient-to-b from-background to-muted/20">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+                <Zap className="h-3 w-3 mr-1" /> Processus
+              </Badge>
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Comment ça marche ?</h2>
+              <p className="mt-3 text-muted-foreground max-w-xl mx-auto leading-relaxed">
+                4 étapes simples pour concrétiser votre projet. De votre première idée à la livraison finale, je vous accompagne à chaque étape.
+              </p>
+            </div>
+
+            <div className="relative">
+              {/* Ligne de connexion verticale (desktop) / horizontale (mobile) */}
+              <div className="hidden sm:block absolute top-16 left-[calc(12.5%+20px)] right-[calc(12.5%+20px)] h-0.5 bg-gradient-to-r from-amber-300 via-orange-400 to-red-400 opacity-40" />
+
+              <div className="grid sm:grid-cols-4 gap-6 sm:gap-4">
+                {[
+                  {
+                    step: '01',
+                    icon: MessageCircle,
+                    title: 'Contactez-moi',
+                    desc: "Envoyez-moi un message sur WhatsApp ou remplissez le formulaire. Décrivez votre projet en quelques mots.",
+                    color: 'from-amber-400 to-amber-500',
+                    bg: 'bg-amber-50 dark:bg-amber-950/20',
+                    border: 'border-amber-200 dark:border-amber-800',
+                  },
+                  {
+                    step: '02',
+                    icon: Search,
+                    title: 'Brief & Devis',
+                    desc: "Je vous pose les bonnes questions pour comprendre vos besoins. Vous recevez une proposition claire avec délai et prix.",
+                    color: 'from-orange-400 to-orange-500',
+                    bg: 'bg-orange-50 dark:bg-orange-950/20',
+                    border: 'border-orange-200 dark:border-orange-800',
+                  },
+                  {
+                    step: '03',
+                    icon: PenTool,
+                    title: 'Création',
+                    desc: "Je conçois votre projet avec soin. Vous recevez des aperçus et pouvez demander des ajustements.",
+                    color: 'from-red-400 to-red-500',
+                    bg: 'bg-red-50 dark:bg-red-950/20',
+                    border: 'border-red-200 dark:border-red-800',
+                  },
+                  {
+                    step: '04',
+                    icon: Rocket,
+                    title: 'Livraison',
+                    desc: "Fichiers sources livrés en haute qualité. Suivi après livraison pour s'assurer que tout est parfait.",
+                    color: 'from-emerald-400 to-emerald-500',
+                    bg: 'bg-emerald-50 dark:bg-emerald-950/20',
+                    border: 'border-emerald-200 dark:border-emerald-800',
+                  },
+                ].map((s, i) => (
+                  <div key={s.step} className={`relative text-center p-5 rounded-2xl border ${s.border} ${s.bg} transition-all duration-300 hover:-translate-y-1 hover:shadow-lg`}>
+                    <div className={`inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${s.color} text-white shadow-lg mb-3`}>
+                      <s.icon className="h-5 w-5" />
+                    </div>
+                    <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Étape {s.step}</div>
+                    <h3 className="text-sm font-extrabold mb-2">{s.title}</h3>
+                    <p className="text-xs text-muted-foreground leading-relaxed">{s.desc}</p>
+                    {i < 3 && (
+                      <ArrowDown className="h-5 w-5 text-amber-400 mx-auto mt-3 sm:hidden" />
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -729,7 +854,14 @@ export default function Home() {
                       <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500/30 to-orange-500/30 group-hover:from-amber-500/50 group-hover:to-orange-500/50 transition-colors">
                         <form.icon className="h-5 w-5 text-amber-400" />
                       </div>
-                      <span className="text-2xl font-extrabold text-amber-400">{form.price} <span className="text-xs font-normal text-slate-500">FCFA</span></span>
+                      <div className="flex flex-col items-end gap-1.5">
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                          form.level === 'Débutant' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' :
+                          form.level === 'Intermédiaire' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' :
+                          'bg-violet-500/20 text-violet-400 border border-violet-500/30'
+                        }`}>{form.level}</span>
+                        <span className="text-2xl font-extrabold text-amber-400">{form.price} <span className="text-xs font-normal text-slate-500">FCFA</span></span>
+                      </div>
                     </div>
                     <h3 className="text-sm font-bold text-white leading-snug mb-2">{form.text}</h3>
                     <div className="flex items-center gap-3 text-[11px] text-slate-400">
@@ -759,6 +891,12 @@ export default function Home() {
                       <form.icon className="h-4 w-4 text-slate-400 group-hover:text-emerald-400 transition-colors" />
                     </div>
                     <p className="text-xs font-medium text-slate-300 group-hover:text-white transition-colors flex-1">{form.text}</p>
+                    <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full flex-shrink-0 ${
+                      form.level === 'Débutant' ? 'bg-emerald-500/20 text-emerald-400' :
+                      form.level === 'Intermédiaire' ? 'bg-amber-500/20 text-amber-400' :
+                      form.level === 'Avancé' ? 'bg-violet-500/20 text-violet-400' :
+                      'bg-slate-500/20 text-slate-400'
+                    }`}>{form.level}</span>
                     <ArrowRight className="h-3.5 w-3.5 text-white/20 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all" />
                   </a>
                 ))}
@@ -1385,6 +1523,65 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ═══ GARANTIES ═══ */}
+        <section className="py-16 sm:py-20 bg-gradient-to-b from-muted/20 to-background">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+                <ShieldCheck className="h-3 w-3 mr-1" /> Garanties
+              </Badge>
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Mes 4 Garanties pour Vous</h2>
+              <p className="mt-3 text-muted-foreground max-w-xl mx-auto leading-relaxed">
+                Chaque projet est protégé. Voici les engagements que je prends avec chaque client, sans exception.
+              </p>
+            </div>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {[
+                {
+                  icon: ThumbsUp,
+                  title: 'Satisfaction ou Révision',
+                  desc: "Votre projet n'est pas terminé tant que vous n'êtes pas 100% satisfait. Révisions incluses.",
+                  color: 'from-emerald-400 to-teal-500',
+                  bg: 'bg-emerald-50 dark:bg-emerald-950/20',
+                },
+                {
+                  icon: Timer,
+                  title: 'Livraison dans les Délais',
+                  desc: "CV et lettres en 24h, logos en 48h, sites web en 3-7 jours. Promesse tenue.",
+                  color: 'from-amber-400 to-orange-500',
+                  bg: 'bg-amber-50 dark:bg-amber-950/20',
+                },
+                {
+                  icon: Lock,
+                  title: 'Confidentialité Totale',
+                  desc: 'Vos données, vos idées, vos fichiers restent strictement privés. Aucune partage tiers.',
+                  color: 'from-blue-400 to-indigo-500',
+                  bg: 'bg-blue-50 dark:bg-blue-950/20',
+                },
+                {
+                  icon: MessageCircle,
+                  title: 'Support WhatsApp 7j/7',
+                  desc: "Un message, une réponse. Je suis disponible pour vous accompagner même après la livraison.",
+                  color: 'from-purple-400 to-violet-500',
+                  bg: 'bg-purple-50 dark:bg-purple-950/20',
+                },
+              ].map((g) => (
+                <Card key={g.title} className={`border-0 shadow-md overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${g.bg}`}>
+                  <div className={`h-1 bg-gradient-to-r ${g.color}`} />
+                  <CardContent className="p-5 text-center">
+                    <div className={`inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${g.color} text-white shadow-lg mb-4`}>
+                      <g.icon className="h-6 w-6" />
+                    </div>
+                    <h3 className="text-sm font-extrabold mb-2">{g.title}</h3>
+                    <p className="text-xs text-muted-foreground leading-relaxed">{g.desc}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* ═══ 18. CTA FINAL ═══ */}
         <section className="py-16 sm:py-20 bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 relative overflow-hidden">
           <div className="absolute inset-0">
@@ -1523,8 +1720,36 @@ export default function Home() {
       {/* ═══ 20. FOOTER ═══ */}
       <Footer />
 
+      {/* ═══ 21. BOTTOM MOBILE NAV ═══ */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-background/95 backdrop-blur-xl border-t border-border shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+        <div className="flex items-center justify-around h-16 px-2">
+          <a href="#accueil" className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-amber-500 transition-colors py-1 px-2">
+            <Sparkles className="h-5 w-5" />
+            <span className="text-[10px] font-medium">Accueil</span>
+          </a>
+          <a href="#services" className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-amber-500 transition-colors py-1 px-2">
+            <Layers className="h-5 w-5" />
+            <span className="text-[10px] font-medium">Services</span>
+          </a>
+          <a href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20souhaite%20discuter%20d%27un%20projet." target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-0.5 -mt-5">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 text-white shadow-lg shadow-emerald-500/30">
+              <MessageCircle className="h-6 w-6" />
+            </div>
+            <span className="text-[10px] font-semibold text-emerald-600">WhatsApp</span>
+          </a>
+          <a href="#formations" className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-amber-500 transition-colors py-1 px-2">
+            <GraduationCap className="h-5 w-5" />
+            <span className="text-[10px] font-medium">Formations</span>
+          </a>
+          <a href="#contact" className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-amber-500 transition-colors py-1 px-2">
+            <Send className="h-5 w-5" />
+            <span className="text-[10px] font-medium">Contact</span>
+          </a>
+        </div>
+      </div>
+
       {/* ═══ WHATSAPP FLOTTANT + BACK TO TOP ═══ */}
-      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+      <div className="fixed bottom-6 right-6 z-40 hidden lg:flex flex-col items-end gap-3">
         {/* Back to top button */}
         <AnimatePresence>
           {showBackToTop && (
