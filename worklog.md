@@ -51,3 +51,38 @@ Stage Summary:
 - Site brand is now "Studio Créatif" everywhere
 - Footer now displays payment methods prominently
 - All interactive cards have consistent luxury hover effects
+---
+Task ID: 1
+Agent: main
+Task: Remplacer Google OTP par SMS OTP réel via Twilio
+
+Work Log:
+- Installé `twilio` et supprimé `otpauth` + `qrcode`
+- Créé `/api/send-otp/route.ts` : génère OTP 6 chiffres, envoie SMS via Twilio, stocke le code dans un cookie httpOnly signé (HMAC-SHA256)
+- Créé `/api/verify-otp/route.ts` : vérifie le code saisi contre le cookie signé, gère expiration 5min
+- Configuré `.env` avec TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER, OTP_SECRET
+- Réécrit `LoginPage.tsx` avec flux SMS OTP : formulaire → envoi SMS → saisie code → vérification
+- Mode développement automatique : si Twilio non configuré, le code est affiché à l'écran pour tester
+- Timer 5 minutes, renvoi de code, pays avec select natif fonctionnel
+
+Stage Summary:
+- Système SMS OTP fonctionnel avec 2 API routes et cookie signé (pas de base de données)
+- En mode dev (Twilio non configuré) le code est affiché pour tester
+- Pour la production : créer un compte Twilio gratuit et remplir les 3 variables .env
+
+---
+Task ID: 2
+Agent: main
+Task: Vérifications et ajouts finaux
+
+Work Log:
+- Footer vérifié : tous les liens sont corrects (ancres + URLs externes)
+- Prix vérifiés : tous les services Découverte sont gratuits, les Premium renvoient vers WhatsApp pour devis
+- Ajouté 5ème catégorie "Marketing Digital" dans la section Tarifs (Découverte + Premium)
+- Ajouté l'import `Megaphone` de lucide-react
+- Ajouté "Post Réseaux Sociaux — Gratuit" dans le formulaire de contact
+
+Stage Summary:
+- 5 catégories × 2 tiers (Découverte/Premium) maintenant complets
+- Build réussi sans erreur
+- Toutes les tâches de la session terminées

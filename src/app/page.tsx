@@ -54,6 +54,7 @@ import {
   Scissors,
   ArrowDown,
   Search,
+  Megaphone,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -606,6 +607,11 @@ export default function Home() {
                   cat: 'Formation', icon: GraduationCap, color: 'from-emerald-500 to-teal-500', borderColor: 'border-emerald-200 dark:border-emerald-800',
                   decouverte: { title: 'Offre Découverte — Gratuite', desc: "Session d'initiation de 30 minutes pour découvrir mes outils et méthodes." },
                   premium: { title: 'Offre Premium', desc: 'Parcours de formation complet avec suivi personnalisé, support après formation, et certificat de participation.' },
+                },
+                {
+                  cat: 'Marketing Digital', icon: Megaphone, color: 'from-cyan-500 to-blue-500', borderColor: 'border-cyan-200 dark:border-cyan-800',
+                  decouverte: { title: 'Offre Découverte — Gratuite', desc: "Une affiche ou post réseau social simple pour promouvoir votre activité. Format prêt à publier, 1 révision incluse." },
+                  premium: { title: 'Offre Premium', desc: "Stratégie complète : affiches, posts, stories, bannières publicitaires pour Facebook/Instagram/TikTok. Charte visuelle réseaux sociaux, calendrier éditorial de 7 jours." },
                 },
               ].map((section) => (
                 <Card key={section.cat} className={`border ${section.borderColor} overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5`}>
@@ -1256,6 +1262,7 @@ export default function Home() {
                       <option value="Site Web Simple — Gratuit">Site Web Simple — Gratuit</option>
                       <option value="Site Web Professionnel — Gratuit">Site Web Professionnel — Gratuit</option>
                       <option value="Montage Vidéo Pro — Gratuit">Montage Vidéo Pro — Gratuit</option>
+                      <option value="Post Réseaux Sociaux — Gratuit">Post Réseaux Sociaux — Gratuit</option>
                       <option disabled className="font-semibold text-muted-foreground">── Carrière Pro ──</option>
                       <option value="Pack Lancement Carrière — 3 500 FCFA">Pack Lancement Carrière — 3 500 FCFA</option>
                       <option value="Relooking CV — 700 FCFA">Relooking CV — 700 FCFA</option>
