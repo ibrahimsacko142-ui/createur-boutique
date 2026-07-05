@@ -13,7 +13,6 @@ const navLinks = [
   { label: "Gagner de l'argent", href: '#gagner-argent' },
   { label: 'Formations', href: '#formations' },
   { label: 'Portfolio', href: '#portfolio' },
-  { label: 'Générateur IA', href: '#generateur' },
   { label: 'Contact', href: '#contact' },
 ]
 

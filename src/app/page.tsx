@@ -71,7 +71,7 @@ import { Label } from '@/components/ui/label'
 import { useToast } from '@/hooks/use-toast'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import WhatsAppGenerator from '@/components/WhatsAppGenerator'
+
 
 /* ─── Format Price ─── */
 function formatPrice(p: number) {
@@ -1011,21 +1011,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ═══ 13. GÉNÉRATEUR WHATSAPP IA ═══ */}
-        <section id="generateur" className="py-16 sm:py-20">
-          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-10">
-              <Badge variant="secondary" className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200">
-                <Zap className="h-3 w-3 mr-1" /> Outil IA
-              </Badge>
-              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Générateur de Messages WhatsApp</h2>
-              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                Créez des messages WhatsApp professionnels en un clic. Choisissez le type, le ton — l&apos;IA rédige pour vous. Gratuit, rapide, efficace.
-              </p>
-            </div>
-            <WhatsAppGenerator />
-          </div>
-        </section>
+
 
         {/* ═══ 14. INSCRIPTION FORMATION ═══ */}
         <section id="inscription" className="py-16 sm:py-20 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 dark:from-emerald-950/20 dark:via-teal-950/10 dark:to-cyan-950/10 relative overflow-hidden">
