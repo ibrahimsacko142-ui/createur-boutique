@@ -197,7 +197,6 @@ export default function Home() {
   const [showBackToTop, setShowBackToTop] = useState(false)
   const [portfolioFilter, setPortfolioFilter] = useState('Tous')
   const [quickOrder, setQuickOrder] = useState({ service: '', name: '', phone: '', description: '' })
-  const [inscriptionData, setInscriptionData] = useState({ name: '', phone: '', formation: '' })
   const [faqOpen, setFaqOpen] = useState<string | null>(null)
   const [leadMagnet, setLeadMagnet] = useState({ name: '', contact: '' })
   const { toast } = useToast()
@@ -885,14 +884,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="mt-8 text-center">
-              <a href="#inscription">
-                <Button size="lg" className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-semibold shadow-lg shadow-emerald-500/20 transition-transform duration-200 hover:scale-105 active:scale-95">
-                  <UserCheck className="h-4 w-4 mr-2" /> Je veux m&apos;inscrire maintenant
-                </Button>
-              </a>
-              <p className="mt-3 text-slate-400 text-xs">Remplissez le formulaire d&apos;inscription ci-dessous</p>
-            </div>
+
           </div>
         </section>
 
