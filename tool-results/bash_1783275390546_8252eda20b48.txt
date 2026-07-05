@@ -1,0 +1,692 @@
+
+
+        {/* ═══ 14. INSCRIPTION FORMATION ═══ */}
+        <section id="inscription" className="py-16 sm:py-20 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 dark:from-emerald-950/20 dark:via-teal-950/10 dark:to-cyan-950/10 relative overflow-hidden">
+          <div className="absolute -top-20 -right-20 h-80 w-80 bg-emerald-200/30 dark:bg-emerald-900/10 rounded-full blur-3xl" />
+          <div className="absolute -bottom-20 -left-20 h-80 w-80 bg-teal-200/20 dark:bg-teal-900/10 rounded-full blur-3xl" />
+          <div className="relative mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-10">
+              <Badge variant="secondary" className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800">
+                <UserCheck className="h-3 w-3 mr-1" /> Inscription
+              </Badge>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Inscrivez-vous à une Formation</h2>
+              <p className="mt-4 text-muted-foreground max-w-xl mx-auto leading-relaxed">
+                Remplissez vos informations et choisissez la formation qui vous intéresse. Votre demande d&apos;inscription sera envoyée directement via WhatsApp pour un traitement rapide.
+              </p>
+            </div>
+
+            <Card className="border-0 shadow-xl overflow-hidden">
+              <div className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 p-1">
+                <div className="bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-600 text-white p-6 sm:p-8">
+                  <div className="text-center">
+                    <GraduationCap className="h-8 w-8 mx-auto mb-2" />
+                    <h3 className="text-xl sm:text-2xl font-extrabold">Formulaire d&apos;Inscription</h3>
+                    <p className="mt-1.5 text-white/80 text-sm">Gratuit — Réponse rapide via WhatsApp</p>
+                  </div>
+                </div>
+              </div>
+              <CardContent className="p-6 sm:p-8 space-y-5">
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-sm font-semibold flex items-center gap-1.5">
+                      <UserCheck className="h-3.5 w-3.5 text-emerald-600" /> Votre nom complet *
+                    </Label>
+                    <Input
+                      placeholder="Ex: Amadou Diallo"
+                      value={inscriptionData.name}
+                      onChange={(e) => setInscriptionData(prev => ({ ...prev, name: e.target.value }))}
+                      className="h-11 bg-white dark:bg-background"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-sm font-semibold flex items-center gap-1.5">
+                      <Phone className="h-3.5 w-3.5 text-emerald-600" /> Votre numéro de téléphone *
+                    </Label>
+                    <Input
+                      type="tel"
+                      placeholder="Ex: +223 70 00 00 00"
+                      value={inscriptionData.phone}
+                      onChange={(e) => setInscriptionData(prev => ({ ...prev, phone: e.target.value }))}
+                      className="h-11 bg-white dark:bg-background"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-sm font-semibold flex items-center gap-1.5">
+                    <GraduationCap className="h-3.5 w-3.5 text-emerald-600" /> Formation souhaitée *
+                  </Label>
+                  <select
+                    value={inscriptionData.formation}
+                    onChange={(e) => setInscriptionData(prev => ({ ...prev, formation: e.target.value }))}
+                    className="w-full h-12 rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500"
+                  >
+                    <option value="">— Choisissez une formation —</option>
+                    {formations.map((form, i) => (
+                      <option key={i} value={form.text}>{form.text}</option>
+                    ))}
+                  </select>
+                </div>
+                <Button
+                  onClick={() => {
+                    if (!inscriptionData.name || !inscriptionData.phone || !inscriptionData.formation) {
+                      toast({ title: 'Champs requis', description: 'Veuillez remplir votre nom, numéro et choisir une formation.', variant: 'destructive' })
+                      return
+                    }
+                    const msg = encodeURIComponent(
+                      `Bonjour Sacko ! Je souhaite m'inscrire à une formation.\n\n` +
+                      `Nom : ${inscriptionData.name}\n` +
+                      `Téléphone : ${inscriptionData.phone}\n` +
+                      `Formation choisie : ${inscriptionData.formation}\n\n` +
+                      `Merci de me confirmer mon inscription et de me donner les prochaines étapes !`
+                    )
+                    window.open(`https://wa.me/22397787244?text=${msg}`, '_blank')
+                    toast({ title: 'Inscription envoyée !', description: "Votre demande d'inscription a été envoyée via WhatsApp. Vous recevrez une confirmation rapidement." })
+                    setInscriptionData({ name: '', phone: '', formation: '' })
+                  }}
+                  className="w-full bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-600 hover:via-teal-600 hover:to-cyan-600 text-white font-bold h-12 text-sm shadow-lg shadow-emerald-500/20 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99]"
+                >
+                  <MessageCircle className="h-4 w-4 mr-2" /> M&apos;inscrire via WhatsApp
+                </Button>
+                <div className="flex items-center justify-center gap-4 pt-2 text-xs text-muted-foreground">
+                  <span className="flex items-center gap-1"><Gift className="h-3 w-3 text-emerald-500" /> 100% Gratuit</span>
+                  <span className="flex items-center gap-1"><Zap className="h-3 w-3 text-emerald-500" /> Réponse rapide</span>
+                  <span className="flex items-center gap-1"><Shield className="h-3 w-3 text-emerald-500" /> Données sécurisées</span>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        {/* ═══ 15. COMMANDE RAPIDE (Formulaire Qualifiant) ═══ */}
+        <section id="commande-rapide" className="py-20 sm:py-24">
+          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+            <Card className="border-0 shadow-2xl overflow-hidden">
+              <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 p-1">
+                <div className="bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 text-white p-6 sm:p-8">
+                  <div className="text-center">
+                    <Zap className="h-8 w-8 mx-auto mb-2" />
+                    <h2 className="text-2xl sm:text-3xl font-extrabold">Démarrez Votre Projet</h2>
+                    <p className="mt-2 text-white/80 text-sm">Remplissez ce formulaire — je vous recontacte <strong>personnellement</strong> sur WhatsApp avec une proposition adaptée.</p>
+                    <div className="mt-4 inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm rounded-full px-4 py-1.5 text-white text-xs font-semibold border border-white/20">
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-red-400" />
+                      </span>
+                      5 projets maximum par jour — qualité avant quantité
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <CardContent className="p-6 sm:p-8 space-y-4">
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-sm font-semibold">Service souhaité *</Label>
+                    <select
+                      value={quickOrder.service}
+                      onChange={(e) => setQuickOrder(prev => ({ ...prev, service: e.target.value }))}
+                      className="w-full h-11 rounded-md border border-input bg-background px-3 text-sm"
+                    >
+                      <option value="">Sélectionnez un service...</option>
+                      <option disabled className="font-semibold text-muted-foreground">── Design & Création ──</option>
+                      <option value="Logo Professionnel — Gratuit">Logo Professionnel — Gratuit</option>
+                      <option value="Affiche Professionnelle — Gratuit">Affiche Professionnelle — Gratuit</option>
+                      <option value="Identité Visuelle Complète — Gratuit">Identité Visuelle Complète — Gratuit</option>
+                      <option disabled className="font-semibold text-muted-foreground">── Web & Vidéo ──</option>
+                      <option value="Site Web Simple — Gratuit">Site Web Simple — Gratuit</option>
+                      <option value="Site Web Professionnel — Gratuit">Site Web Professionnel — Gratuit</option>
+                      <option value="Montage Vidéo Pro — Gratuit">Montage Vidéo Pro — Gratuit</option>
+                      <option value="Post Réseaux Sociaux — Gratuit">Post Réseaux Sociaux — Gratuit</option>
+                      <option disabled className="font-semibold text-muted-foreground">── Carrière Pro ──</option>
+                      <option value="Pack Lancement Carrière — 3 500 FCFA">Pack Lancement Carrière — 3 500 FCFA</option>
+                      <option value="Relooking CV — 700 FCFA">Relooking CV — 700 FCFA</option>
+                      <option value="Impact LinkedIn — 2 000 FCFA">Impact LinkedIn — 2 000 FCFA</option>
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-sm font-semibold">Secteur d&apos;activité</Label>
+                    <select
+                      value={quickOrder.description}
+                      onChange={(e) => setQuickOrder(prev => ({ ...prev, description: e.target.value }))}
+                      className="w-full h-11 rounded-md border border-input bg-background px-3 text-sm"
+                    >
+                      <option value="">Votre secteur...</option>
+                      <option value="Commerce / Boutique">Commerce / Boutique</option>
+                      <option value="Restauration / Alimentation">Restauration / Alimentation</option>
+                      <option value="Éducation / Formation">Éducation / Formation</option>
+                      <option value="Tech / Informatique">Tech / Informatique</option>
+                      <option value="Mode / Beauté">Mode / Beauté</option>
+                      <option value="Transport / Logistique">Transport / Logistique</option>
+                      <option value="Santé / Bien-être">Santé / Bien-être</option>
+                      <option value="BTP / Immobilier">BTP / Immobilier</option>
+                      <option value="Art / Culture">Art / Culture</option>
+                      <option value="Autre">Autre</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-sm font-semibold">Votre nom *</Label>
+                    <Input placeholder="Ex: Amadou Diallo" value={quickOrder.name} onChange={(e) => setQuickOrder(prev => ({ ...prev, name: e.target.value }))} className="h-11" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-sm font-semibold">Téléphone WhatsApp *</Label>
+                    <Input type="tel" placeholder="+223 XX XX XX XX" value={quickOrder.phone} onChange={(e) => setQuickOrder(prev => ({ ...prev, phone: e.target.value }))} className="h-11" />
+                  </div>
+                </div>
+                <Button
+                  onClick={() => {
+                    if (!quickOrder.service || !quickOrder.name || !quickOrder.phone) {
+                      toast({ title: 'Champs requis', description: 'Service, nom et téléphone sont obligatoires.', variant: 'destructive' })
+                      return
+                    }
+                    const msg = encodeURIComponent(
+                      `Bonjour Sacko ! Je souhaite un service.\n\n` +
+                      `Service : ${quickOrder.service}\n` +
+                      `Secteur : ${quickOrder.description || 'Non précisé'}\n` +
+                      `Nom : ${quickOrder.name}\n` +
+                      `Téléphone : ${quickOrder.phone}\n\n` +
+                      `Je suis prêt(e) à discuter de mon projet. Merci !`
+                    )
+                    window.open(`https://wa.me/22397787244?text=${msg}`, '_blank')
+                    toast({ title: 'Demande envoyée !', description: 'Je vous recontacte personnellement sous 30 minutes.' })
+                  }}
+                  className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold h-12 text-sm shadow-lg shadow-emerald-500/20"
+                >
+                  <Send className="h-4 w-4 mr-2" /> Envoyer ma demande
+                </Button>
+                <p className="text-[11px] text-muted-foreground text-center">
+                  Vos données restent <strong>privées</strong>. Je vous recontacte uniquement pour votre projet.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        {/* ═══ 16. À PROPOS ═══ */}
+        <section id="apropos" className="py-16 sm:py-20 bg-gradient-to-b from-muted/30 to-background relative overflow-hidden">
+          <div className="absolute top-10 left-10 h-64 w-64 bg-amber-200/20 dark:bg-amber-900/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-10 right-10 h-64 w-64 bg-orange-200/15 dark:bg-orange-900/10 rounded-full blur-3xl" />
+          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div className="space-y-5">
+                {/* Photo de Sacko */}
+                <div className="relative">
+                  <div className="relative rounded-2xl overflow-hidden shadow-2xl border">
+                    <img src="/demo-photo.png" alt="Sacko - Studio Créatif" className="w-full h-72 sm:h-80 object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-amber-900/80 via-amber-900/20 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm mb-2">
+                        <Palette className="h-6 w-6" />
+                      </div>
+                      <h3 className="text-xl font-bold">Sacko</h3>
+                      <p className="mt-0.5 text-white/80 text-sm">Studio Créatif &bull; Bamako, Mali</p>
+                    </div>
+                  </div>
+                  <div className="absolute -bottom-4 -right-4 bg-white dark:bg-card rounded-xl p-4 shadow-xl border hidden sm:block">
+                    <div className="flex items-center gap-2.5">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
+                        <Zap className="h-4 w-4 text-amber-600" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold">50+ Projets livrés</p>
+                        <p className="text-[10px] text-muted-foreground">À Bamako et au-delà</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {/* Vidéo de présentation */}
+                <div className="relative rounded-2xl overflow-hidden shadow-xl border">
+                  <video
+                    controls
+                    preload="metadata"
+                    poster="/demo-photo.png"
+                    className="w-full h-48 sm:h-56 object-cover bg-black"
+                  >
+                    <source src="/demo-video.mp4" type="video/mp4" />
+                    Votre navigateur ne supporte pas la lecture vidéo.
+                  </video>
+                  <div className="absolute top-3 left-3">
+                    <Badge className="bg-amber-500/90 text-white border-0 text-[10px] font-semibold backdrop-blur-sm">
+                      <MonitorPlay className="h-3 w-3 mr-1" /> Vidéo de présentation
+                    </Badge>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+                  <Heart className="h-3 w-3 mr-1" /> Qui suis-je
+                </Badge>
+                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">À Propos de Sacko</h2>
+                <div className="mt-6 space-y-4 text-muted-foreground leading-relaxed">
+                  <p>
+                    Bienvenue ! Je suis <strong className="text-foreground">Sacko</strong>, créateur digital passionné basé à Bamako. Mon objectif est d&apos;accompagner les entreprises et les porteurs de projets dans la construction d&apos;une <strong className="text-foreground">image de marque forte, professionnelle et mémorable</strong>. De la première idée à la conception finale, je transforme votre vision en une réalité visuelle qui attire et fidélise vos clients.
+                  </p>
+                  <p>
+                    Je maîtrise les outils les plus demandés du marché — <strong className="text-foreground">CapCut Pro, Canva Pro, PicsArt Pro</strong> — et je les mets au service de chaque projet pour garantir des résultats à la hauteur de vos ambitions. Que ce soit un logo percutant, un site web qui convertit, ou une identité visuelle complète, chaque création est pensée pour vous démarquer de la concurrence.
+                  </p>
+                  <p>
+                    Ma mission : <strong className="text-foreground">aider les entrepreneurs et créateurs du Mali et d&apos;Afrique</strong> à prendre le contrôle de leur image numérique. Je crois fermement que chaque business, même le plus modeste, mérite une identité visuelle qui inspire confiance et attire des clients.
+                  </p>
+                </div>
+                <div className="mt-6 grid grid-cols-3 gap-3">
+                  {[
+                    { number: '50+', label: 'Marques créées' },
+                    { number: '100%', label: 'Sur-mesure' },
+                    { number: '5/5', label: 'Satisfaction' },
+                  ].map((stat) => (
+                    <div key={stat.label} className="text-center p-3 rounded-lg bg-muted/50 border">
+                      <div className="text-lg font-bold text-amber-600">{stat.number}</div>
+                      <div className="text-[10px] text-muted-foreground">{stat.label}</div>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <a href="#services">
+                    <Button className="bg-amber-500 hover:bg-amber-600 text-white font-semibold">
+                      Découvrir mes services <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </a>
+                  <a href="#contact">
+                    <Button variant="outline" className="font-semibold">Me contacter</Button>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ═══ 17. FAQ ═══ */}
+        <section id="faq" className="py-16 sm:py-20 bg-muted/30">
+          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+                <MessageCircle className="h-3 w-3 mr-1" /> FAQ
+              </Badge>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Questions Fréquentes</h2>
+              <p className="mt-3 text-muted-foreground max-w-xl mx-auto">
+                Les réponses aux questions les plus posées. Si vous ne trouvez pas votre réponse, contactez-moi directement sur WhatsApp.
+              </p>
+            </div>
+            <div className="space-y-3">
+              {[
+                { q: "L'Offre Découverte est-elle vraiment 100% gratuite ?", a: "Oui, totalement. C'est ma manière de vous prouver la qualité de mon travail avant que vous ne décidiez de passer à une offre Premium payante. Aucun engagement requis, aucun frais caché." },
+                { q: "Quels sont les délais de livraison ?", a: "Les services \"Carrière Pro\" (CV, Lettres) sont livrés en moins de 24h. Pour les logos simples, comptez 48h, et pour un site web complet, entre 3 et 7 jours selon la complexité. Chaque projet a un suivi personnalisé." },
+                { q: "Puis-je demander des modifications si le résultat ne me plaît pas ?", a: "Absolument. Votre satisfaction est ma priorité. Pour l'Offre Découverte, une révision est incluse. Pour les offres Premium, les révisions sont illimitées jusqu'à ce que le résultat vous corresponde parfaitement. Je ne livre que lorsque vous êtes 100% satisfait." },
+                { q: "Pourquoi limitez-vous les commandes à 5 par jour ?", a: "Je privilégie la qualité à la quantité. Travailler avec un nombre limité de clients me permet de dédier toute mon attention et mon expertise à chaque pixel de votre projet. Le résultat : des créations qui convertissent." },
+              ].map((faq, i) => {
+                const isOpen = faqOpen === `faq-${i}`
+                return (
+                  <Card key={i} className="border-0 shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
+                    <button
+                      onClick={() => setFaqOpen(isOpen ? null : `faq-${i}`)}
+                      aria-expanded={isOpen}
+                      className="w-full flex items-center justify-between p-5 text-left"
+                    >
+                      <h3 className="font-semibold text-sm pr-4">{faq.q}</h3>
+                      <motion.div
+                        animate={{ rotate: isOpen ? 180 : 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="flex-shrink-0"
+                      >
+                        <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                      </motion.div>
+                    </button>
+                    <AnimatePresence initial={false}>
+                      {isOpen && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.25, ease: 'easeInOut' }}
+                          className="overflow-hidden"
+                        >
+                          <p className="text-sm text-muted-foreground leading-relaxed px-5 pb-5">{faq.a}</p>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </Card>
+                )
+              })}
+            </div>
+            <div className="mt-8 text-center">
+              <p className="text-sm text-muted-foreground">
+                Vous avez d&apos;autres questions ?{' '}
+                <a href="#contact" className="text-amber-600 font-medium hover:underline">Contactez-moi</a> ou écrivez-moi directement sur{' '}
+                <a href="https://wa.me/22397787244" target="_blank" rel="noopener noreferrer" className="text-emerald-600 font-medium hover:underline">WhatsApp</a>.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ═══ LEAD MAGNET — Cadeau Exclusif ═══ */}
+        <section className="py-16 sm:py-20">
+          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+            <Card className="border-0 shadow-xl overflow-hidden">
+              <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white p-8 sm:p-10 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-40 h-40 bg-amber-500/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+                <div className="absolute bottom-0 left-0 w-32 h-32 bg-emerald-500/10 rounded-full translate-y-1/2 -translate-x-1/2" />
+                <div className="relative z-10 text-center mb-8">
+                  <div className="inline-flex items-center gap-2 bg-amber-500/20 rounded-full px-4 py-1.5 text-amber-300 text-xs font-semibold mb-4 border border-amber-500/20">
+                    <Gift className="h-3.5 w-3.5" /> Cadeau Exclusif pour les Entrepreneurs
+                  </div>
+                  <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-3">
+                    10 Templates Canva <span className="text-amber-400">Gratuits</span>
+                  </h2>
+                  <p className="text-slate-300 leading-relaxed max-w-md mx-auto text-sm">
+                    <strong className="text-white">Boostez la visibilité de votre business dès aujourd&apos;hui.</strong> Rejoignez ma liste de contacts et recevez instantanément un <strong className="text-white">pack de 10 templates Canva exclusifs</strong> conçus pour les boutiques et créateurs de Bamako.
+                  </p>
+                </div>
+                <div className="relative z-10 flex flex-col sm:flex-row gap-3">
+                  <Input
+                    placeholder="Votre prénom"
+                    value={leadMagnet.name}
+                    onChange={(e) => setLeadMagnet(prev => ({ ...prev, name: e.target.value }))}
+                    className="h-11 bg-white/10 border-white/20 text-white placeholder:text-slate-500 focus:border-amber-500/50"
+                  />
+                  <Input
+                    placeholder="Votre numéro WhatsApp ou email"
+                    value={leadMagnet.contact}
+                    onChange={(e) => setLeadMagnet(prev => ({ ...prev, contact: e.target.value }))}
+                    className="h-11 bg-white/10 border-white/20 text-white placeholder:text-slate-500 focus:border-amber-500/50"
+                  />
+                  <Button
+                    onClick={() => {
+                      if (!leadMagnet.name || !leadMagnet.contact) {
+                        toast({ title: 'Champs requis', description: 'Prénom et contact sont obligatoires.', variant: 'destructive' })
+                        return
+                      }
+                      const msg = encodeURIComponent(
+                        `Bonjour Sacko ! Je souhaite recevoir le pack de 10 templates Canva gratuit.\n\nPrénom : ${leadMagnet.name}\nContact : ${leadMagnet.contact}\n\nMerci !`
+                      )
+                      window.open(`https://wa.me/22397787244?text=${msg}`, '_blank')
+                      toast({ title: 'Demande envoyée !', description: 'Vous recevrez votre pack de templates très rapidement.' })
+                      setLeadMagnet({ name: '', contact: '' })
+                    }}
+                    className="h-11 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-sm shadow-lg shadow-amber-500/25 whitespace-nowrap px-6"
+                  >
+                    <Gift className="h-4 w-4 mr-1.5" /> Recevoir mon pack
+                  </Button>
+                </div>
+                <p className="relative z-10 text-center text-[11px] text-slate-500 mt-4">
+                  Aucun spam. Uniquement des ressources et opportunités pour votre business.
+                </p>
+              </div>
+            </Card>
+          </div>
+        </section>
+
+        {/* ═══ GARANTIES ═══ */}
+        <section className="py-16 sm:py-20 bg-gradient-to-b from-muted/20 to-background">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+                <ShieldCheck className="h-3 w-3 mr-1" /> Garanties
+              </Badge>
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Mes 4 Garanties pour Vous</h2>
+              <p className="mt-3 text-muted-foreground max-w-xl mx-auto leading-relaxed">
+                Chaque projet est protégé. Voici les engagements que je prends avec chaque client, sans exception.
+              </p>
+            </div>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {[
+                {
+                  icon: ThumbsUp,
+                  title: 'Satisfaction ou Révision',
+                  desc: "Votre projet n'est pas terminé tant que vous n'êtes pas 100% satisfait. Révisions incluses.",
+                  color: 'from-emerald-400 to-teal-500',
+                  bg: 'bg-emerald-50 dark:bg-emerald-950/20',
+                },
+                {
+                  icon: Timer,
+                  title: 'Livraison dans les Délais',
+                  desc: "CV et lettres en 24h, logos en 48h, sites web en 3-7 jours. Promesse tenue.",
+                  color: 'from-amber-400 to-orange-500',
+                  bg: 'bg-amber-50 dark:bg-amber-950/20',
+                },
+                {
+                  icon: Lock,
+                  title: 'Confidentialité Totale',
+                  desc: 'Vos données, vos idées, vos fichiers restent strictement privés. Aucune partage tiers.',
+                  color: 'from-blue-400 to-indigo-500',
+                  bg: 'bg-blue-50 dark:bg-blue-950/20',
+                },
+                {
+                  icon: MessageCircle,
+                  title: 'Support WhatsApp 7j/7',
+                  desc: "Un message, une réponse. Je suis disponible pour vous accompagner même après la livraison.",
+                  color: 'from-purple-400 to-violet-500',
+                  bg: 'bg-purple-50 dark:bg-purple-950/20',
+                },
+              ].map((g) => (
+                <Card key={g.title} className={`border-0 shadow-md overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${g.bg}`}>
+                  <div className={`h-1 bg-gradient-to-r ${g.color}`} />
+                  <CardContent className="p-5 text-center">
+                    <div className={`inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${g.color} text-white shadow-lg mb-4`}>
+                      <g.icon className="h-6 w-6" />
+                    </div>
+                    <h3 className="text-sm font-extrabold mb-2">{g.title}</h3>
+                    <p className="text-xs text-muted-foreground leading-relaxed">{g.desc}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ═══ 18. CTA FINAL ═══ */}
+        <section className="py-16 sm:py-20 bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 relative overflow-hidden">
+          <div className="absolute inset-0">
+            <div className="absolute top-0 left-1/4 h-64 w-64 bg-white/10 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 right-1/4 h-64 w-64 bg-white/10 rounded-full blur-3xl" />
+          </div>
+          <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
+              Prêt à faire passer votre communication au niveau supérieur ?
+            </h2>
+            <p className="mt-4 text-lg text-white/90 max-w-2xl mx-auto leading-relaxed">
+              N&apos;attendez plus pour donner à votre entreprise l&apos;image qu&apos;elle mérite. Contactez-moi dès aujourd&apos;hui pour discuter de votre projet et obtenir un devis gratuit.
+            </p>
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <a href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20suis%20pr%C3%AAt%20%C3%A0%20lancer%20mon%20projet%20de%20communication." target="_blank" rel="noopener noreferrer">
+                <Button size="lg" className="bg-white text-amber-600 hover:bg-white/90 font-bold shadow-xl text-base px-8">
+                  <MessageCircle className="h-5 w-5 mr-2" /> Commander via WhatsApp
+                </Button>
+              </a>
+              <a href="https://wa.me/22397787244?text=Bonjour%20!%20J%27aimerais%20discuter%20de%20mon%20projet%20avec%20vous." target="_blank" rel="noopener noreferrer">
+                <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 font-semibold text-base px-8">
+                  M&apos;envoyer un message <Send className="ml-2 h-4 w-4" />
+                </Button>
+              </a>
+            </div>
+            <div className="mt-8 flex flex-col items-center gap-4">
+              <div className="flex items-center gap-5 text-white/80 text-xs font-medium">
+                <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4" /> Livraison rapide</span>
+                <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4" /> Satisfaction garantie</span>
+              </div>
+              <div className="flex items-center gap-3 text-white/70 text-xs">
+                <span className="px-3 py-1 rounded-full bg-white/15 border border-white/20 font-medium">Orange Money</span>
+                <span className="px-3 py-1 rounded-full bg-white/15 border border-white/20 font-medium">Moov Money</span>
+                <span className="px-3 py-1 rounded-full bg-white/15 border border-white/20 font-medium">Wave</span>
+                <span className="px-3 py-1 rounded-full bg-white/15 border border-white/20 font-medium">Cartes Virtuelles</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ═══ 19. CONTACT ═══ */}
+        <section id="contact" className="py-16 sm:py-20 bg-muted/30">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="grid lg:grid-cols-2 gap-12">
+              <div>
+                <Badge variant="secondary" className="mb-3">
+                  <Send className="h-3 w-3 mr-1" /> Contact
+                </Badge>
+                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Contactez-Moi</h2>
+                <p className="mt-3 text-muted-foreground leading-relaxed max-w-md">
+                  Vous avez un projet, une question ou besoin d&apos;un service ? N&apos;hésitez pas à me contacter. Je réponds rapidement.
+                </p>
+                <div className="mt-8 space-y-6">
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30">
+                      <Mail className="h-5 w-5 text-amber-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium">Email</p>
+                      <p className="text-sm text-muted-foreground">contact@createurboutique.com</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30">
+                      <Phone className="h-5 w-5 text-amber-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium">Téléphone</p>
+                      <p className="text-sm text-muted-foreground">+223 97 78 72 44</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30">
+                      <MapPin className="h-5 w-5 text-amber-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium">Localisation</p>
+                      <p className="text-sm text-muted-foreground">Bamako, Mali</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-8 flex gap-3">
+                  <a href="https://www.instagram.com/sk_designer_luxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors" aria-label="Instagram">
+                    <Instagram className="h-5 w-5 text-amber-600" />
+                  </a>
+                  <a href="https://www.facebook.com/skdesignerluxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors" aria-label="Facebook">
+                    <Facebook className="h-5 w-5 text-amber-600" />
+                  </a>
+                  <a href="https://www.tiktok.com/@sk_designer_luxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors" aria-label="TikTok">
+                    <svg className="h-5 w-5 text-amber-600" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.87a8.16 8.16 0 0 0 4.77 1.52V6.94a4.85 4.85 0 0 1-1.01-.25z" /></svg>
+                  </a>
+                </div>
+              </div>
+
+              <form onSubmit={handleSubmitContact} className="space-y-4 rounded-2xl border bg-card p-6 sm:p-8 shadow-sm">
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Nom *</Label>
+                    <Input id="name" placeholder="Votre nom" value={contactData.name} onChange={(e) => setContactData({ ...contactData, name: e.target.value })} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email *</Label>
+                    <Input id="email" type="email" placeholder="votre@email.com" value={contactData.email} onChange={(e) => setContactData({ ...contactData, email: e.target.value })} />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="subject">Sujet</Label>
+                  <Input id="subject" placeholder="Quel service vous intéresse ?" value={contactData.subject} onChange={(e) => setContactData({ ...contactData, subject: e.target.value })} />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="message">Message *</Label>
+                  <Textarea id="message" placeholder="Décrivez votre projet ou votre demande..." rows={5} value={contactData.message} onChange={(e) => setContactData({ ...contactData, message: e.target.value })} />
+                </div>
+                <Button
+                  type="submit"
+                  className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold shadow-lg shadow-amber-500/20"
+                >
+                  <span className="flex items-center gap-2">
+                    <MessageCircle className="h-4 w-4" /> Envoyer via WhatsApp
+                  </span>
+                </Button>
+              </form>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      {/* ═══ 20. FOOTER ═══ */}
+      <Footer />
+
+      {/* ═══ 21. BOTTOM MOBILE NAV ═══ */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-background/95 backdrop-blur-xl border-t border-border shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+        <div className="flex items-center justify-around h-16 px-2">
+          <a href="#accueil" className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-amber-500 transition-colors py-1 px-2">
+            <Sparkles className="h-5 w-5" />
+            <span className="text-[10px] font-medium">Accueil</span>
+          </a>
+          <a href="#services" className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-amber-500 transition-colors py-1 px-2">
+            <Layers className="h-5 w-5" />
+            <span className="text-[10px] font-medium">Services</span>
+          </a>
+          <a href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20souhaite%20discuter%20d%27un%20projet." target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-0.5 -mt-5">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 text-white shadow-lg shadow-emerald-500/30">
+              <MessageCircle className="h-6 w-6" />
+            </div>
+            <span className="text-[10px] font-semibold text-emerald-600">WhatsApp</span>
+          </a>
+          <a href="#formations" className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-amber-500 transition-colors py-1 px-2">
+            <GraduationCap className="h-5 w-5" />
+            <span className="text-[10px] font-medium">Formations</span>
+          </a>
+          <a href="#contact" className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-amber-500 transition-colors py-1 px-2">
+            <Send className="h-5 w-5" />
+            <span className="text-[10px] font-medium">Contact</span>
+          </a>
+        </div>
+      </div>
+
+      {/* ═══ WHATSAPP FLOTTANT + BACK TO TOP ═══ */}
+      <div className="fixed bottom-6 right-6 z-40 hidden lg:flex flex-col items-end gap-3">
+        {/* Back to top button - desktop only */}
+        <AnimatePresence>
+          {showBackToTop && (
+            <motion.button
+              initial={{ opacity: 0, scale: 0.5, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.5, y: 20 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 text-white shadow-lg shadow-amber-500/30 hover:shadow-xl hover:shadow-amber-500/40 transition-all duration-300 hover:scale-110"
+              aria-label="Retour en haut"
+            >
+              <ChevronUp className="h-5 w-5" />
+            </motion.button>
+          )}
+        </AnimatePresence>
+        {/* WhatsApp button - desktop only */}
+        <a
+          href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20souhaite%20discuter%20d%27un%20projet."
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500 text-white shadow-lg shadow-emerald-500/30 hover:bg-emerald-600 hover:shadow-xl hover:shadow-emerald-500/40 transition-all duration-300 hover:scale-110 group relative"
+          aria-label="Contacter sur WhatsApp"
+        >
+          <MessageCircle className="h-6 w-6" />
+          <span className="absolute -top-1 -right-1 flex h-4 w-4">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+            <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-white dark:border-background" />
+          </span>
+          <span className="absolute right-full mr-3 whitespace-nowrap rounded-lg bg-gray-900 text-white px-3 py-1.5 text-xs font-medium shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+            Me contacter sur WhatsApp
+            <span className="absolute top-1/2 -right-1 -translate-y-1/2 h-2 w-2 bg-gray-900 rotate-45" />
+          </span>
+        </a>
+      </div>
+
+      {/* Back to top button - mobile only (above bottom nav) */}
+      <AnimatePresence>
+        {showBackToTop && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.5 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="fixed bottom-20 right-4 z-40 flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 text-white shadow-lg shadow-amber-500/30 lg:hidden"
+            aria-label="Retour en haut"
+          >
+            <ChevronUp className="h-4 w-4" />
+          </motion.button>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
