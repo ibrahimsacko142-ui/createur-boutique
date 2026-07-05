@@ -63,6 +63,7 @@ import {
   Award,
   Plus,
   Users,
+  Key,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -1052,104 +1053,159 @@ export default function Home() {
           </div>
         </section>
 
-{/* ═══ SERVICES & TARIFS PAR CATÉGORIE ═══ */}
+{/* ═══ SERVICES & TARIFS — DÉCOUVERTE / PREMIUM ═══ */}
         <section id="services" className="py-20 sm:py-24">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <FadeIn className="text-center mb-10">
-              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
-                <Sparkles className="h-3 w-3 mr-1" /> Ce que je propose
-              </Badge>
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Mes Services</h2>
-              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                Découvrez comment chaque service peut transformer votre activité. Du logo qui capte l'attention au site web qui convertit, chaque création est conçue pour vous apporter des résultats concrets.
-              </p>
-            </FadeIn>
-
-            {/* Category tabs */}
-            <FadeIn delay={0.05} className="flex flex-wrap justify-center gap-2 mb-10">
-              {[
-                { key: 'all', label: 'Tous les services', icon: Layers },
-                { key: 'design', label: 'Design Graphique', icon: Palette },
-                { key: 'web', label: 'Sites Web', icon: Globe },
-                { key: 'video', label: 'Montage Vidéo', icon: MonitorPlay },
-                { key: 'outil', label: 'Outils & Ressources', icon: Wrench },
-                { key: 'formation', label: 'Formations', icon: GraduationCap },
-              ].map((cat) => (
-                <button
-                  key={cat.key}
-                  onClick={() => setServiceCategory(cat.key)}
-                  className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold transition-all duration-200 border ${
-                    serviceCategory === cat.key
-                      ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white border-transparent shadow-md shadow-amber-500/20'
-                      : 'bg-card text-muted-foreground hover:text-foreground hover:border-amber-300 dark:hover:border-amber-700'
-                  }`}
-                >
-                  <cat.icon className="h-3.5 w-3.5" /> {cat.label}
-                </button>
-              ))}
-            </FadeIn>
-
-            <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {products
-                .filter((p) => {
-                  if (serviceCategory === 'all') return true
-                  if (serviceCategory === 'design') return p.category === 'service' && ['Affiche', 'Logo', 'Contenu'].some(k => p.name.includes(k))
-                  if (serviceCategory === 'web') return p.category === 'service' && p.name.includes('Site')
-                  if (serviceCategory === 'video') return p.category === 'service' && p.name.includes('Vidéo')
-                  if (serviceCategory === 'outil') return p.category === 'outil'
-                  if (serviceCategory === 'formation') return p.name.includes('Formation')
-                  return true
-                })
-                .map((product) => {
-                  const iconMap: Record<string, React.ElementType> = {
-                    'Formation Designer Graphique': Palette, 'Affiche Professionnelle': PenTool, 'Logo Professionnel': Sparkles,
-                    'Site Web Simple': Globe, 'Site Web Professionnel': Globe, 'Montage Vidéo Pro': MonitorPlay,
-                    'Contenu Réseaux Sociaux': Target, 'CapCut Pro': MonitorPlay, 'PicsArt Pro': PenTool,
-                    'IPTV Pro': Tv, 'Livres Professionnels': BookOpen, 'Canva Pro': Palette,
-                  }
-                  return <ServiceCard key={product.id} product={product} icon={iconMap[product.name] || Zap} />
-                })
-              }
-            </StaggerContainer>
-          </div>
-        </section>
-
-        {/* ═══ OUTILS & RESSOURCES ═══ */}
-        <section className="py-16 sm:py-20 bg-muted/30">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
             <FadeIn className="text-center mb-12">
-              <Badge variant="secondary" className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200">
-                <Zap className="h-3 w-3 mr-1" /> Disponibles
+              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+                <Sparkles className="h-3 w-3 mr-1" /> Tarifs
               </Badge>
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Outils & Ressources</h2>
-              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
-                Accédez aux meilleurs outils numériques et ressources professionnelles pour booster votre productivité.
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Mes Services</h2>
+              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                Chaque service existe en deux formules : testez gratuitement avec l&apos;Offre Découverte, puis passez au Premium pour un résultat professionnel complet.
               </p>
+              <div className="flex items-center justify-center gap-6 mt-5 text-xs">
+                <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-emerald-500" /> Découverte = Gratuit</span>
+                <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-amber-500" /> Premium = Sur devis via WhatsApp</span>
+              </div>
             </FadeIn>
 
-            <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-              {loading
-                ? Array.from({ length: 4 }).map((_, i) => (
-                    <Card key={i} className="overflow-hidden border-0 shadow-md">
-                      <Skeleton className="aspect-[4/3] w-full" />
-                      <CardContent className="p-4 space-y-2">
-                        <Skeleton className="h-4 w-3/4" />
-                        <Skeleton className="h-3 w-full" />
-                        <Skeleton className="h-5 w-1/3 mt-2" />
-                      </CardContent>
-                    </Card>
-                  ))
-                : outils.map((product) => {
-                    const iconMap: Record<string, React.ElementType> = {
-                      'CapCut Pro': MonitorPlay,
-                      'PicsArt Pro': PenTool,
-                      'IPTV Pro': Tv,
-                      'Livres Professionnels': BookOpen,
-                    }
-                    return <ServiceCard key={product.id} product={product} icon={iconMap[product.name] || Zap} />
-                  })
-              }
-            </StaggerContainer>
+            <div className="space-y-8">
+              {[
+                {
+                  cat: 'Design Graphique',
+                  icon: Palette,
+                  color: 'from-pink-500 to-rose-500',
+                  borderColor: 'border-pink-200 dark:border-pink-800',
+                  decouverte: {
+                    title: 'Offre Découverte — Gratuit',
+                    desc: 'Un logo simple pour démarrer. Texte stylisé + icône basique, 2 propositions au choix, 1 révision incluse. Idéal pour tester notre style avant de vous engager.',
+                  },
+                  premium: {
+                    title: 'Offre Premium',
+                    desc: 'Logo professionnel vectorisé, décliné en couleur et noir/blanc, charte graphique complète (couleurs, typographies), fichiers sources livrés (AI, PSD, PNG haute résolution), révisions illimitées jusqu\'à satisfaction.',
+                  },
+                },
+                {
+                  cat: 'Développement Web',
+                  icon: Globe,
+                  color: 'from-blue-500 to-indigo-500',
+                  borderColor: 'border-blue-200 dark:border-blue-800',
+                  decouverte: {
+                    title: 'Offre Découverte — Gratuite',
+                    desc: 'Une landing page 1 page, responsive (mobile/ordinateur), pour présenter votre activité en ligne rapidement.',
+                  },
+                  premium: {
+                    title: 'Offre Premium',
+                    desc: 'Site multi-pages sur mesure, formulaire de contact fonctionnel, déploiement et hébergement inclus, nom de domaine personnalisé, maintenance mensuelle disponible en option.',
+                  },
+                },
+                {
+                  cat: 'Montage Vidéo',
+                  icon: MonitorPlay,
+                  color: 'from-purple-500 to-violet-500',
+                  borderColor: 'border-purple-200 dark:border-purple-800',
+                  decouverte: {
+                    title: 'Offre Découverte — Gratuite',
+                    desc: 'Montage court (moins d\'une minute), coupe simple sans effets avancés. Parfait pour un aperçu rapide.',
+                  },
+                  premium: {
+                    title: 'Offre Premium',
+                    desc: 'Montage complet avec effets visuels, sous-titres, musique libre de droits, export optimisé pour réseaux sociaux ou YouTube.',
+                  },
+                },
+                {
+                  cat: 'Formation',
+                  icon: GraduationCap,
+                  color: 'from-emerald-500 to-teal-500',
+                  borderColor: 'border-emerald-200 dark:border-emerald-800',
+                  decouverte: {
+                    title: 'Offre Découverte — Gratuite',
+                    desc: 'Session d\'initiation de 30 minutes pour découvrir nos outils et méthodes.',
+                  },
+                  premium: {
+                    title: 'Offre Premium',
+                    desc: 'Parcours de formation complet avec suivi personnalisé, support après formation, et certificat de participation.',
+                  },
+                },
+              ].map((section, idx) => (
+                <FadeIn key={section.cat} delay={idx * 0.05}>
+                  <Card className={`border ${section.borderColor} overflow-hidden`}>
+                    <div className={`h-1.5 bg-gradient-to-r ${section.color}`} />
+                    <CardContent className="p-5 sm:p-7">
+                      {/* Category header */}
+                      <div className="flex items-center gap-3 mb-5">
+                        <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${section.color} text-white shadow-lg`}>
+                          <section.icon className="h-5 w-5" />
+                        </div>
+                        <h3 className="text-lg font-extrabold">{section.cat}</h3>
+                      </div>
+
+                      <div className="grid sm:grid-cols-2 gap-4">
+                        {/* Découverte */}
+                        <div className="rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-950/20 p-4 sm:p-5">
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-white text-xs font-bold">✓</span>
+                            <h4 className="text-sm font-bold text-emerald-700 dark:text-emerald-400">{section.decouverte.title}</h4>
+                          </div>
+                          <p className="text-xs text-muted-foreground leading-relaxed mb-4">{section.decouverte.desc}</p>
+                          <a
+                            href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je veux l'Offre Découverte : ${section.cat}. C'est gratuit, je veux tester !`)}`}
+                            target="_blank" rel="noopener noreferrer"
+                          >
+                            <Button variant="outline" className="w-full border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 font-semibold text-xs h-10">
+                              <Gift className="h-3.5 w-3.5 mr-1.5" /> Essayer gratuitement
+                            </Button>
+                          </a>
+                        </div>
+
+                        {/* Premium */}
+                        <div className="rounded-xl border border-amber-200 dark:border-amber-800 bg-amber-50/50 dark:bg-amber-950/20 p-4 sm:p-5">
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-amber-500 to-orange-500 text-white text-xs font-bold">★</span>
+                            <h4 className="text-sm font-bold text-amber-700 dark:text-amber-400">{section.premium.title}</h4>
+                          </div>
+                          <p className="text-xs text-muted-foreground leading-relaxed mb-4">{section.premium.desc}</p>
+                          <a
+                            href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je suis intéressé(e) par l'Offre Premium : ${section.cat}. Pouvez-vous me donner un devis ?`)}`}
+                            target="_blank" rel="noopener noreferrer"
+                          >
+                            <Button className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-10 shadow-md shadow-amber-500/20">
+                              <Rocket className="h-3.5 w-3.5 mr-1.5" /> Passer au Premium
+                            </Button>
+                          </a>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </FadeIn>
+              ))}
+
+              {/* Comptes premium — bandeau spécial */}
+              <FadeIn delay={0.25}>
+                <Card className="border-0 shadow-lg overflow-hidden">
+                  <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white p-5 sm:p-7">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 shadow-lg flex-shrink-0">
+                        <Key className="h-5 w-5 text-white" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-bold text-base mb-1">Comptes Premium (Canva Pro, CapCut Pro, etc.)</h3>
+                        <p className="text-sm text-slate-300 leading-relaxed">Accès à des outils professionnels à tarif réduit — pas de version gratuite, mais essai limité disponible sur demande.</p>
+                      </div>
+                      <a
+                        href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20avoir%20un%20compte%20premium%20(Canva%20Pro%2C%20CapCut%20Pro%2C%20etc.)."
+                        target="_blank" rel="noopener noreferrer" className="flex-shrink-0"
+                      >
+                        <Button variant="outline" className="border-white/20 text-white hover:bg-white/10 font-semibold text-xs h-10 whitespace-nowrap">
+                          Demander un essai <ArrowRight className="h-3.5 w-3.5 ml-1.5" />
+                        </Button>
+                      </a>
+                    </div>
+                  </div>
+                </Card>
+              </FadeIn>
+            </div>
           </div>
         </section>
 
