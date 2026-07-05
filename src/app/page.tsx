@@ -74,6 +74,7 @@ import { useToast } from '@/hooks/use-toast'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import AdBanner from '@/components/AdBanner'
+import WhatsAppGenerator from '@/components/WhatsAppGenerator'
 import {
   Dialog,
   DialogContent,
@@ -2193,6 +2194,24 @@ export default function Home() {
                 </motion.div>
               ))}
             </StaggerContainer>
+          </div>
+        </section>
+
+        {/* ═══ GÉNÉRATEUR WhatsApp IA ═══ */}
+        <section id="generateur" className="py-16 sm:py-20">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+            <FadeIn className="text-center mb-10">
+              <Badge variant="secondary" className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200">
+                <Zap className="h-3 w-3 mr-1" /> Outil IA
+              </Badge>
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Générateur de Messages WhatsApp</h2>
+              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                Créez des messages WhatsApp professionnels en un clic. Choisissez le type, le ton — l&apos;IA rédige pour vous. Gratuit, rapide, efficace.
+              </p>
+            </FadeIn>
+            <FadeIn delay={0.1}>
+              <WhatsAppGenerator />
+            </FadeIn>
           </div>
         </section>
 

@@ -18,6 +18,7 @@ const navLinks = [
   { label: 'Témoignages', href: '#temoignages' },
   { label: 'FAQ', href: '#faq' },
   { label: 'Guides', href: '#blog' },
+  { label: 'Générateur IA', href: '#generateur' },
   { label: 'Contact', href: '#contact' },
 ]
 
