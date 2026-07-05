@@ -10,6 +10,7 @@ const navLinks = [
   { label: 'Accueil', href: '#accueil' },
   { label: 'Services', href: '#services' },
   { label: 'Résultats', href: '#ce-que-vous-obtenez' },
+  { label: 'Carrière Pro', href: '#carriere-pro' },
   { label: 'Portfolio', href: '#portfolio' },
   { label: 'Inscription', href: '#inscription' },
   { label: 'Espace Client', href: '#espace-client' },

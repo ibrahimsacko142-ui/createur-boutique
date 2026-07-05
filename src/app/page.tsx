@@ -916,6 +916,136 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ═══ CARRIÈRE PRO — OFFRE À LA CARTE ═══ */}
+        <section id="carriere-pro" className="py-16 sm:py-20 bg-gradient-to-b from-slate-900 via-slate-900 to-background text-white relative overflow-hidden">
+          <div className="absolute inset-0">
+            <div className="absolute top-20 left-10 h-72 w-72 bg-blue-500/10 rounded-full blur-3xl" />
+            <div className="absolute bottom-20 right-10 h-72 w-72 bg-purple-500/10 rounded-full blur-3xl" />
+          </div>
+          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <FadeIn className="text-center mb-12">
+              <Badge className="mb-3 bg-blue-500/20 text-blue-300 border-blue-500/30 hover:bg-blue-500/30">
+                <GraduationCap className="h-3 w-3 mr-1" /> Carrière Pro
+              </Badge>
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Offre à la Carte</h2>
+              <p className="mt-3 text-slate-400 max-w-xl mx-auto">
+                5 services clés pour booster votre employabilité. Chaque prestation est livrée sous 24h.
+              </p>
+            </FadeIn>
+
+            <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
+              {[
+                {
+                  icon: PenTool,
+                  name: 'Plume Pro',
+                  sub: 'Lettre de motivation',
+                  price: '800',
+                  hook: 'La lettre qui donne envie de lire votre CV.',
+                  color: 'from-blue-500 to-cyan-500',
+                },
+                {
+                  icon: FileCheck,
+                  name: 'Relooking CV',
+                  sub: 'Refonte de CV',
+                  price: '700',
+                  hook: 'Votre parcours, une nouvelle vitrine.',
+                  color: 'from-emerald-500 to-teal-500',
+                },
+                {
+                  icon: Building2,
+                  name: 'Impact LinkedIn',
+                  sub: 'Profil LinkedIn',
+                  price: '2 000',
+                  hook: 'Le profil que les recruteurs remarquent en premier.',
+                  color: 'from-indigo-500 to-purple-500',
+                },
+                {
+                  icon: Target,
+                  name: 'Objectif Entretien',
+                  sub: 'Préparation entretien',
+                  price: '500',
+                  hook: "Les questions pièges de votre secteur, décortiquées.",
+                  color: 'from-amber-500 to-orange-500',
+                },
+                {
+                  icon: BadgeCheck,
+                  name: 'Réseautage Pro',
+                  sub: 'Carte de visite',
+                  price: '1 500',
+                  hook: 'Un premier contact, une impression durable.',
+                  color: 'from-rose-500 to-pink-500',
+                },
+              ].map((s) => (
+                <motion.div key={s.name} variants={cardVariants}>
+                  <Card className="h-full bg-white/5 border border-white/10 backdrop-blur-sm hover:border-white/20 transition-all duration-300 group hover:-translate-y-1">
+                    <CardContent className="p-6">
+                      <div className="flex items-start justify-between mb-4">
+                        <div className={`flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br ${s.color} text-white shadow-lg`}>
+                          <s.icon className="h-5 w-5" />
+                        </div>
+                        <span className="text-xl font-extrabold text-white">{s.price} <span className="text-xs font-normal text-slate-400">FCFA</span></span>
+                      </div>
+                      <h3 className="text-lg font-bold text-white">{s.name}</h3>
+                      <p className="text-xs text-slate-500 mb-2">{s.sub}</p>
+                      <p className="text-sm text-slate-300 leading-relaxed mb-4">{s.hook}</p>
+                      <a
+                        href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je souhaite commander : ${s.name} (${s.sub}) — ${s.price} FCFA.`)}`}
+                        target="_blank" rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-sm font-semibold text-amber-400 hover:text-amber-300 transition-colors group-hover:gap-2.5"
+                      >
+                        Commander <ArrowRight className="h-3.5 w-3.5" />
+                      </a>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </StaggerContainer>
+
+            {/* ── PACK LANCEMENT CARRIÈRE ── */}
+            <FadeIn delay={0.2}>
+              <Card className="border-2 border-amber-400/40 bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-red-500/10 backdrop-blur-sm overflow-hidden relative">
+                <div className="absolute top-0 right-0 w-40 h-40 bg-amber-500/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+                <CardContent className="p-6 sm:p-8 relative z-10">
+                  <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-10">
+                    <div className="flex-1 text-center lg:text-left">
+                      <Badge className="mb-3 bg-amber-500/20 text-amber-300 border-amber-500/30">
+                        <Trophy className="h-3 w-3 mr-1" /> Pack Lancement Carrière
+                      </Badge>
+                      <h3 className="text-2xl sm:text-3xl font-extrabold text-white mb-3">CV Premium + Lettre + LinkedIn + Guide entretien</h3>
+                      <p className="text-slate-300 leading-relaxed mb-2">
+                        <span className="bg-amber-500/20 text-amber-300 text-xs font-bold px-2 py-0.5 rounded mr-1">Guide entretien offert</span>
+                        Tout ce qu'il faut pour candidater sans stress — et sans mauvaise surprise.
+                      </p>
+                      <div className="flex items-baseline gap-3 mt-4">
+                        <span className="text-xl text-slate-500 line-through">4 800 FCFA</span>
+                        <span className="text-3xl font-extrabold text-white">3 500 FCFA</span>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-center gap-3 flex-shrink-0">
+                      <a
+                        href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20veux%20le%20Pack%20Lancement%20Carri%C3%A8re%20%C3%A0%203%20500%20FCFA."
+                        target="_blank" rel="noopener noreferrer"
+                      >
+                        <Button size="lg" className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-xl shadow-amber-500/25 px-8 whitespace-nowrap">
+                          <MessageCircle className="h-5 w-5 mr-2" /> Prendre le Pack
+                        </Button>
+                      </a>
+                      <span className="text-[10px] text-slate-500">Économie de 1 300 FCFA</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </FadeIn>
+
+            {/* ── RARÉTÉ ── */}
+            <FadeIn delay={0.3} className="mt-6 text-center">
+              <p className="text-sm text-slate-400">
+                Qualité avant quantité : <span className="text-white font-bold">5 commandes/jour maximum</span>. Places restantes aujourd'hui : <span className="inline-flex items-center gap-1.5 text-amber-400 font-bold"><span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />2/5</span>
+              </p>
+            </FadeIn>
+          </div>
+        </section>
+
 {/* ═══ SERVICES & TARIFS PAR CATÉGORIE ═══ */}
         <section id="services" className="py-20 sm:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -2438,6 +2568,13 @@ export default function Home() {
                       <option value="Formation E-commerce — Gratuit">Formation E-commerce — Gratuit</option>
                       <option value="Formation en Maintenance Informatique — Gratuit">Formation en Maintenance Informatique — Gratuit</option>
                       <option value="Formation en Hacking et Sécurité Informatique — Gratuit">Formation en Hacking et Sécurité Informatique — Gratuit</option>
+                      <option disabled className="font-semibold text-muted-foreground">── Carrière Pro ──</option>
+                      <option value="Plume Pro (Lettre de motivation) — 800 FCFA">Plume Pro (Lettre de motivation) — 800 FCFA</option>
+                      <option value="Relooking CV — 700 FCFA">Relooking CV — 700 FCFA</option>
+                      <option value="Impact LinkedIn — 2 000 FCFA">Impact LinkedIn — 2 000 FCFA</option>
+                      <option value="Objectif Entretien — 500 FCFA">Objectif Entretien — 500 FCFA</option>
+                      <option value="Réseautage Pro (Carte de visite) — 1 500 FCFA">Réseautage Pro (Carte de visite) — 1 500 FCFA</option>
+                      <option value="Pack Lancement Carrière — 3 500 FCFA">Pack Lancement Carrière — 3 500 FCFA</option>
                     </select>
                   </div>
                   <div className="grid sm:grid-cols-2 gap-4">
