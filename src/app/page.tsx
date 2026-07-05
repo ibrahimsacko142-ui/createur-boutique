@@ -202,7 +202,7 @@ export default function Home() {
   useEffect(() => {
     const timer = setTimeout(() => {
       toast({
-        title: 'Bienvenue chez SK Designer Luxe !',
+        title: 'Bienvenue chez Studio Créatif !',
         description: 'Découvrez mes services — tous actuellement gratuits !',
       })
     }, 2000)
@@ -311,7 +311,7 @@ export default function Home() {
                 <div className="relative">
                   <div className="absolute -inset-4 bg-gradient-to-r from-amber-400/20 via-orange-400/20 to-red-400/20 rounded-3xl blur-2xl" />
                   <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/20">
-                    <img src="/demo-photo.png" alt="SK Designer Luxe - Studio Créatif" className="w-full h-[420px] object-cover" />
+                    <img src="/demo-photo.png" alt="Studio Créatif - Sacko" className="w-full h-[420px] object-cover" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                     <div className="absolute bottom-0 left-0 right-0 p-6">
                       <div className="flex gap-2 flex-wrap">
@@ -360,7 +360,7 @@ export default function Home() {
                 { label: 'Canva Pro', icon: Layers },
                 { label: 'CapCut Pro', icon: Scissors },
               ].map((s) => (
-                <a key={s.label} href="#services" className="flex-shrink-0 flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl bg-muted/50 hover:bg-muted transition-colors">
+                <a key={s.label} href="#services" className="flex-shrink-0 flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl bg-muted/50 hover:bg-muted hover:-translate-y-0.5 hover:shadow-md transition-all duration-300">
                   <s.icon className="h-5 w-5 text-amber-500" />
                   <span className="text-xs font-medium">{s.label}</span>
                 </a>
@@ -705,11 +705,11 @@ export default function Home() {
           <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <Badge className="mb-3 bg-amber-500/20 text-amber-300 border-amber-500/30 hover:bg-amber-500/30">
-                <GraduationCap className="h-3 w-3 mr-1" /> Formations
+                <GraduationCap className="h-3 w-3 mr-1" /> Expertise & Formations
               </Badge>
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Formations Disponibles</h2>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Formations dispensées par un <span className="text-amber-400">Expert Actif</span></h2>
               <p className="mt-4 text-slate-300 max-w-2xl mx-auto leading-relaxed">
-                J&apos;aide les entrepreneurs, étudiants et créateurs à développer leurs compétences digitales avec des formations modernes et accessibles. Chaque formation est conçue pour vous donner des compétences pratiques et immédiatement applicables.
+                Je ne suis pas un simple formateur théorique. Chaque formation est issue de mon expérience terrain à Bamako : vrais projets, vrais clients, vrais revenus. J&apos;aide les entrepreneurs, étudiants et créateurs à développer des compétences immédiatement rentables, avec un suivi personnalisé et des outils professionnels inclus.
               </p>
             </div>
 
@@ -753,7 +753,7 @@ export default function Home() {
                     key={i}
                     href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je suis intéressé(e) par la formation : ${form.text}. Pouvez-vous me donner plus de détails ?`)}`}
                     target="_blank" rel="noopener noreferrer"
-                    className="group flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-emerald-500/40 transition-all duration-300 cursor-pointer"
+                    className="group flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-emerald-500/40 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-emerald-500/5 transition-all duration-300 cursor-pointer"
                   >
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/5 flex-shrink-0">
                       <form.icon className="h-4 w-4 text-slate-400 group-hover:text-emerald-400 transition-colors" />
@@ -787,7 +787,7 @@ export default function Home() {
               <Badge className="mb-3 bg-purple-500/20 text-purple-300 border-purple-500/30 hover:bg-purple-500/30">
                 <Users className="h-3 w-3 mr-1" /> Collectif
               </Badge>
-              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Collectif SK Designer Luxe</h2>
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Collectif Studio Créatif</h2>
               <p className="mt-3 text-slate-400 max-w-xl mx-auto">
                 Rejoins une communauté d&apos;entrepreneurs et créateurs qui s&apos;entraident, partagent des opportunités et grandissent ensemble. Accès illimité aux ressources, formations exclusives et soutien personnalisé.
               </p>
@@ -800,7 +800,7 @@ export default function Home() {
                 { icon: FolderDown, text: 'Templates & ressources premium' },
                 { icon: Users, text: 'Réseau de +200 entrepreneurs' },
               ].map((b, i) => (
-                <div key={i} className="flex items-center gap-3 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                <div key={i} className="flex items-center gap-3 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-500/5 transition-all duration-300">
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-500/20 flex-shrink-0">
                     <b.icon className="h-4 w-4 text-purple-400" />
                   </div>
@@ -892,7 +892,7 @@ export default function Home() {
                   { title: 'Affiche Événement', before: 'https://sfile.chatglm.cn/images-ppt/d2c6b53ee01b.jpg', after: 'https://sfile.chatglm.cn/images-ppt/d247ebeec9b2.jpg', desc: 'Affiche simple devenue visuel professionnel' },
                   { title: 'Identité Complète', before: 'https://sfile.chatglm.cn/images-ppt/6c9261ec8848.jpg', after: 'https://sfile.chatglm.cn/images-ppt/0c5c9b1b948b.jpg', desc: "De l'amateur au professionnalisme total" },
                 ].map((item, i) => (
-                  <Card key={i} className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+                  <Card key={i} className="overflow-hidden border-0 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                     <CardContent className="p-4 space-y-3">
                       <BeforeAfterSlider before={item.before} after={item.after} title={item.title} />
                       <h4 className="font-bold text-sm">{item.title}</h4>
@@ -1182,14 +1182,14 @@ export default function Home() {
                 {/* Photo de Sacko */}
                 <div className="relative">
                   <div className="relative rounded-2xl overflow-hidden shadow-2xl border">
-                    <img src="/demo-photo.png" alt="Sacko - SK Designer Luxe" className="w-full h-72 sm:h-80 object-cover" />
+                    <img src="/demo-photo.png" alt="Sacko - Studio Créatif" className="w-full h-72 sm:h-80 object-cover" />
                     <div className="absolute inset-0 bg-gradient-to-t from-amber-900/80 via-amber-900/20 to-transparent" />
                     <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
                       <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm mb-2">
                         <Palette className="h-6 w-6" />
                       </div>
                       <h3 className="text-xl font-bold">Sacko</h3>
-                      <p className="mt-0.5 text-white/80 text-sm">SK Designer Luxe &bull; Bamako, Mali</p>
+                      <p className="mt-0.5 text-white/80 text-sm">Studio Créatif &bull; Bamako, Mali</p>
                     </div>
                   </div>
                   <div className="absolute -bottom-4 -right-4 bg-white dark:bg-card rounded-xl p-4 shadow-xl border hidden sm:block">
@@ -1282,7 +1282,7 @@ export default function Home() {
               {[
                 { q: "L'Offre Découverte est-elle vraiment 100% gratuite ?", a: "Oui, totalement. C'est ma manière de vous prouver la qualité de mon travail avant que vous ne décidiez de passer à une offre Premium payante. Aucun engagement requis, aucun frais caché." },
                 { q: "Quels sont les délais de livraison ?", a: "Les services \"Carrière Pro\" (CV, Lettres) sont livrés en moins de 24h. Pour les logos simples, comptez 48h, et pour un site web complet, entre 3 et 7 jours selon la complexité. Chaque projet a un suivi personnalisé." },
-                { q: "Comment se déroule le paiement pour les offres payantes ?", a: "Pour vous faciliter la tâche, j'accepte les paiements locaux et sécurisés : Orange Money, Moov Money, Wave, ainsi que les cartes virtuelles. Simple, rapide et adapté à vos habitudes." },
+                { q: "Puis-je demander des modifications si le résultat ne me plaît pas ?", a: "Absolument. Votre satisfaction est ma priorité. Pour l'Offre Découverte, une révision est incluse. Pour les offres Premium, les révisions sont illimitées jusqu'à ce que le résultat vous corresponde parfaitement. Je ne livre que lorsque vous êtes 100% satisfait." },
                 { q: "Pourquoi limitez-vous les commandes à 5 par jour ?", a: "Je privilégie la qualité à la quantité. Travailler avec un nombre limité de clients me permet de dédier toute mon attention et mon expertise à chaque pixel de votre projet. Le résultat : des créations qui convertissent." },
               ].map((faq, i) => {
                 const isOpen = faqOpen === `faq-${i}`

@@ -14,11 +14,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SK Designer Luxe — Design Graphique, Sites Web & Solutions Numériques à Bamako | Sacko",
+  title: "Studio Créatif — Design Graphique, Sites Web & Solutions Numériques à Bamako | Sacko",
   description:
-    "SK Designer Luxe par Sacko : votre partenaire digital premium à Bamako, Mali. Design graphique professionnel, création de logos, sites web, montage vidéo, outils numériques (CapCut Pro, PicsArt Pro, IPTV Pro). Paiement Wave. Livraison rapide 24h.",
+    "Studio Créatif par Sacko : votre studio créatif premium à Bamako, Mali. Design graphique professionnel, création de logos, sites web, montage vidéo, outils numériques (CapCut Pro, PicsArt Pro, IPTV Pro). Paiement Wave, Orange Money, Moov Money. Livraison rapide 24h.",
   keywords: [
-    "SK Designer Luxe",
+    "Studio Créatif",
     "Sacko",
     "design Mali",
     "SK Designer",
@@ -44,8 +44,8 @@ export const metadata: Metadata = {
     'google-adsense-account': 'ca-pub-5792648101445233',
   },
   openGraph: {
-    title: "SK Designer Luxe — Design & Digital Premium à Bamako | Sacko",
-    description: "SK Designer Luxe par Sacko — Services professionnels de design graphique, sites web, montage vidéo et outils numériques. L'excellence du design digital en Afrique.",
+    title: "Studio Créatif — Design & Digital Premium à Bamako | Sacko",
+    description: "Studio Créatif par Sacko — Services professionnels de design graphique, sites web, montage vidéo et outils numériques. L'excellence du design digital en Afrique.",
     locale: "fr_ML",
     type: "website",
   },

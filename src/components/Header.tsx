@@ -111,7 +111,7 @@ export default function Header() {
             S
           </div>
           <span className="text-xl font-bold tracking-tight">
-            SK <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">Designer Luxe</span>
+            Studio <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">Créatif</span>
           </span>
         </a>
 

@@ -38,11 +38,11 @@ export default function Footer() {
                 S
               </div>
               <span className="text-lg font-bold">
-                SK <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">Designer Luxe</span>
+                Studio <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">Créatif</span>
               </span>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Votre partenaire digital de confiance à Bamako. Design graphique, création de sites web, montage vidéo et outils numériques professionnels. Qualité, Créativité, Satisfaction.
+              Votre studio créatif de confiance à Bamako. Design graphique, sites web, montage vidéo, formations et solutions numériques sur-mesure. Expertise, Créativité, Excellence.
             </p>
             <div className="flex gap-2.5 pt-1">
               <a href="https://www.instagram.com/sk_designer_luxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted hover:bg-amber-100 dark:hover:bg-amber-900/30 hover:text-amber-500 transition-all group" aria-label="Instagram">
@@ -122,9 +122,27 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 border-t pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        {/* Modes de paiement acceptés */}
+        <div className="mt-8 pt-6 border-t">
+          <h3 className="text-xs font-semibold uppercase tracking-wider mb-3 text-center">Paiements sécurisés acceptés</h3>
+          <div className="flex flex-wrap items-center justify-center gap-2.5">
+            {[
+              { label: 'Orange Money', color: 'bg-orange-500' },
+              { label: 'Moov Money', color: 'bg-blue-500' },
+              { label: 'Wave', color: 'bg-sky-500' },
+              { label: 'Cartes Virtuelles', color: 'bg-violet-500' },
+            ].map((p) => (
+              <span key={p.label} className="inline-flex items-center gap-1.5 rounded-full bg-muted border px-3 py-1.5 text-[11px] font-medium text-muted-foreground">
+                <span className={`h-2 w-2 rounded-full ${p.color}`} />
+                {p.label}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-8 border-t pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-muted-foreground flex items-center gap-1">
-            &copy; {new Date().getFullYear()} SK Designer Luxe. Tous droits réservés. Fait avec <Heart className="h-3 w-3 text-red-500 fill-red-500" /> à Bamako, Mali.
+            &copy; {new Date().getFullYear()} Studio Créatif. Tous droits réservés. Fait avec <Heart className="h-3 w-3 text-red-500 fill-red-500" /> à Bamako, Mali.
           </p>
           <div className="flex items-center gap-4 text-xs text-muted-foreground">
             <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20consulter%20vos%20mentions%20l%C3%A9gales." target="_blank" rel="noopener noreferrer" className="hover:text-amber-600 transition-colors">Mentions légales</a>

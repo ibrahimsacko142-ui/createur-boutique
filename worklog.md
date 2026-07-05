@@ -25,3 +25,29 @@ Stage Summary:
 - Footer avec CTA WhatsApp intégré
 - SEO optimisé pour Bamako/Mali/design digital
 - Build propre, zéro erreur
+---
+Task ID: 1
+Agent: Main Agent
+Task: Renommer le site de "SK Designer Luxe" à "Studio Créatif" + ajouter Lead Magnet, FAQ, paiement footer, hover animations, expertise formations
+
+Work Log:
+- Renamed "SK Designer Luxe" to "Studio Créatif" across all source files (Header, Footer, Layout metadata, Page)
+- Updated FAQ: replaced Q3 (payment) with "Puis-je demander des modifications si le résultat ne me plaît pas ?"
+- Added hover micro-animations (hover:-translate-y-0.5, hover:shadow-lg, transition-all duration-300) on:
+  - Quick access bar items
+  - Formation compact cards (emerald glow)
+  - Collectif benefit cards (purple glow)
+  - Avant/Après slider cards
+- Added payment methods section in Footer (Orange Money, Moov Money, Wave, Cartes Virtuelles) with colored dots
+- Improved Formations section heading: "Expertise & Formations" + "Formations dispensées par un Expert Actif"
+- Updated formation description text with expertise positioning (terrain experience, real projects, real revenue)
+- Updated Footer brand description to include "Expertise, Créativité, Excellence"
+- Updated layout.tsx metadata (title, description, keywords, OG tags) for "Studio Créatif"
+- Verified zero remaining references to "SK Designer Luxe" or "Créateur Boutique" in /src
+- Build successful: next build compiled without errors
+
+Stage Summary:
+- All 5 tasks completed: name change, FAQ update, hover animations, payment footer, expertise positioning
+- Site brand is now "Studio Créatif" everywhere
+- Footer now displays payment methods prominently
+- All interactive cards have consistent luxury hover effects
