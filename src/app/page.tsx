@@ -403,7 +403,6 @@ export default function Home() {
 
         {/* ═══ 4. STATISTIQUES ═══ */}
         <section className="py-12 sm:py-16 bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 relative overflow-hidden">
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIxIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMSkiLz48L3N2Zz4=')] opacity-50" />
           <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-10">
               <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">Ce que je fais, en chiffres</h2>
@@ -662,7 +661,7 @@ export default function Home() {
                 { icon: Target, name: 'Objectif Entretien', sub: 'Préparation entretien', price: '500', hook: "Les questions pièges de votre secteur, décortiquées.", color: 'from-amber-500 to-orange-500' },
                 { icon: BadgeCheck, name: 'Réseautage Pro', sub: 'Carte de visite', price: '1 500', hook: 'Un premier contact, une impression durable.', color: 'from-rose-500 to-pink-500' },
               ].map((s) => (
-                <Card key={s.name} className="h-full bg-white/5 border border-white/10 backdrop-blur-sm hover:border-white/20 transition-all duration-300 hover:-translate-y-0.5">
+                <Card key={s.name} className="h-full bg-white/[0.07] border border-white/10 hover:border-white/20 transition-all duration-300 hover:-translate-y-0.5">
                   <CardContent className="p-6">
                     <div className="flex items-start justify-between mb-4">
                       <div className={`flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br ${s.color} text-white shadow-lg`}>
@@ -686,7 +685,7 @@ export default function Home() {
             </div>
 
             {/* Pack Lancement Carrière */}
-            <Card className="border-2 border-amber-400/40 bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-red-500/10 backdrop-blur-sm overflow-hidden relative">
+            <Card className="border-2 border-amber-400/40 bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-red-500/10 overflow-hidden relative">
               <div className="absolute top-0 right-0 w-40 h-40 bg-amber-500/10 rounded-full -translate-y-1/2 translate-x-1/2" />
               <CardContent className="p-6 sm:p-8 relative z-10">
                 <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-10">
@@ -836,7 +835,7 @@ export default function Home() {
                   href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je suis intéressé(e) par la formation : ${form.text} (${form.price} FCFA). Comment y accéder ?`)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group relative rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:border-amber-400/50 transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/10 cursor-pointer overflow-hidden"
+                  className="group relative rounded-2xl bg-white/[0.07] border border-white/10 hover:border-amber-400/50 transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/10 cursor-pointer overflow-hidden"
                 >
                   <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full -translate-y-1/2 translate-x-1/2" />
                   <div className="relative p-5 sm:p-6">
@@ -937,7 +936,7 @@ export default function Home() {
               ))}
             </div>
 
-            <Card className="border-2 border-purple-400/30 bg-purple-500/10 backdrop-blur-sm overflow-hidden">
+            <Card className="border-2 border-purple-400/30 bg-purple-500/10 overflow-hidden">
               <CardContent className="p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
                 <div className="text-center sm:text-left">
                   <p className="text-sm text-slate-300 mb-1">Abonnement mensuel</p>
@@ -1114,9 +1113,8 @@ export default function Home() {
 
             <Card className="border-0 shadow-xl overflow-hidden">
               <div className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 p-1">
-                <div className="bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-600 text-white p-6 sm:p-8 relative overflow-hidden">
-                  <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIzMCIgY3k9IjMwIiByPSIxLjUiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wOCkiLz48L3N2Zz4=')] opacity-50" />
-                  <div className="relative z-10 text-center">
+                <div className="bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-600 text-white p-6 sm:p-8">
+                  <div className="text-center">
                     <GraduationCap className="h-8 w-8 mx-auto mb-2" />
                     <h3 className="text-xl sm:text-2xl font-extrabold">Formulaire d&apos;Inscription</h3>
                     <p className="mt-1.5 text-white/80 text-sm">Gratuit — Réponse rapide via WhatsApp</p>
@@ -1200,9 +1198,8 @@ export default function Home() {
           <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
             <Card className="border-0 shadow-2xl overflow-hidden">
               <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 p-1">
-                <div className="bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 text-white p-6 sm:p-8 relative overflow-hidden">
-                  <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIzMCIgY3k9IjMwIiByPSIxLjUiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wOCkiLz48L3N2Zz4=')] opacity-50" />
-                  <div className="relative z-10 text-center">
+                <div className="bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 text-white p-6 sm:p-8">
+                  <div className="text-center">
                     <Zap className="h-8 w-8 mx-auto mb-2" />
                     <h2 className="text-2xl sm:text-3xl font-extrabold">Démarrez Votre Projet</h2>
                     <p className="mt-2 text-white/80 text-sm">Remplissez ce formulaire — je vous recontacte <strong>personnellement</strong> sur WhatsApp avec une proposition adaptée.</p>

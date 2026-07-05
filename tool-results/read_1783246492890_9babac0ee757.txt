@@ -1,0 +1,402 @@
+   200→   200→  const [faqOpen, setFaqOpen] = useState<string | null>(null)
+   201→   201→  const [leadMagnet, setLeadMagnet] = useState({ name: '', contact: '' })
+   202→   202→  const { toast } = useToast()
+   203→   203→
+   204→   204→  const stat1 = useCounter(50, 1500)
+   205→   205→  const stat3 = useCounter(100, 1500)
+   206→   206→
+   207→   207→  const handleSubmitContact = (e: React.FormEvent) => {
+   208→   208→    e.preventDefault()
+   209→   209→    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+   210→   210→    if (!contactData.name || !contactData.email || !contactData.message) {
+   211→   211→      toast({ title: 'Champs requis', description: 'Veuillez remplir tous les champs obligatoires.', variant: 'destructive' })
+   212→   212→      return
+   213→   213→    }
+   214→   214→    if (!emailRegex.test(contactData.email)) {
+   215→   215→      toast({ title: 'Email invalide', description: 'Veuillez entrer une adresse email valide.', variant: 'destructive' })
+   216→   216→      return
+   217→   217→    }
+   218→   218→    const msg = encodeURIComponent(`Bonjour ! Je suis ${contactData.name} (${contactData.email}).\n\nSujet : ${contactData.subject || 'Général'}\n\n${contactData.message}`)
+   219→   219→    window.open(`https://wa.me/22397787244?text=${msg}`, '_blank')
+   220→   220→    toast({ title: 'Redirection vers WhatsApp', description: 'Votre message sera envoyé via WhatsApp pour une réponse rapide.' })
+   221→   221→    setContactData({ name: '', email: '', subject: '', message: '' })
+   222→   222→  }
+   223→   223→
+   224→   224→  useEffect(() => {
+   225→   225→    const handleScroll = () => {
+   226→   226→      setShowBackToTop(window.scrollY > 600)
+   227→   227→    }
+   228→   228→    window.addEventListener('scroll', handleScroll, { passive: true })
+   229→   229→    return () => window.removeEventListener('scroll', handleScroll)
+   230→   230→  }, [])
+   231→   231→
+   232→   232→  useEffect(() => {
+   233→   233→    if (sessionStorage.getItem('welcomed')) return
+   234→   234→    sessionStorage.setItem('welcomed', '1')
+   235→   235→    const timer = setTimeout(() => {
+   236→   236→      toast({
+   237→   237→        title: 'Bienvenue chez Studio Créatif !',
+   238→   238→        description: 'Découvrez mes services — tous actuellement gratuits !',
+   239→   239→      })
+   240→   240→    }, 2000)
+   241→   241→    return () => clearTimeout(timer)
+   242→   242→  }, [])
+   243→   243→
+   244→   244→  return (
+   245→   245→    <div className="min-h-screen flex flex-col bg-background pb-16 lg:pb-0">
+   246→   246→      <Header />
+   247→   247→
+   248→   248→      <main className="flex-1">
+   249→   249→
+   250→   250→        {/* ═══ 1. BANNIÈRE PROMO ═══ */}
+   251→   251→        <AnimatePresence>
+   252→   252→          {showBanner && (
+   253→   253→            <motion.div
+   254→   254→              initial={{ height: 0, opacity: 0 }}
+   255→   255→              animate={{ height: 'auto', opacity: 1 }}
+   256→   256→              exit={{ height: 0, opacity: 0 }}
+   257→   257→              className="overflow-hidden bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white"
+   258→   258→            >
+   259→   259→              <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-4">
+   260→   260→                <p className="text-xs sm:text-sm font-medium text-center sm:text-left flex-1">
+   261→   261→                  <Flame className="h-3.5 w-3.5 inline mr-1" />
+   262→   262→                  Bienvenue ! Tous les services sont actuellement gratuits — Profitez-en pour lancer votre projet digital
+   263→   263→                </p>
+   264→   264→                <div className="flex items-center gap-2 flex-shrink-0">
+   265→   265→                  <a href="#services">
+   266→   266→                    <Button size="sm" variant="secondary" className="h-7 text-xs bg-white text-amber-600 hover:bg-white/90 font-semibold px-3">
+   267→   267→                      Découvrir les services
+   268→   268→                    </Button>
+   269→   269→                  </a>
+   270→   270→                  <button onClick={() => setShowBanner(false)} className="text-white/80 hover:text-white transition-colors" aria-label="Fermer">
+   271→   271→                    <X className="h-4 w-4" />
+   272→   272→                  </button>
+   273→   273→                </div>
+   274→   274→              </div>
+   275→   275→            </motion.div>
+   276→   276→          )}
+   277→   277→        </AnimatePresence>
+   278→   278→
+   279→   279→        {/* ═══ 2. HERO ═══ */}
+   280→   280→        <section id="accueil" className="relative overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-white dark:from-amber-950/20 dark:via-orange-950/10 dark:to-background">
+   281→   281→          <div className="absolute top-0 -right-40 h-[500px] w-[500px] rounded-full bg-amber-200/40 dark:bg-amber-800/10 blur-3xl" />
+   282→   282→          <div className="absolute -bottom-20 -left-40 h-[400px] w-[400px] rounded-full bg-orange-200/30 dark:bg-orange-800/10 blur-3xl" />
+   283→   283→          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[300px] w-[300px] rounded-full bg-red-100/30 dark:bg-red-900/10 blur-3xl" />
+   284→   284→
+   285→   285→          <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
+   286→   286→            <div className="grid lg:grid-cols-2 gap-12 items-center">
+   287→   287→              <div>
+   288→   288→                <Badge variant="secondary" className="mb-4 px-3 py-1 text-xs font-medium bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800 shadow-sm">
+   289→   289→                  <Sparkles className="h-3 w-3 mr-1" /> Studio Créatif Indépendant
+   290→   290→                </Badge>
+   291→   291→
+   292→   292→                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
+   293→   293→                  Donnez vie à vos projets digitaux et{' '}
+   294→   294→                  <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 bg-clip-text text-transparent">
+   295→   295→                    démarquez-vous.
+   296→   296→                  </span>
+   297→   297→                </h1>
+   298→   298→
+   299→   299→                <p className="mt-6 text-lg text-muted-foreground leading-relaxed max-w-lg">
+   300→   300→                  Création de logos, sites web et visuels sur-mesure pour propulser les entrepreneurs et créateurs de Bamako et d&apos;ailleurs. Chaque projet est une opportunité de transformer votre vision en une réalité qui attire et fidélise.
+   301→   301→                </p>
+   302→   302→
+   303→   303→                <div className="mt-8 flex flex-wrap gap-3">
+   304→   304→                  <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20discuter%20de%20mon%20projet." target="_blank" rel="noopener noreferrer">
+   305→   305→                    <Button size="lg" className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 hover:from-amber-600 hover:via-orange-600 hover:to-red-600 text-white font-semibold shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 transition-all duration-200 hover:scale-105 active:scale-95">
+   306→   306→                      <Rocket className="mr-2 h-4 w-4" /> Lancer mon projet
+   307→   307→                    </Button>
+   308→   308→                  </a>
+   309→   309→                  <a href="https://wa.me/22397787244?text=Bonjour%20!%20J%27aimerais%20obtenir%20un%20devis%20gratuit%20pour%20mon%20projet." target="_blank" rel="noopener noreferrer">
+   310→   310→                    <Button size="lg" variant="outline" className="font-semibold hover:bg-accent transition-transform duration-200 hover:scale-105 active:scale-95">
+   311→   311→                      Obtenir un devis gratuit <ArrowRight className="ml-2 h-4 w-4" />
+   312→   312→                    </Button>
+   313→   313→                  </a>
+   314→   314→                </div>
+   315→   315→
+   316→   316→                <div className="mt-10 flex flex-wrap gap-3">
+   317→   317→                  {['Design Graphique', 'Sites Web', 'Montage Vidéo', 'Marketing Digital'].map((tag) => (
+   318→   318→                    <span key={tag} className="inline-flex items-center gap-1.5 rounded-full bg-white/80 dark:bg-white/5 border px-3.5 py-1.5 text-xs font-medium text-amber-700 dark:text-amber-400 border-amber-200/80 dark:border-amber-800 shadow-sm">
+   319→   319→                      <CheckCircle2 className="h-3 w-3 text-emerald-500" /> {tag}
+   320→   320→                    </span>
+   321→   321→                  ))}
+   322→   322→                </div>
+   323→   323→
+   324→   324→                <div className="mt-8 flex items-center gap-4">
+   325→   325→                  <div className="flex -space-x-2">
+   326→   326→                    {['from-amber-400 to-orange-500', 'from-emerald-400 to-teal-500', 'from-purple-400 to-pink-500', 'from-blue-400 to-cyan-500'].map((g, i) => (
+   327→   327→                      <div key={i} className={`h-8 w-8 rounded-full border-2 border-white bg-gradient-to-br ${g}`} />
+   328→   328→                    ))}
+   329→   329→                  </div>
+   330→   330→                  <div>
+   331→   331→                    <p className="text-xs font-bold">50+ Marques propulsées</p>
+   332→   332→                    <div className="flex gap-0.5">
+   333→   333→                      {[1, 2, 3, 4, 5].map((s) => (
+   334→   334→                        <Star key={s} className="h-3 w-3 fill-amber-400 text-amber-400" />
+   335→   335→                      ))}
+   336→   336→                    </div>
+   337→   337→                  </div>
+   338→   338→                </div>
+   339→   339→              </div>
+   340→   340→
+   341→   341→              {/* Hero Visual */}
+   342→   342→              <div className="hidden lg:block">
+   343→   343→                <div className="relative">
+   344→   344→                  <div className="absolute -inset-4 bg-gradient-to-r from-amber-400/20 via-orange-400/20 to-red-400/20 rounded-3xl blur-2xl" />
+   345→   345→                  <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/20">
+   346→   346→                    <img src="/demo-photo.png" alt="Studio Créatif - Sacko" className="w-full h-[420px] object-cover" />
+   347→   347→                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+   348→   348→                    <div className="absolute bottom-0 left-0 right-0 p-6">
+   349→   349→                      <div className="flex gap-2 flex-wrap">
+   350→   350→                        {['Design Graphique', 'Sites Web', 'Montage Vidéo', 'Formations'].map((t) => (
+   351→   351→                          <span key={t} className="px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-white text-xs font-medium border border-white/10">{t}</span>
+   352→   352→                        ))}
+   353→   353→                      </div>
+   354→   354→                    </div>
+   355→   355→                  </div>
+   356→   356→                  <div className="absolute -bottom-6 -left-6 bg-white dark:bg-card rounded-xl shadow-xl p-3 border flex items-center gap-3 hover:scale-105 transition-transform cursor-default">
+   357→   357→                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
+   358→   358→                      <Award className="h-5 w-5 text-amber-500" />
+   359→   359→                    </div>
+   360→   360→                    <div>
+   361→   361→                      <p className="text-xs font-bold">50+ Marques</p>
+   362→   362→                      <p className="text-[10px] text-muted-foreground">Propulsées</p>
+   363→   363→                    </div>
+   364→   364→                  </div>
+   365→   365→                  <div className="absolute -top-4 -right-4 bg-white dark:bg-card rounded-xl shadow-xl p-3 border hover:scale-105 transition-transform cursor-default">
+   366→   366→                    <div className="flex items-center gap-2">
+   367→   367→                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30">
+   368→   368→                        <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+   369→   369→                      </div>
+   370→   370→                      <div>
+   371→   371→                        <p className="text-xs font-bold">100% Sur-mesure</p>
+   372→   372→                        <p className="text-[10px] text-muted-foreground">Chaque pixel pensé pour vous</p>
+   373→   373→                      </div>
+   374→   374→                    </div>
+   375→   375→                  </div>
+   376→   376→                </div>
+   377→   377→              </div>
+   378→   378→            </div>
+   379→   379→          </div>
+   380→   380→        </section>
+   381→   381→
+   382→   382→        {/* ═══ 3. QUICK SERVICE ACCESS BAR ═══ */}
+   383→   383→        <section className="py-6 border-b bg-background">
+   384→   384→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+   385→   385→            <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+   386→   386→              {[
+   387→   387→                { label: 'Logo', icon: Palette },
+   388→   388→                { label: 'Site Web', icon: Globe },
+   389→   389→                { label: 'Vidéo', icon: MonitorPlay },
+   390→   390→                { label: 'Affiche', icon: PenTool },
+   391→   391→                { label: 'Formation', icon: GraduationCap },
+   392→   392→                { label: 'Canva Pro', icon: Layers },
+   393→   393→                { label: 'CapCut Pro', icon: Scissors },
+   394→   394→              ].map((s) => (
+   395→   395→                <a key={s.label} href="#services" className="flex-shrink-0 flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl bg-muted/50 hover:bg-muted hover:-translate-y-0.5 hover:shadow-md transition-all duration-300">
+   396→   396→                  <s.icon className="h-5 w-5 text-amber-500" />
+   397→   397→                  <span className="text-xs font-medium">{s.label}</span>
+   398→   398→                </a>
+   399→   399→              ))}
+   400→   400→            </div>
+   401→   401→          </div>
+   402→   402→        </section>
+   403→   403→
+   404→   404→        {/* ═══ 4. STATISTIQUES ═══ */}
+   405→   405→        <section className="py-12 sm:py-16 bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 relative overflow-hidden">
+   406→   406→          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIxIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMSkiLz48L3N2Zz4=')] opacity-50" />
+   407→   407→          <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+   408→   408→            <div className="text-center mb-10">
+   409→   409→              <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">Ce que je fais, en chiffres</h2>
+   410→   410→              <p className="mt-2 text-white/80 text-sm">Transparent, impactant, à taille humaine</p>
+   411→   411→            </div>
+   412→   412→            <div className="grid grid-cols-3 gap-6 sm:gap-12">
+   413→   413→              <div key="stat-1" ref={stat1.ref} className="text-center">
+   414→   414→                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mx-auto mb-3">
+   415→   415→                  <Award className="h-6 w-6 text-white" />
+   416→   416→                </div>
+   417→   417→                <div className="text-3xl sm:text-4xl font-extrabold text-white mb-1">{stat1.count}+</div>
+   418→   418→                <p className="text-sm font-semibold text-white/90">Marques propulsées</p>
+   419→   419→                <p className="text-xs text-white/60 mt-1 leading-relaxed hidden sm:block">Logos, affiches et identités créées avec soin</p>
+   420→   420→              </div>
+   421→   421→              <div className="text-center">
+   422→   422→                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mx-auto mb-3">
+   423→   423→                  <Palette className="h-6 w-6 text-white" />
+   424→   424→                </div>
+   425→   425→                <div className="text-3xl sm:text-4xl font-extrabold text-white mb-1">100%</div>
+   426→   426→                <p className="text-sm font-semibold text-white/90">Sur-mesure</p>
+   427→   427→                <p className="text-xs text-white/60 mt-1 leading-relaxed hidden sm:block">Aucun template pré-fait, chaque pixel est pensé pour vous</p>
+   428→   428→              </div>
+   429→   429→              <div key="stat-3" ref={stat3.ref} className="text-center">
+   430→   430→                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mx-auto mb-3">
+   431→   431→                  <ThumbsUp className="h-6 w-6 text-white" />
+   432→   432→                </div>
+   433→   433→                <div className="text-3xl sm:text-4xl font-extrabold text-white mb-1">{stat3.count}%</div>
+   434→   434→                <p className="text-sm font-semibold text-white/90">Satisfaction client</p>
+   435→   435→                <p className="text-xs text-white/60 mt-1 leading-relaxed hidden sm:block">Une collaboration basée sur l'écoute et le résultat</p>
+   436→   436→              </div>
+   437→   437→            </div>
+   438→   438→          </div>
+   439→   439→        </section>
+   440→   440→
+   441→   441→        {/* ═══ 5. BARRE DE CONFIANCE ═══ */}
+   442→   442→        <section className="py-6 border-b bg-background">
+   443→   443→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+   444→   444→            <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10">
+   445→   445→              {[
+   446→   446→                { icon: ShieldCheck, label: 'Qualité Garantie' },
+   447→   447→                { icon: Zap, label: 'Livraison Rapide' },
+   448→   448→                { icon: CheckCircle2, label: 'Satisfaction Garantie' },
+   449→   449→                { icon: Gift, label: '100% Gratuit' },
+   450→   450→                { icon: MessageCircle, label: 'Support WhatsApp' },
+   451→   451→              ].map((item) => (
+   452→   452→                <div key={item.label} className="flex items-center gap-2 text-muted-foreground">
+   453→   453→                  <item.icon className="h-4 w-4 text-amber-500" />
+   454→   454→                  <span className="text-xs font-medium whitespace-nowrap">{item.label}</span>
+   455→   455→                </div>
+   456→   456→              ))}
+   457→   457→            </div>
+   458→   458→          </div>
+   459→   459→        </section>
+   460→   460→
+   461→   461→        {/* ═══ 5.5 COMMENT ÇA MARCHE ═══ */}
+   462→   462→        <section className="py-16 sm:py-20 bg-gradient-to-b from-background to-muted/20">
+   463→   463→          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+   464→   464→            <div className="text-center mb-12">
+   465→   465→              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+   466→   466→                <Zap className="h-3 w-3 mr-1" /> Processus
+   467→   467→              </Badge>
+   468→   468→              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Comment ça marche ?</h2>
+   469→   469→              <p className="mt-3 text-muted-foreground max-w-xl mx-auto leading-relaxed">
+   470→   470→                4 étapes simples pour concrétiser votre projet. De votre première idée à la livraison finale, je vous accompagne à chaque étape.
+   471→   471→              </p>
+   472→   472→            </div>
+   473→   473→
+   474→   474→            <div className="relative">
+   475→   475→              {/* Ligne de connexion verticale (desktop) / horizontale (mobile) */}
+   476→   476→              <div className="hidden sm:block absolute top-16 left-[calc(12.5%+20px)] right-[calc(12.5%+20px)] h-0.5 bg-gradient-to-r from-amber-300 via-orange-400 to-red-400 opacity-40" />
+   477→   477→
+   478→   478→              <div className="grid sm:grid-cols-4 gap-6 sm:gap-4">
+   479→   479→                {[
+   480→   480→                  {
+   481→   481→                    step: '01',
+   482→   482→                    icon: MessageCircle,
+   483→   483→                    title: 'Contactez-moi',
+   484→   484→                    desc: "Envoyez-moi un message sur WhatsApp ou remplissez le formulaire. Décrivez votre projet en quelques mots.",
+   485→   485→                    color: 'from-amber-400 to-amber-500',
+   486→   486→                    bg: 'bg-amber-50 dark:bg-amber-950/20',
+   487→   487→                    border: 'border-amber-200 dark:border-amber-800',
+   488→   488→                  },
+   489→   489→                  {
+   490→   490→                    step: '02',
+   491→   491→                    icon: Search,
+   492→   492→                    title: 'Brief & Devis',
+   493→   493→                    desc: "Je vous pose les bonnes questions pour comprendre vos besoins. Vous recevez une proposition claire avec délai et prix.",
+   494→   494→                    color: 'from-orange-400 to-orange-500',
+   495→   495→                    bg: 'bg-orange-50 dark:bg-orange-950/20',
+   496→   496→                    border: 'border-orange-200 dark:border-orange-800',
+   497→   497→                  },
+   498→   498→                  {
+   499→   499→                    step: '03',
+   500→   500→                    icon: PenTool,
+   501→   501→                    title: 'Création',
+   502→   502→                    desc: "Je conçois votre projet avec soin. Vous recevez des aperçus et pouvez demander des ajustements.",
+   503→   503→                    color: 'from-red-400 to-red-500',
+   504→   504→                    bg: 'bg-red-50 dark:bg-red-950/20',
+   505→   505→                    border: 'border-red-200 dark:border-red-800',
+   506→   506→                  },
+   507→   507→                  {
+   508→   508→                    step: '04',
+   509→   509→                    icon: Rocket,
+   510→   510→                    title: 'Livraison',
+   511→   511→                    desc: "Fichiers sources livrés en haute qualité. Suivi après livraison pour s'assurer que tout est parfait.",
+   512→   512→                    color: 'from-emerald-400 to-emerald-500',
+   513→   513→                    bg: 'bg-emerald-50 dark:bg-emerald-950/20',
+   514→   514→                    border: 'border-emerald-200 dark:border-emerald-800',
+   515→   515→                  },
+   516→   516→                ].map((s, i) => (
+   517→   517→                  <div key={s.step} className={`relative text-center p-5 rounded-2xl border ${s.border} ${s.bg} transition-all duration-300 hover:-translate-y-1 hover:shadow-lg`}>
+   518→   518→                    <div className={`inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${s.color} text-white shadow-lg mb-3`}>
+   519→   519→                      <s.icon className="h-5 w-5" />
+   520→   520→                    </div>
+   521→   521→                    <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Étape {s.step}</div>
+   522→   522→                    <h3 className="text-sm font-extrabold mb-2">{s.title}</h3>
+   523→   523→                    <p className="text-xs text-muted-foreground leading-relaxed">{s.desc}</p>
+   524→   524→                    {i < 3 && (
+   525→   525→                      <ArrowDown className="h-5 w-5 text-amber-400 mx-auto mt-3 sm:hidden" />
+   526→   526→                    )}
+   527→   527→                  </div>
+   528→   528→                ))}
+   529→   529→              </div>
+   530→   530→            </div>
+   531→   531→          </div>
+   532→   532→        </section>
+   533→   533→
+   534→   534→        {/* ═══ 6. SERVICES & TARIFS ═══ */}
+   535→   535→        <section id="services" className="py-20 sm:py-24">
+   536→   536→          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+   537→   537→            <div className="text-center mb-12">
+   538→   538→              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+   539→   539→                <Sparkles className="h-3 w-3 mr-1" /> Tarifs
+   540→   540→              </Badge>
+   541→   541→              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Mes Services</h2>
+   542→   542→              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+   543→   543→                Chaque service existe en deux formules : testez gratuitement avec l&apos;Offre Découverte, puis passez au Premium pour un résultat professionnel complet.
+   544→   544→              </p>
+   545→   545→              <div className="flex items-center justify-center gap-6 mt-5 text-xs">
+   546→   546→                <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-emerald-500" /> Découverte = Gratuit</span>
+   547→   547→                <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-amber-500" /> Premium = Sur devis via WhatsApp</span>
+   548→   548→              </div>
+   549→   549→            </div>
+   550→   550→
+   551→   551→            <div className="space-y-8">
+   552→   552→              {[
+   553→   553→                {
+   554→   554→                  cat: 'Design Graphique', icon: Palette, color: 'from-pink-500 to-rose-500', borderColor: 'border-pink-200 dark:border-pink-800',
+   555→   555→                  decouverte: { title: 'Offre Découverte — Gratuit', desc: "Un logo simple pour démarrer. Texte stylisé + icône basique, 2 propositions au choix, 1 révision incluse. Idéal pour tester mon style avant de vous engager." },
+   556→   556→                  premium: { title: 'Offre Premium', desc: "Logo professionnel vectorisé, décliné en couleur et noir/blanc, charte graphique complète (couleurs, typographies), fichiers sources livrés (AI, PSD, PNG haute résolution), révisions illimitées jusqu'à satisfaction." },
+   557→   557→                },
+   558→   558→                {
+   559→   559→                  cat: 'Développement Web', icon: Globe, color: 'from-blue-500 to-indigo-500', borderColor: 'border-blue-200 dark:border-blue-800',
+   560→   560→                  decouverte: { title: 'Offre Découverte — Gratuite', desc: 'Une landing page 1 page, responsive (mobile/ordinateur), pour présenter votre activité en ligne rapidement.' },
+   561→   561→                  premium: { title: 'Offre Premium', desc: 'Site multi-pages sur mesure, formulaire de contact fonctionnel, déploiement et hébergement inclus, nom de domaine personnalisé, maintenance mensuelle disponible en option.' },
+   562→   562→                },
+   563→   563→                {
+   564→   564→                  cat: 'Montage Vidéo', icon: MonitorPlay, color: 'from-purple-500 to-violet-500', borderColor: 'border-purple-200 dark:border-purple-800',
+   565→   565→                  decouverte: { title: 'Offre Découverte — Gratuite', desc: "Montage court (moins d'une minute), coupe simple sans effets avancés. Parfait pour un aperçu rapide." },
+   566→   566→                  premium: { title: 'Offre Premium', desc: 'Montage complet avec effets visuels, sous-titres, musique libre de droits, export optimisé pour réseaux sociaux ou YouTube.' },
+   567→   567→                },
+   568→   568→                {
+   569→   569→                  cat: 'Formation', icon: GraduationCap, color: 'from-emerald-500 to-teal-500', borderColor: 'border-emerald-200 dark:border-emerald-800',
+   570→   570→                  decouverte: { title: 'Offre Découverte — Gratuite', desc: "Session d'initiation de 30 minutes pour découvrir mes outils et méthodes." },
+   571→   571→                  premium: { title: 'Offre Premium', desc: 'Parcours de formation complet avec suivi personnalisé, support après formation, et certificat de participation.' },
+   572→   572→                },
+   573→   573→              ].map((section) => (
+   574→   574→                <Card key={section.cat} className={`border ${section.borderColor} overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5`}>
+   575→   575→                  <div className={`h-1.5 bg-gradient-to-r ${section.color}`} />
+   576→   576→                  <CardContent className="p-5 sm:p-7">
+   577→   577→                    <div className="flex items-center gap-3 mb-5">
+   578→   578→                      <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${section.color} text-white shadow-lg`}>
+   579→   579→                        <section.icon className="h-5 w-5" />
+   580→   580→                      </div>
+   581→   581→                      <h3 className="text-lg font-extrabold">{section.cat}</h3>
+   582→   582→                    </div>
+   583→   583→                    <div className="grid sm:grid-cols-2 gap-4">
+   584→   584→                      <div className="rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-950/20 p-4 sm:p-5">
+   585→   585→                        <div className="flex items-center gap-2 mb-2">
+   586→   586→                          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-white text-xs font-bold">✓</span>
+   587→   587→                          <h4 className="text-sm font-bold text-emerald-700 dark:text-emerald-400">{section.decouverte.title}</h4>
+   588→   588→                        </div>
+   589→   589→                        <p className="text-xs text-muted-foreground leading-relaxed mb-4">{section.decouverte.desc}</p>
+   590→   590→                        <a
+   591→   591→                          href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je veux l'Offre Découverte : ${section.cat}. C'est gratuit, je veux tester !`)}`}
+   592→   592→                          target="_blank" rel="noopener noreferrer"
+   593→   593→                        >
+   594→   594→                          <Button variant="outline" className="w-full border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 font-semibold text-xs h-10">
+   595→   595→                            <Gift className="h-3.5 w-3.5 mr-1.5" /> Essayer gratuitement
+   596→   596→                          </Button>
+   597→   597→                        </a>
+   598→   598→                      </div>
+   599→   599→                      <div className="rounded-xl border border-amber-200 dark:border-amber-800 bg-amber-50/50 dark:bg-amber-950/20 p-4 sm:p-5">
+
+[showing lines 200-599 of 1790; use offset=600 with limit to continue reading]
