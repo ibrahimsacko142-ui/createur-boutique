@@ -1,0 +1,728 @@
+     1→'use client'
+     2→
+     3→import { useState, useEffect, useRef, useCallback } from 'react'
+     4→import { motion, AnimatePresence } from 'framer-motion'
+     5→import {
+     6→  Phone, User, Globe, Shield, ArrowRight, Sparkles,
+     7→  Palette, MonitorPlay, GraduationCap, RefreshCw,
+     8→  Copy, Check, AlertCircle, ArrowLeft, MessageSquare, Loader2
+     9→} from 'lucide-react'
+    10→import { Button } from '@/components/ui/button'
+    11→import { Card, CardContent } from '@/components/ui/card'
+    12→import { Input } from '@/components/ui/input'
+    13→import { Label } from '@/components/ui/label'
+    14→import { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator } from '@/components/ui/input-otp'
+    15→import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+    16→
+    17→/* ═══════════════════════════════════════════════════════════════
+    18→   PAYS
+    19→   ═══════════════════════════════════════════════════════════════ */
+    20→const PAYS = [
+    21→  { code: '+223', nom: 'Mali', drapeau: '\u{1F1F2}\u{1F1F1}' },
+    22→  { code: '+221', nom: 'Sénégal', drapeau: '\u{1F1F7}\u{1F1F8}' },
+    23→  { code: '+225', nom: "Côte d'Ivoire", drapeau: '\u{1F1E8}\u{1F1EE}' },
+    24→  { code: '+226', nom: 'Burkina Faso', drapeau: '\u{1F1E7}\u{1F1EB}' },
+    25→  { code: '+227', nom: 'Niger', drapeau: '\u{1F1F3}\u{1F1EA}' },
+    26→  { code: '+228', nom: 'Togo', drapeau: '\u{1F1F9}\u{1F1EC}' },
+    27→  { code: '+229', nom: 'Bénin', drapeau: '\u{1F1E7}\u{1F1EF}' },
+    28→  { code: '+241', nom: 'Gabon', drapeau: '\u{1F1EC}\u{1F1E6}' },
+    29→  { code: '+243', nom: 'RD Congo', drapeau: '\u{1F1E8}\u{1F1E9}' },
+    30→  { code: '+242', nom: 'Congo', drapeau: '\u{1F1E8}\u{1F1EC}' },
+    31→  { code: '+237', nom: 'Cameroun', drapeau: '\u{1F1E8}\u{1F1F2}' },
+    32→  { code: '+235', nom: 'Tchad', drapeau: '\u{1F1F9}\u{1F1ED}' },
+    33→  { code: '+236', nom: 'Centrafrique', drapeau: '\u{1F1E8}\u{1F1EB}' },
+    34→  { code: '+240', nom: 'Guinée Équatoriale', drapeau: '\u{1F1EC}\u{1F1F6}' },
+    35→  { code: '+258', nom: 'Mozambique', drapeau: '\u{1F1F2}\u{1F1FF}' },
+    36→  { code: '+33', nom: 'France', drapeau: '\u{1F1EB}\u{1F1F7}' },
+    37→  { code: '+1', nom: 'États-Unis / Canada', drapeau: '\u{1F1FA}\u{1F1F8}' },
+    38→  { code: '+44', nom: 'Royaume-Uni', drapeau: '\u{1F1EC}\u{1F1E7}' },
+    39→  { code: '+212', nom: 'Maroc', drapeau: '\u{1F1F2}\u{1F1E6}' },
+    40→  { code: '+216', nom: 'Tunisie', drapeau: '\u{1F1F9}\u{1F1F3}' },
+    41→  { code: '+20', nom: 'Égypte', drapeau: '\u{1F1EA}\u{1F1EC}' },
+    42→  { code: '+234', nom: 'Nigeria', drapeau: '\u{1F1F3}\u{1F1EC}' },
+    43→  { code: '+233', nom: 'Ghana', drapeau: '\u{1F1EC}\u{1F1ED}' },
+    44→  { code: '+224', nom: 'Guinée', drapeau: '\u{1F1EC}\u{1F1F3}' },
+    45→  { code: '+245', nom: 'Guinée-Bissau', drapeau: '\u{1F1EC}\u{1F1FC}' },
+    46→  { code: '+248', nom: 'Seychelles', drapeau: '\u{1F1F8}\u{1F1F8}' },
+    47→  { code: '+230', nom: 'Maurice', drapeau: '\u{1F1F2}\u{1F1FA}' },
+    48→  { code: '+261', nom: 'Madagascar', drapeau: '\u{1F1F2}\u{1F1EC}' },
+    49→  { code: '+250', nom: 'Rwanda', drapeau: '\u{1F1F7}\u{1F1EA}' },
+    50→  { code: '+257', nom: 'Burundi', drapeau: '\u{1F1E7}\u{1F1EE}' },
+    51→  { code: '+255', nom: 'Tanzanie', drapeau: '\u{1F1F9}\u{1F1FF}' },
+    52→]
+    53→
+    54→/* ═══════════════════════════════════════════════════════════════
+    55→   TYPES
+    56→   ═══════════════════════════════════════════════════════════════ */
+    57→type InscStep = 'form' | 'otp' | 'success'
+    58→type LoginStep = 'phone' | 'otp'
+    59→
+    60→interface UserData {
+    61→  prenom: string
+    62→  nom: string
+    63→  telephone: string
+    64→  pays: string
+    65→  codePays: string
+    66→}
+    67→
+    68→/* ═══════════════════════════════════════════════════════════════
+    69→   COMPOSANT
+    70→   ═══════════════════════════════════════════════════════════════ */
+    71→export default function LoginPage({ onLogin }: { onLogin: (user: UserData) => void }) {
+    72→
+    73→  /* ─── Inscription ─── */
+    74→  const [prenom, setPrenom] = useState('')
+    75→  const [nom, setNom] = useState('')
+    76→  const [telephone, setTelephone] = useState('')
+    77→  const [paysIndex, setPaysIndex] = useState(0)
+    78→  const [inscStep, setInscStep] = useState<InscStep>('form')
+    79→  const [inscOtp, setInscOtp] = useState('')
+    80→  const [inscOtpError, setInscOtpError] = useState('')
+    81→  const [inscSending, setInscSending] = useState(false)
+    82→  const [inscVerifying, setInscVerifying] = useState(false)
+    83→  const [inscSmsInfo, setInscSmsInfo] = useState('')
+    84→  const [inscOtpCode, setInscOtpCode] = useState('')
+    85→  const [inscCodeCopied, setInscCodeCopied] = useState(false)
+    86→
+    87→  /* ─── Connexion ─── */
+    88→  const [loginPhone, setLoginPhone] = useState('')
+    89→  const [loginPaysIndex, setLoginPaysIndex] = useState(0)
+    90→  const [loginStep, setLoginStep] = useState<LoginStep>('phone')
+    91→  const [loginOtp, setLoginOtp] = useState('')
+    92→  const [loginOtpError, setLoginOtpError] = useState('')
+    93→  const [loginSending, setLoginSending] = useState(false)
+    94→  const [loginVerifying, setLoginVerifying] = useState(false)
+    95→  const [loginSmsInfo, setLoginSmsInfo] = useState('')
+    96→  const [loginOtpCode, setLoginOtpCode] = useState('')
+    97→  const [loginCodeCopied, setLoginCodeCopied] = useState(false)
+    98→  const [loginError, setLoginError] = useState('')
+    99→
+   100→  /* ─── Timer (5 min) ─── */
+   101→  const [inscTimer, setInscTimer] = useState(0)
+   102→  const [loginTimer, setLoginTimer] = useState(0)
+   103→  const inscTimerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+   104→  const loginTimerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+   105→
+   106→  /* ─── UI ─── */
+   107→  const [activeTab, setActiveTab] = useState<'inscription' | 'connexion'>('inscription')
+   108→
+   109→  const codePays = PAYS[paysIndex].code
+   110→  const loginCode = PAYS[loginPaysIndex].code
+   111→
+   112→  /* ─── Timers ─── */
+   113→  useEffect(() => {
+   114→    if (inscTimer > 0) {
+   115→      inscTimerRef.current = setInterval(() => setInscTimer(p => { if (p <= 1) { clearInterval(inscTimerRef.current!); return 0 } return p - 1 }), 1000)
+   116→    }
+   117→    return () => { if (inscTimerRef.current) clearInterval(inscTimerRef.current) }
+   118→  }, [inscTimer > 0]) // eslint-disable-line react-hooks/exhaustive-deps
+   119→
+   120→  useEffect(() => {
+   121→    if (loginTimer > 0) {
+   122→      loginTimerRef.current = setInterval(() => setLoginTimer(p => { if (p <= 1) { clearInterval(loginTimerRef.current!); return 0 } return p - 1 }), 1000)
+   123→    }
+   124→    return () => { if (loginTimerRef.current) clearInterval(loginTimerRef.current) }
+   125→  }, [loginTimer > 0]) // eslint-disable-line react-hooks/exhaustive-deps
+   126→
+   127→  const fmtTimer = (s: number) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`
+   128→
+   129→  /* ═══════════════════════════════════════════════════════════════
+   130→     INSCRIPTION
+   131→     ═══════════════════════════════════════════════════════════════ */
+   132→
+   133→  const sendInscOtp = useCallback(async () => {
+   134→    if (!prenom.trim() || !nom.trim() || !telephone.trim()) return
+   135→    setInscSending(true)
+   136→    setInscOtpError('')
+   137→    setInscDevOtp('')
+   138→    try {
+   139→      const fullPhone = `${codePays}${telephone.replace(/\s/g, '')}`
+   140→      const res = await fetch('/api/send-otp', {
+   141→        method: 'POST',
+   142→        headers: { 'Content-Type': 'application/json' },
+   143→        body: JSON.stringify({ phone: fullPhone }),
+   144→      })
+   145→      const data = await res.json()
+   146→
+   147→      if (!data.success) {
+   148→        setInscOtpError(data.error || "Erreur d'envoi.")
+   149→        setInscSending(false)
+   150→        return
+   151→      }
+   152→
+   153→      setInscSmsInfo(data.message || '')
+   154→      if (data.otp) setInscOtpCode(data.otp)
+   155→      setInscOtp('')
+   156→      setInscTimer(300) // 5 min
+   157→      setInscStep('otp')
+   158→    } catch {
+   159→      setInscOtpError('Erreur réseau. Vérifiez votre connexion.')
+   160→    } finally {
+   161→      setInscSending(false)
+   162→    }
+   163→  }, [prenom, nom, telephone, codePays])
+   164→
+   165→  const verifyInscOtp = useCallback(async () => {
+   166→    if (inscOtp.length !== 6) { setInscOtpError('Entrez les 6 chiffres'); return }
+   167→    setInscVerifying(true)
+   168→    setInscOtpError('')
+   169→    try {
+   170→      const res = await fetch('/api/verify-otp', {
+   171→        method: 'POST',
+   172→        headers: { 'Content-Type': 'application/json' },
+   173→        body: JSON.stringify({ otp: inscOtp }),
+   174→      })
+   175→      const data = await res.json()
+   176→
+   177→      if (!data.success) {
+   178→        setInscOtpError(data.error || 'Code incorrect.')
+   179→        setInscVerifying(false)
+   180→        return
+   181→      }
+   182→
+   183→      /* Succès */
+   184→      const userData: UserData = {
+   185→        prenom: prenom.trim(),
+   186→        nom: nom.trim(),
+   187→        telephone,
+   188→        pays: PAYS[paysIndex].nom,
+   189→        codePays,
+   190→      }
+   191→      localStorage.setItem('studio_creatif_user', JSON.stringify(userData))
+   192→      localStorage.setItem('studio_creatif_auth', 'true')
+   193→      setInscStep('success')
+   194→      setTimeout(() => onLogin(userData), 1200)
+   195→    } catch {
+   196→      setInscOtpError('Erreur réseau. Réessayez.')
+   197→    } finally {
+   198→      setInscVerifying(false)
+   199→    }
+   200→  }, [inscOtp, prenom, nom, telephone, paysIndex, codePays, onLogin])
+   201→
+   202→  const resendInscOtp = useCallback(async () => {
+   203→    setInscOtp('')
+   204→    setInscOtpError('')
+   205→    setInscOtpCode('')
+   206→    setInscSending(true)
+   207→    try {
+   208→      const fullPhone = `${codePays}${telephone.replace(/\s/g, '')}`
+   209→      const res = await fetch('/api/send-otp', {
+   210→        method: 'POST',
+   211→        headers: { 'Content-Type': 'application/json' },
+   212→        body: JSON.stringify({ phone: fullPhone }),
+   213→      })
+   214→      const data = await res.json()
+   215→      if (data.success) {
+   216→        setInscSmsInfo(data.message || '')
+   217→        if (data.otp) setInscOtpCode(data.otp)
+   218→        setInscTimer(300)
+   219→      } else {
+   220→        setInscOtpError(data.error || "Erreur d'envoi.")
+   221→      }
+   222→    } catch {
+   223→      setInscOtpError('Erreur réseau.')
+   224→    } finally {
+   225→      setInscSending(false)
+   226→    }
+   227→  }, [codePays, telephone])
+   228→
+   229→  /* ═══════════════════════════════════════════════════════════════
+   230→     CONNEXION
+   231→     ═══════════════════════════════════════════════════════════════ */
+   232→
+   233→  const sendLoginOtp = useCallback(async () => {
+   234→    if (!loginPhone.trim()) return
+   235→    setLoginSending(true)
+   236→    setLoginError('')
+   237→    setLoginOtpCode('')
+   238→    try {
+   239→      const fullPhone = `${loginCode}${loginPhone.replace(/\s/g, '')}`
+   240→      const res = await fetch('/api/send-otp', {
+   241→        method: 'POST',
+   242→        headers: { 'Content-Type': 'application/json' },
+   243→        body: JSON.stringify({ phone: fullPhone }),
+   244→      })
+   245→      const data = await res.json()
+   246→      if (!data.success) {
+   247→        setLoginError(data.error || "Erreur d'envoi.")
+   248→        setLoginSending(false)
+   249→        return
+   250→      }
+   251→      setLoginSmsInfo(data.message || '')
+   252→      if (data.otp) setLoginOtpCode(data.otp)
+   253→      setLoginOtp('')
+   254→      setLoginOtpError('')
+   255→      setLoginTimer(300)
+   256→      setLoginStep('otp')
+   257→    } catch {
+   258→      setLoginError('Erreur réseau.')
+   259→    } finally {
+   260→      setLoginSending(false)
+   261→    }
+   262→  }, [loginPhone, loginCode])
+   263→
+   264→  const verifyLoginOtp = useCallback(async () => {
+   265→    if (loginOtp.length !== 6) { setLoginOtpError('Entrez les 6 chiffres'); return }
+   266→    setLoginVerifying(true)
+   267→    setLoginOtpError('')
+   268→    try {
+   269→      const res = await fetch('/api/verify-otp', {
+   270→        method: 'POST',
+   271→        headers: { 'Content-Type': 'application/json' },
+   272→        body: JSON.stringify({ otp: loginOtp }),
+   273→      })
+   274→      const data = await res.json()
+   275→      if (!data.success) {
+   276→        setLoginOtpError(data.error || 'Code incorrect.')
+   277→        setLoginVerifying(false)
+   278→        return
+   279→      }
+   280→      const savedUser = localStorage.getItem('studio_creatif_user')
+   281→      const userData: UserData = savedUser
+   282→        ? JSON.parse(savedUser)
+   283→        : { prenom: '', nom: '', telephone: loginPhone, pays: PAYS[loginPaysIndex].nom, codePays: loginCode }
+   284→      localStorage.setItem('studio_creatif_auth', 'true')
+   285→      onLogin(userData)
+   286→    } catch {
+   287→      setLoginOtpError('Erreur réseau.')
+   288→    } finally {
+   289→      setLoginVerifying(false)
+   290→    }
+   291→  }, [loginOtp, loginPhone, loginPaysIndex, loginCode, onLogin])
+   292→
+   293→  const resendLoginOtp = useCallback(async () => {
+   294→    setLoginOtp('')
+   295→    setLoginOtpError('')
+   296→    setLoginDevOtp('')
+   297→    setLoginSending(true)
+   298→    try {
+   299→      const fullPhone = `${loginCode}${loginPhone.replace(/\s/g, '')}`
+   300→      const res = await fetch('/api/send-otp', {
+   301→        method: 'POST',
+   302→        headers: { 'Content-Type': 'application/json' },
+   303→        body: JSON.stringify({ phone: fullPhone }),
+   304→      })
+   305→      const data = await res.json()
+   306→      if (data.success) {
+   307→        setLoginSmsInfo(data.message || '')
+   308→        if (data.otp) setLoginOtpCode(data.otp)
+   309→        setLoginTimer(300)
+   310→      } else {
+   311→        setLoginOtpError(data.error || "Erreur d'envoi.")
+   312→      }
+   313→    } catch {
+   314→      setLoginOtpError('Erreur réseau.')
+   315→    } finally {
+   316→      setLoginSending(false)
+   317→    }
+   318→  }, [loginCode, loginPhone])
+   319→
+   320→  /* ═══════════════════════════════════════════════════════════════
+   321→     HELPERS
+   322→     ═══════════════════════════════════════════════════════════════ */
+   323→
+   324→  const copyCode = (code: string, setCopied: (v: boolean) => void) => {
+   325→    navigator.clipboard.writeText(code)
+   326→    setCopied(true)
+   327→    setTimeout(() => setCopied(false), 2000)
+   328→  }
+   329→
+   330→  /* ─── Sous-composants ─── */
+   331→
+   332→  const OtpSlots = ({ value, onChange }: { value: string; onChange: (v: string) => void }) => (
+   333→    <div className="flex justify-center">
+   334→      <InputOTP maxLength={6} value={value} onChange={onChange} containerClassName="gap-2">
+   335→        <InputOTPGroup>
+   336→          <InputOTPSlot index={0} className="h-13 w-12 sm:w-14 text-xl font-bold rounded-xl border-2" />
+   337→          <InputOTPSlot index={1} className="h-13 w-12 sm:w-14 text-xl font-bold rounded-xl border-2" />
+   338→          <InputOTPSlot index={2} className="h-13 w-12 sm:w-14 text-xl font-bold rounded-xl border-2" />
+   339→        </InputOTPGroup>
+   340→        <InputOTPSeparator className="text-muted-foreground/40 mx-1 text-lg" />
+   341→        <InputOTPGroup>
+   342→          <InputOTPSlot index={3} className="h-13 w-12 sm:w-14 text-xl font-bold rounded-xl border-2" />
+   343→          <InputOTPSlot index={4} className="h-13 w-12 sm:w-14 text-xl font-bold rounded-xl border-2" />
+   344→          <InputOTPSlot index={5} className="h-13 w-12 sm:w-14 text-xl font-bold rounded-xl border-2" />
+   345→        </InputOTPGroup>
+   346→      </InputOTP>
+   347→    </div>
+   348→  )
+   349→
+   350→  const PaysSelect = ({ value, onChange }: { value: number; onChange: (i: number) => void }) => (
+   351→    <div className="relative">
+   352→      <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10 pointer-events-none" />
+   353→      <select
+   354→        value={value}
+   355→        onChange={(e) => onChange(Number(e.target.value))}
+   356→        className="h-11 w-full rounded-md border border-input bg-background pl-9 pr-8 text-sm appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-500"
+   357→      >
+   358→        {PAYS.map((p, i) => (
+   359→          <option key={`${p.code}-${p.nom}`} value={i}>{p.drapeau}  {p.nom} ({p.code})</option>
+   360→        ))}
+   361→      </select>
+   362→      <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+   363→        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+   364→      </svg>
+   365→    </div>
+   366→  )
+   367→
+   368→  /** Carte affichant le code OTP */
+   369→  const OtpCodeCard = ({ code, copied, onCopy, label }: {
+   370→    code: string; copied: boolean; onCopy: () => void; label: string
+   371→  }) => (
+   372→    <div className="bg-slate-100 dark:bg-slate-800 rounded-2xl p-5 text-center space-y-3">
+   373→      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{label}</p>
+   374→      <div className="flex items-center justify-center gap-2">
+   375→        <span className="text-3xl sm:text-4xl font-mono font-extrabold tracking-[0.3em] text-foreground">
+   376→          {code.slice(0, 3)}<span className="text-muted-foreground/40 mx-1">-</span>{code.slice(3)}
+   377→        </span>
+   378→        <button onClick={onCopy} className="ml-2 p-2 rounded-lg hover:bg-background transition-colors" title="Copier">
+   379→          {copied ? <Check className="h-4 w-4 text-emerald-500" /> : <Copy className="h-4 w-4 text-muted-foreground" />}
+   380→        </button>
+   381→      </div>
+   382→      <p className="text-[11px] text-muted-foreground">Copiez ce code et entrez-le ci-dessous pour vérification.</p>
+   383→    </div>
+   384→  )
+   385→
+   386→  /* ═══════════════════════════════════════════════════════════════
+   387→     RENDER
+   388→     ═══════════════════════════════════════════════════════════════ */
+   389→  return (
+   390→    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 via-orange-50 to-white dark:from-slate-950 dark:via-slate-900 dark:to-background p-4">
+   391→      <div className="fixed top-0 -right-40 h-[500px] w-[500px] rounded-full bg-amber-200/40 dark:bg-amber-800/10 blur-3xl pointer-events-none" />
+   392→      <div className="fixed -bottom-20 -left-40 h-[400px] w-[400px] rounded-full bg-orange-200/30 dark:bg-orange-800/10 blur-3xl pointer-events-none" />
+   393→
+   394→      <motion.div
+   395→        initial={{ opacity: 0, y: 20, scale: 0.98 }}
+   396→        animate={{ opacity: 1, y: 0, scale: 1 }}
+   397→        transition={{ duration: 0.5, ease: 'easeOut' }}
+   398→        className="w-full max-w-md relative z-10"
+   399→      >
+   400→        {/* ─── Logo ─── */}
+   401→        <div className="text-center mb-8">
+   402→          <motion.div
+   403→            initial={{ scale: 0 }}
+   404→            animate={{ scale: 1 }}
+   405→            transition={{ type: 'spring', stiffness: 200, delay: 0.1 }}
+   406→            className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 shadow-xl shadow-amber-500/25 mb-4"
+   407→          >
+   408→            <Sparkles className="h-8 w-8 text-white" />
+   409→          </motion.div>
+   410→          <h1 className="text-3xl font-extrabold tracking-tight">Studio Créatif</h1>
+   411→          <p className="text-muted-foreground text-sm mt-1">Créativité, Expertise, Excellence</p>
+   412→        </div>
+   413→
+   414→        {/* ─── Carte principale ─── */}
+   415→        <Card className="border-0 shadow-2xl shadow-amber-500/10 overflow-hidden">
+   416→          <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 p-1">
+   417→            <CardContent className="p-0 bg-background">
+   418→              <Tabs
+   419→                value={activeTab}
+   420→                onValueChange={(v) => {
+   421→                  setActiveTab(v as 'inscription' | 'connexion')
+   422→                  setInscStep('form'); setLoginStep('phone')
+   423→                  setLoginError(''); setInscTimer(0); setLoginTimer(0)
+   424→                }}
+   425→              >
+   426→                <div className="flex border-b">
+   427→                  <TabsList className="w-full h-12 bg-transparent rounded-none p-0 gap-0">
+   428→                    <TabsTrigger value="inscription" className="flex-1 h-full rounded-none data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:border-b-2 data-[state=active]:border-amber-500 text-sm font-semibold">
+   429→                      Inscription
+   430→                    </TabsTrigger>
+   431→                    <TabsTrigger value="connexion" className="flex-1 h-full rounded-none data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:border-b-2 data-[state=active]:border-amber-500 text-sm font-semibold">
+   432→                      Connexion
+   433→                    </TabsTrigger>
+   434→                  </TabsList>
+   435→                </div>
+   436→
+   437→                {/* ═══════════ INSCRIPTION ═══════════ */}
+   438→                <TabsContent value="inscription">
+   439→                  <AnimatePresence mode="wait">
+   440→
+   441→                    {/* ── Formulaire ── */}
+   442→                    {inscStep === 'form' && (
+   443→                      <motion.div key="i-form" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.3 }} className="p-6 sm:p-8 space-y-5">
+   444→                        <div className="text-center mb-2">
+   445→                          <h2 className="text-lg font-bold">Créez votre compte</h2>
+   446→                          <p className="text-xs text-muted-foreground mt-1">Vous recevrez un code de vérification par SMS</p>
+   447→                        </div>
+   448→
+   449→                        <div className="grid grid-cols-2 gap-3">
+   450→                          <div className="space-y-1.5">
+   451→                            <Label className="text-xs font-semibold">Prénom *</Label>
+   452→                            <div className="relative">
+   453→                              <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+   454→                              <Input placeholder="Ex: Ibrahim" value={prenom} onChange={(e) => setPrenom(e.target.value)} className="pl-9 h-11 text-sm" />
+   455→                            </div>
+   456→                          </div>
+   457→                          <div className="space-y-1.5">
+   458→                            <Label className="text-xs font-semibold">Nom *</Label>
+   459→                            <div className="relative">
+   460→                              <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+   461→                              <Input placeholder="Ex: Sacko" value={nom} onChange={(e) => setNom(e.target.value)} className="pl-9 h-11 text-sm" />
+   462→                            </div>
+   463→                          </div>
+   464→                        </div>
+   465→
+   466→                        <div className="space-y-1.5">
+   467→                          <Label className="text-xs font-semibold">Pays *</Label>
+   468→                          <PaysSelect value={paysIndex} onChange={setPaysIndex} />
+   469→                        </div>
+   470→
+   471→                        <div className="space-y-1.5">
+   472→                          <Label className="text-xs font-semibold">Numéro de téléphone *</Label>
+   473→                          <div className="relative">
+   474→                            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10 pointer-events-none" />
+   475→                            <div className="absolute left-9 top-1/2 -translate-y-1/2 text-xs font-semibold text-muted-foreground border-r border-border pr-2 h-5 flex items-center pointer-events-none">
+   476→                              {codePays}
+   477→                            </div>
+   478→                            <Input type="tel" placeholder="70 00 00 00" value={telephone} onChange={(e) => setTelephone(e.target.value)} className="pl-[5.5rem] h-11 text-sm" />
+   479→                          </div>
+   480→                        </div>
+   481→
+   482→                        <Button
+   483→                          onClick={sendInscOtp}
+   484→                          disabled={!prenom.trim() || !nom.trim() || !telephone.trim() || inscSending}
+   485→                          className="w-full bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 hover:from-amber-600 hover:via-orange-600 hover:to-red-600 text-white font-bold h-12 text-sm shadow-lg shadow-amber-500/20 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
+   486→                        >
+   487→                          {inscSending ? (
+   488→                            <span className="flex items-center gap-2"><Loader2 className="h-4 w-4 animate-spin" /> Envoi du SMS en cours...</span>
+   489→                          ) : (
+   490→                            <span className="flex items-center gap-2"><MessageSquare className="h-4 w-4" /> Recevoir mon code par SMS <ArrowRight className="h-4 w-4" /></span>
+   491→                          )}
+   492→                        </Button>
+   493→
+   494→                        <p className="text-[11px] text-muted-foreground text-center leading-relaxed">
+   495→                          Un code à 6 chiffres sera envoyé à votre numéro par SMS.
+   496→                        </p>
+   497→                      </motion.div>
+   498→                    )}
+   499→
+   500→                    {/* ── Vérification OTP (inscription) ── */}
+   501→                    {inscStep === 'otp' && (
+   502→                      <motion.div key="i-otp" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.3 }} className="p-6 sm:p-8 space-y-5">
+   503→                        <div className="text-center">
+   504→                          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 200, delay: 0.1 }} className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30 mb-4">
+   505→                            <MessageSquare className="h-7 w-7 text-emerald-600 dark:text-emerald-400" />
+   506→                          </motion.div>
+   507→                          <h2 className="text-lg font-bold">Vérification par SMS</h2>
+   508→                          <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
+   509→                            Entrez le code envoyé à <span className="font-semibold text-foreground">{codePays} {telephone}</span>
+   510→                          </p>
+   511→                        </div>
+   512→
+   513→                        {/* Info SMS */}
+   514→                        <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/40 rounded-xl p-3 text-center">
+   515→                          <p className="text-xs text-emerald-700 dark:text-emerald-400 font-medium">
+   516→                            <Shield className="h-3.5 w-3.5 inline mr-1" />
+   517→                            {inscSmsInfo || 'Code envoyé par SMS'}
+   518→                          </p>
+   519→                        </div>
+   520→
+   521→                        {inscOtpCode && (
+   522→                          <OtpCodeCard
+   523→                            code={inscOtpCode}
+   524→                            copied={inscCodeCopied}
+   525→                            onCopy={() => copyCode(inscOtpCode, setInscCodeCopied)}
+   526→                            label="Votre code de vérification"
+   527→                          />
+   528→                        )}
+   529→
+   530→                        <OtpSlots value={inscOtp} onChange={(v) => { setInscOtp(v); setInscOtpError('') }} />
+   531→
+   532→                        {inscOtpError && (
+   533→                          <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-center gap-1.5 text-xs text-destructive font-medium">
+   534→                            <AlertCircle className="h-3.5 w-3.5" />
+   535→                            {inscOtpError}
+   536→                          </motion.div>
+   537→                        )}
+   538→
+   539→                        <Button
+   540→                          onClick={verifyInscOtp}
+   541→                          disabled={inscOtp.length !== 6 || inscVerifying}
+   542→                          className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold h-12 text-sm shadow-lg shadow-emerald-500/20 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
+   543→                        >
+   544→                          {inscVerifying ? (
+   545→                            <span className="flex items-center gap-2"><Loader2 className="h-4 w-4 animate-spin" /> Vérification...</span>
+   546→                          ) : (
+   547→                            <span className="flex items-center gap-2"><Shield className="h-4 w-4" /> Vérifier et créer mon compte</span>
+   548→                          )}
+   549→                        </Button>
+   550→
+   551→                        <div className="text-center">
+   552→                          {inscTimer > 0 ? (
+   553→                            <p className="text-xs text-muted-foreground">
+   554→                              Code valable encore <span className="font-bold text-foreground">{fmtTimer(inscTimer)}</span>
+   555→                            </p>
+   556→                          ) : (
+   557→                            <button
+   558→                              onClick={resendInscOtp}
+   559→                              disabled={inscSending}
+   560→                              className="text-xs font-semibold text-amber-600 dark:text-amber-400 hover:underline inline-flex items-center gap-1 disabled:opacity-50"
+   561→                            >
+   562→                              <RefreshCw className={`h-3 w-3 ${inscSending ? 'animate-spin' : ''}`} />
+   563→                              Renvoyer le code par SMS
+   564→                            </button>
+   565→                          )}
+   566→                        </div>
+   567→
+   568→                        <button onClick={() => { setInscStep('form'); setInscTimer(0) }} className="text-xs text-muted-foreground hover:text-foreground transition-colors text-center w-full block">
+   569→                          <ArrowLeft className="h-3 w-3 inline mr-1" /> Modifier mes informations
+   570→                        </button>
+   571→                      </motion.div>
+   572→                    )}
+   573→
+   574→                    {/* ── Succès inscription ── */}
+   575→                    {inscStep === 'success' && (
+   576→                      <motion.div key="i-ok" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }} className="p-8 sm:p-12 text-center space-y-4">
+   577→                        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 200, delay: 0.1 }} className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30">
+   578→                          <svg className="h-8 w-8 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+   579→                            <motion.path initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.5, delay: 0.2 }} strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+   580→                          </svg>
+   581→                        </motion.div>
+   582→                        <h2 className="text-xl font-extrabold">Bienvenue, {prenom} !</h2>
+   583→                        <p className="text-sm text-muted-foreground">Votre compte a été créé avec succès.</p>
+   584→                        <p className="text-xs text-muted-foreground animate-pulse">Chargement de Studio Créatif...</p>
+   585→                      </motion.div>
+   586→                    )}
+   587→                  </AnimatePresence>
+   588→                </TabsContent>
+   589→
+   590→                {/* ═══════════ CONNEXION ═══════════ */}
+   591→                <TabsContent value="connexion">
+   592→                  <AnimatePresence mode="wait">
+   593→
+   594→                    {/* ── Formulaire connexion ── */}
+   595→                    {loginStep === 'phone' && (
+   596→                      <motion.div key="l-phone" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.3 }} className="p-6 sm:p-8 space-y-5">
+   597→                        <div className="text-center mb-2">
+   598→                          <h2 className="text-lg font-bold">Connectez-vous</h2>
+   599→                          <p className="text-xs text-muted-foreground mt-1">Entrez votre numéro pour recevoir un code par SMS</p>
+   600→                        </div>
+   601→
+   602→                        {loginError && (
+   603→                          <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800/40 rounded-xl p-3 flex items-start gap-2">
+   604→                            <AlertCircle className="h-4 w-4 text-red-500 shrink-0 mt-0.5" />
+   605→                            <p className="text-xs text-red-700 dark:text-red-400 leading-relaxed">{loginError}</p>
+   606→                          </motion.div>
+   607→                        )}
+   608→
+   609→                        <div className="space-y-1.5">
+   610→                          <Label className="text-xs font-semibold">Pays</Label>
+   611→                          <PaysSelect value={loginPaysIndex} onChange={setLoginPaysIndex} />
+   612→                        </div>
+   613→
+   614→                        <div className="space-y-1.5">
+   615→                          <Label className="text-xs font-semibold">Numéro de téléphone *</Label>
+   616→                          <div className="relative">
+   617→                            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10 pointer-events-none" />
+   618→                            <div className="absolute left-9 top-1/2 -translate-y-1/2 text-xs font-semibold text-muted-foreground border-r border-border pr-2 h-5 flex items-center pointer-events-none">
+   619→                              {loginCode}
+   620→                            </div>
+   621→                            <Input type="tel" placeholder="70 00 00 00" value={loginPhone} onChange={(e) => { setLoginPhone(e.target.value); setLoginError('') }} className="pl-[5.5rem] h-11 text-sm" />
+   622→                          </div>
+   623→                        </div>
+   624→
+   625→                        <Button
+   626→                          onClick={sendLoginOtp}
+   627→                          disabled={!loginPhone.trim() || loginSending}
+   628→                          className="w-full bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 hover:from-amber-600 hover:via-orange-600 hover:to-red-600 text-white font-bold h-12 text-sm shadow-lg shadow-amber-500/20 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
+   629→                        >
+   630→                          {loginSending ? (
+   631→                            <span className="flex items-center gap-2"><Loader2 className="h-4 w-4 animate-spin" /> Envoi du SMS...</span>
+   632→                          ) : (
+   633→                            <span className="flex items-center gap-2"><MessageSquare className="h-4 w-4" /> Recevoir mon code par SMS <ArrowRight className="h-4 w-4" /></span>
+   634→                          )}
+   635→                        </Button>
+   636→                      </motion.div>
+   637→                    )}
+   638→
+   639→                    {/* ── Vérification OTP (connexion) ── */}
+   640→                    {loginStep === 'otp' && (
+   641→                      <motion.div key="l-otp" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.3 }} className="p-6 sm:p-8 space-y-5">
+   642→                        <div className="text-center">
+   643→                          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 200, delay: 0.1 }} className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30 mb-4">
+   644→                            <MessageSquare className="h-7 w-7 text-emerald-600 dark:text-emerald-400" />
+   645→                          </motion.div>
+   646→                          <h2 className="text-lg font-bold">Vérification par SMS</h2>
+   647→                          <p className="text-xs text-muted-foreground mt-1.5">
+   648→                            Code pour <span className="font-semibold text-foreground">{loginCode} {loginPhone}</span>
+   649→                          </p>
+   650→                        </div>
+   651→
+   652→                        <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/40 rounded-xl p-3 text-center">
+   653→                          <p className="text-xs text-emerald-700 dark:text-emerald-400 font-medium">
+   654→                            <Shield className="h-3.5 w-3.5 inline mr-1" />
+   655→                            {loginSmsInfo || 'Code envoyé par SMS'}
+   656→                          </p>
+   657→                        </div>
+   658→
+   659→                        {loginOtpCode && (
+   660→                          <OtpCodeCard
+   661→                            code={loginOtpCode}
+   662→                            copied={loginCodeCopied}
+   663→                            onCopy={() => copyCode(loginOtpCode, setLoginCodeCopied)}
+   664→                            label="Votre code de vérification"
+   665→                          />
+   666→                        )}
+   667→
+   668→                        <OtpSlots value={loginOtp} onChange={(v) => { setLoginOtp(v); setLoginOtpError('') }} />
+   669→
+   670→                        {loginOtpError && (
+   671→                          <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-center gap-1.5 text-xs text-destructive font-medium">
+   672→                            <AlertCircle className="h-3.5 w-3.5" />
+   673→                            {loginOtpError}
+   674→                          </motion.div>
+   675→                        )}
+   676→
+   677→                        <Button
+   678→                          onClick={verifyLoginOtp}
+   679→                          disabled={loginOtp.length !== 6 || loginVerifying}
+   680→                          className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold h-12 text-sm shadow-lg shadow-emerald-500/20 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
+   681→                        >
+   682→                          {loginVerifying ? (
+   683→                            <span className="flex items-center gap-2"><Loader2 className="h-4 w-4 animate-spin" /> Vérification...</span>
+   684→                          ) : (
+   685→                            <span className="flex items-center gap-2"><Shield className="h-4 w-4" /> Vérifier et se connecter</span>
+   686→                          )}
+   687→                        </Button>
+   688→
+   689→                        <div className="text-center">
+   690→                          {loginTimer > 0 ? (
+   691→                            <p className="text-xs text-muted-foreground">
+   692→                              Code valable encore <span className="font-bold text-foreground">{fmtTimer(loginTimer)}</span>
+   693→                            </p>
+   694→                          ) : (
+   695→                            <button
+   696→                              onClick={resendLoginOtp}
+   697→                              disabled={loginSending}
+   698→                              className="text-xs font-semibold text-amber-600 dark:text-amber-400 hover:underline inline-flex items-center gap-1 disabled:opacity-50"
+   699→                            >
+   700→                              <RefreshCw className={`h-3 w-3 ${loginSending ? 'animate-spin' : ''}`} />
+   701→                              Renvoyer le code par SMS
+   702→                            </button>
+   703→                          )}
+   704→                        </div>
+   705→
+   706→                        <button onClick={() => { setLoginStep('phone'); setLoginTimer(0) }} className="text-xs text-muted-foreground hover:text-foreground transition-colors text-center w-full block">
+   707→                          <ArrowLeft className="h-3 w-3 inline mr-1" /> Modifier le numéro
+   708→                        </button>
+   709→                      </motion.div>
+   710→                    )}
+   711→                  </AnimatePresence>
+   712→                </TabsContent>
+   713→              </Tabs>
+   714→            </CardContent>
+   715→          </div>
+   716→        </Card>
+   717→
+   718→        {/* ─── Bas de page ─── */}
+   719→        <div className="mt-6 flex items-center justify-center gap-6 text-xs text-muted-foreground">
+   720→          <span className="flex items-center gap-1.5"><Palette className="h-3.5 w-3.5 text-amber-500" /> Design</span>
+   721→          <span className="flex items-center gap-1.5"><Globe className="h-3.5 w-3.5 text-blue-500" /> Sites Web</span>
+   722→          <span className="flex items-center gap-1.5"><MonitorPlay className="h-3.5 w-3.5 text-purple-500" /> Vidéo</span>
+   723→          <span className="flex items-center gap-1.5"><GraduationCap className="h-3.5 w-3.5 text-emerald-500" /> Formation</span>
+   724→        </div>
+   725→      </motion.div>
+   726→    </div>
+   727→  )
+   728→}
