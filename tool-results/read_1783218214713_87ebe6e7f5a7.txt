@@ -1,0 +1,402 @@
+  1800→                <Card className="border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl overflow-hidden">
+  1801→                  <div className="bg-white/5 border-b border-white/10 px-5 py-3 flex items-center gap-2">
+  1802→                    <div className="flex gap-1.5">
+  1803→                      <div className="w-3 h-3 rounded-full bg-red-500/80" />
+  1804→                      <div className="w-3 h-3 rounded-full bg-amber-500/80" />
+  1805→                      <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
+  1806→                    </div>
+  1807→                    <span className="text-[11px] text-slate-400 ml-2 font-medium">dashboard.createurboutique.com</span>
+  1808→                  </div>
+  1809→                  <CardContent className="p-5 sm:p-6 space-y-4">
+  1810→                    <div className="flex items-center justify-between">
+  1811→                      <div>
+  1812→                        <p className="text-xs text-slate-400">Bienvenue,</p>
+  1813→                        <p className="text-sm font-bold text-amber-400">Mon Espace Client</p>
+  1814→                      </div>
+  1815→                      <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-[10px]">
+  1816→                        <span className="relative flex h-1.5 w-1.5 mr-1.5">
+  1817→                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+  1818→                          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400" />
+  1819→                        </span>
+  1820→                        En ligne
+  1821→                      </Badge>
+  1822→                    </div>
+  1823→
+  1824→                    {/* Mini project cards */}
+  1825→                    {[
+  1826→                      { name: 'Logo Restaurant', status: 'Terminé', statusColor: 'text-emerald-400', progress: 100, icon: '✅' },
+  1827→                      { name: 'Affiche Promotion', status: 'En cours', statusColor: 'text-amber-400', progress: 65, icon: '🔄' },
+  1828→                      { name: 'Site Web Vitrine', status: 'En attente', statusColor: 'text-slate-400', progress: 0, icon: '⏳' },
+  1829→                    ].map((project, i) => (
+  1830→                      <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5">
+  1831→                        <span className="text-lg">{project.icon}</span>
+  1832→                        <div className="flex-1 min-w-0">
+  1833→                          <p className="text-sm font-medium text-slate-200 truncate">{project.name}</p>
+  1834→                          <div className="flex items-center gap-2 mt-1.5">
+  1835→                            <div className="flex-1 h-1.5 rounded-full bg-white/10 overflow-hidden">
+  1836→                              <motion.div
+  1837→                                className="h-full rounded-full bg-gradient-to-r from-amber-500 to-emerald-500"
+  1838→                                initial={{ width: 0 }}
+  1839→                                whileInView={{ width: `${project.progress}%` }}
+  1840→                                viewport={{ once: true }}
+  1841→                                transition={{ duration: 1, delay: 0.3 + i * 0.15, ease: 'easeOut' }}
+  1842→                              />
+  1843→                            </div>
+  1844→                            <span className="text-[10px] font-medium text-slate-400">{project.progress}%</span>
+  1845→                          </div>
+  1846→                        </div>
+  1847→                        <span className={`text-[11px] font-semibold ${project.statusColor} whitespace-nowrap`}>{project.status}</span>
+  1848→                      </div>
+  1849→                    ))}
+  1850→
+  1851→                    <div className="grid grid-cols-3 gap-3 pt-2">
+  1852→                      {[
+  1853→                        { label: 'Projets', value: '3', color: 'text-amber-400' },
+  1854→                        { label: 'Terminés', value: '1', color: 'text-emerald-400' },
+  1855→                        { label: 'Livré', value: '1', color: 'text-blue-400' },
+  1856→                      ].map((stat, i) => (
+  1857→                        <div key={i} className="text-center p-2.5 rounded-xl bg-white/5 border border-white/5">
+  1858→                          <p className={`text-lg font-bold ${stat.color}`}>{stat.value}</p>
+  1859→                          <p className="text-[10px] text-slate-400 mt-0.5">{stat.label}</p>
+  1860→                        </div>
+  1861→                      ))}
+  1862→                    </div>
+  1863→
+  1864→                    <p className="text-[10px] text-slate-500 text-center pt-1">Connectez-vous via le formulaire pour accéder à votre vrai tableau de bord personnalisé.</p>
+  1865→                  </CardContent>
+  1866→                </Card>
+  1867→              </FadeIn>
+  1868→            </div>
+  1869→          </div>
+  1870→        </section>
+  1871→
+  1872→        {/* ═══ POURQUOI NOUS CHOISIR ═══ */}
+  1873→        <section className="py-16 sm:py-20 bg-gradient-to-br from-amber-50 via-orange-50/50 to-white dark:from-amber-950/10 dark:via-orange-950/5 dark:to-background relative overflow-hidden">
+  1874→          <div className="absolute -top-20 -left-20 h-80 w-80 bg-amber-200/30 dark:bg-amber-900/10 rounded-full blur-3xl" />
+  1875→          <div className="absolute -bottom-20 -right-20 h-80 w-80 bg-orange-200/20 dark:bg-orange-900/10 rounded-full blur-3xl" />
+  1876→          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  1877→            <FadeIn className="text-center mb-14">
+  1878→              <Badge variant="secondary" className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200">
+  1879→                <ThumbsUp className="h-3 w-3 mr-1" /> Collaboration
+  1880→              </Badge>
+  1881→              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Pourquoi Collaborer Ensemble ?</h2>
+  1882→              <p className="mt-4 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+  1883→                  Au-delà des compétences techniques, c'est une approche humaine et personnalisée qui fait la différence. Voici ce qui rend chaque collaboration unique et efficace.
+  1884→              </p>
+  1885→            </FadeIn>
+  1886→
+  1887→            <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  1888→              {[
+  1889→                { icon: Zap, title: 'Créativité sur-mesure', desc: "Chaque projet est conçu selon vos besoins spécifiques. Aucun template pré-fait, aucune copie : votre identité visuelle sera unique et reflétera parfaitement l'essence de votre marque. Du premier croquis au fichier final, chaque détail est pensé pour vous.", color: 'bg-amber-100 dark:bg-amber-900/30', iconColor: 'text-amber-600' },
+  1890→                { icon: ShieldCheck, title: 'Rapidité & Efficacité', desc: "Des délais respectés pour que vous puissiez lancer vos campagnes à temps. Je comprends que le temps est précieux pour un entrepreneur : c'est pourquoi chaque projet est livré rapidement sans jamais compromettre la qualité.", color: 'bg-emerald-100 dark:bg-emerald-900/30', iconColor: 'text-emerald-600' },
+  1891→                { icon: MessageCircle, title: 'Accompagnement de A à Z', desc: "Une écoute attentive pour garantir un résultat qui dépasse vos attentes. De la première discussion sur WhatsApp à la livraison finale, je vous guide à chaque étape et j'ajuste jusqu'à ce que vous soyez entièrement satisfait.", color: 'bg-blue-100 dark:bg-blue-900/30', iconColor: 'text-blue-600' },
+  1892→                { icon: ShieldCheck, title: 'Qualité Professionnelle', desc: 'Chaque création est réalisée avec les meilleurs outils du marché : Canva Pro, CapCut Pro, PicsArt Pro. Le résultat est un visuel qui rivalise avec ceux des grandes agences, à une fraction du prix.', color: 'bg-purple-100 dark:bg-purple-900/30', iconColor: 'text-purple-600' },
+  1893→                { icon: RefreshCw, title: 'Révisions Gratuites', desc: "Non satisfait ? J'effectue des révisions gratuites jusqu'à ce que le résultat vous convienne parfaitement. Votre satisfaction n'est pas une option, c'est mon engagement.", color: 'bg-orange-100 dark:bg-orange-900/30', iconColor: 'text-orange-600' },
+  1894→                { icon: Gift, title: '100% Gratuit', desc: "Tous mes services sont actuellement offerts gratuitement. C'est ma façon de vous permettre de découvrir la qualité de mon travail sans aucun engagement financier.", color: 'bg-emerald-100 dark:bg-emerald-900/30', iconColor: 'text-emerald-600' },
+  1895→              ].map((item) => (
+  1896→                <motion.div key={item.title} variants={cardVariants}>
+  1897→                  <Card className="h-full border-0 shadow-md hover:shadow-xl transition-all duration-300 group hover:-translate-y-1">
+  1898→                    <CardContent className="p-6">
+  1899→                      <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${item.color} mb-4 group-hover:scale-110 transition-transform duration-300`}>
+  1900→                        <item.icon className={`h-6 w-6 ${item.iconColor}`} />
+  1901→                      </div>
+  1902→                      <h3 className="font-bold text-base mb-2">{item.title}</h3>
+  1903→                      <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
+  1904→                    </CardContent>
+  1905→                  </Card>
+  1906→                </motion.div>
+  1907→              ))}
+  1908→            </StaggerContainer>
+  1909→
+  1910→            {/* Garantie badge */}
+  1911→            <FadeIn delay={0.3} className="mt-12">
+  1912→              <div className="mx-auto max-w-2xl">
+  1913→                <Card className="border-2 border-emerald-200 dark:border-emerald-800 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20 overflow-hidden">
+  1914→                  <CardContent className="p-6 sm:p-8 text-center">
+  1915→                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30 mx-auto mb-4">
+  1916→                      <BadgeCheck className="h-8 w-8 text-emerald-600" />
+  1917→                    </div>
+  1918→                    <h3 className="text-xl font-extrabold text-emerald-700 dark:text-emerald-400 mb-2">Garantie 100% Satisfaction</h3>
+  1919→                    <p className="text-sm text-muted-foreground leading-relaxed">
+  1920→                      Je garantis votre satisfaction. Si le résultat ne correspond pas à votre commande, je reprends le travail gratuitement. Aucun risque pour vous.
+  1921→                    </p>
+  1922→                    <div className="flex flex-wrap items-center justify-center gap-4 mt-5">
+  1923→                      {['Gratuit', 'Révisions illimitées', 'Support permanent'].map((tag) => (
+  1924→                        <span key={tag} className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 px-3 py-1 text-xs font-medium text-emerald-700 dark:text-emerald-400">
+  1925→                          <CheckCircle2 className="h-3 w-3" /> {tag}
+  1926→                        </span>
+  1927→                      ))}
+  1928→                    </div>
+  1929→                  </CardContent>
+  1930→                </Card>
+  1931→              </div>
+  1932→            </FadeIn>
+  1933→          </div>
+  1934→        </section>
+  1935→
+  1936→        
+  1937→
+  1938→        {/* ═══ POUR QUI + OUTILS + LIVRAISON ═══ */}
+  1939→        <section className="py-16 sm:py-20 bg-muted/30">
+  1940→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  1941→            {/* Pour qui */}
+  1942→            <FadeIn className="mb-12">
+  1943→              <div className="text-center mb-8">
+  1944→                <Badge variant="secondary" className="mb-3 bg-blue-100 text-blue-700 border-blue-200">
+  1945→                  <UserCheck className="h-3 w-3 mr-1" /> Cible
+  1946→                </Badge>
+  1947→                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Pour Qui Sont Mes Services ?</h2>
+  1948→              </div>
+  1949→              <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+  1950→                {[
+  1951→                  { icon: Target, title: 'Entrepreneurs', desc: 'Créez une identité visuelle forte pour votre business et attirez plus de clients avec des designs professionnels.', image: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=300&h=200&fit=crop' },
+  1952→                  { icon: GraduationCap, title: 'Étudiants', desc: 'Développez vos compétences en design et digital avec mes formations abordables et mes outils pro.', image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=300&h=200&fit=crop' },
+  1953→                  { icon: Building2, title: 'Entreprises', desc: 'Renforcez votre image de marque avec des supports de communication professionnels et modernes.', image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=300&h=200&fit=crop' },
+  1954→                  { icon: Sparkles, title: 'Créateurs de contenu', desc: 'Boostez votre production de contenu avec du montage vidéo pro, des visuels réseaux sociaux et des outils premium.', image: 'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=300&h=200&fit=crop' },
+  1955→                ].map((item) => (
+  1956→                  <motion.div key={item.title} variants={cardVariants}>
+  1957→                    <Card className="h-full border-0 shadow-md text-center hover:shadow-xl transition-all duration-300 overflow-hidden group">
+  1958→                      <div className="relative h-32 overflow-hidden">
+  1959→                        <img src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+  1960→                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+  1961→                        <div className="absolute bottom-3 left-1/2 -translate-x-1/2">
+  1962→                          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white shadow-lg">
+  1963→                            <item.icon className="h-6 w-6 text-amber-600" />
+  1964→                          </div>
+  1965→                        </div>
+  1966→                      </div>
+  1967→                      <CardContent className="p-5">
+  1968→                        <h3 className="font-bold text-sm mb-2">{item.title}</h3>
+  1969→                        <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
+  1970→                      </CardContent>
+  1971→                    </Card>
+  1972→                  </motion.div>
+  1973→                ))}
+  1974→              </StaggerContainer>
+  1975→            </FadeIn>
+  1976→
+  1977→            <div className="grid lg:grid-cols-2 gap-8 mt-12">
+  1978→              {/* Outils utilisés */}
+  1979→              <FadeIn>
+  1980→                <Card className="border-0 shadow-lg h-full">
+  1981→                  <CardContent className="p-6 sm:p-8">
+  1982→                    <h3 className="text-lg font-bold mb-2 flex items-center gap-2">
+  1983→                      <Wrench className="h-5 w-5 text-amber-500" /> Outils Utilisés
+  1984→                    </h3>
+  1985→                    <p className="text-xs text-muted-foreground mb-5">Les outils professionnels qui garantissent la qualité de mes créations.</p>
+  1986→                    <div className="grid grid-cols-2 gap-3">
+  1987→                      {[
+  1988→                        { name: 'CapCut Pro', desc: 'Montage vidéo' },
+  1989→                        { name: 'Canva Pro', desc: 'Design rapide' },
+  1990→                        { name: 'PicsArt Pro', desc: 'Design mobile' },
+  1991→                        { name: 'Outils web pro', desc: 'Sites web' },
+  1992→                      ].map((outil) => (
+  1993→                        <div key={outil.name} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border">
+  1994→                          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 flex-shrink-0">
+  1995→                            <Wrench className="h-4 w-4 text-amber-600" />
+  1996→                          </div>
+  1997→                          <div>
+  1998→                            <p className="text-xs font-bold">{outil.name}</p>
+  1999→                            <p className="text-[10px] text-muted-foreground">{outil.desc}</p>
+  2000→                          </div>
+  2001→                        </div>
+  2002→                      ))}
+  2003→                    </div>
+  2004→                  </CardContent>
+  2005→                </Card>
+  2006→              </FadeIn>
+  2007→
+  2008→              {/* Livraison numérique */}
+  2009→              <FadeIn delay={0.1}>
+  2010→                <Card className="border-0 shadow-lg h-full">
+  2011→                  <CardContent className="p-6 sm:p-8">
+  2012→                    <h3 className="text-lg font-bold mb-2 flex items-center gap-2">
+  2013→                      <FolderDown className="h-5 w-5 text-emerald-500" /> Livraison Numérique
+  2014→                    </h3>
+  2015→                    <p className="text-xs text-muted-foreground mb-5">Vos fichiers livrés rapidement et en toute sécurité.</p>
+  2016→                    <div className="space-y-3">
+  2017→                      {[
+  2018→                        { icon: MessageCircle, label: 'Fichiers envoyés via WhatsApp', detail: 'Réception instantanée' },
+  2019→                        { icon: Globe, label: 'Google Drive', detail: 'Dossier partagé sécurisé' },
+  2020→                        { icon: Zap, label: 'Devis gratuit', detail: 'Selon le délai annoncé' },
+  2021→                        { icon: Shield, label: 'Fichiers haute qualité', detail: 'Format source + export' },
+  2022→                      ].map((item) => (
+  2023→                        <div key={item.label} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border">
+  2024→                          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex-shrink-0">
+  2025→                            <item.icon className="h-4 w-4 text-emerald-600" />
+  2026→                          </div>
+  2027→                          <div className="flex-1">
+  2028→                            <p className="text-xs font-bold">{item.label}</p>
+  2029→                            <p className="text-[10px] text-muted-foreground">{item.detail}</p>
+  2030→                          </div>
+  2031→                          <CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" />
+  2032→                        </div>
+  2033→                      ))}
+  2034→                    </div>
+  2035→                  </CardContent>
+  2036→                </Card>
+  2037→              </FadeIn>
+  2038→            </div>
+  2039→          </div>
+  2040→        </section>
+  2041→
+  2042→        {/* ═══ À PROPOS ═══ */}
+  2043→        <section id="apropos" className="py-16 sm:py-20">
+  2044→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  2045→            <div className="grid lg:grid-cols-2 gap-12 items-center">
+  2046→              <FadeIn>
+  2047→                <div className="relative">
+  2048→                  <div className="rounded-2xl overflow-hidden shadow-xl h-[400px] relative">
+  2049→                    <img src="/demo-photo.png" alt="SK Designer Luxe par Sacko - À propos" className="w-full h-full object-cover" />
+  2050→                    <div className="absolute inset-0 bg-gradient-to-t from-amber-900/80 via-amber-900/30 to-transparent" />
+  2051→                    <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+  2052→                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mb-3">
+  2053→                        <Palette className="h-7 w-7" />
+  2054→                      </div>
+  2055→                      <h3 className="text-2xl font-bold">SK Designer Luxe</h3>
+  2056→                      <p className="mt-1 text-white/80 text-sm">Créateur Digital &bull; Bamako, Mali</p>
+  2057→                    </div>
+  2058→                  </div>
+  2059→                  <div className="absolute -bottom-6 -right-6 bg-white dark:bg-card rounded-2xl p-5 shadow-xl border hidden sm:block">
+  2060→                    <div className="flex items-center gap-3">
+  2061→                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
+  2062→                        <Zap className="h-5 w-5 text-amber-600" />
+  2063→                      </div>
+  2064→                      <div>
+  2065→                        <p className="text-lg font-bold">50+ Projets livrés</p>
+  2066→                        <p className="text-xs text-muted-foreground">À Bamako et au-delà</p>
+  2067→                      </div>
+  2068→                    </div>
+  2069→                  </div>
+  2070→                </div>
+  2071→              </FadeIn>
+  2072→
+  2073→              <FadeIn delay={0.2}>
+  2074→                <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+  2075→                  <Heart className="h-3 w-3 mr-1" /> Qui suis-je
+  2076→                </Badge>
+  2077→                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">À Propos de Sacko</h2>
+  2078→                <div className="mt-6 space-y-4 text-muted-foreground leading-relaxed">
+  2079→                  <p>
+  2080→                    Bienvenue ! Je suis <strong className="text-foreground">Sacko</strong>, créateur digital passionné basé à Bamako. Mon objectif est d&apos;accompagner les entreprises et les porteurs de projets dans la construction d&apos;une <strong className="text-foreground">image de marque forte, professionnelle et mémorable</strong>. De la première idée à la conception finale, je transforme votre vision en une réalité visuelle qui attire et fidélise vos clients.
+  2081→                  </p>
+  2082→                  <p>
+  2083→                    Je maîtrise les outils les plus demandés du marché — <strong className="text-foreground">CapCut Pro, Canva Pro, PicsArt Pro</strong> — et je les mets au service de chaque projet pour garantir des résultats à la hauteur de vos ambitions. Que ce soit un logo percutant, un site web qui convertit, ou une identité visuelle complète, chaque création est pensée pour vous démarquer de la concurrence.
+  2084→                  </p>
+  2085→                  <p>
+  2086→                    Ma mission : <strong className="text-foreground">aider les entrepreneurs et créateurs du Mali et d&apos;Afrique</strong> à prendre le contrôle de leur image numérique. Je crois fermement que chaque business, même le plus modeste, mérite une identité visuelle qui inspire confiance et attire des clients. C&apos;est cette conviction qui guide chaque projet que je réalise.
+  2087→                  </p>
+  2088→                </div>
+  2089→
+  2090→                <div className="mt-6 grid grid-cols-3 gap-3">
+  2091→                  {[
+  2092→                    { number: '50+', label: 'Marques créées' },
+  2093→                    { number: '100%', label: 'Sur-mesure' },
+  2094→                    { number: '5/5', label: 'Satisfaction' },
+  2095→                  ].map((stat) => (
+  2096→                    <div key={stat.label} className="text-center p-3 rounded-lg bg-muted/50 border">
+  2097→                      <div className="text-lg font-bold text-amber-600">{stat.number}</div>
+  2098→                      <div className="text-[10px] text-muted-foreground">{stat.label}</div>
+  2099→                    </div>
+  2100→                  ))}
+  2101→                </div>
+  2102→
+  2103→                <div className="mt-8 flex flex-wrap gap-3">
+  2104→                  <a href="#services">
+  2105→                    <Button className="bg-amber-500 hover:bg-amber-600 text-white font-semibold">
+  2106→                      Découvrir mes services <ArrowRight className="ml-2 h-4 w-4" />
+  2107→                    </Button>
+  2108→                  </a>
+  2109→                  <a href="#contact">
+  2110→                    <Button variant="outline" className="font-semibold">
+  2111→                      Me contacter
+  2112→                    </Button>
+  2113→                  </a>
+  2114→                </div>
+  2115→              </FadeIn>
+  2116→            </div>
+  2117→          </div>
+  2118→        </section>
+  2119→
+  2120→        {/* ═══ AVANT / APRÈS + GARANTIE ═══ */}
+  2121→        <section className="py-16 sm:py-20 bg-muted/30">
+  2122→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  2123→            <div className="grid lg:grid-cols-2 gap-8">
+  2124→              {/* Comparaison Avant/Après */}
+  2125→              <FadeIn>
+  2126→                <div className="text-center mb-6">
+  2127→                  <Badge variant="secondary" className="mb-3 bg-purple-100 text-purple-700 border-purple-200">
+  2128→                    <ArrowRightLeft className="h-3 w-3 mr-1" /> Avant / Après
+  2129→                  </Badge>
+  2130→                  <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">La Différence est Visible</h2>
+  2131→                  <p className="text-sm text-muted-foreground mt-2">Design simple vs design professionnel — voyez la valeur ajoutée</p>
+  2132→                </div>
+  2133→                <div className="grid grid-cols-2 gap-4">
+  2134→                  <div className="space-y-3">
+  2135→                    <div className="text-center">
+  2136→                      <Badge variant="secondary" className="bg-red-100 text-red-600 border-red-200">Avant</Badge>
+  2137→                    </div>
+  2138→                    <Card className="border-0 shadow-md overflow-hidden">
+  2139→                      <div className="h-28 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 flex items-center justify-center">
+  2140→                        <div className="text-center p-3">
+  2141→                          <div className="w-16 h-16 bg-gray-300 dark:bg-gray-600 rounded-lg mx-auto mb-2 flex items-center justify-center">
+  2142→                            <PenTool className="h-6 w-6 text-gray-400" />
+  2143→                          </div>
+  2144→                          <p className="text-[10px] text-gray-500">Logo basique</p>
+  2145→                        </div>
+  2146→                      </div>
+  2147→                      <CardContent className="p-3">
+  2148→                        <ul className="space-y-1">
+  2149→                          {['Design basique', 'Pas d\'identité', 'Non professionnel'].map((t) => (
+  2150→                            <li key={t} className="flex items-center gap-1 text-[10px] text-red-500">
+  2151→                              <X className="h-3 w-3" /> {t}
+  2152→                            </li>
+  2153→                          ))}
+  2154→                        </ul>
+  2155→                      </CardContent>
+  2156→                    </Card>
+  2157→                  </div>
+  2158→                  <div className="space-y-3">
+  2159→                    <div className="text-center">
+  2160→                      <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200">Après</Badge>
+  2161→                    </div>
+  2162→                    <Card className="border-0 shadow-md overflow-hidden">
+  2163→                      <div className="h-28 bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
+  2164→                        <div className="text-center p-3">
+  2165→                          <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-lg mx-auto mb-2 flex items-center justify-center">
+  2166→                            <Sparkles className="h-6 w-6 text-white" />
+  2167→                          </div>
+  2168→                          <p className="text-[10px] text-white/90">Logo pro</p>
+  2169→                        </div>
+  2170→                      </div>
+  2171→                      <CardContent className="p-3">
+  2172→                        <ul className="space-y-1">
+  2173→                          {['Design professionnel', 'Identité forte', 'Impact visuel'].map((t) => (
+  2174→                            <li key={t} className="flex items-center gap-1 text-[10px] text-emerald-600">
+  2175→                              <CheckCircle2 className="h-3 w-3" /> {t}
+  2176→                            </li>
+  2177→                          ))}
+  2178→                        </ul>
+  2179→                      </CardContent>
+  2180→                    </Card>
+  2181→                  </div>
+  2182→                </div>
+  2183→              </FadeIn>
+  2184→
+  2185→              {/* Garantie + Objectif + Partenariats + Publicité */}
+  2186→              <div className="space-y-6">
+  2187→                {/* Garantie de qualité */}
+  2188→                <FadeIn delay={0.1}>
+  2189→                  <Card className="border-2 border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-950/10">
+  2190→                    <CardContent className="p-5">
+  2191→                      <div className="flex items-center gap-3 mb-3">
+  2192→                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500 text-white">
+  2193→                          <BadgeCheck className="h-5 w-5" />
+  2194→                        </div>
+  2195→                        <div>
+  2196→                          <h3 className="font-bold text-sm">Garantie de Qualité</h3>
+  2197→                          <p className="text-[10px] text-muted-foreground">Ma promesse envers vous</p>
+  2198→                        </div>
+  2199→                      </div>
+
+[showing lines 1800-2199 of 3161; use offset=2200 with limit to continue reading]

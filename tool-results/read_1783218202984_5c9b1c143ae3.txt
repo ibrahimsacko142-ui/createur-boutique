@@ -1,0 +1,402 @@
+  2600→                        Responsable : Ibrahim Sacko<br />
+  2601→                        Localisation : Bamako, Mali<br />
+  2602→                        Contact : contact@createurboutique.com / +223 97 78 72 44 (WhatsApp)</p>
+  2603→                      </div>
+  2604→                      <div>
+  2605→                        <h4 className="font-bold text-foreground text-base mb-2">Hébergement</h4>
+  2606→                        <p>Ce site est hébergé par Vercel Inc.<br />
+  2607→                        Adresse : 340 S Lemon Ave #4133, Walnut, CA 91789, États-Unis<br />
+  2608→                        Site web : vercel.com</p>
+  2609→                      </div>
+  2610→                      <div>
+  2611→                        <h4 className="font-bold text-foreground text-base mb-2">Propriété intellectuelle</h4>
+  2612→                        <p>L&rsquo;ensemble des contenus présents sur ce site (textes, images, logos, vidéos, créations graphiques) est la propriété de SK Designer Luxe, sauf mention contraire. Toute reproduction, distribution ou utilisation sans autorisation préalable est interdite.</p>
+  2613→                      </div>
+  2614→                      <div>
+  2615→                        <h4 className="font-bold text-foreground text-base mb-2">Responsabilité</h4>
+  2616→                        <p>SK Designer Luxe s&rsquo;efforce d&rsquo;assurer l&rsquo;exactitude des informations diffusées sur ce site, mais ne peut garantir l&rsquo;absence d&rsquo;erreurs ou d&rsquo;omissions. L&rsquo;utilisateur du site est seul responsable de l&rsquo;usage qu&rsquo;il fait des informations fournies.</p>
+  2617→                      </div>
+  2618→                      <div>
+  2619→                        <h4 className="font-bold text-foreground text-base mb-2">Liens externes</h4>
+  2620→                        <p>Ce site peut contenir des liens vers des sites tiers (WhatsApp, réseaux sociaux, plateformes de paiement). SK Designer Luxe n&rsquo;est pas responsable du contenu ou des pratiques de confidentialité de ces sites externes.</p>
+  2621→                      </div>
+  2622→                      <div>
+  2623→                        <h4 className="font-bold text-foreground text-base mb-2">Droit applicable</h4>
+  2624→                        <p>Les présentes mentions légales sont soumises au droit malien.</p>
+  2625→                      </div>
+  2626→                    </div>
+  2627→                  </CardContent>
+  2628→                </Card>
+  2629→              </FadeIn>
+  2630→            )}
+  2631→
+  2632→            {legalPage === 'confidentialite' && (
+  2633→              <FadeIn>
+  2634→                <Card className="border-0 shadow-lg max-w-4xl mx-auto">
+  2635→                  <CardContent className="p-6 sm:p-10 space-y-6">
+  2636→                    <h3 className="text-2xl font-bold">Politique de Confidentialité</h3>
+  2637→                    <p className="text-sm text-muted-foreground leading-relaxed">Dernière mise à jour : 5 juillet 2026</p>
+  2638→                    <div className="space-y-5 text-sm text-muted-foreground leading-relaxed">
+  2639→                      <div>
+  2640→                        <h4 className="font-bold text-foreground text-base mb-2">1. Informations collectées</h4>
+  2641→                        <p>Lorsque vous utilisez ce site, je peux collecter :<br />
+  2642→                        - Les informations que vous fournissez via mes formulaires de contact (nom, numéro WhatsApp, email, description de votre projet)<br />
+  2643→                        - Des données de navigation anonymes (pages visitées, durée de visite, type d&rsquo;appareil) via des outils d&rsquo;analyse<br />
+  2644→                        - Des cookies pour améliorer votre expérience de navigation</p>
+  2645→                      </div>
+  2646→                      <div>
+  2647→                        <h4 className="font-bold text-foreground text-base mb-2">2. Utilisation des informations</h4>
+  2648→                        <p>Les informations collectées servent à :<br />
+  2649→                        - Répondre à vos demandes de devis ou de service<br />
+  2650→                        - Améliorer la qualité de mes services et de mon site<br />
+  2651→                        - Vous contacter au sujet de votre commande ou formation<br />
+  2652→                        - Afficher des publicités pertinentes (si applicable)</p>
+  2653→                      </div>
+  2654→                      <div>
+  2655→                        <h4 className="font-bold text-foreground text-base mb-2">3. Partage des informations</h4>
+  2656→                        <p>Je ne vends ni ne loue vos informations personnelles à des tiers. Elles peuvent être partagées uniquement :<br />
+  2657→                        - Avec des prestataires techniques nécessaires au fonctionnement du site (hébergement)<br />
+  2658→                        - Si la loi l&rsquo;exige</p>
+  2659→                      </div>
+  2660→                      <div>
+  2661→                        <h4 className="font-bold text-foreground text-base mb-2">4. Cookies et publicité</h4>
+  2662→                        <p>Ce site peut utiliser des cookies, y compris ceux de services publicitaires tiers (comme Google AdSense), pour proposer des annonces adaptées à vos centres d&rsquo;intérêt. Vous pouvez désactiver les cookies dans les paramètres de votre navigateur à tout moment.</p>
+  2663→                      </div>
+  2664→                      <div>
+  2665→                        <h4 className="font-bold text-foreground text-base mb-2">5. Sécurité</h4>
+  2666→                        <p>Je mets en oeuvre des mesures raisonnables pour protéger vos informations, mais aucun système n&rsquo;est totalement sécurisé à 100%.</p>
+  2667→                      </div>
+  2668→                      <div>
+  2669→                        <h4 className="font-bold text-foreground text-base mb-2">6. Vos droits</h4>
+  2670→                        <p>Vous pouvez à tout moment demander la suppression de vos données personnelles en me contactant via WhatsApp ou email.</p>
+  2671→                      </div>
+  2672→                      <div>
+  2673→                        <h4 className="font-bold text-foreground text-base mb-2">7. Contact</h4>
+  2674→                        <p>Pour toute question concernant cette politique : contact@createurboutique.com</p>
+  2675→                      </div>
+  2676→                    </div>
+  2677→                  </CardContent>
+  2678→                </Card>
+  2679→              </FadeIn>
+  2680→            )}
+  2681→          </div>
+  2682→        </section>
+  2683→
+  2684→        {/* ═══ FAQ ═══ */}
+  2685→        <section id="faq" className="py-16 sm:py-20 bg-muted/30">
+  2686→          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+  2687→            <FadeIn className="text-center mb-12">
+  2688→              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+  2689→                <MessageCircle className="h-3 w-3 mr-1" /> FAQ
+  2690→              </Badge>
+  2691→              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Questions Fréquentes</h2>
+  2692→              <p className="mt-3 text-muted-foreground max-w-xl mx-auto">
+  2693→                Les réponses aux questions les plus posées. Si vous ne trouvez pas votre réponse, contactez-moi directement sur WhatsApp.
+  2694→              </p>
+  2695→            </FadeIn>
+  2696→            <FadeIn delay={0.1} className="space-y-3">
+  2697→              {[
+  2698→                {
+  2699→                  q: "Est-ce que les services sont vraiment gratuits ?",
+  2700→                  a: "Oui, tous les services sont actuellement offerts gratuitement. C'est ma façon de vous permettre de découvrir la qualité de mon travail sans aucun engagement financier."
+  2701→                },
+  2702→                {
+  2703→                  q: "Comment recevoir ma commande ?",
+  2704→                  a: "Après avoir discuté de votre projet sur WhatsApp, je crée votre design et vous l'envoie directement via WhatsApp ou Google Drive. La livraison se fait généralement entre 1 et 24 heures selon le service."
+  2705→                },
+  2706→                {
+  2707→                  q: "Quels outils utilisez-vous ?",
+  2708→                  a: "J'utilise les meilleurs outils professionnels du marché : Canva Pro pour le design, CapCut Pro pour le montage vidéo, PicsArt Pro pour le design mobile, et des outils web professionnels pour les sites."
+  2709→                },
+  2710→                {
+  2711→                  q: "Combien de révisions sont incluses ?",
+  2712→                  a: "Les révisions sont illimitées et gratuites. Je travaille jusqu'à ce que vous soyez entièrement satisfait du résultat. Votre satisfaction est ma priorité absolue."
+  2713→                },
+  2714→                {
+  2715→                  q: "Comment suivre une formation ?",
+  2716→                  a: "Cliquez simplement sur la formation qui vous intéresse. Vous serez redirigé vers WhatsApp où je vous expliquerai le contenu et comment y accéder. Simple et direct."
+  2717→                },
+  2718→                {
+  2719→                  q: "Travaillez-vous avec des clients en dehors de Bamako ?",
+  2720→                  a: "Absolument ! Je travaille avec des clients partout au Mali et en Afrique. Toutes les communications et livraisons se font en ligne via WhatsApp et Google Drive."
+  2721→                },
+  2722→              ].map((faq, i) => {
+  2723→                const isOpen = faqOpen === `faq-${i}`
+  2724→                return (
+  2725→                  <Card key={i} className="border-0 shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
+  2726→                    <button
+  2727→                      onClick={() => setFaqOpen(isOpen ? null : `faq-${i}`)}
+  2728→                      className="w-full flex items-center justify-between p-5 text-left"
+  2729→                    >
+  2730→                      <h3 className="font-semibold text-sm pr-4">{faq.q}</h3>
+  2731→                      <motion.div
+  2732→                        animate={{ rotate: isOpen ? 180 : 0 }}
+  2733→                        transition={{ duration: 0.2 }}
+  2734→                        className="flex-shrink-0"
+  2735→                      >
+  2736→                        <ChevronUp className="h-4 w-4 text-muted-foreground" />
+  2737→                      </motion.div>
+  2738→                    </button>
+  2739→                    <AnimatePresence initial={false}>
+  2740→                      {isOpen && (
+  2741→                        <motion.div
+  2742→                          initial={{ height: 0, opacity: 0 }}
+  2743→                          animate={{ height: 'auto', opacity: 1 }}
+  2744→                          exit={{ height: 0, opacity: 0 }}
+  2745→                          transition={{ duration: 0.25, ease: 'easeInOut' }}
+  2746→                          className="overflow-hidden"
+  2747→                        >
+  2748→                          <p className="text-sm text-muted-foreground leading-relaxed px-5 pb-5">{faq.a}</p>
+  2749→                        </motion.div>
+  2750→                      )}
+  2751→                    </AnimatePresence>
+  2752→                  </Card>
+  2753→                )
+  2754→              })}
+  2755→            </FadeIn>
+  2756→            <FadeIn className="mt-8 text-center">
+  2757→              <p className="text-sm text-muted-foreground">
+  2758→                Vous avez d&apos;autres questions ?{' '}
+  2759→                <a href="#contact" className="text-amber-600 font-medium hover:underline">Contactez-moi</a> ou écrivez-moi directement sur{' '}
+  2760→                <a href="https://wa.me/22397787244" target="_blank" rel="noopener noreferrer" className="text-emerald-600 font-medium hover:underline">WhatsApp</a>.
+  2761→              </p>
+  2762→            </FadeIn>
+  2763→          </div>
+  2764→        </section>
+  2765→
+  2766→        {/* ═══ COMMANDE RAPIDE ═══ */}
+  2767→        <section id="commande-rapide" className="py-20 sm:py-24">
+  2768→          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+  2769→            <FadeIn>
+  2770→              <Card className="border-0 shadow-2xl overflow-hidden">
+  2771→                <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 p-1">
+  2772→                  <div className="bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 text-white p-6 sm:p-8 relative overflow-hidden">
+  2773→                    <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIzMCIgY3k9IjMwIiByPSIxLjUiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wOCkiLz48L3N2Zz4=')] opacity-50" />
+  2774→                    <div className="relative z-10 text-center">
+  2775→                      <Zap className="h-8 w-8 mx-auto mb-2" />
+  2776→                      <h2 className="text-2xl sm:text-3xl font-extrabold">Commander un Service</h2>
+  2777→                      <p className="mt-2 text-white/80 text-sm">Remplissez le formulaire et recevez votre service gratuitement via WhatsApp.</p>
+  2778→                      <div className="mt-4 inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm rounded-full px-4 py-1.5 text-white text-xs font-semibold border border-white/20">
+  2779→                        <span className="relative flex h-2 w-2">
+  2780→                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+  2781→                          <span className="relative inline-flex rounded-full h-2 w-2 bg-red-400" />
+  2782→                        </span>
+  2783→                        Limité à 5 commandes par jour — Réservez votre place
+  2784→                      </div>
+  2785→                    </div>
+  2786→                  </div>
+  2787→                </div>
+  2788→                <CardContent className="p-6 sm:p-8 space-y-4">
+  2789→                  <div className="space-y-2">
+  2790→                    <Label className="text-sm font-semibold">Service souhaité *</Label>
+  2791→                    <select
+  2792→                      value={quickOrder.service}
+  2793→                      onChange={(e) => setQuickOrder(prev => ({ ...prev, service: e.target.value }))}
+  2794→                      className="w-full h-11 rounded-md border border-input bg-background px-3 text-sm"
+  2795→                    >
+  2796→                      <option value="">Sélectionnez un service...</option>
+  2797→                      <option value="Affiche Professionnelle — Gratuit">Affiche Professionnelle — Gratuit</option>
+  2798→                      <option value="Logo Professionnel — Gratuit">Logo Professionnel — Gratuit</option>
+  2799→                      <option value="Site Web Simple — Gratuit">Site Web Simple — Gratuit</option>
+  2800→                      <option value="Site Web Professionnel — Gratuit">Site Web Professionnel — Gratuit</option>
+  2801→                      <option value="Montage Vidéo Pro — Gratuit">Montage Vidéo Pro — Gratuit</option>
+  2802→                      <option value="Contenu Réseaux Sociaux — Gratuit">Contenu Réseaux Sociaux — Gratuit</option>
+  2803→                      <option value="Formation Designer Graphique — Gratuit">Formation Designer Graphique — Gratuit</option>
+  2804→                      <option value="CapCut Pro — Gratuit">CapCut Pro — Gratuit</option>
+  2805→                      <option value="PicsArt Pro — Gratuit">PicsArt Pro — Gratuit</option>
+  2806→                      <option value="IPTV Pro — Gratuit">IPTV Pro — Gratuit</option>
+  2807→                      <option value="Canva Pro — Gratuit">Canva Pro — Gratuit</option>
+  2808→                      <option value="Livres Professionnels — Gratuit">Livres Professionnels — Gratuit</option>
+  2809→                      <option disabled className="font-semibold text-muted-foreground">── Formations ──</option>
+  2810→                      <option value="Formation en Trading — Gratuit">Formation en Trading — Gratuit</option>
+  2811→                      <option value="Formation en Management et Gestion de projets — Gratuit">Formation en Management et Gestion de projets — Gratuit</option>
+  2812→                      <option value="Formation en Intelligence Artificielle — Gratuit">Formation en Intelligence Artificielle — Gratuit</option>
+  2813→                      <option value="Formation YouTube et Monétisation — Gratuit">Formation YouTube et Monétisation — Gratuit</option>
+  2814→                      <option value="Formation en Programmation — Gratuit">Formation en Programmation — Gratuit</option>
+  2815→                      <option value="Formation en Montage Vidéo — Gratuit">Formation en Montage Vidéo — Gratuit</option>
+  2816→                      <option value="Formation E-commerce — Gratuit">Formation E-commerce — Gratuit</option>
+  2817→                      <option value="Formation en Maintenance Informatique — Gratuit">Formation en Maintenance Informatique — Gratuit</option>
+  2818→                      <option value="Formation en Hacking et Sécurité Informatique — Gratuit">Formation en Hacking et Sécurité Informatique — Gratuit</option>
+  2819→                      <option disabled className="font-semibold text-muted-foreground">── Carrière Pro ──</option>
+  2820→                      <option value="Plume Pro (Lettre de motivation) — 800 FCFA">Plume Pro (Lettre de motivation) — 800 FCFA</option>
+  2821→                      <option value="Relooking CV — 700 FCFA">Relooking CV — 700 FCFA</option>
+  2822→                      <option value="Impact LinkedIn — 2 000 FCFA">Impact LinkedIn — 2 000 FCFA</option>
+  2823→                      <option value="Objectif Entretien — 500 FCFA">Objectif Entretien — 500 FCFA</option>
+  2824→                      <option value="Réseautage Pro (Carte de visite) — 1 500 FCFA">Réseautage Pro (Carte de visite) — 1 500 FCFA</option>
+  2825→                      <option value="Pack Lancement Carrière — 3 500 FCFA">Pack Lancement Carrière — 3 500 FCFA</option>
+  2826→                    </select>
+  2827→                  </div>
+  2828→                  <div className="grid sm:grid-cols-2 gap-4">
+  2829→                    <div className="space-y-2">
+  2830→                      <Label className="text-sm font-semibold">Votre nom *</Label>
+  2831→                      <Input placeholder="Votre nom complet" value={quickOrder.name} onChange={(e) => setQuickOrder(prev => ({ ...prev, name: e.target.value }))} className="h-11" />
+  2832→                    </div>
+  2833→                    <div className="space-y-2">
+  2834→                      <Label className="text-sm font-semibold">Téléphone *</Label>
+  2835→                      <Input type="tel" placeholder="+223 XX XX XX XX" value={quickOrder.phone} onChange={(e) => setQuickOrder(prev => ({ ...prev, phone: e.target.value }))} className="h-11" />
+  2836→                    </div>
+  2837→                  </div>
+  2838→                  <div className="space-y-2">
+  2839→                    <Label className="text-sm font-semibold">Description du projet</Label>
+  2840→                    <Textarea placeholder="Décrivez votre projet en quelques mots..." rows={3} value={quickOrder.description} onChange={(e) => setQuickOrder(prev => ({ ...prev, description: e.target.value }))} />
+  2841→                  </div>
+  2842→                  <Button
+  2843→                    onClick={() => {
+  2844→                      if (!quickOrder.service || !quickOrder.name || !quickOrder.phone) {
+  2845→                        toast({ title: 'Champs requis', description: 'Service, nom et téléphone sont obligatoires.', variant: 'destructive' })
+  2846→                        return
+  2847→                      }
+  2848→                      const msg = encodeURIComponent(`Bonjour ! Je souhaite commander :\n\nService : ${quickOrder.service}\nNom : ${quickOrder.name}\nTéléphone : ${quickOrder.phone}\nDescription : ${quickOrder.description || 'Aucune description fournie.'}\n\nMerci !`)
+  2849→                      window.open(`https://wa.me/22397787244?text=${msg}`, '_blank')
+  2850→                      toast({ title: 'Redirection WhatsApp', description: 'Votre demande de commande est envoyée !' })
+  2851→                    }}
+  2852→                    className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold h-12 text-sm shadow-lg shadow-emerald-500/20"
+  2853→                  >
+  2854→                    <Send className="h-4 w-4 mr-2" /> Envoyer ma commande via WhatsApp
+  2855→                  </Button>
+  2856→                  <p className="text-[10px] text-muted-foreground text-center">Réponse garantie en moins de 30 minutes. Tous les services sont gratuits.</p>
+  2857→                </CardContent>
+  2858→              </Card>
+  2859→            </FadeIn>
+  2860→          </div>
+  2861→        </section>
+  2862→
+  2863→        {/* ═══ CTA FINAL ═══ */}
+  2864→        <section className="py-16 sm:py-20 bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 relative overflow-hidden">
+  2865→          <div className="absolute inset-0">
+  2866→            <div className="absolute top-0 left-1/4 h-64 w-64 bg-white/10 rounded-full blur-3xl" />
+  2867→            <div className="absolute bottom-0 right-1/4 h-64 w-64 bg-white/10 rounded-full blur-3xl" />
+  2868→          </div>
+  2869→          <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
+  2870→            <FadeIn>
+  2871→              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
+  2872→                Prêt à faire passer votre communication au niveau supérieur ?
+  2873→              </h2>
+  2874→              <p className="mt-4 text-lg text-white/90 max-w-2xl mx-auto leading-relaxed">
+  2875→                N'attendez plus pour donner à votre entreprise l'image qu'elle mérite. Contactez-moi dès aujourd'hui pour discuter de votre projet et obtenir un devis gratuit.
+  2876→              </p>
+  2877→              <div className="mt-5 inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm rounded-full px-4 py-1.5 text-white text-xs font-semibold border border-white/20">
+  2878→                <span className="relative flex h-2 w-2">
+  2879→                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+  2880→                  <span className="relative inline-flex rounded-full h-2 w-2 bg-red-400" />
+  2881→                </span>
+  2882→                Limité à 5 commandes par jour — Réservez votre place
+  2883→              </div>
+  2884→              <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+  2885→                <a href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20suis%20pr%C3%AAt%20%C3%A0%20lancer%20mon%20projet%20de%20communication." target="_blank" rel="noopener noreferrer">
+  2886→                  <Button size="lg" className="bg-white text-amber-600 hover:bg-white/90 font-bold shadow-xl text-base px-8">
+  2887→                    <MessageCircle className="h-5 w-5 mr-2" /> Commander via WhatsApp
+  2888→                  </Button>
+  2889→                </a>
+  2890→                <a href="https://wa.me/22397787244?text=Bonjour%20!%20J%27aimerais%20discuter%20de%20mon%20projet%20avec%20vous." target="_blank" rel="noopener noreferrer">
+  2891→                  <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 font-semibold text-base px-8">
+  2892→                    M'envoyer un message <Send className="ml-2 h-4 w-4" />
+  2893→                  </Button>
+  2894→                </a>
+  2895→              </div>
+  2896→              <div className="mt-8 flex items-center justify-center gap-6 text-white/80 text-sm">
+  2897→                <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4" /> Livraison rapide</span>
+  2898→                <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4" /> Satisfaction garantie</span>
+  2899→                <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4" /> Paiement sécurisé</span>
+  2900→              </div>
+  2901→            </FadeIn>
+  2902→          </div>
+  2903→        </section>
+  2904→
+  2905→        {/* ═══ CONTACT ═══ */}
+  2906→        <section id="contact" className="py-16 sm:py-20 bg-muted/30">
+  2907→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  2908→            <div className="grid lg:grid-cols-2 gap-12">
+  2909→              <FadeIn>
+  2910→                <Badge variant="secondary" className="mb-3">
+  2911→                  <Send className="h-3 w-3 mr-1" /> Contact
+  2912→                </Badge>
+  2913→                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Contactez-Moi</h2>
+  2914→                <p className="mt-3 text-muted-foreground leading-relaxed max-w-md">
+  2915→                  Vous avez un projet, une question ou besoin d&apos;un service ? N&apos;hésitez pas à me contacter. Je réponds rapidement.
+  2916→                </p>
+  2917→
+  2918→                <div className="mt-8 space-y-6">
+  2919→                  <div className="flex items-center gap-4">
+  2920→                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30">
+  2921→                      <Mail className="h-5 w-5 text-amber-600" />
+  2922→                    </div>
+  2923→                    <div>
+  2924→                      <p className="text-sm font-medium">Email</p>
+  2925→                      <p className="text-sm text-muted-foreground">contact@createurboutique.com</p>
+  2926→                    </div>
+  2927→                  </div>
+  2928→                  <div className="flex items-center gap-4">
+  2929→                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30">
+  2930→                      <Phone className="h-5 w-5 text-amber-600" />
+  2931→                    </div>
+  2932→                    <div>
+  2933→                      <p className="text-sm font-medium">Téléphone</p>
+  2934→                      <p className="text-sm text-muted-foreground">+223 97 78 72 44</p>
+  2935→                    </div>
+  2936→                  </div>
+  2937→                  <div className="flex items-center gap-4">
+  2938→                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30">
+  2939→                      <MapPin className="h-5 w-5 text-amber-600" />
+  2940→                    </div>
+  2941→                    <div>
+  2942→                      <p className="text-sm font-medium">Localisation</p>
+  2943→                      <p className="text-sm text-muted-foreground">Bamako, Mali</p>
+  2944→                    </div>
+  2945→                  </div>
+  2946→                </div>
+  2947→
+  2948→                <div className="mt-8 flex gap-3">
+  2949→                  <a href="https://www.instagram.com/sk_designer_luxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors" aria-label="Instagram">
+  2950→                    <Instagram className="h-5 w-5 text-amber-600" />
+  2951→                  </a>
+  2952→                  <a href="https://www.facebook.com/skdesignerluxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors" aria-label="Facebook">
+  2953→                    <Facebook className="h-5 w-5 text-amber-600" />
+  2954→                  </a>
+  2955→                  <a href="https://www.tiktok.com/@sk_designer_luxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors" aria-label="TikTok">
+  2956→                    <Youtube className="h-5 w-5 text-amber-600" />
+  2957→                  </a>
+  2958→                </div>
+  2959→              </FadeIn>
+  2960→
+  2961→              <FadeIn delay={0.2}>
+  2962→                <form onSubmit={handleSubmitContact} className="space-y-4 rounded-2xl border bg-card p-6 sm:p-8 shadow-sm">
+  2963→                  <div className="grid sm:grid-cols-2 gap-4">
+  2964→                    <div className="space-y-2">
+  2965→                      <Label htmlFor="name">Nom *</Label>
+  2966→                      <Input
+  2967→                        id="name"
+  2968→                        placeholder="Votre nom"
+  2969→                        value={contactData.name}
+  2970→                        onChange={(e) => setContactData({ ...contactData, name: e.target.value })}
+  2971→                      />
+  2972→                    </div>
+  2973→                    <div className="space-y-2">
+  2974→                      <Label htmlFor="email">Email *</Label>
+  2975→                      <Input
+  2976→                        id="email"
+  2977→                        type="email"
+  2978→                        placeholder="votre@email.com"
+  2979→                        value={contactData.email}
+  2980→                        onChange={(e) => setContactData({ ...contactData, email: e.target.value })}
+  2981→                      />
+  2982→                    </div>
+  2983→                  </div>
+  2984→                  <div className="space-y-2">
+  2985→                    <Label htmlFor="subject">Sujet</Label>
+  2986→                    <Input
+  2987→                      id="subject"
+  2988→                      placeholder="Quel service vous intéresse ?"
+  2989→                      value={contactData.subject}
+  2990→                      onChange={(e) => setContactData({ ...contactData, subject: e.target.value })}
+  2991→                    />
+  2992→                  </div>
+  2993→                  <div className="space-y-2">
+  2994→                    <Label htmlFor="message">Message *</Label>
+  2995→                    <Textarea
+  2996→                      id="message"
+  2997→                      placeholder="Décrivez votre projet ou votre demande..."
+  2998→                      rows={5}
+  2999→                      value={contactData.message}
+
+[showing lines 2600-2999 of 3161; use offset=3000 with limit to continue reading]

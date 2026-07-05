@@ -1,0 +1,302 @@
+   340→      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 flex-shrink-0 mt-0.5">
+   341→        <Icon className="h-4 w-4 text-amber-600" />
+   342→      </div>
+   343→      <p className="text-sm leading-relaxed">{text}</p>
+   344→    </motion.div>
+   345→  )
+   346→}
+   347→
+   348→
+   349→/* ─── Animated Counter ─── */
+   350→function Counter({ target, duration = 1500, suffix = '', prefix = '' }: { target: number; duration?: number; suffix?: string; prefix?: string }) {
+   351→  const [count, setCount] = useState(0)
+   352→  const elementRef = useRef<HTMLSpanElement>(null)
+   353→  const hasAnimated = useRef(false)
+   354→
+   355→  useEffect(() => {
+   356→    const observer = new IntersectionObserver(
+   357→      ([entry]) => {
+   358→        if (entry.isIntersecting && !hasAnimated.current) {
+   359→          hasAnimated.current = true
+   360→          let startTime: number | null = null
+   361→          const startValue = 0
+   362→
+   363→          const animate = (timestamp: number) => {
+   364→            if (!startTime) startTime = timestamp
+   365→            const progress = Math.min((timestamp - startTime) / duration, 1)
+   366→            const easeProgress = progress * (2 - progress)
+   367→            const currentValue = Math.floor(easeProgress * (target - startValue) + startValue)
+   368→            setCount(currentValue)
+   369→
+   370→            if (progress < 1) {
+   371→              requestAnimationFrame(animate)
+   372→            }
+   373→          }
+   374→
+   375→          requestAnimationFrame(animate)
+   376→        }
+   377→      },
+   378→      { threshold: 0.2 }
+   379→    )
+   380→
+   381→    if (elementRef.current) {
+   382→      observer.observe(elementRef.current)
+   383→    }
+   384→
+   385→    return () => observer.disconnect()
+   386→  }, [target, duration])
+   387→
+   388→  return (
+   389→    <span ref={elementRef} className="tabular-nums">
+   390→      {prefix}{count.toLocaleString('fr-FR')}{suffix}
+   391→    </span>
+   392→  )
+   393→}
+   394→
+   395→/* ═══════════════════════════════════════════════
+   396→   MAIN PAGE
+   397→   ═══════════════════════════════════════════════ */
+   398→export default function Home() {
+   399→  const [products, setProducts] = useState<Product[]>([])
+   400→  const [loading, setLoading] = useState(true)
+   401→  const [contactData, setContactData] = useState({ name: '', email: '', subject: '', message: '' })
+   402→  const [newsletterName, setNewsletterName] = useState('')
+   403→  const [newsletterEmail, setNewsletterEmail] = useState('')
+   404→  const [sending, setSending] = useState(false)
+   405→  const [showBanner, setShowBanner] = useState(true)
+   406→  const [showBackToTop, setShowBackToTop] = useState(false)
+   407→  const [showChatPopup, setShowChatPopup] = useState(true)
+   408→  const [serviceCategory, setServiceCategory] = useState('all')
+   409→  const [portfolioFilter, setPortfolioFilter] = useState('Tous')
+   410→  const [quickOrder, setQuickOrder] = useState({ service: '', name: '', phone: '', description: '' })
+   411→  const [inscriptionData, setInscriptionData] = useState({ name: '', phone: '', formation: '' })
+   412→  const [clientLogin, setClientLogin] = useState({ name: '', phone: '' })
+   413→  const [selectedArticle, setSelectedArticle] = useState<typeof blogArticles[number] | null>(null)
+   414→  const [faqOpen, setFaqOpen] = useState<string | null>(null)
+   415→  const [legalPage, setLegalPage] = useState<'mentions' | 'confidentialite' | null>(null)
+   416→  const { toast } = useToast()
+   417→
+   418→  // ═══ BLOG ARTICLES DATA ═══
+   419→  const blogArticles = [
+   420→    {
+   421→      title: '5 conseils pour créer un logo mémorable',
+   422→      excerpt: "Découvrez les règles essentielles pour concevoir un logo qui marque les esprits et reste gravé dans la mémoire de votre audience.",
+   423→      category: 'Design',
+   424→      date: '28 Juin 2026',
+   425→      readTime: '4 min',
+   426→      color: 'bg-amber-100 text-amber-700',
+   427→      image: 'https://sfile.chatglm.cn/images-ppt/b90eaf7f2e0c.jpg',
+   428→      content: `Un logo est bien plus qu'une simple image : c'est le visage de votre marque, le premier contact visuel avec votre public. Voici cinq conseils fondamentaux pour créer un logo qui reste gravé dans les mémoires.\n\n**1. La simplicité avant tout**\nLes meilleurs logos sont ceux qui sont simples et immédiatement reconnaissables. Pensez au logo d'Apple, de Nike ou de McDonald's : des formes épurées, sans surcharge visuelle. Un logo trop complexe est difficile à mémoriser et à reproduire sur différents supports. Limitez-vous à deux ou trois couleurs maximum et évitez les détails superflus qui ne seront pas visibles en petite taille.\n\n**2. Pensez à la polyvalence**\nVotre logo doit fonctionner sur tous les supports : cartes de visite, affiches, site web, réseaux sociaux, tee-shirts, et même en noir et blanc. Testez toujours votre création à différentes tailles et sur différents fonds pour vérifier sa lisibilité et son impact visuel. Un bon logo reste efficace qu'il soit affiché sur un écran géant ou imprimé sur un stylo.\n\n**3. Choisissez les bonnes couleurs**\nChaque couleur évoque une émotion différente. Le bleu inspire la confiance, le rouge l'urgence et la passion, le vert la nature et la croissance, le jaune l'optimisme. Pour une entreprise au Mali, pensez également aux couleurs qui résonnent avec votre public cible et votre secteur d'activité. La cohérence chromatique est essentielle pour renforcer l'identité de votre marque.\n\n**4. La typographie compte**\nLa police de caractère que vous choisissez pour votre logo en dit long sur votre marque. Une police serif classique évoque le prestige et la tradition, tandis qu'une police sans-serif moderne communique l'innovation et la simplicité. Évitez les polices trop décoratives qui peuvent devenir illisibles. L'idéal est d'utiliser une police unique ou d'en combiner deux au maximum.\n\n**5. Rendez-le intemporel**\nÉvitez de suivre les tendances éphémères qui datent rapidement. Un bon logo doit rester pertinent pendant des années, voire des décennies. Regardez les marques les plus prestigieuses : leur logo a peu changé depuis leur création. Concentrez-vous sur l'essence de votre marque plutôt que sur les effets de mode du moment.\n\nChez SK Designer Luxe, nous appliquons ces principes à chaque création. Chaque logo est conçu sur mesure pour refléter l'identité unique de votre entreprise et marquer les esprits de votre audience. Discutons de votre projet pour discuter de votre projet !`
+   429→    },
+   430→    {
+   431→      title: 'Comment réussir en digital en 2026',
+   432→      excerpt: "Les stratégies clés pour se démarquer dans le monde du digital cette année. Marketing, design et présence en ligne.",
+   433→      category: 'Digital',
+   434→      date: '25 Juin 2026',
+   435→      readTime: '6 min',
+   436→      color: 'bg-emerald-100 text-emerald-700',
+   437→      image: 'https://sfile.chatglm.cn/images-ppt/6345c222842a.jpg',
+   438→      content: `Le paysage digital évolue à une vitesse vertigineuse, et 2026 n'est pas une exception. Que vous soyez entrepreneur, freelancer ou créateur de contenu à Bamako, voici les stratégies essentielles pour réussir votre transition numérique et vous démarquer de la concurrence.\n\n**1. Investissez dans une identité visuelle forte**\nDans un monde saturé de contenus visuels, votre identité graphique est votre meilleur atout. Un logo professionnel, une charte graphique cohérente et des visuels de qualité sont indispensables pour inspirer confiance et attirer des clients. Les entreprises qui investissent dans leur branding voient en moyenne une augmentation de 23% de leurs revenus. Ne sous-estimez jamais le pouvoir d'un premier visuel impactant.\n\n**2. Maîtrisez les réseaux sociaux**\nLes réseaux sociaux sont le canal d'acquisition client le plus efficace au Mali en 2026. Instagram, TikTok et Facebook dominent le marché. Créez du contenu régulier, authentique et engageant. Utilisez des outils professionnels comme CapCut Pro et PicsArt Pro pour des visuels et vidéos qui sortent du lot. La constance est la clé : publiez au minimum trois fois par semaine et interagissez avec votre communauté quotidiennement.\n\n**3. Ayez un site web professionnel**\nUn site web est votre vitrine ouverte 24h/24. En 2026, ne pas avoir de site web professionnel, c'est comme avoir un magasin sans enseigne. Un site vitrine bien conçu booste votre crédibilité et vous permet de toucher des clients au-delà de Bamako, dans tout le Mali et même en Afrique de l'Ouest. Optez pour un design moderne, rapide sur mobile et optimisé pour les moteurs de recherche.\n\n**4. Le marketing digital accessible à tous**\nVous n'avez pas besoin d'un gros budget pour faire du marketing digital efficace. Commencez par optimiser vos profils sociaux, créez du contenu à valeur ajoutée, et utilisez les publicités ciblées avec un petit budget. Les stories Instagram, les reels TikTok et les publications Facebook restent les formats les plus performants pour atteindre votre audience cible au Mali.\n\n**5. Automatisez et optimisez**\nUtilisez les outils numériques pour gagner du temps : planification des publications, réponses automatiques, gestion de la relation client. Plus vous automatisez les tâches répétitives, plus vous pouvez vous concentrer sur la création de valeur et le développement de votre activité. C'est un investissement qui paie rapidement.\n\nChez SK Designer Luxe, nous vous accompagnons dans chacune de ces étapes. De la création de votre identité visuelle au développement de votre site web, nous avons les outils et l'expertise pour propulser votre présence digitale. Me contacter pour un diagnostic gratuit de votre présence en ligne !`
+   439→    },
+   440→    {
+   441→      title: 'Les tendances design graphique à suivre',
+   442→      excerpt: "Minimalisme, gradients, typographies audacieuses... Tour d'horizon des tendances qui dominent le design cette année.",
+   443→      category: 'Tendances',
+   444→      date: '22 Juin 2026',
+   445→      readTime: '5 min',
+   446→      color: 'bg-purple-100 text-purple-700',
+   447→      image: 'https://sfile.chatglm.cn/images-ppt/d247ebeec9b2.jpg',
+   448→      content: `Le design graphique est en constante évolution, et rester à jour avec les dernières tendances est essentiel pour tout créateur ou entrepreneur soucieux de l'image de sa marque. Voici les tendances qui dominent le design graphique en 2026.\n\n**1. Le néo-minimalisme**\nLe minimalisme revient en force, mais avec une touche moderne. Fini les designs trop froids et stériles : le néo-minimalisme intègre des textures subtiles, des gradients doux et des micro-animations qui apportent de la vie sans surcharger. L'idée est de communiquer un maximum d'information avec un minimum d'éléments, tout en créant une expérience visuelle agréable et mémorable.\n\n**2. Les typographies audacieuses**\nEn 2026, la typographie devient le protagoniste du design. Les polices surdimensionnées, les lettres déformées, les mots disposés verticalement ou en spirale : tout est permis tant que le message reste lisible. Cette tendance est particulièrement visible sur les affiches événementielles et les visuels pour les réseaux sociaux, où l'impact immédiat est primordial.\n\n**3. Les gradients évolués**\nLes gradients ne sont pas nouveaux, mais en 2026, ils se font plus sophistiqués. On voit des dégradés de couleurs inattendues (mélange de pastel et de néon), des mesh gradients qui simulent des effets 3D, et des transitions de couleurs fluides qui créent de la profondeur. Cette technique est parfaite pour les fonds de site web, les affiches et les identités de marque dynamiques.\n\n**4. Le design inclusif et culturel**\nUne tendance forte en Afrique et particulièrement au Mali : l'intégration d'éléments culturels dans le design moderne. Les motifs traditionnels réinterprétés, les couleurs inspirées du patrimoine local, les typographies qui rendent hommage aux langues africaines. C'est une façon de créer des designs uniques qui racontent une histoire et renforcent l'identité culturelle tout en restant contemporains et professionnels.\n\n**5. L'intelligence artificielle comme outil créatif**\nL'IA est devenue un outil incontournable pour les designers. Elle permet de générer des concepts rapides, d'explorer des directions créatives et d'accélérer les processus de production. Cependant, la touche humaine reste irremplaçable pour le raffinement, la cohérence et l'émotion. Les meilleurs designers en 2026 sont ceux qui combinent la puissance de l'IA avec leur sensibilité artistique.\n\nCes tendances inspirent chacune de nos créations chez SK Designer Luxe. Nous intégrons les meilleures pratiques actuelles tout en adaptant chaque projet au contexte local et aux besoins spécifiques de nos clients. Envie d'un design tendance et unique ? Parlons de votre projet !`
+   449→    },
+   450→    {
+   451→      title: "Pourquoi votre entreprise a besoin d'un site web",
+   452→      excerpt: "Un site web professionnel est devenu indispensable pour toute entreprise. Découvrez pourquoi investir dans un site vitrine.",
+   453→      category: 'Site Web',
+   454→      date: '18 Juin 2026',
+   455→      readTime: '5 min',
+   456→      color: 'bg-blue-100 text-blue-700',
+   457→      image: 'https://sfile.chatglm.cn/images-ppt/1e6a7645314b.png',
+   458→      content: `En 2026, ne pas avoir de site web professionnel équivaut à être invisible pour une grande partie de votre marché potentiel. Voici pourquoi chaque entreprise, même la plus petite, a besoin d'une présence en ligne structurée et professionnelle.\n\n**1. Une vitrine ouverte 24h/24 et 7j/7**\nVotre site web travaille pour vous même quand vous dormez. Un client potentiel peut découvrir vos services, consulter votre portfolio, lire vos tarifs et vous contacter à tout moment. Au Mali, de plus en plus de consommateurs utilisent internet pour rechercher des services locaux avant de prendre une décision d'achat. Sans site web, vous perdez ces clients au profit de concurrents qui ont compris l'importance du digital.\n\n**2. Crédibilité et professionnalisme**\nUn site web bien conçu renforce instantanément la crédibilité de votre entreprise. Lorsqu'un client potentiel recherche votre nom ou votre activité et trouve un site professionnel avec des informations claires, des témoignages et un portfolio de qualité, il est beaucoup plus enclin à faire confiance. À l'inverse, l'absence de site web peut susciter des doutes sur le sérieux de l'entreprise.\n\n**3. Atteindre au-delà de Bamako**\nUn site web vous permet de toucher des clients dans tout le Mali, en Afrique de l'Ouest et même dans le monde entier. Vos services de design, création de logos ou montage vidéo ne sont pas limités géographiquement. Un portfolio en ligne bien organisé est votre meilleur outil de vente, accessible depuis n'importe où. C'est particulièrement vrai pour les freelancers et les petites entreprises qui cherchent à élargir leur clientèle.\n\n**4. Un investissement rentable**\nContrairement à ce que beaucoup pensent, créer un site web professionnel n'est pas un luxe réservé aux grandes entreprises. Avec des solutions modernes et des créateurs talentueux à Bamako, vous pouvez avoir un site vitrine de qualité à partir de 25 000 FCFA. C'est un investissement qui se rentabilise rapidement grâce aux nouveaux clients qu'il génère et à l'image professionnelle qu'il projette.\n\n**5. Optimisation pour les réseaux sociaux**\nVotre site web est le hub central de votre présence digitale. Tous vos profils sur les réseaux sociaux (Instagram, Facebook, TikTok) doivent renvoyer vers votre site web. C'est là que les clients trouvent toutes les informations détaillées, passent commande et vous contactent directement. Un site web structuré avec des appels à l'action clairs transforme les visiteurs en clients.\n\nChez SK Designer Luxe, nous créons des sites web professionnels, modernes et optimisés pour convertir les visiteurs en clients. Chaque site est conçu sur mesure avec un design responsive, une navigation intuitive et un temps de chargement rapide. Contactez-nous pour donner à votre entreprise la présence en ligne qu'elle mérite !`
+   459→    },
+   460→    {
+   461→      title: 'Les outils indispensables pour un créateur de contenu',
+   462→      excerpt: "CapCut Pro, PicsArt Pro, Canva... Découvrez les outils qui feront la différence dans votre production de contenu.",
+   463→      category: 'Outils',
+   464→      date: '15 Juin 2026',
+   465→      readTime: '7 min',
+   466→      color: 'bg-red-100 text-red-700',
+   467→      image: 'https://sfile.chatglm.cn/images-ppt/0dcd8f4f7dd4.jpeg',
+   468→      content: `La création de contenu de qualité nécessite les bons outils. Que vous soyez créateur de contenu sur les réseaux sociaux, entrepreneur ou passionné de design, voici les outils indispensables qui feront la différence dans votre production.\n\n**1. CapCut Pro : le roi du montage vidéo**\nCapCut Pro est devenu l'outil de montage vidéo incontournable pour les créateurs de contenu. Sa version Pro débloque des fonctionnalités avancées : effets spéciaux premium, transitions cinématiques, suppression automatique de fond, templates professionnels et export en haute qualité. Pour les créateurs maliens qui produisent du contenu pour TikTok, Instagram Reels ou YouTube, CapCut Pro est un investissement qui transforme la qualité de vos vidéos.\n\n**2. PicsArt Pro : l'atelier de design mobile**\nPicsArt Pro offre des centaines d'outils de retouche photo, de création graphique et de montage. Avec la version Pro, vous accédez à des filtres premium, des stickers exclusifs, des outils AI de suppression d'arrière-plan et des templates professionnels. C'est l'outil parfait pour créer des visuels de qualité pour les réseaux sociaux, des affiches promotionnelles ou des stories engageantes directement depuis votre téléphone.\n\n**3. Canva : le design accessible à tous**\nCanva a révolutionné le design graphique en le rendant accessible à tous. Avec son interface intuitive et ses milliers de templates, même sans compétences en design, vous pouvez créer des visuels professionnels. La version Pro offre encore plus de possibilités : images premium, outils de branding, planification des publications et collaboration en équipe. C'est l'outil idéal pour les entrepreneurs qui veulent gérer eux-mêmes leur communication visuelle.\n\n**4. Les outils de gestion et planification**\nAu-delà de la création, la planification est essentielle. Des outils comme Buffer, Later ou Planoly vous permettent de programmer vos publications à l'avance, d'analyser vos performances et d'optimiser votre stratégie de contenu. Une bonne organisation est souvent ce qui sépare les créateurs qui réussissent de ceux qui abandonnent.\n\n**5. L'importance d'avoir les versions Pro**\nLes versions gratuites de ces outils sont utiles, mais les versions Pro font une réelle différence dans la qualité finale de votre contenu. Les effets premium, l'absence de filigrane, les exports en haute résolution et les templates exclusifs justifient largement l'investissement. Chez SK Designer Luxe, nous proposons l'activation de CapCut Pro et PicsArt Pro à des prix accessibles pour tous les créateurs au Mali.\n\nInvestir dans les bons outils, c'est investir dans la qualité de votre contenu et, ultimement, dans la croissance de votre audience et de votre entreprise. SK Designer Luxe vous aide à accéder à ces outils premium à des tarifs imbattables. Contactez-nous pour en savoir plus !`
+   469→    },
+   470→    {
+   471→      title: 'Comment attirer des clients avec le marketing digital',
+   472→      excerpt: "Réseaux sociaux, publicité en ligne, branding... Les techniques éprouvées pour développer votre clientèle.",
+   473→      category: 'Marketing',
+   474→      date: '10 Juin 2026',
+   475→      readTime: '6 min',
+   476→      color: 'bg-teal-100 text-teal-700',
+   477→      image: 'https://sfile.chatglm.cn/images-ppt/b994c44a4327.jpg',
+   478→      content: `Le marketing digital est le levier de croissance le plus puissant et le plus accessible pour les entreprises au Mali. Voici les techniques éprouvées pour attirer des clients et développer votre activité, même avec un petit budget.\n\n**1. Construisez une marque forte**\nTout commence par l'identité visuelle. Un logo professionnel, des couleurs cohérentes et un ton de communication défini sont les fondations de votre stratégie marketing. Les clients font confiance aux marques qui ont une identité claire et cohérente. Investissez dans un logo de qualité, créez une charte graphique et appliquez-la systématiquement sur tous vos supports de communication. C'est la base de toute stratégie digitale réussie.\n\n**2. Le contenu est roi**\nCréez du contenu qui apporte de la valeur à votre audience. Tutoriels, avant-après, coulisses de votre travail, témoignages clients, conseils professionnels : chaque publication doit donner envie à votre audience de revenir et de s'engager. Au Mali, le contenu vidéo est particulièrement efficace sur TikTok et Instagram. Montrez votre savoir-faire, partagez vos réalisations et racontez l'histoire de votre entreprise.\n\n**3. Exploitez la publicité ciblée**\nMême avec un petit budget de 5 000 à 10 000 FCFA par semaine, vous pouvez atteindre des milliers de personnes grâce à la publicité Facebook et Instagram. Ciblez votre audience par localisation (Bamako, Mali), par centres d'intérêt et par démographie. Testez différentes créations publicitaires et mesurez les résultats pour optimiser vos campagnes. Le retour sur investissement peut être spectaculaire.\n\n**4. Le bouche-à-oreille digital**\nEncouragez vos clients satisfaits à laisser des avis, à taguer votre entreprise sur leurs publications et à recommander vos services. Un système de parrainage, comme celui proposé par SK Designer Luxe, est un excellent moyen de transformer vos clients existants en ambassadeurs de votre marque. Chaque client satisfait peut vous apporter 2 à 3 nouveaux clients grâce aux recommandations.\n\n**5. Soyez présent là où vos clients sont**\nIdentifiez les plateformes où votre audience cible passe le plus de temps. Pour le marché malien, Facebook et Instagram sont incontournables, TikTok est en forte croissance, et WhatsApp reste le canal de communication directe le plus utilisé. Adaptez votre contenu à chaque plateforme et soyez régulier dans vos publications. La constance bat l'intensité : mieux vaut publier trois fois par semaine pendant un an qu'une fois par jour pendant un mois.\n\nLe marketing digital n'est pas réservé aux grandes entreprises avec des budgets importants. Avec les bonnes stratégies, les bons outils et un peu de créativité, toute entreprise au Mali peut attirer des clients et croître grâce au digital. SK Designer Luxe vous accompagne avec des outils premium, des formations pratiques et des services de qualité pour booster votre présence en ligne !`
+   479→    },
+   480→  ]
+   481→
+   482→  useEffect(() => {
+   483→    const timer = setInterval(() => {
+   484→      setCountdown((prev) => {
+   485→        let { hours, minutes, seconds } = prev
+   486→        seconds--
+   487→        if (seconds < 0) { seconds = 59; minutes-- }
+   488→        if (minutes < 0) { minutes = 59; hours-- }
+   489→        if (hours < 0) { hours = 23; minutes = 59; seconds = 59 }
+   490→        return { hours, minutes, seconds }
+   491→      })
+   492→    }, 1000)
+   493→    return () => clearInterval(timer)
+   494→  }, [])
+   495→
+   496→  useEffect(() => {
+   497→    const handleScroll = () => {
+   498→      setShowBackToTop(window.scrollY > 600)
+   499→    }
+   500→    window.addEventListener('scroll', handleScroll)
+   501→    return () => window.removeEventListener('scroll', handleScroll)
+   502→  }, [])
+   503→
+   504→  useEffect(() => {
+   505→    const hardcodedProducts: Product[] = [
+   506→      { id: 'p1', name: 'Formation Designer Graphique', description: 'Formation complète en design graphique avec pratique et accompagnement. Apprenez les bases et techniques avancées.', price: 0, image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&h=400&fit=crop', category: 'service', featured: true, stock: 99 },
+   507→      { id: 'p2', name: 'Affiche Professionnelle', description: 'Création d\'affiches publicitaires modernes, attractives et adaptées à votre marque. Design haute qualité.', price: 0, image: 'https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=600&h=400&fit=crop', category: 'service', featured: true, stock: 99 },
+   508→      { id: 'p3', name: 'Logo Professionnel', description: 'Création de logo unique avec identité visuelle complète. Fichiers sources inclus.', price: 0, image: 'https://images.unsplash.com/photo-1626785774625-ddcddc3445e9?w=600&h=400&fit=crop', category: 'service', featured: true, stock: 99 },
+   509→      { id: 'p4', name: 'Site Web Simple', description: 'Site web vitrine moderne, responsive et optimisé SEO. Parfait pour présenter votre activité.', price: 0, image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop', category: 'service', featured: false, stock: 99 },
+   510→      { id: 'p5', name: 'Site Web Professionnel', description: 'Site web complet avec fonctionnalités avancées, design sur mesure et hébergement inclus.', price: 0, image: 'https://images.unsplash.com/photo-1547658719-da2b51169166?w=600&h=400&fit=crop', category: 'service', featured: true, stock: 99 },
+   511→      { id: 'p6', name: 'Montage Vidéo Pro', description: 'Montage vidéo professionnel avec effets premium et transitions fluides via CapCut Pro.', price: 0, image: 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=600&h=400&fit=crop', category: 'service', featured: false, stock: 99 },
+   512→      { id: 'p7', name: 'Contenu Réseaux Sociaux', description: 'Création de visuels et contenus engageants pour vos réseaux sociaux. Pack mensuel disponible.', price: 0, image: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=600&h=400&fit=crop', category: 'service', featured: false, stock: 99 },
+   513→      { id: 'p8', name: 'CapCut Pro', description: 'Accès premium à CapCut Pro pour un montage vidéo professionnel sans filigrane. Compte activé.', price: 0, image: 'https://images.unsplash.com/photo-1536240478700-b869070f9279?w=600&h=400&fit=crop', category: 'outil', featured: true, stock: 50 },
+   514→      { id: 'p9', name: 'PicsArt Pro', description: 'Accès premium à PicsArt Pro pour le design mobile professionnel. Tous les outils débloqués.', price: 0, image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&h=400&fit=crop', category: 'outil', featured: true, stock: 50 },
+   515→      { id: 'p10', name: 'IPTV Pro', description: 'Accès IPTV Pro avec des milliers de chaînes TV en streaming haute qualité. Abonnement complet.', price: 0, image: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=600&h=400&fit=crop', category: 'outil', featured: true, stock: 30 },
+   516→      { id: 'p11', name: 'Livres Professionnels', description: 'Pack de livres numériques professionnels et éducatifs pour développer vos compétences.', price: 0, image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600&h=400&fit=crop', category: 'outil', featured: false, stock: 99 },
+   517→      { id: 'p12', name: 'Canva Pro', description: 'Accès premium à Canva Pro pour créer des designs professionnels. Templates illimités.', price: 0, image: '/canva-pro-real.png', category: 'outil', featured: false, stock: 50 },
+   518→    ]
+   519→    setProducts(hardcodedProducts)
+   520→    setLoading(false)
+   521→    // Welcome notification after a short delay
+   522→    const timer = setTimeout(() => {
+   523→      toast({
+   524→        title: 'Bienvenue chez SK Designer Luxe !',
+   525→        description: 'Découvrez mes services — tous actuellement gratuits !',
+   526→      })
+   527→    }, 2000)
+   528→    return () => clearTimeout(timer)
+   529→  }, [])
+   530→
+   531→
+   532→  const services = products.filter((p) => p.category === 'service')
+   533→  const outils = products.filter((p) => p.category === 'outil')
+   534→
+   535→
+   536→  const competences = [
+   537→    { text: 'Designer graphique professionnel', icon: Palette },
+   538→    { text: "Création d'affiches publicitaires modernes", icon: PenTool },
+   539→    { text: 'Création de logos et identité visuelle', icon: Sparkles },
+   540→    { text: 'Création de sites web professionnels', icon: Globe },
+   541→    { text: 'Montage vidéo professionnel avec CapCut Pro', icon: MonitorPlay },
+   542→    { text: 'Utilisation avancée de Canva Pro et PicsArt Pro', icon: Palette },
+   543→    { text: 'Création de contenus pour réseaux sociaux', icon: Target },
+   544→    { text: 'Développement personnel et outils numériques', icon: Laptop },
+   545→    { text: 'Vente de livres professionnels et éducatifs', icon: BookOpen },
+   546→    { text: 'IPTV Pro et outils digitaux', icon: Tv },
+   547→  ]
+   548→
+   549→  const formations = [
+   550→    { text: 'Devenir Designer Pro avec Canva & Illustrator', icon: Palette, price: '5 000', duration: '6h', lessons: '9 leçons' },
+   551→    { text: 'Créer et monétiser des vidéos pour réseaux sociaux', icon: MonitorPlay, price: '7 500', duration: '8h', lessons: '15 leçons' },
+   552→    { text: 'Créer un site web professionnel (No-code + Next.js)', icon: Globe, price: '10 000', duration: '10h', lessons: '12 leçons' },
+   553→    { text: 'Devenir Community Manager pour PME locales', icon: Target, price: '6 000', duration: '7h', lessons: '10 leçons' },
+   554→    { text: 'Formation complète en Trading', icon: TrendingUp },
+   555→    { text: 'Formation en Management et Gestion de projets', icon: Building2 },
+   556→    { text: 'Formation en Intelligence Artificielle', icon: Brain },
+   557→    { text: 'Formation YouTube et monétisation', icon: Youtube },
+   558→    { text: 'Formation complète en Programmation', icon: Code },
+   559→    { text: 'Formation en Design Graphique', icon: Palette },
+   560→    { text: 'Formation complète en Montage Vidéo', icon: MonitorPlay },
+   561→    { text: 'Formation en Infographie et Design', icon: PenTool },
+   562→    { text: 'Formation E-commerce', icon: ShoppingCart },
+   563→    { text: 'Pack 10 000 templates et ressources Canva', icon: FolderDown },
+   564→    { text: 'Formation en Maintenance informatique', icon: Wrench },
+   565→    { text: 'Formation en Hacking et Sécurité informatique', icon: ShieldCheck },
+   566→    { text: 'Formation Revendeur IPTV', icon: Tv },
+   567→    { text: 'Formation complète en conception de Sites Web', icon: Globe },
+   568→  ]
+   569→
+   570→  const handleSubmitContact = async (e: React.FormEvent) => {
+   571→    e.preventDefault()
+   572→    if (!contactData.name || !contactData.email || !contactData.message) {
+   573→      toast({ title: 'Champs requis', description: 'Veuillez remplir tous les champs obligatoires.', variant: 'destructive' })
+   574→      return
+   575→    }
+   576→    setSending(true)
+   577→    // Redirect to WhatsApp with the message
+   578→    const msg = encodeURIComponent(`Bonjour ! Je suis ${contactData.name} (${contactData.email}).\n\nSujet : ${contactData.subject || 'Général'}\n\n${contactData.message}`)
+   579→    window.open(`https://wa.me/22397787244?text=${msg}`, '_blank')
+   580→    toast({ title: 'Redirection vers WhatsApp', description: 'Votre message sera envoyé via WhatsApp pour une réponse rapide.' })
+   581→    setContactData({ name: '', email: '', subject: '', message: '' })
+   582→    setSending(false)
+   583→  }
+   584→
+   585→  return (
+   586→    <div className="min-h-screen flex flex-col bg-background">
+   587→      <Header />
+   588→
+   589→      <main className="flex-1">
+   590→        {/* ═══ BANNIÈRE PROMO ═══ */}
+   591→        <AnimatePresence>
+   592→          {showBanner && (
+   593→            <motion.div
+   594→              initial={{ height: 0, opacity: 0 }}
+   595→              animate={{ height: 'auto', opacity: 1 }}
+   596→              exit={{ height: 0, opacity: 0 }}
+   597→              className="overflow-hidden bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white"
+   598→            >
+   599→              <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-4">
+   600→                <p className="text-xs sm:text-sm font-medium text-center sm:text-left flex-1">
+   601→                  <Flame className="h-3.5 w-3.5 inline mr-1" />
+   602→                  Bienvenue ! Tous les services sont actuellement gratuits — Profitez-en pour lancer votre projet digital
+   603→                </p>
+   604→                <div className="flex items-center gap-2 flex-shrink-0">
+   605→                  <a href="#services">
+   606→                    <Button size="sm" variant="secondary" className="h-7 text-xs bg-white text-amber-600 hover:bg-white/90 font-semibold px-3">
+   607→                      Découvrir les services
+   608→                    </Button>
+   609→                  </a>
+   610→                  <button onClick={() => setShowBanner(false)} className="text-white/80 hover:text-white transition-colors" aria-label="Fermer">
+   611→                    <X className="h-4 w-4" />
+   612→                  </button>
+   613→                </div>
+   614→              </div>
+   615→            </motion.div>
+   616→          )}
+   617→        </AnimatePresence>
+   618→
+   619→        {/* ═══ HERO ═══ */}
+   620→        <section id="accueil" className="relative overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-white dark:from-amber-950/20 dark:via-orange-950/10 dark:to-background">
+   621→          <div className="absolute top-0 -right-40 h-[500px] w-[500px] rounded-full bg-amber-200/40 dark:bg-amber-800/10 blur-3xl" />
+   622→          <div className="absolute -bottom-20 -left-40 h-[400px] w-[400px] rounded-full bg-orange-200/30 dark:bg-orange-800/10 blur-3xl" />
+   623→          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[300px] w-[300px] rounded-full bg-red-100/30 dark:bg-red-900/10 blur-3xl" />
+   624→
+   625→          <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
+   626→            <div className="grid lg:grid-cols-2 gap-12 items-center">
+   627→              <div>
+   628→                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+   629→                  <Badge variant="secondary" className="mb-4 px-3 py-1 text-xs font-medium bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800 shadow-sm">
+   630→                    <Sparkles className="h-3 w-3 mr-1" /> Studio Créatif Indépendant
+   631→                  </Badge>
+   632→                </motion.div>
+   633→
+   634→                <motion.h1
+   635→                  className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight"
+   636→                  initial={{ opacity: 0, y: 20 }}
+   637→                  animate={{ opacity: 1, y: 0 }}
+   638→                  transition={{ duration: 0.5, delay: 0.1 }}
+   639→                >
+
+[showing lines 340-639 of 3161; use offset=640 with limit to continue reading]
