@@ -1,0 +1,503 @@
+     1→     1→'use client'
+     2→     2→
+     3→     3→import { useState, useEffect, useCallback, useRef } from 'react'
+     4→     4→import { motion, AnimatePresence } from 'framer-motion'
+     5→     5→import { Phone, User, Globe, Shield, ArrowRight, RefreshCw, Sparkles, Palette, MonitorPlay, GraduationCap, Copy, Check } from 'lucide-react'
+     6→     6→import { Button } from '@/components/ui/button'
+     7→     7→import { Card, CardContent } from '@/components/ui/card'
+     8→     8→import { Input } from '@/components/ui/input'
+     9→     9→import { Label } from '@/components/ui/label'
+    10→    10→import { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator } from '@/components/ui/input-otp'
+    11→    11→import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+    12→    12→
+    13→    13→/* ─── Pays ─── */
+    14→    14→const PAYS = [
+    15→    15→  { code: '+223', nom: 'Mali', drapeau: '🇲🇱' },
+    16→    16→  { code: '+221', nom: 'Sénégal', drapeau: '🇸🇳' },
+    17→    17→  { code: '+225', nom: "Côte d'Ivoire", drapeau: '🇨🇮' },
+    18→    18→  { code: '+226', nom: 'Burkina Faso', drapeau: '🇧🇫' },
+    19→    19→  { code: '+227', nom: 'Niger', drapeau: '🇳🇪' },
+    20→    20→  { code: '+228', nom: 'Togo', drapeau: '🇹🇬' },
+    21→    21→  { code: '+229', nom: 'Bénin', drapeau: '🇧🇯' },
+    22→    22→  { code: '+241', nom: 'Gabon', drapeau: '🇬🇦' },
+    23→    23→  { code: '+243', nom: 'RD Congo', drapeau: '🇨🇩' },
+    24→    24→  { code: '+242', nom: 'Congo', drapeau: '🇨🇬' },
+    25→    25→  { code: '+237', nom: 'Cameroun', drapeau: '🇨🇲' },
+    26→    26→  { code: '+235', nom: 'Tchad', drapeau: '🇹🇩' },
+    27→    27→  { code: '+236', nom: 'Centrafrique', drapeau: '🇨🇫' },
+    28→    28→  { code: '+240', nom: 'Guinée Équatoriale', drapeau: '🇬🇶' },
+    29→    29→  { code: '+258', nom: 'Mozambique', drapeau: '🇲🇿' },
+    30→    30→  { code: '+33', nom: 'France', drapeau: '🇫🇷' },
+    31→    31→  { code: '+1', nom: 'États-Unis / Canada', drapeau: '🇺🇸' },
+    32→    32→  { code: '+44', nom: 'Royaume-Uni', drapeau: '🇬🇧' },
+    33→    33→  { code: '+212', nom: 'Maroc', drapeau: '🇲🇦' },
+    34→    34→  { code: '+216', nom: 'Tunisie', drapeau: '🇹🇳' },
+    35→    35→  { code: '+213', nom: 'Algérie', drapeau: '🇩🇿' },
+    36→    36→  { code: '+20', nom: 'Égypte', drapeau: '🇪🇬' },
+    37→    37→  { code: '+234', nom: 'Nigeria', drapeau: '🇳🇬' },
+    38→    38→  { code: '+254', nom: 'Kenya', drapeau: '🇰🇪' },
+    39→    39→  { code: '+27', nom: 'Afrique du Sud', drapeau: '🇿🇦' },
+    40→    40→  { code: '+41', nom: 'Suisse', drapeau: '🇨🇭' },
+    41→    41→  { code: '+32', nom: 'Belgique', drapeau: '🇧🇪' },
+    42→    42→  { code: '+49', nom: 'Allemagne', drapeau: '🇩🇪' },
+    43→    43→  { code: '+39', nom: 'Italie', drapeau: '🇮🇹' },
+    44→    44→  { code: '+34', nom: 'Espagne', drapeau: '🇪🇸' },
+    45→    45→  { code: '+86', nom: 'Chine', drapeau: '🇨🇳' },
+    46→    46→]
+    47→    47→
+    48→    48→type Step = 'form' | 'otp' | 'success'
+    49→    49→
+    50→    50→interface UserData {
+    51→    51→  prenom: string
+    52→    52→  nom: string
+    53→    53→  telephone: string
+    54→    54→  pays: string
+    55→    55→  codePays: string
+    56→    56→}
+    57→    57→
+    58→    58→export default function LoginPage({ onLogin }: { onLogin: (user: UserData) => void }) {
+    59→    59→  /* ─── Inscription state ─── */
+    60→    60→  const [prenom, setPrenom] = useState('')
+    61→    61→  const [nom, setNom] = useState('')
+    62→    62→  const [telephone, setTelephone] = useState('')
+    63→    63→  const [paysIndex, setPaysIndex] = useState(0)
+    64→    64→
+    65→    65→  /* ─── Connexion state ─── */
+    66→    66→  const [loginPhone, setLoginPhone] = useState('')
+    67→    67→  const [loginPaysIndex, setLoginPaysIndex] = useState(0)
+    68→    68→
+    69→    69→  /* ─── OTP state ─── */
+    70→    70→  const [step, setStep] = useState<Step>('form')
+    71→    71→  const [otp, setOtp] = useState('')
+    72→    72→  const [generatedOtp, setGeneratedOtp] = useState('')
+    73→    73→  const [otpError, setOtpError] = useState('')
+    74→    74→  const [otpExpiry, setOtpExpiry] = useState(0)
+    75→    75→  const [isLoading, setIsLoading] = useState(false)
+    76→    76→  const [activeTab, setActiveTab] = useState<'inscription' | 'connexion'>('inscription')
+    77→    77→  const [loginOtp, setLoginOtp] = useState('')
+    78→    78→  const [loginGeneratedOtp, setLoginGeneratedOtp] = useState('')
+    79→    79→  const [loginStep, setLoginStep] = useState<'phone' | 'otp'>('phone')
+    80→    80→  const [loginOtpError, setLoginOtpError] = useState('')
+    81→    81→  const [codeCopied, setCodeCopied] = useState(false)
+    82→    82→  const [loginCodeCopied, setLoginCodeCopied] = useState(false)
+    83→    83→
+    84→    84→  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+    85→    85→
+    86→    86→  const codePays = PAYS[paysIndex].code
+    87→    87→  const loginCode = PAYS[loginPaysIndex].code
+    88→    88→
+    89→    89→  /* ─── Timer ─── */
+    90→    90→  useEffect(() => {
+    91→    91→    if (otpExpiry > 0) {
+    92→    92→      timerRef.current = setInterval(() => {
+    93→    93→        setOtpExpiry(prev => {
+    94→    94→          if (prev <= 1) {
+    95→    95→            if (timerRef.current) clearInterval(timerRef.current)
+    96→    96→            return 0
+    97→    97→          }
+    98→    98→          return prev - 1
+    99→    99→        })
+   100→   100→      }, 1000)
+   101→   101→    }
+   102→   102→    return () => {
+   103→   103→      if (timerRef.current) clearInterval(timerRef.current)
+   104→   104→    }
+   105→   105→  }, [otpExpiry])
+   106→   106→
+   107→   107→  /* ─── Generate OTP ─── */
+   108→   108→  const generateOtp = useCallback((): string => {
+   109→   109→    return Math.floor(100000 + Math.random() * 900000).toString()
+   110→   110→  }, [])
+   111→   111→
+   112→   112→  /* ─── Send OTP (inscription) ─── */
+   113→   113→  const sendOtpInscription = () => {
+   114→   114→    if (!prenom.trim() || !nom.trim() || !telephone.trim()) return
+   115→   115→    setIsLoading(true)
+   116→   116→    const code = generateOtp()
+   117→   117→    setGeneratedOtp(code)
+   118→   118→    setOtp('')
+   119→   119→    setOtpError('')
+   120→   120→    setOtpExpiry(120)
+   121→   121→    setCodeCopied(false)
+   122→   122→    setTimeout(() => { setStep('otp'); setIsLoading(false) }, 600)
+   123→   123→  }
+   124→   124→
+   125→   125→  /* ─── Send OTP (connexion) ─── */
+   126→   126→  const sendOtpConnexion = () => {
+   127→   127→    if (!loginPhone.trim()) return
+   128→   128→    setIsLoading(true)
+   129→   129→    const code = generateOtp()
+   130→   130→    setLoginGeneratedOtp(code)
+   131→   131→    setLoginOtp('')
+   132→   132→    setLoginOtpError('')
+   133→   133→    setOtpExpiry(120)
+   134→   134→    setLoginCodeCopied(false)
+   135→   135→    setTimeout(() => { setLoginStep('otp'); setIsLoading(false) }, 600)
+   136→   136→  }
+   137→   137→
+   138→   138→  /* ─── Verify OTP (inscription) ─── */
+   139→   139→  const verifyOtp = () => {
+   140→   140→    if (otp.length !== 6) { setOtpError('Entrez les 6 chiffres'); return }
+   141→   141→    if (otp !== generatedOtp) { setOtpError('Code incorrect'); return }
+   142→   142→    if (otpExpiry <= 0) { setOtpError('Code expiré. Demandez un nouveau code.'); return }
+   143→   143→    const userData: UserData = { prenom: prenom.trim(), nom: nom.trim(), telephone, pays: PAYS[paysIndex].nom, codePays }
+   144→   144→    localStorage.setItem('studio_creatif_user', JSON.stringify(userData))
+   145→   145→    localStorage.setItem('studio_creatif_auth', 'true')
+   146→   146→    setStep('success')
+   147→   147→    setTimeout(() => onLogin(userData), 1200)
+   148→   148→  }
+   149→   149→
+   150→   150→  /* ─── Verify OTP (connexion) ─── */
+   151→   151→  const verifyLoginOtp = () => {
+   152→   152→    if (loginOtp.length !== 6) { setLoginOtpError('Entrez les 6 chiffres'); return }
+   153→   153→    if (loginOtp !== loginGeneratedOtp) { setLoginOtpError('Code incorrect'); return }
+   154→   154→    if (otpExpiry <= 0) { setLoginOtpError('Code expiré. Demandez un nouveau code.'); return }
+   155→   155→    const userData: UserData = { prenom: '', nom: '', telephone: loginPhone, pays: PAYS[loginPaysIndex].nom, codePays: loginCode }
+   156→   156→    localStorage.setItem('studio_creatif_user', JSON.stringify(userData))
+   157→   157→    localStorage.setItem('studio_creatif_auth', 'true')
+   158→   158→    onLogin(userData)
+   159→   159→  }
+   160→   160→
+   161→   161→  /* ─── Copy code ─── */
+   162→   162→  const copyCode = (code: string, type: 'insc' | 'login') => {
+   163→   163→    navigator.clipboard.writeText(code)
+   164→   164→    if (type === 'insc') setCodeCopied(true)
+   165→   165→    else setLoginCodeCopied(true)
+   166→   166→    setTimeout(() => { if (type === 'insc') setCodeCopied(false); else setLoginCodeCopied(false) }, 2000)
+   167→   167→  }
+   168→   168→
+   169→   169→  const formatTimer = (s: number) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`
+   170→   170→
+   171→   171→  /* ─── OTP display card ─── */
+   172→   172→  const OtpCodeCard = ({ code, copied, onCopy, label }: { code: string; copied: boolean; onCopy: () => void; label: string }) => (
+   173→   173→    <div className="bg-slate-100 dark:bg-slate-800 rounded-2xl p-5 text-center space-y-3">
+   174→   174→      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{label}</p>
+   175→   175→      <div className="flex items-center justify-center gap-2">
+   176→   176→        <span className="text-3xl sm:text-4xl font-mono font-extrabold tracking-[0.3em] text-foreground">
+   177→   177→          {code.slice(0, 3)}<span className="text-muted-foreground/40 mx-1">-</span>{code.slice(3)}
+   178→   178→        </span>
+   179→   179→        <button
+   180→   180→          onClick={onCopy}
+   181→   181→          className="ml-2 p-2 rounded-lg hover:bg-background transition-colors"
+   182→   182→          title="Copier le code"
+   183→   183→        >
+   184→   184→          {copied ? <Check className="h-4 w-4 text-emerald-500" /> : <Copy className="h-4 w-4 text-muted-foreground" />}
+   185→   185→        </button>
+   186→   186→      </div>
+   187→   187→      <p className="text-[11px] text-muted-foreground">Ce code expire dans <span className="font-bold text-foreground">{formatTimer(otpExpiry)}</span></p>
+   188→   188→    </div>
+   189→   189→  )
+   190→   190→
+   191→   191→  /* ─── OTP Input slots ─── */
+   192→   192→  const OtpInput = ({ value, onChange, error, onVerify, disabled, label }: {
+   193→   193→    value: string; onChange: (v: string) => void; error: string;
+   194→   194→    onVerify: () => void; disabled: boolean; label: string
+   195→   195→  }) => (
+   196→   196→    <>
+   197→   197→      <div className="flex justify-center">
+   198→   198→        <InputOTP maxLength={6} value={value} onChange={onChange} containerClassName="gap-2">
+   199→   199→          <InputOTPGroup>
+   200→   200→            <InputOTPSlot index={0} className="h-13 w-12 sm:w-14 text-xl font-bold rounded-xl border-2" />
+   201→   201→            <InputOTPSlot index={1} className="h-13 w-12 sm:w-14 text-xl font-bold rounded-xl border-2" />
+   202→   202→            <InputOTPSlot index={2} className="h-13 w-12 sm:w-14 text-xl font-bold rounded-xl border-2" />
+   203→   203→          </InputOTPGroup>
+   204→   204→          <InputOTPSeparator className="text-muted-foreground/40 mx-1 text-lg" />
+   205→   205→          <InputOTPGroup>
+   206→   206→            <InputOTPSlot index={3} className="h-13 w-12 sm:w-14 text-xl font-bold rounded-xl border-2" />
+   207→   207→            <InputOTPSlot index={4} className="h-13 w-12 sm:w-14 text-xl font-bold rounded-xl border-2" />
+   208→   208→            <InputOTPSlot index={5} className="h-13 w-12 sm:w-14 text-xl font-bold rounded-xl border-2" />
+   209→   209→          </InputOTPGroup>
+   210→   210→        </InputOTP>
+   211→   211→      </div>
+   212→   212→      {error && (
+   213→   213→        <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-xs text-destructive text-center font-medium">{error}</motion.p>
+   214→   214→      )}
+   215→   215→      <Button
+   216→   216→        onClick={onVerify}
+   217→   217→        disabled={disabled}
+   218→   218→        className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold h-12 text-sm shadow-lg shadow-emerald-500/20 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
+   219→   219→      >
+   220→   220→        <Shield className="h-4 w-4 mr-2" /> {label}
+   221→   221→      </Button>
+   222→   222→    </>
+   223→   223→  )
+   224→   224→
+   225→   225→  return (
+   226→   226→    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 via-orange-50 to-white dark:from-slate-950 dark:via-slate-900 dark:to-background p-4">
+   227→   227→      <div className="fixed top-0 -right-40 h-[500px] w-[500px] rounded-full bg-amber-200/40 dark:bg-amber-800/10 blur-3xl pointer-events-none" />
+   228→   228→      <div className="fixed -bottom-20 -left-40 h-[400px] w-[400px] rounded-full bg-orange-200/30 dark:bg-orange-800/10 blur-3xl pointer-events-none" />
+   229→   229→
+   230→   230→      <motion.div
+   231→   231→        initial={{ opacity: 0, y: 20, scale: 0.98 }}
+   232→   232→        animate={{ opacity: 1, y: 0, scale: 1 }}
+   233→   233→        transition={{ duration: 0.5, ease: 'easeOut' }}
+   234→   234→        className="w-full max-w-md relative z-10"
+   235→   235→      >
+   236→   236→        {/* Logo */}
+   237→   237→        <div className="text-center mb-8">
+   238→   238→          <motion.div
+   239→   239→            initial={{ scale: 0 }}
+   240→   240→            animate={{ scale: 1 }}
+   241→   241→            transition={{ type: 'spring', stiffness: 200, delay: 0.1 }}
+   242→   242→            className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 shadow-xl shadow-amber-500/25 mb-4"
+   243→   243→          >
+   244→   244→            <Sparkles className="h-8 w-8 text-white" />
+   245→   245→          </motion.div>
+   246→   246→          <h1 className="text-3xl font-extrabold tracking-tight">Studio Créatif</h1>
+   247→   247→          <p className="text-muted-foreground text-sm mt-1">Créativité, Expertise, Excellence</p>
+   248→   248→        </div>
+   249→   249→
+   250→   250→        {/* Main Card */}
+   251→   251→        <Card className="border-0 shadow-2xl shadow-amber-500/10 overflow-hidden">
+   252→   252→          <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 p-1">
+   253→   253→            <CardContent className="p-0 bg-background">
+   254→   254→              <Tabs value={activeTab} onValueChange={(v) => { setActiveTab(v as 'inscription' | 'connexion'); setStep('form'); setLoginStep('phone') }}>
+   255→   255→                <div className="flex border-b">
+   256→   256→                  <TabsList className="w-full h-12 bg-transparent rounded-none p-0 gap-0">
+   257→   257→                    <TabsTrigger
+   258→   258→                      value="inscription"
+   259→   259→                      className="flex-1 h-full rounded-none data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:border-b-2 data-[state=active]:border-amber-500 text-sm font-semibold"
+   260→   260→                    >
+   261→   261→                      Inscription
+   262→   262→                    </TabsTrigger>
+   263→   263→                    <TabsTrigger
+   264→   264→                      value="connexion"
+   265→   265→                      className="flex-1 h-full rounded-none data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:border-b-2 data-[state=active]:border-amber-500 text-sm font-semibold"
+   266→   266→                    >
+   267→   267→                      Connexion
+   268→   268→                    </TabsTrigger>
+   269→   269→                  </TabsList>
+   270→   270→                </div>
+   271→   271→
+   272→   272→                {/* ═══ INSCRIPTION ═══ */}
+   273→   273→                <TabsContent value="inscription">
+   274→   274→                  <AnimatePresence mode="wait">
+   275→   275→                    {step === 'form' && (
+   276→   276→                      <motion.div key="insc-form" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.3 }} className="p-6 sm:p-8 space-y-5">
+   277→   277→                        <div className="text-center mb-2">
+   278→   278→                          <h2 className="text-lg font-bold">Créez votre compte</h2>
+   279→   279→                          <p className="text-xs text-muted-foreground mt-1">Rejoignez Studio Créatif gratuitement</p>
+   280→   280→                        </div>
+   281→   281→
+   282→   282→                        <div className="grid grid-cols-2 gap-3">
+   283→   283→                          <div className="space-y-1.5">
+   284→   284→                            <Label className="text-xs font-semibold">Prénom *</Label>
+   285→   285→                            <div className="relative">
+   286→   286→                              <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+   287→   287→                              <Input placeholder="Ex: Ibrahim" value={prenom} onChange={(e) => setPrenom(e.target.value)} className="pl-9 h-11 text-sm" />
+   288→   288→                            </div>
+   289→   289→                          </div>
+   290→   290→                          <div className="space-y-1.5">
+   291→   291→                            <Label className="text-xs font-semibold">Nom *</Label>
+   292→   292→                            <div className="relative">
+   293→   293→                              <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+   294→   294→                              <Input placeholder="Ex: Sacko" value={nom} onChange={(e) => setNom(e.target.value)} className="pl-9 h-11 text-sm" />
+   295→   295→                            </div>
+   296→   296→                          </div>
+   297→   297→                        </div>
+   298→   298→
+   299→   299→                        {/* Pays — select natif fiable */}
+   300→   300→                        <div className="space-y-1.5">
+   301→   301→                          <Label className="text-xs font-semibold">Pays *</Label>
+   302→   302→                          <div className="relative">
+   303→   303→                            <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10 pointer-events-none" />
+   304→   304→                            <select
+   305→   305→                              value={paysIndex}
+   306→   306→                              onChange={(e) => setPaysIndex(Number(e.target.value))}
+   307→   307→                              className="h-11 w-full rounded-md border border-input bg-background pl-9 pr-8 text-sm appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-500"
+   308→   308→                            >
+   309→   309→                              {PAYS.map((p, i) => (
+   310→   310→                                <option key={p.code} value={i}>{p.drapeau}  {p.nom} ({p.code})</option>
+   311→   311→                              ))}
+   312→   312→                            </select>
+   313→   313→                            <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+   314→   314→                          </div>
+   315→   315→                        </div>
+   316→   316→
+   317→   317→                        {/* Téléphone */}
+   318→   318→                        <div className="space-y-1.5">
+   319→   319→                          <Label className="text-xs font-semibold">Numéro de téléphone *</Label>
+   320→   320→                          <div className="relative">
+   321→   321→                            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10 pointer-events-none" />
+   322→   322→                            <div className="absolute left-9 top-1/2 -translate-y-1/2 text-xs font-semibold text-muted-foreground border-r border-border pr-2 h-5 flex items-center pointer-events-none">
+   323→   323→                              {codePays}
+   324→   324→                            </div>
+   325→   325→                            <Input type="tel" placeholder="70 00 00 00" value={telephone} onChange={(e) => setTelephone(e.target.value)} className="pl-[5.5rem] h-11 text-sm" />
+   326→   326→                          </div>
+   327→   327→                        </div>
+   328→   328→
+   329→   329→                        <Button
+   330→   330→                          onClick={sendOtpInscription}
+   331→   331→                          disabled={!prenom.trim() || !nom.trim() || !telephone.trim() || isLoading}
+   332→   332→                          className="w-full bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 hover:from-amber-600 hover:via-orange-600 hover:to-red-600 text-white font-bold h-12 text-sm shadow-lg shadow-amber-500/20 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
+   333→   333→                        >
+   334→   334→                          {isLoading ? (
+   335→   335→                            <span className="flex items-center gap-2"><RefreshCw className="h-4 w-4 animate-spin" /> Envoi en cours...</span>
+   336→   336→                          ) : (
+   337→   337→                            <span className="flex items-center gap-2">Obtenir mon code OTP <ArrowRight className="h-4 w-4" /></span>
+   338→   338→                          )}
+   339→   339→                        </Button>
+   340→   340→
+   341→   341→                        <p className="text-[11px] text-muted-foreground text-center leading-relaxed">
+   342→   342→                          Un code de vérification à 6 chiffres vous sera attribué.
+   343→   343→                        </p>
+   344→   344→                      </motion.div>
+   345→   345→                    )}
+   346→   346→
+   347→   347→                    {step === 'otp' && (
+   348→   348→                      <motion.div key="insc-otp" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.3 }} className="p-6 sm:p-8 space-y-5">
+   349→   349→                        <div className="text-center">
+   350→   350→                          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 200, delay: 0.1 }} className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30 mb-4">
+   351→   351→                            <Shield className="h-7 w-7 text-emerald-600 dark:text-emerald-400" />
+   352→   352→                          </motion.div>
+   353→   353→                          <h2 className="text-lg font-bold">Vérification OTP</h2>
+   354→   354→                          <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
+   355→   355→                            Entrez le code ci-dessous pour <span className="font-semibold text-foreground">{codePays} {telephone}</span>
+   356→   356→                          </p>
+   357→   357→                        </div>
+   358→   358→
+   359→   359→                        <OtpCodeCard code={generatedOtp} copied={codeCopied} onCopy={() => copyCode(generatedOtp, 'insc')} label="Votre code de vérification" />
+   360→   360→
+   361→   361→                        <OtpInput value={otp} onChange={(v) => { setOtp(v); setOtpError('') }} error={otpError} onVerify={verifyOtp} disabled={otp.length !== 6} label="Vérifier et continuer" />
+   362→   362→
+   363→   363→                        <div className="text-center">
+   364→   364→                          {otpExpiry > 0 ? (
+   365→   365→                            <p className="text-xs text-muted-foreground">Code valable encore <span className="font-bold text-foreground">{formatTimer(otpExpiry)}</span></p>
+   366→   366→                          ) : (
+   367→   367→                            <button
+   368→   368→                              onClick={() => {
+   369→   369→                                const code = generateOtp()
+   370→   370→                                setGeneratedOtp(code); setOtp(''); setOtpError(''); setOtpExpiry(120); setCodeCopied(false)
+   371→   371→                              }}
+   372→   372→                              className="text-xs font-semibold text-amber-600 dark:text-amber-400 hover:underline inline-flex items-center gap-1"
+   373→   373→                            >
+   374→   374→                              <RefreshCw className="h-3 w-3" /> Générer un nouveau code
+   375→   375→                            </button>
+   376→   376→                          )}
+   377→   377→                        </div>
+   378→   378→
+   379→   379→                        <button onClick={() => setStep('form')} className="text-xs text-muted-foreground hover:text-foreground transition-colors text-center w-full block">
+   380→   380→                          Modifier mes informations
+   381→   381→                        </button>
+   382→   382→                      </motion.div>
+   383→   383→                    )}
+   384→   384→
+   385→   385→                    {step === 'success' && (
+   386→   386→                      <motion.div key="insc-success" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }} className="p-8 sm:p-12 text-center space-y-4">
+   387→   387→                        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 200, delay: 0.1 }} className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30">
+   388→   388→                          <svg className="h-8 w-8 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+   389→   389→                            <motion.path initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.5, delay: 0.2 }} strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+   390→   390→                          </svg>
+   391→   391→                        </motion.div>
+   392→   392→                        <h2 className="text-xl font-extrabold">Bienvenue, {prenom} !</h2>
+   393→   393→                        <p className="text-sm text-muted-foreground">Votre compte a été créé avec succès.</p>
+   394→   394→                        <p className="text-xs text-muted-foreground animate-pulse">Chargement de Studio Créatif...</p>
+   395→   395→                      </motion.div>
+   396→   396→                    )}
+   397→   397→                  </AnimatePresence>
+   398→   398→                </TabsContent>
+   399→   399→
+   400→   400→                {/* ═══ CONNEXION ═══ */}
+   401→   401→                <TabsContent value="connexion">
+   402→   402→                  <AnimatePresence mode="wait">
+   403→   403→                    {loginStep === 'phone' && (
+   404→   404→                      <motion.div key="login-phone" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.3 }} className="p-6 sm:p-8 space-y-5">
+   405→   405→                        <div className="text-center mb-2">
+   406→   406→                          <h2 className="text-lg font-bold">Connectez-vous</h2>
+   407→   407→                          <p className="text-xs text-muted-foreground mt-1">Entrez votre numéro pour recevoir un code</p>
+   408→   408→                        </div>
+   409→   409→
+   410→   410→                        <div className="space-y-1.5">
+   411→   411→                          <Label className="text-xs font-semibold">Pays</Label>
+   412→   412→                          <div className="relative">
+   413→   413→                            <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10 pointer-events-none" />
+   414→   414→                            <select
+   415→   415→                              value={loginPaysIndex}
+   416→   416→                              onChange={(e) => setLoginPaysIndex(Number(e.target.value))}
+   417→   417→                              className="h-11 w-full rounded-md border border-input bg-background pl-9 pr-8 text-sm appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-500"
+   418→   418→                            >
+   419→   419→                              {PAYS.map((p, i) => (
+   420→   420→                                <option key={p.code} value={i}>{p.drapeau}  {p.nom} ({p.code})</option>
+   421→   421→                              ))}
+   422→   422→                            </select>
+   423→   423→                            <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+   424→   424→                          </div>
+   425→   425→                        </div>
+   426→   426→
+   427→   427→                        <div className="space-y-1.5">
+   428→   428→                          <Label className="text-xs font-semibold">Numéro de téléphone *</Label>
+   429→   429→                          <div className="relative">
+   430→   430→                            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10 pointer-events-none" />
+   431→   431→                            <div className="absolute left-9 top-1/2 -translate-y-1/2 text-xs font-semibold text-muted-foreground border-r border-border pr-2 h-5 flex items-center pointer-events-none">
+   432→   432→                              {loginCode}
+   433→   433→                            </div>
+   434→   434→                            <Input type="tel" placeholder="70 00 00 00" value={loginPhone} onChange={(e) => setLoginPhone(e.target.value)} className="pl-[5.5rem] h-11 text-sm" />
+   435→   435→                          </div>
+   436→   436→                        </div>
+   437→   437→
+   438→   438→                        <Button
+   439→   439→                          onClick={sendOtpConnexion}
+   440→   440→                          disabled={!loginPhone.trim() || isLoading}
+   441→   441→                          className="w-full bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 hover:from-amber-600 hover:via-orange-600 hover:to-red-600 text-white font-bold h-12 text-sm shadow-lg shadow-amber-500/20 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
+   442→   442→                        >
+   443→   443→                          {isLoading ? (
+   444→   444→                            <span className="flex items-center gap-2"><RefreshCw className="h-4 w-4 animate-spin" /> Envoi en cours...</span>
+   445→   445→                          ) : (
+   446→   446→                            <span className="flex items-center gap-2">Obtenir mon code OTP <ArrowRight className="h-4 w-4" /></span>
+   447→   447→                          )}
+   448→   448→                        </Button>
+   449→   449→                      </motion.div>
+   450→   450→                    )}
+   451→   451→
+   452→   452→                    {loginStep === 'otp' && (
+   453→   453→                      <motion.div key="login-otp" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.3 }} className="p-6 sm:p-8 space-y-5">
+   454→   454→                        <div className="text-center">
+   455→   455→                          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 200, delay: 0.1 }} className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30 mb-4">
+   456→   456→                            <Shield className="h-7 w-7 text-emerald-600 dark:text-emerald-400" />
+   457→   457→                          </motion.div>
+   458→   458→                          <h2 className="text-lg font-bold">Vérification OTP</h2>
+   459→   459→                          <p className="text-xs text-muted-foreground mt-1.5">Code pour <span className="font-semibold text-foreground">{loginCode} {loginPhone}</span></p>
+   460→   460→                        </div>
+   461→   461→
+   462→   462→                        <OtpCodeCard code={loginGeneratedOtp} copied={loginCodeCopied} onCopy={() => copyCode(loginGeneratedOtp, 'login')} label="Votre code de vérification" />
+   463→   463→
+   464→   464→                        <OtpInput value={loginOtp} onChange={(v) => { setLoginOtp(v); setLoginOtpError('') }} error={loginOtpError} onVerify={verifyLoginOtp} disabled={loginOtp.length !== 6} label="Vérifier et se connecter" />
+   465→   465→
+   466→   466→                        <div className="text-center">
+   467→   467→                          {otpExpiry > 0 ? (
+   468→   468→                            <p className="text-xs text-muted-foreground">Code valable encore <span className="font-bold text-foreground">{formatTimer(otpExpiry)}</span></p>
+   469→   469→                          ) : (
+   470→   470→                            <button
+   471→   471→                              onClick={() => {
+   472→   472→                                const code = generateOtp()
+   473→   473→                                setLoginGeneratedOtp(code); setLoginOtp(''); setLoginOtpError(''); setOtpExpiry(120); setLoginCodeCopied(false)
+   474→   474→                              }}
+   475→   475→                              className="text-xs font-semibold text-amber-600 dark:text-amber-400 hover:underline inline-flex items-center gap-1"
+   476→   476→                            >
+   477→   477→                              <RefreshCw className="h-3 w-3" /> Générer un nouveau code
+   478→   478→                            </button>
+   479→   479→                          )}
+   480→   480→                        </div>
+   481→   481→
+   482→   482→                        <button onClick={() => setLoginStep('phone')} className="text-xs text-muted-foreground hover:text-foreground transition-colors text-center w-full block">
+   483→   483→                          Modifier le numéro
+   484→   484→                        </button>
+   485→   485→                      </motion.div>
+   486→   486→                    )}
+   487→   487→                  </AnimatePresence>
+   488→   488→                </TabsContent>
+   489→   489→              </Tabs>
+   490→   490→            </CardContent>
+   491→   491→          </div>
+   492→   492→        </Card>
+   493→   493→
+   494→   494→        <div className="mt-6 flex items-center justify-center gap-6 text-xs text-muted-foreground">
+   495→   495→          <span className="flex items-center gap-1.5"><Palette className="h-3.5 w-3.5 text-amber-500" /> Design</span>
+   496→   496→          <span className="flex items-center gap-1.5"><Globe className="h-3.5 w-3.5 text-blue-500" /> Sites Web</span>
+   497→   497→          <span className="flex items-center gap-1.5"><MonitorPlay className="h-3.5 w-3.5 text-purple-500" /> Vidéo</span>
+   498→   498→          <span className="flex items-center gap-1.5"><GraduationCap className="h-3.5 w-3.5 text-emerald-500" /> Formation</span>
+   499→   499→        </div>
+   500→   500→      </motion.div>
+   501→   501→    </div>
+   502→   502→  )
+   503→   503→}

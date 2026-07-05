@@ -1,16 +1,23 @@
 'use client'
 
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Phone, User, Globe, Shield, ArrowRight, RefreshCw, Sparkles, Palette, MonitorPlay, GraduationCap, Copy, Check } from 'lucide-react'
+import {
+  Phone, User, Globe, Shield, ArrowRight, Sparkles,
+  Palette, MonitorPlay, GraduationCap, QrCode, Key,
+  Copy, Check, Smartphone, Clock, AlertCircle, ArrowLeft
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator } from '@/components/ui/input-otp'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import * as OTPAuth from 'otpauth'
 
-/* ─── Pays ─── */
+/* ═══════════════════════════════════════════════════════════════
+   PAYS
+   ═══════════════════════════════════════════════════════════════ */
 const PAYS = [
   { code: '+223', nom: 'Mali', drapeau: '🇲🇱' },
   { code: '+221', nom: 'Sénégal', drapeau: '🇸🇳' },
@@ -32,20 +39,25 @@ const PAYS = [
   { code: '+44', nom: 'Royaume-Uni', drapeau: '🇬🇧' },
   { code: '+212', nom: 'Maroc', drapeau: '🇲🇦' },
   { code: '+216', nom: 'Tunisie', drapeau: '🇹🇳' },
-  { code: '+213', nom: 'Algérie', drapeau: '🇩🇿' },
   { code: '+20', nom: 'Égypte', drapeau: '🇪🇬' },
   { code: '+234', nom: 'Nigeria', drapeau: '🇳🇬' },
-  { code: '+254', nom: 'Kenya', drapeau: '🇰🇪' },
-  { code: '+27', nom: 'Afrique du Sud', drapeau: '🇿🇦' },
-  { code: '+41', nom: 'Suisse', drapeau: '🇨🇭' },
-  { code: '+32', nom: 'Belgique', drapeau: '🇧🇪' },
-  { code: '+49', nom: 'Allemagne', drapeau: '🇩🇪' },
-  { code: '+39', nom: 'Italie', drapeau: '🇮🇹' },
-  { code: '+34', nom: 'Espagne', drapeau: '🇪🇸' },
-  { code: '+86', nom: 'Chine', drapeau: '🇨🇳' },
+  { code: '+233', nom: 'Ghana', drapeau: '🇬🇭' },
+  { code: '+224', nom: 'Guinée', drapeau: '🇬🇳' },
+  { code: '+221', nom: 'Guinée-Bissau', drapeau: '🇬🇼' },
+  { code: '+245', nom: 'Guinée-Bissau', drapeau: '🇬🇼' },
+  { code: '+248', nom: 'Seychelles', drapeau: '🇸🇨' },
+  { code: '+230', nom: 'Maurice', drapeau: '🇲🇺' },
+  { code: '+261', nom: 'Madagascar', drapeau: '🇲🇬' },
+  { code: '+250', nom: 'Rwanda', drapeau: '🇷🇼' },
+  { code: '+257', nom: 'Burundi', drapeau: '🇧🇮' },
+  { code: '+255', nom: 'Tanzanie', drapeau: '🇹🇿' },
 ]
 
-type Step = 'form' | 'otp' | 'success'
+/* ═══════════════════════════════════════════════════════════════
+   TYPES
+   ═══════════════════════════════════════════════════════════════ */
+type InscStep = 'form' | 'qr' | 'otp' | 'success'
+type LoginStep = 'phone' | 'otp' | 'error'
 
 interface UserData {
   prenom: string
@@ -55,7 +67,23 @@ interface UserData {
   codePays: string
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   QR CODE GENERATOR (dynamic import pour éviter SSR)
+   ═══════════════════════════════════════════════════════════════ */
+async function generateQRDataURL(uri: string): Promise<string> {
+  const QRCode = (await import('qrcode')).default
+  return QRCode.toDataURL(uri, {
+    width: 240,
+    margin: 2,
+    color: { dark: '#000000', light: '#ffffff' },
+  })
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   COMPOSANT PRINCIPAL
+   ═══════════════════════════════════════════════════════════════ */
 export default function LoginPage({ onLogin }: { onLogin: (user: UserData) => void }) {
+
   /* ─── Inscription state ─── */
   const [prenom, setPrenom] = useState('')
   const [nom, setNom] = useState('')
@@ -66,164 +94,277 @@ export default function LoginPage({ onLogin }: { onLogin: (user: UserData) => vo
   const [loginPhone, setLoginPhone] = useState('')
   const [loginPaysIndex, setLoginPaysIndex] = useState(0)
 
-  /* ─── OTP state ─── */
-  const [step, setStep] = useState<Step>('form')
-  const [otp, setOtp] = useState('')
-  const [generatedOtp, setGeneratedOtp] = useState('')
-  const [otpError, setOtpError] = useState('')
-  const [otpExpiry, setOtpExpiry] = useState(0)
+  /* ─── TOTP state ─── */
+  const [inscStep, setInscStep] = useState<InscStep>('form')
+  const [loginStep, setLoginStep] = useState<LoginStep>('phone')
+  const [totpSecret, setTotpSecret] = useState('')
+  const [qrDataUrl, setQrDataUrl] = useState('')
+  const [inscTotp, setInscTotp] = useState<OTPAuth.TOTP | null>(null)
+  const [loginTotp, setLoginTotp] = useState<OTPAuth.TOTP | null>(null)
+
+  /* ─── OTP input state ─── */
+  const [inscOtp, setInscOtp] = useState('')
+  const [inscOtpError, setInscOtpError] = useState('')
+  const [loginOtp, setLoginOtp] = useState('')
+  const [loginOtpError, setLoginOtpError] = useState('')
+
+  /* ─── UI state ─── */
   const [isLoading, setIsLoading] = useState(false)
   const [activeTab, setActiveTab] = useState<'inscription' | 'connexion'>('inscription')
-  const [loginOtp, setLoginOtp] = useState('')
-  const [loginGeneratedOtp, setLoginGeneratedOtp] = useState('')
-  const [loginStep, setLoginStep] = useState<'phone' | 'otp'>('phone')
-  const [loginOtpError, setLoginOtpError] = useState('')
-  const [codeCopied, setCodeCopied] = useState(false)
-  const [loginCodeCopied, setLoginCodeCopied] = useState(false)
+  const [secretCopied, setSecretCopied] = useState(false)
+  const [loginError, setLoginError] = useState('')
 
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  /* ─── TOTP countdown (synchronisé avec les tranches de 30s) ─── */
+  const [totpCountdown, setTotpCountdown] = useState(30)
+
+  useEffect(() => {
+    const update = () => setTotpCountdown(30 - (Math.floor(Date.now() / 1000) % 30))
+    update()
+    const id = setInterval(update, 1000)
+    return () => clearInterval(id)
+  }, [])
 
   const codePays = PAYS[paysIndex].code
   const loginCode = PAYS[loginPaysIndex].code
 
-  /* ─── Timer ─── */
-  useEffect(() => {
-    if (otpExpiry > 0) {
-      timerRef.current = setInterval(() => {
-        setOtpExpiry(prev => {
-          if (prev <= 1) {
-            if (timerRef.current) clearInterval(timerRef.current)
-            return 0
-          }
-          return prev - 1
-        })
-      }, 1000)
-    }
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current)
-    }
-  }, [otpExpiry])
+  /* ═══════════════════════════════════════════════════════════════
+     INSCRIPTION : formulaire → QR → OTP → succès
+     ═══════════════════════════════════════════════════════════════ */
 
-  /* ─── Generate OTP ─── */
-  const generateOtp = useCallback((): string => {
-    return Math.floor(100000 + Math.random() * 900000).toString()
-  }, [])
-
-  /* ─── Send OTP (inscription) ─── */
-  const sendOtpInscription = () => {
+  /** Étape 1 → 2 : Générer le TOTP et le QR code */
+  const handleInscriptionSubmit = useCallback(async () => {
     if (!prenom.trim() || !nom.trim() || !telephone.trim()) return
     setIsLoading(true)
-    const code = generateOtp()
-    setGeneratedOtp(code)
-    setOtp('')
-    setOtpError('')
-    setOtpExpiry(120)
-    setCodeCopied(false)
-    setTimeout(() => { setStep('otp'); setIsLoading(false) }, 600)
-  }
+    try {
+      const secret = new OTPAuth.Secret()
+      const totp = new OTPAuth.TOTP({
+        issuer: 'Studio Créatif',
+        label: `${prenom.trim()} ${nom.trim()}`,
+        algorithm: 'SHA1',
+        digits: 6,
+        period: 30,
+        secret,
+      })
+      const uri = totp.toString()
+      const qr = await generateQRDataURL(uri)
+      setTotpSecret(secret.base32)
+      setQrDataUrl(qr)
+      setInscTotp(totp)
+      setInscOtp('')
+      setInscOtpError('')
+      setInscStep('qr')
+    } catch {
+      setInscOtpError('Erreur de génération du QR code. Réessayez.')
+    } finally {
+      setIsLoading(false)
+    }
+  }, [prenom, nom, telephone])
 
-  /* ─── Send OTP (connexion) ─── */
-  const sendOtpConnexion = () => {
-    if (!loginPhone.trim()) return
-    setIsLoading(true)
-    const code = generateOtp()
-    setLoginGeneratedOtp(code)
-    setLoginOtp('')
-    setLoginOtpError('')
-    setOtpExpiry(120)
-    setLoginCodeCopied(false)
-    setTimeout(() => { setLoginStep('otp'); setIsLoading(false) }, 600)
-  }
+  /** Étape 2 → 3 : L'utilisateur a scanné le QR, passe à la saisie du code */
+  const goToOtpStep = useCallback(() => {
+    setInscOtp('')
+    setInscOtpError('')
+    setInscStep('otp')
+  }, [])
 
-  /* ─── Verify OTP (inscription) ─── */
-  const verifyOtp = () => {
-    if (otp.length !== 6) { setOtpError('Entrez les 6 chiffres'); return }
-    if (otp !== generatedOtp) { setOtpError('Code incorrect'); return }
-    if (otpExpiry <= 0) { setOtpError('Code expiré. Demandez un nouveau code.'); return }
-    const userData: UserData = { prenom: prenom.trim(), nom: nom.trim(), telephone, pays: PAYS[paysIndex].nom, codePays }
+  /** Étape 3 : Vérifier le code TOTP saisi */
+  const verifyInscOtp = useCallback(() => {
+    if (!inscTotp) return
+    if (inscOtp.length !== 6) {
+      setInscOtpError('Entrez les 6 chiffres')
+      return
+    }
+    const delta = inscTotp.validate({ token: inscOtp, window: 1 })
+    if (delta === null) {
+      setInscOtpError('Code incorrect. Vérifiez votre Google Authenticator.')
+      return
+    }
+    /* Succès — sauvegarder */
+    const userData: UserData = {
+      prenom: prenom.trim(),
+      nom: nom.trim(),
+      telephone,
+      pays: PAYS[paysIndex].nom,
+      codePays,
+    }
     localStorage.setItem('studio_creatif_user', JSON.stringify(userData))
     localStorage.setItem('studio_creatif_auth', 'true')
-    setStep('success')
+    localStorage.setItem('studio_creatif_totp_secret', totpSecret)
+    setInscStep('success')
     setTimeout(() => onLogin(userData), 1200)
-  }
+  }, [inscTotp, inscOtp, prenom, nom, telephone, paysIndex, codePays, totpSecret, onLogin])
 
-  /* ─── Verify OTP (connexion) ─── */
-  const verifyLoginOtp = () => {
-    if (loginOtp.length !== 6) { setLoginOtpError('Entrez les 6 chiffres'); return }
-    if (loginOtp !== loginGeneratedOtp) { setLoginOtpError('Code incorrect'); return }
-    if (otpExpiry <= 0) { setLoginOtpError('Code expiré. Demandez un nouveau code.'); return }
-    const userData: UserData = { prenom: '', nom: '', telephone: loginPhone, pays: PAYS[loginPaysIndex].nom, codePays: loginCode }
-    localStorage.setItem('studio_creatif_user', JSON.stringify(userData))
+  /* ═══════════════════════════════════════════════════════════════
+     CONNEXION : téléphone → OTP → succès
+     ═══════════════════════════════════════════════════════════════ */
+
+  /** Étape 1 → 2 : Vérifier qu'un compte existe et préparer TOTP */
+  const handleLoginSubmit = useCallback(() => {
+    if (!loginPhone.trim()) return
+    const savedSecret = localStorage.getItem('studio_creatif_totp_secret')
+    if (!savedSecret) {
+      setLoginError('Aucun compte trouvé sur cet appareil. Veuillez créer un compte.')
+      setLoginStep('error')
+      return
+    }
+    try {
+      const secret = OTPAuth.Secret.fromBase32(savedSecret)
+      const totp = new OTPAuth.TOTP({
+        issuer: 'Studio Créatif',
+        label: 'Studio Créatif',
+        algorithm: 'SHA1',
+        digits: 6,
+        period: 30,
+        secret,
+      })
+      setLoginTotp(totp)
+      setLoginOtp('')
+      setLoginOtpError('')
+      setLoginError('')
+      setLoginStep('otp')
+    } catch {
+      setLoginError('Erreur de lecture du compte. Veuillez vous inscrire à nouveau.')
+      setLoginStep('error')
+    }
+  }, [loginPhone])
+
+  /** Vérifier le code TOTP pour connexion */
+  const verifyLoginOtp = useCallback(() => {
+    if (!loginTotp) return
+    if (loginOtp.length !== 6) {
+      setLoginOtpError('Entrez les 6 chiffres')
+      return
+    }
+    const delta = loginTotp.validate({ token: loginOtp, window: 1 })
+    if (delta === null) {
+      setLoginOtpError('Code incorrect. Vérifiez votre Google Authenticator.')
+      return
+    }
+    const savedUser = localStorage.getItem('studio_creatif_user')
+    const userData: UserData = savedUser
+      ? JSON.parse(savedUser)
+      : { prenom: '', nom: '', telephone: loginPhone, pays: PAYS[loginPaysIndex].nom, codePays: loginCode }
     localStorage.setItem('studio_creatif_auth', 'true')
     onLogin(userData)
-  }
+  }, [loginTotp, loginOtp, loginPhone, loginPaysIndex, loginCode, onLogin])
 
-  /* ─── Copy code ─── */
-  const copyCode = (code: string, type: 'insc' | 'login') => {
-    navigator.clipboard.writeText(code)
-    if (type === 'insc') setCodeCopied(true)
-    else setLoginCodeCopied(true)
-    setTimeout(() => { if (type === 'insc') setCodeCopied(false); else setLoginCodeCopied(false) }, 2000)
-  }
+  /* ═══════════════════════════════════════════════════════════════
+     HELPERS
+     ═══════════════════════════════════════════════════════════════ */
 
-  const formatTimer = (s: number) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`
+  const copySecret = useCallback(() => {
+    navigator.clipboard.writeText(totpSecret)
+    setSecretCopied(true)
+    setTimeout(() => setSecretCopied(false), 2000)
+  }, [totpSecret])
 
-  /* ─── OTP display card ─── */
-  const OtpCodeCard = ({ code, copied, onCopy, label }: { code: string; copied: boolean; onCopy: () => void; label: string }) => (
-    <div className="bg-slate-100 dark:bg-slate-800 rounded-2xl p-5 text-center space-y-3">
-      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{label}</p>
-      <div className="flex items-center justify-center gap-2">
-        <span className="text-3xl sm:text-4xl font-mono font-extrabold tracking-[0.3em] text-foreground">
-          {code.slice(0, 3)}<span className="text-muted-foreground/40 mx-1">-</span>{code.slice(3)}
-        </span>
-        <button
-          onClick={onCopy}
-          className="ml-2 p-2 rounded-lg hover:bg-background transition-colors"
-          title="Copier le code"
-        >
-          {copied ? <Check className="h-4 w-4 text-emerald-500" /> : <Copy className="h-4 w-4 text-muted-foreground" />}
-        </button>
+  /** Formater la clé secrète en blocs de 4 */
+  const formatSecret = (s: string) => s.match(/.{1,4}/g)?.join(' ') ?? s
+
+  /* ─── Sous-composants ─── */
+
+  /** Indicateur d'étapes pour l'inscription */
+  const StepIndicator = ({ current }: { current: number }) => {
+    const steps = [
+      { n: 1, label: 'Formulaire' },
+      { n: 2, label: 'QR Code' },
+      { n: 3, label: 'Vérification' },
+    ]
+    return (
+      <div className="flex items-center justify-center gap-1 mb-6">
+        {steps.map((s, i) => (
+          <div key={s.n} className="flex items-center">
+            <div className="flex items-center gap-1.5">
+              <div
+                className={`h-6 w-6 rounded-full flex items-center justify-center text-[10px] font-bold transition-colors duration-300 ${
+                  s.n <= current
+                    ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white'
+                    : 'bg-muted text-muted-foreground'
+                }`}
+              >
+                {s.n < current ? <Check className="h-3.5 w-3.5" /> : s.n}
+              </div>
+              <span className={`text-[10px] font-medium hidden sm:inline transition-colors duration-300 ${
+                s.n <= current ? 'text-foreground' : 'text-muted-foreground'
+              }`}>
+                {s.label}
+              </span>
+            </div>
+            {i < steps.length - 1 && (
+              <div className={`w-6 h-0.5 mx-1 rounded transition-colors duration-300 ${
+                s.n < current ? 'bg-amber-500' : 'bg-muted'
+              }`} />
+            )}
+          </div>
+        ))}
       </div>
-      <p className="text-[11px] text-muted-foreground">Ce code expire dans <span className="font-bold text-foreground">{formatTimer(otpExpiry)}</span></p>
+    )
+  }
+
+  /** Compteur de temps restant avant changement du code TOTP */
+  const CountdownBadge = () => {
+    const pct = (totpCountdown / 30) * 100
+    const color = totpCountdown <= 5 ? 'text-red-500' : totpCountdown <= 10 ? 'text-amber-500' : 'text-emerald-500'
+    return (
+      <div className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
+        <Clock className={`h-3.5 w-3.5 ${color}`} />
+        <span>Nouveau code dans <span className={`font-bold ${color}`}>{totpCountdown}s</span></span>
+        <div className="w-12 h-1.5 bg-muted rounded-full overflow-hidden ml-1">
+          <div
+            className={`h-full rounded-full transition-all duration-1000 ease-linear ${
+              totpCountdown <= 5 ? 'bg-red-500' : totpCountdown <= 10 ? 'bg-amber-500' : 'bg-emerald-500'
+            }`}
+            style={{ width: `${pct}%` }}
+          />
+        </div>
+      </div>
+    )
+  }
+
+  /** Slots de saisie OTP (réutilisable) */
+  const OtpSlots = ({ value, onChange }: { value: string; onChange: (v: string) => void }) => (
+    <div className="flex justify-center">
+      <InputOTP maxLength={6} value={value} onChange={onChange} containerClassName="gap-2">
+        <InputOTPGroup>
+          <InputOTPSlot index={0} className="h-13 w-12 sm:w-14 text-xl font-bold rounded-xl border-2" />
+          <InputOTPSlot index={1} className="h-13 w-12 sm:w-14 text-xl font-bold rounded-xl border-2" />
+          <InputOTPSlot index={2} className="h-13 w-12 sm:w-14 text-xl font-bold rounded-xl border-2" />
+        </InputOTPGroup>
+        <InputOTPSeparator className="text-muted-foreground/40 mx-1 text-lg" />
+        <InputOTPGroup>
+          <InputOTPSlot index={3} className="h-13 w-12 sm:w-14 text-xl font-bold rounded-xl border-2" />
+          <InputOTPSlot index={4} className="h-13 w-12 sm:w-14 text-xl font-bold rounded-xl border-2" />
+          <InputOTPSlot index={5} className="h-13 w-12 sm:w-14 text-xl font-bold rounded-xl border-2" />
+        </InputOTPGroup>
+      </InputOTP>
     </div>
   )
 
-  /* ─── OTP Input slots ─── */
-  const OtpInput = ({ value, onChange, error, onVerify, disabled, label }: {
-    value: string; onChange: (v: string) => void; error: string;
-    onVerify: () => void; disabled: boolean; label: string
-  }) => (
-    <>
-      <div className="flex justify-center">
-        <InputOTP maxLength={6} value={value} onChange={onChange} containerClassName="gap-2">
-          <InputOTPGroup>
-            <InputOTPSlot index={0} className="h-13 w-12 sm:w-14 text-xl font-bold rounded-xl border-2" />
-            <InputOTPSlot index={1} className="h-13 w-12 sm:w-14 text-xl font-bold rounded-xl border-2" />
-            <InputOTPSlot index={2} className="h-13 w-12 sm:w-14 text-xl font-bold rounded-xl border-2" />
-          </InputOTPGroup>
-          <InputOTPSeparator className="text-muted-foreground/40 mx-1 text-lg" />
-          <InputOTPGroup>
-            <InputOTPSlot index={3} className="h-13 w-12 sm:w-14 text-xl font-bold rounded-xl border-2" />
-            <InputOTPSlot index={4} className="h-13 w-12 sm:w-14 text-xl font-bold rounded-xl border-2" />
-            <InputOTPSlot index={5} className="h-13 w-12 sm:w-14 text-xl font-bold rounded-xl border-2" />
-          </InputOTPGroup>
-        </InputOTP>
-      </div>
-      {error && (
-        <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-xs text-destructive text-center font-medium">{error}</motion.p>
-      )}
-      <Button
-        onClick={onVerify}
-        disabled={disabled}
-        className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold h-12 text-sm shadow-lg shadow-emerald-500/20 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
+  /** Sélecteur de pays (natif, fiable) */
+  const PaysSelect = ({ value, onChange }: { value: number; onChange: (i: number) => void }) => (
+    <div className="relative">
+      <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10 pointer-events-none" />
+      <select
+        value={value}
+        onChange={(e) => onChange(Number(e.target.value))}
+        className="h-11 w-full rounded-md border border-input bg-background pl-9 pr-8 text-sm appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-500"
       >
-        <Shield className="h-4 w-4 mr-2" /> {label}
-      </Button>
-    </>
+        {PAYS.map((p, i) => (
+          <option key={`${p.code}-${p.nom}`} value={i}>{p.drapeau}  {p.nom} ({p.code})</option>
+        ))}
+      </select>
+      <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+      </svg>
+    </div>
   )
 
+  /* ═══════════════════════════════════════════════════════════════
+     RENDER
+     ═══════════════════════════════════════════════════════════════ */
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 via-orange-50 to-white dark:from-slate-950 dark:via-slate-900 dark:to-background p-4">
+      {/* Fond décoratif */}
       <div className="fixed top-0 -right-40 h-[500px] w-[500px] rounded-full bg-amber-200/40 dark:bg-amber-800/10 blur-3xl pointer-events-none" />
       <div className="fixed -bottom-20 -left-40 h-[400px] w-[400px] rounded-full bg-orange-200/30 dark:bg-orange-800/10 blur-3xl pointer-events-none" />
 
@@ -233,7 +374,7 @@ export default function LoginPage({ onLogin }: { onLogin: (user: UserData) => vo
         transition={{ duration: 0.5, ease: 'easeOut' }}
         className="w-full max-w-md relative z-10"
       >
-        {/* Logo */}
+        {/* ─── Logo ─── */}
         <div className="text-center mb-8">
           <motion.div
             initial={{ scale: 0 }}
@@ -247,11 +388,19 @@ export default function LoginPage({ onLogin }: { onLogin: (user: UserData) => vo
           <p className="text-muted-foreground text-sm mt-1">Créativité, Expertise, Excellence</p>
         </div>
 
-        {/* Main Card */}
+        {/* ─── Carte principale ─── */}
         <Card className="border-0 shadow-2xl shadow-amber-500/10 overflow-hidden">
           <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 p-1">
             <CardContent className="p-0 bg-background">
-              <Tabs value={activeTab} onValueChange={(v) => { setActiveTab(v as 'inscription' | 'connexion'); setStep('form'); setLoginStep('phone') }}>
+              <Tabs
+                value={activeTab}
+                onValueChange={(v) => {
+                  setActiveTab(v as 'inscription' | 'connexion')
+                  setInscStep('form')
+                  setLoginStep('phone')
+                  setLoginError('')
+                }}
+              >
                 <div className="flex border-b">
                   <TabsList className="w-full h-12 bg-transparent rounded-none p-0 gap-0">
                     <TabsTrigger
@@ -269,14 +418,25 @@ export default function LoginPage({ onLogin }: { onLogin: (user: UserData) => vo
                   </TabsList>
                 </div>
 
-                {/* ═══ INSCRIPTION ═══ */}
+                {/* ═══════════════════════════════════════════════
+                    INSCRIPTION
+                    ═══════════════════════════════════════════════ */}
                 <TabsContent value="inscription">
                   <AnimatePresence mode="wait">
-                    {step === 'form' && (
-                      <motion.div key="insc-form" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.3 }} className="p-6 sm:p-8 space-y-5">
+
+                    {/* ─── ÉTAPE 1 : Formulaire ─── */}
+                    {inscStep === 'form' && (
+                      <motion.div
+                        key="insc-form"
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        transition={{ duration: 0.3 }}
+                        className="p-6 sm:p-8 space-y-5"
+                      >
                         <div className="text-center mb-2">
                           <h2 className="text-lg font-bold">Créez votre compte</h2>
-                          <p className="text-xs text-muted-foreground mt-1">Rejoignez Studio Créatif gratuitement</p>
+                          <p className="text-xs text-muted-foreground mt-1">Rejoignez Studio Créatif avec Google Authenticator</p>
                         </div>
 
                         <div className="grid grid-cols-2 gap-3">
@@ -296,25 +456,11 @@ export default function LoginPage({ onLogin }: { onLogin: (user: UserData) => vo
                           </div>
                         </div>
 
-                        {/* Pays — select natif fiable */}
                         <div className="space-y-1.5">
                           <Label className="text-xs font-semibold">Pays *</Label>
-                          <div className="relative">
-                            <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10 pointer-events-none" />
-                            <select
-                              value={paysIndex}
-                              onChange={(e) => setPaysIndex(Number(e.target.value))}
-                              className="h-11 w-full rounded-md border border-input bg-background pl-9 pr-8 text-sm appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-500"
-                            >
-                              {PAYS.map((p, i) => (
-                                <option key={p.code} value={i}>{p.drapeau}  {p.nom} ({p.code})</option>
-                              ))}
-                            </select>
-                            <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-                          </div>
+                          <PaysSelect value={paysIndex} onChange={setPaysIndex} />
                         </div>
 
-                        {/* Téléphone */}
                         <div className="space-y-1.5">
                           <Label className="text-xs font-semibold">Numéro de téléphone *</Label>
                           <div className="relative">
@@ -327,101 +473,254 @@ export default function LoginPage({ onLogin }: { onLogin: (user: UserData) => vo
                         </div>
 
                         <Button
-                          onClick={sendOtpInscription}
+                          onClick={handleInscriptionSubmit}
                           disabled={!prenom.trim() || !nom.trim() || !telephone.trim() || isLoading}
                           className="w-full bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 hover:from-amber-600 hover:via-orange-600 hover:to-red-600 text-white font-bold h-12 text-sm shadow-lg shadow-amber-500/20 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           {isLoading ? (
-                            <span className="flex items-center gap-2"><RefreshCw className="h-4 w-4 animate-spin" /> Envoi en cours...</span>
+                            <span className="flex items-center gap-2"><RefreshCw className="h-4 w-4 animate-spin" /> Génération en cours...</span>
                           ) : (
-                            <span className="flex items-center gap-2">Obtenir mon code OTP <ArrowRight className="h-4 w-4" /></span>
+                            <span className="flex items-center gap-2">Configurer Google Authenticator <ArrowRight className="h-4 w-4" /></span>
                           )}
                         </Button>
 
                         <p className="text-[11px] text-muted-foreground text-center leading-relaxed">
-                          Un code de vérification à 6 chiffres vous sera attribué.
+                          Vous aurez besoin de l&#39;application <span className="font-semibold text-foreground">Google Authenticator</span> sur votre téléphone.
                         </p>
                       </motion.div>
                     )}
 
-                    {step === 'otp' && (
-                      <motion.div key="insc-otp" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.3 }} className="p-6 sm:p-8 space-y-5">
+                    {/* ─── ÉTAPE 2 : QR Code ─── */}
+                    {inscStep === 'qr' && (
+                      <motion.div
+                        key="insc-qr"
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        transition={{ duration: 0.3 }}
+                        className="p-6 sm:p-8 space-y-5"
+                      >
+                        <StepIndicator current={2} />
+
                         <div className="text-center">
-                          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 200, delay: 0.1 }} className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30 mb-4">
-                            <Shield className="h-7 w-7 text-emerald-600 dark:text-emerald-400" />
+                          <motion.div
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{ type: 'spring', stiffness: 200, delay: 0.1 }}
+                            className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30 mb-4"
+                          >
+                            <QrCode className="h-7 w-7 text-blue-600 dark:text-blue-400" />
                           </motion.div>
-                          <h2 className="text-lg font-bold">Vérification OTP</h2>
-                          <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
-                            Entrez le code ci-dessous pour <span className="font-semibold text-foreground">{codePays} {telephone}</span>
+                          <h2 className="text-lg font-bold">Scannez avec Google Authenticator</h2>
+                          <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed max-w-xs mx-auto">
+                            Ouvrez <span className="font-semibold text-foreground">Google Authenticator</span> sur votre téléphone et scannez ce QR code
                           </p>
                         </div>
 
-                        <OtpCodeCard code={generatedOtp} copied={codeCopied} onCopy={() => copyCode(generatedOtp, 'insc')} label="Votre code de vérification" />
-
-                        <OtpInput value={otp} onChange={(v) => { setOtp(v); setOtpError('') }} error={otpError} onVerify={verifyOtp} disabled={otp.length !== 6} label="Vérifier et continuer" />
-
-                        <div className="text-center">
-                          {otpExpiry > 0 ? (
-                            <p className="text-xs text-muted-foreground">Code valable encore <span className="font-bold text-foreground">{formatTimer(otpExpiry)}</span></p>
-                          ) : (
-                            <button
-                              onClick={() => {
-                                const code = generateOtp()
-                                setGeneratedOtp(code); setOtp(''); setOtpError(''); setOtpExpiry(120); setCodeCopied(false)
-                              }}
-                              className="text-xs font-semibold text-amber-600 dark:text-amber-400 hover:underline inline-flex items-center gap-1"
-                            >
-                              <RefreshCw className="h-3 w-3" /> Générer un nouveau code
-                            </button>
-                          )}
+                        {/* QR Code */}
+                        <div className="flex justify-center">
+                          <div className="bg-white rounded-2xl p-4 shadow-md border border-slate-200 dark:border-slate-700">
+                            {qrDataUrl ? (
+                              <img src={qrDataUrl} alt="QR Code Google Authenticator" className="w-[200px] h-[200px] sm:w-[220px] sm:h-[220px]" />
+                            ) : (
+                              <div className="w-[200px] h-[200px] sm:w-[220px] sm:h-[220px] flex items-center justify-center">
+                                <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
+                              </div>
+                            )}
+                          </div>
                         </div>
 
-                        <button onClick={() => setStep('form')} className="text-xs text-muted-foreground hover:text-foreground transition-colors text-center w-full block">
+                        {/* Clé secrète (saisie manuelle) */}
+                        <div className="space-y-2">
+                          <p className="text-[11px] text-muted-foreground text-center font-medium uppercase tracking-wider">
+                            Ou saisissez manuellement la clé
+                          </p>
+                          <div className="bg-slate-100 dark:bg-slate-800 rounded-xl p-3 flex items-center justify-between gap-2">
+                            <Key className="h-4 w-4 text-muted-foreground shrink-0" />
+                            <span className="text-xs font-mono font-bold tracking-wider text-foreground text-center flex-1">
+                              {formatSecret(totpSecret)}
+                            </span>
+                            <button
+                              onClick={copySecret}
+                              className="shrink-0 p-1.5 rounded-lg hover:bg-background transition-colors"
+                              title="Copier la clé"
+                            >
+                              {secretCopied
+                                ? <Check className="h-4 w-4 text-emerald-500" />
+                                : <Copy className="h-4 w-4 text-muted-foreground" />
+                              }
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Instructions rapides */}
+                        <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/40 rounded-xl p-3 space-y-2">
+                          <p className="text-[11px] font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wider">Comment faire</p>
+                          <ol className="text-xs text-amber-900 dark:text-amber-200/80 space-y-1.5 list-decimal list-inside leading-relaxed">
+                            <li>Ouvrez <span className="font-semibold">Google Authenticator</span> sur votre téléphone</li>
+                            <li>Appuyez sur <span className="font-semibold">+</span> puis <span className="font-semibold">Scanner un QR code</span></li>
+                            <li>Scannez le code ci-dessus ou saisissez la clé manuellement</li>
+                          </ol>
+                        </div>
+
+                        {/* Bouton continuer */}
+                        <Button
+                          onClick={goToOtpStep}
+                          className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold h-12 text-sm shadow-lg shadow-emerald-500/20 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99]"
+                        >
+                          <span className="flex items-center gap-2">
+                            <Smartphone className="h-4 w-4" />
+                            J&apos;ai scanné le code, continuer
+                            <ArrowRight className="h-4 w-4" />
+                          </span>
+                        </Button>
+
+                        <button
+                          onClick={() => { setInscStep('form'); setQrDataUrl(''); setTotpSecret('') }}
+                          className="text-xs text-muted-foreground hover:text-foreground transition-colors text-center w-full block"
+                        >
+                          <ArrowLeft className="h-3 w-3 inline mr-1" />
                           Modifier mes informations
                         </button>
                       </motion.div>
                     )}
 
-                    {step === 'success' && (
-                      <motion.div key="insc-success" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }} className="p-8 sm:p-12 text-center space-y-4">
-                        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 200, delay: 0.1 }} className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30">
+                    {/* ─── ÉTAPE 3 : Saisie du code TOTP ─── */}
+                    {inscStep === 'otp' && (
+                      <motion.div
+                        key="insc-otp"
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        transition={{ duration: 0.3 }}
+                        className="p-6 sm:p-8 space-y-5"
+                      >
+                        <StepIndicator current={3} />
+
+                        <div className="text-center">
+                          <motion.div
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{ type: 'spring', stiffness: 200, delay: 0.1 }}
+                            className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30 mb-4"
+                          >
+                            <Shield className="h-7 w-7 text-emerald-600 dark:text-emerald-400" />
+                          </motion.div>
+                          <h2 className="text-lg font-bold">Vérification Google OTP</h2>
+                          <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
+                            Ouvrez <span className="font-semibold text-foreground">Google Authenticator</span> et entrez le code à 6 chiffres affiché pour <span className="font-semibold text-foreground">Studio Créatif</span>
+                          </p>
+                        </div>
+
+                        <CountdownBadge />
+
+                        <OtpSlots value={inscOtp} onChange={(v) => { setInscOtp(v); setInscOtpError('') }} />
+
+                        {inscOtpError && (
+                          <motion.div
+                            initial={{ opacity: 0, y: -5 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="flex items-center justify-center gap-1.5 text-xs text-destructive font-medium"
+                          >
+                            <AlertCircle className="h-3.5 w-3.5" />
+                            {inscOtpError}
+                          </motion.div>
+                        )}
+
+                        <Button
+                          onClick={verifyInscOtp}
+                          disabled={inscOtp.length !== 6}
+                          className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold h-12 text-sm shadow-lg shadow-emerald-500/20 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
+                        >
+                          <Shield className="h-4 w-4 mr-2" />
+                          Vérifier et créer mon compte
+                        </Button>
+
+                        <p className="text-[11px] text-muted-foreground text-center leading-relaxed">
+                          Le code se renouvelle automatiquement toutes les 30 secondes.
+                          <br />
+                          Si le code ne fonctionne pas, attendez le prochain.
+                        </p>
+
+                        <button
+                          onClick={() => setInscStep('qr')}
+                          className="text-xs text-muted-foreground hover:text-foreground transition-colors text-center w-full block"
+                        >
+                          <ArrowLeft className="h-3 w-3 inline mr-1" />
+                          Retour au QR code
+                        </button>
+                      </motion.div>
+                    )}
+
+                    {/* ─── ÉTAPE 4 : Succès ─── */}
+                    {inscStep === 'success' && (
+                      <motion.div
+                        key="insc-success"
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.4 }}
+                        className="p-8 sm:p-12 text-center space-y-4"
+                      >
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ type: 'spring', stiffness: 200, delay: 0.1 }}
+                          className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30"
+                        >
                           <svg className="h-8 w-8 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                            <motion.path initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.5, delay: 0.2 }} strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            <motion.path
+                              initial={{ pathLength: 0 }}
+                              animate={{ pathLength: 1 }}
+                              transition={{ duration: 0.5, delay: 0.2 }}
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M5 13l4 4L19 7"
+                            />
                           </svg>
                         </motion.div>
                         <h2 className="text-xl font-extrabold">Bienvenue, {prenom} !</h2>
-                        <p className="text-sm text-muted-foreground">Votre compte a été créé avec succès.</p>
+                        <p className="text-sm text-muted-foreground">Votre compte est vérifié avec Google Authenticator.</p>
                         <p className="text-xs text-muted-foreground animate-pulse">Chargement de Studio Créatif...</p>
                       </motion.div>
                     )}
                   </AnimatePresence>
                 </TabsContent>
 
-                {/* ═══ CONNEXION ═══ */}
+                {/* ═══════════════════════════════════════════════
+                    CONNEXION
+                    ═══════════════════════════════════════════════ */}
                 <TabsContent value="connexion">
                   <AnimatePresence mode="wait">
-                    {loginStep === 'phone' && (
-                      <motion.div key="login-phone" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.3 }} className="p-6 sm:p-8 space-y-5">
+
+                    {/* ─── Étape téléphone ─── */}
+                    {(loginStep === 'phone' || loginStep === 'error') && (
+                      <motion.div
+                        key="login-phone"
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        transition={{ duration: 0.3 }}
+                        className="p-6 sm:p-8 space-y-5"
+                      >
                         <div className="text-center mb-2">
                           <h2 className="text-lg font-bold">Connectez-vous</h2>
-                          <p className="text-xs text-muted-foreground mt-1">Entrez votre numéro pour recevoir un code</p>
+                          <p className="text-xs text-muted-foreground mt-1">Vérification avec Google Authenticator</p>
                         </div>
+
+                        {loginError && (
+                          <motion.div
+                            initial={{ opacity: 0, y: -5 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800/40 rounded-xl p-3 flex items-start gap-2"
+                          >
+                            <AlertCircle className="h-4 w-4 text-red-500 shrink-0 mt-0.5" />
+                            <p className="text-xs text-red-700 dark:text-red-400 leading-relaxed">{loginError}</p>
+                          </motion.div>
+                        )}
 
                         <div className="space-y-1.5">
                           <Label className="text-xs font-semibold">Pays</Label>
-                          <div className="relative">
-                            <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10 pointer-events-none" />
-                            <select
-                              value={loginPaysIndex}
-                              onChange={(e) => setLoginPaysIndex(Number(e.target.value))}
-                              className="h-11 w-full rounded-md border border-input bg-background pl-9 pr-8 text-sm appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-500"
-                            >
-                              {PAYS.map((p, i) => (
-                                <option key={p.code} value={i}>{p.drapeau}  {p.nom} ({p.code})</option>
-                              ))}
-                            </select>
-                            <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-                          </div>
+                          <PaysSelect value={loginPaysIndex} onChange={setLoginPaysIndex} />
                         </div>
 
                         <div className="space-y-1.5">
@@ -431,55 +730,82 @@ export default function LoginPage({ onLogin }: { onLogin: (user: UserData) => vo
                             <div className="absolute left-9 top-1/2 -translate-y-1/2 text-xs font-semibold text-muted-foreground border-r border-border pr-2 h-5 flex items-center pointer-events-none">
                               {loginCode}
                             </div>
-                            <Input type="tel" placeholder="70 00 00 00" value={loginPhone} onChange={(e) => setLoginPhone(e.target.value)} className="pl-[5.5rem] h-11 text-sm" />
+                            <Input type="tel" placeholder="70 00 00 00" value={loginPhone} onChange={(e) => { setLoginPhone(e.target.value); setLoginError('') }} className="pl-[5.5rem] h-11 text-sm" />
                           </div>
                         </div>
 
                         <Button
-                          onClick={sendOtpConnexion}
-                          disabled={!loginPhone.trim() || isLoading}
+                          onClick={handleLoginSubmit}
+                          disabled={!loginPhone.trim()}
                           className="w-full bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 hover:from-amber-600 hover:via-orange-600 hover:to-red-600 text-white font-bold h-12 text-sm shadow-lg shadow-amber-500/20 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                          {isLoading ? (
-                            <span className="flex items-center gap-2"><RefreshCw className="h-4 w-4 animate-spin" /> Envoi en cours...</span>
-                          ) : (
-                            <span className="flex items-center gap-2">Obtenir mon code OTP <ArrowRight className="h-4 w-4" /></span>
-                          )}
+                          <span className="flex items-center gap-2">
+                            <Shield className="h-4 w-4" />
+                            Continuer avec Google OTP
+                            <ArrowRight className="h-4 w-4" />
+                          </span>
                         </Button>
                       </motion.div>
                     )}
 
+                    {/* ─── Étape OTP connexion ─── */}
                     {loginStep === 'otp' && (
-                      <motion.div key="login-otp" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.3 }} className="p-6 sm:p-8 space-y-5">
+                      <motion.div
+                        key="login-otp"
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        transition={{ duration: 0.3 }}
+                        className="p-6 sm:p-8 space-y-5"
+                      >
                         <div className="text-center">
-                          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 200, delay: 0.1 }} className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30 mb-4">
+                          <motion.div
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{ type: 'spring', stiffness: 200, delay: 0.1 }}
+                            className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30 mb-4"
+                          >
                             <Shield className="h-7 w-7 text-emerald-600 dark:text-emerald-400" />
                           </motion.div>
-                          <h2 className="text-lg font-bold">Vérification OTP</h2>
-                          <p className="text-xs text-muted-foreground mt-1.5">Code pour <span className="font-semibold text-foreground">{loginCode} {loginPhone}</span></p>
+                          <h2 className="text-lg font-bold">Vérification Google OTP</h2>
+                          <p className="text-xs text-muted-foreground mt-1.5">
+                            Entrez le code de <span className="font-semibold text-foreground">Google Authenticator</span>
+                          </p>
                         </div>
 
-                        <OtpCodeCard code={loginGeneratedOtp} copied={loginCodeCopied} onCopy={() => copyCode(loginGeneratedOtp, 'login')} label="Votre code de vérification" />
+                        <CountdownBadge />
 
-                        <OtpInput value={loginOtp} onChange={(v) => { setLoginOtp(v); setLoginOtpError('') }} error={loginOtpError} onVerify={verifyLoginOtp} disabled={loginOtp.length !== 6} label="Vérifier et se connecter" />
+                        <OtpSlots value={loginOtp} onChange={(v) => { setLoginOtp(v); setLoginOtpError('') }} />
 
-                        <div className="text-center">
-                          {otpExpiry > 0 ? (
-                            <p className="text-xs text-muted-foreground">Code valable encore <span className="font-bold text-foreground">{formatTimer(otpExpiry)}</span></p>
-                          ) : (
-                            <button
-                              onClick={() => {
-                                const code = generateOtp()
-                                setLoginGeneratedOtp(code); setLoginOtp(''); setLoginOtpError(''); setOtpExpiry(120); setLoginCodeCopied(false)
-                              }}
-                              className="text-xs font-semibold text-amber-600 dark:text-amber-400 hover:underline inline-flex items-center gap-1"
-                            >
-                              <RefreshCw className="h-3 w-3" /> Générer un nouveau code
-                            </button>
-                          )}
-                        </div>
+                        {loginOtpError && (
+                          <motion.div
+                            initial={{ opacity: 0, y: -5 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="flex items-center justify-center gap-1.5 text-xs text-destructive font-medium"
+                          >
+                            <AlertCircle className="h-3.5 w-3.5" />
+                            {loginOtpError}
+                          </motion.div>
+                        )}
 
-                        <button onClick={() => setLoginStep('phone')} className="text-xs text-muted-foreground hover:text-foreground transition-colors text-center w-full block">
+                        <Button
+                          onClick={verifyLoginOtp}
+                          disabled={loginOtp.length !== 6}
+                          className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold h-12 text-sm shadow-lg shadow-emerald-500/20 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
+                        >
+                          <Shield className="h-4 w-4 mr-2" />
+                          Vérifier et se connecter
+                        </Button>
+
+                        <p className="text-[11px] text-muted-foreground text-center leading-relaxed">
+                          Le code se renouvelle automatiquement toutes les 30 secondes.
+                        </p>
+
+                        <button
+                          onClick={() => setLoginStep('phone')}
+                          className="text-xs text-muted-foreground hover:text-foreground transition-colors text-center w-full block"
+                        >
+                          <ArrowLeft className="h-3 w-3 inline mr-1" />
                           Modifier le numéro
                         </button>
                       </motion.div>
@@ -491,6 +817,7 @@ export default function LoginPage({ onLogin }: { onLogin: (user: UserData) => vo
           </div>
         </Card>
 
+        {/* ─── Bas de page ─── */}
         <div className="mt-6 flex items-center justify-center gap-6 text-xs text-muted-foreground">
           <span className="flex items-center gap-1.5"><Palette className="h-3.5 w-3.5 text-amber-500" /> Design</span>
           <span className="flex items-center gap-1.5"><Globe className="h-3.5 w-3.5 text-blue-500" /> Sites Web</span>
