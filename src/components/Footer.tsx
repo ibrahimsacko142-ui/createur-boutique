@@ -66,8 +66,8 @@ export default function Footer() {
                 { label: 'Accueil', href: '#accueil' },
                 { label: 'Services', href: '#services' },
                 { label: 'Formations', href: '#formations' },
+                { label: 'Boutique', href: '#boutique' },
                 { label: 'Coachs', href: '#coachs' },
-                { label: 'Portfolio', href: '#portfolio' },
                 { label: 'FAQ', href: '#faq' },
                 { label: 'Contact', href: '#contact' },
               ].map((item) => (

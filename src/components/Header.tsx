@@ -10,9 +10,9 @@ const navLinks = [
   { label: 'Accueil', href: '#accueil' },
   { label: 'Services', href: '#services' },
   { label: 'Formations', href: '#formations' },
+  { label: 'Boutique', href: '#boutique' },
   { label: 'Coachs', href: '#coachs' },
   { label: 'Portfolio', href: '#portfolio' },
-  { label: 'Témoignages', href: '#temoignages' },
   { label: 'Contact', href: '#contact' },
 ]
 
