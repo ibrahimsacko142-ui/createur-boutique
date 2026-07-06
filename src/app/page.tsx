@@ -313,6 +313,9 @@ const books = [
   { title: 'Écrire des livres avec ChatGPT', author: 'Martín Arellano', desc: 'Utilisez l\'IA ChatGPT pour créer et rédiger vos livres.', cover: '/livres/ecrire-livres-chatgpt.jpg' },
   { title: 'Développement système sous Linux', author: 'Christophe Blaess', desc: 'Programmation système : multitâche, mémoire, réseau sous Linux.', cover: '/livres/linux-systeme.jpg' },
   { title: 'Espionnage dans les réseaux TCP/IP', author: 'Zouheir Trabelsi', desc: 'Techniques de sniffing et contre-mesures de sécurité réseau.', cover: '/livres/espionnage-tcp-ip.jpg' },
+  { title: 'WordPress pour les Nuls', author: 'Lisa Sabin-Wilson', desc: 'Créez votre site WordPress : nom de domaine, hébergement, personnalisation, extensions et multimédia.', cover: '/livres/wordpress-nuls.jpg' },
+  { title: 'Programmer avec JavaScript en s\'amusant', author: 'Chris Minnick & Eva Holland', desc: '15 projets fun pour apprendre le JavaScript : jeux, pages web, animation de robot.', cover: '/livres/javascript-amusant.jpg' },
+  { title: 'Stratégie Marketing & Création Publicitaire', author: 'Henri Joannis & Virginie de Barnier', desc: 'De la stratégie marketing à la création publicitaire : magazines, TV, affiches, internet.', cover: '/livres/strategie-marketing-pub.jpg' },
 ]
 
 /* ═══════════════════════════════════════════════
@@ -1285,16 +1288,16 @@ export default function Home() {
                       <FolderDown className="h-6 w-6" />
                     </div>
                     <div>
-                      <h3 className="font-extrabold text-base">Pack Complet — Tous les 9 livres</h3>
-                      <p className="text-sm text-muted-foreground mt-0.5">Économisez 2 000 FCFA en prenant le pack complet</p>
+                      <h3 className="font-extrabold text-base">Pack Complet — Tous les 12 livres</h3>
+                      <p className="text-sm text-muted-foreground mt-0.5">Économisez 5 000 FCFA en prenant le pack complet</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 flex-shrink-0">
                     <div className="text-right">
-                      <span className="text-xs text-muted-foreground line-through">9 000 FCFA</span>
+                      <span className="text-xs text-muted-foreground line-through">12 000 FCFA</span>
                       <div className="text-2xl font-extrabold text-amber-600">7 000 <span className="text-sm font-normal">FCFA</span></div>
                     </div>
-                    <a href={`https://wa.me/22397787244?text=${encodeURIComponent('Bonjour Sacko ! Je veux commander le Pack Complet de 9 livres (7 000 FCFA au lieu de 9 000). Comment procéder ?')}`} target="_blank" rel="noopener noreferrer">
+                    <a href={`https://wa.me/22397787244?text=${encodeURIComponent('Bonjour Sacko ! Je veux commander le Pack Complet de 12 livres (7 000 FCFA au lieu de 12 000). Comment procéder ?')}`} target="_blank" rel="noopener noreferrer">
                       <Button className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-lg shadow-amber-500/20 whitespace-nowrap">
                         <ShoppingCart className="h-4 w-4 mr-1.5" /> Prendre le Pack
                       </Button>
