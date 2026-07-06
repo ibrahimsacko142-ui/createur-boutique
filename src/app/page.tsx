@@ -1518,6 +1518,7 @@ export default function Home() {
                 </button>
               ))}
             </div>
+            </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5">
               {books.filter((b) => (bookFilter === 'Tous' || b.category === bookFilter) && (!bookSearch || b.title.toLowerCase().includes(bookSearch.toLowerCase()) || b.author.toLowerCase().includes(bookSearch.toLowerCase()) || b.desc.toLowerCase().includes(bookSearch.toLowerCase()) || b.category.toLowerCase().includes(bookSearch.toLowerCase()))).length === 0 && (
@@ -2140,46 +2141,72 @@ export default function Home() {
                 Les réponses aux questions les plus posées. Si vous ne trouvez pas votre réponse, contactez-moi directement sur WhatsApp.
               </p>
             </div>
+            {/* FAQ Search */}
+            <div className="relative max-w-md mx-auto mb-6">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Rechercher dans la FAQ..."
+                value={faqSearch}
+                onChange={(e) => setFaqSearch(e.target.value)}
+                className="pl-10 h-10 bg-background border-border rounded-xl text-sm"
+              />
+              {faqSearch && (
+                <button onClick={() => setFaqSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
             <div className="space-y-3">
-              {[
-                { q: "L'Offre Découverte est-elle vraiment 100% gratuite ?", a: "Oui, totalement. C'est ma manière de vous prouver la qualité de mon travail avant que vous ne décidiez de passer à une offre Premium payante. Aucun engagement requis, aucun frais caché." },
-                { q: "Quels sont les délais de livraison ?", a: "Les services \"Carrière Pro\" (CV, Lettres) sont livrés en moins de 24h. Pour les logos simples, comptez 48h, et pour un site web complet, entre 3 et 7 jours selon la complexité. Chaque projet a un suivi personnalisé." },
-                { q: "Puis-je demander des modifications si le résultat ne me plaît pas ?", a: "Absolument. Votre satisfaction est ma priorité. Pour l'Offre Découverte, une révision est incluse. Pour les offres Premium, les révisions sont illimitées jusqu'à ce que le résultat vous corresponde parfaitement. Je ne livre que lorsque vous êtes 100% satisfait." },
-                { q: "Pourquoi limitez-vous les commandes à 5 par jour ?", a: "Je privilégie la qualité à la quantité. Travailler avec un nombre limité de clients me permet de dédier toute mon attention et mon expertise à chaque pixel de votre projet. Le résultat : des créations qui convertissent." },
-              ].map((faq, i) => {
-                const isOpen = faqOpen === `faq-${i}`
-                return (
-                  <Card key={i} className="border-0 shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
-                    <button
-                      onClick={() => setFaqOpen(isOpen ? null : `faq-${i}`)}
-                      aria-expanded={isOpen}
-                      className="w-full flex items-center justify-between p-5 text-left"
-                    >
-                      <h3 className="font-semibold text-sm pr-4">{faq.q}</h3>
-                      <motion.div
-                        animate={{ rotate: isOpen ? 180 : 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="flex-shrink-0"
+              {(() => {
+                const faqs = [
+                  { q: "L'Offre Découverte est-elle vraiment 100% gratuite ?", a: "Oui, totalement. C'est ma manière de vous prouver la qualité de mon travail avant que vous ne décidiez de passer à une offre Premium payante. Aucun engagement requis, aucun frais caché." },
+                  { q: "Quels sont les délais de livraison ?", a: "Les services \"Carrière Pro\" (CV, Lettres) sont livrés en moins de 24h. Pour les logos simples, comptez 48h, et pour un site web complet, entre 3 et 7 jours selon la complexité. Chaque projet a un suivi personnalisé." },
+                  { q: "Puis-je demander des modifications si le résultat ne me plaît pas ?", a: "Absolument. Votre satisfaction est ma priorité. Pour l'Offre Découverte, une révision est incluse. Pour les offres Premium, les révisions sont illimitées jusqu'à ce que le résultat vous corresponde parfaitement. Je ne livre que lorsque vous êtes 100% satisfait." },
+                  { q: "Pourquoi limitez-vous les commandes à 5 par jour ?", a: "Je privilégie la qualité à la quantité. Travailler avec un nombre limité de clients me permet de dédier toute mon attention et mon expertise à chaque pixel de votre projet. Le résultat : des créations qui convertissent." },
+                  { q: "Comment se passe le paiement ?", a: "Le paiement se fait via Orange Money, Moov Money, Wave ou cartes virtuelles. Je vous envoie les détails de paiement sur WhatsApp dès que nous nous mettons d'accord sur le projet. Le paiement s'effectue avant la livraison." },
+                  { q: "Les formations sont-elles en ligne ou en présentiel ?", a: "Les formations sont 100% en ligne via WhatsApp et supports vidéo. Vous apprenez à votre rythme, avec un suivi personnalisé et un groupe WhatsApp pour poser vos questions." },
+                ]
+                const filtered = faqs.filter((f) => !faqSearch || f.q.toLowerCase().includes(faqSearch.toLowerCase()) || f.a.toLowerCase().includes(faqSearch.toLowerCase()))
+                return filtered.length === 0 ? (
+                  <div className="text-center py-8">
+                    <Search className="h-8 w-8 text-muted-foreground/30 mx-auto mb-2" />
+                    <p className="text-sm text-muted-foreground">Aucune question ne correspond à votre recherche.</p>
+                  </div>
+                ) : filtered.map((faq, i) => {
+                  const isOpen = faqOpen === `faq-${i}`
+                  return (
+                    <Card key={i} className="border-0 shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
+                      <button
+                        onClick={() => setFaqOpen(isOpen ? null : `faq-${i}`)}
+                        aria-expanded={isOpen}
+                        className="w-full flex items-center justify-between p-5 text-left"
                       >
-                        <ChevronUp className="h-4 w-4 text-muted-foreground" />
-                      </motion.div>
-                    </button>
-                    <AnimatePresence initial={false}>
-                      {isOpen && (
+                        <h3 className="font-semibold text-sm pr-4">{faq.q}</h3>
                         <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: 'auto', opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.25, ease: 'easeInOut' }}
-                          className="overflow-hidden"
+                          animate={{ rotate: isOpen ? 180 : 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="flex-shrink-0"
                         >
-                          <p className="text-sm text-muted-foreground leading-relaxed px-5 pb-5">{faq.a}</p>
+                          <ChevronUp className="h-4 w-4 text-muted-foreground" />
                         </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </Card>
-                )
-              })}
+                      </button>
+                      <AnimatePresence initial={false}>
+                        {isOpen && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.25, ease: 'easeInOut' }}
+                            className="overflow-hidden"
+                          >
+                            <p className="text-sm text-muted-foreground leading-relaxed px-5 pb-5">{faq.a}</p>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </Card>
+                  )
+                })
+              })()}
             </div>
             <div className="mt-8 text-center">
               <p className="text-sm text-muted-foreground">
@@ -2432,6 +2459,190 @@ export default function Home() {
             </div>
           </div>
         </section>
+      {/* ═══ PORTFOLIO LIGHTBOX ═══ */}
+      <AnimatePresence>
+        {lightboxImg && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-8 bg-black/90 backdrop-blur-sm"
+            onClick={() => setLightboxImg(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+              className="relative max-w-5xl w-full max-h-[90vh] overflow-hidden rounded-2xl shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img src={lightboxImg.src} alt={lightboxImg.title} className="w-full h-auto max-h-[75vh] object-contain bg-black" />
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-6">
+                <h3 className="text-white font-bold text-lg">{lightboxImg.title}</h3>
+                <p className="text-white/70 text-sm mt-1">{lightboxImg.desc}</p>
+              </div>
+              <button
+                onClick={() => setLightboxImg(null)}
+                className="absolute top-4 right-4 h-10 w-10 flex items-center justify-center rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors backdrop-blur-sm"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ═══ SERVICE QUIZ MODAL ═══ */}
+      <AnimatePresence>
+        {quizOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+            onClick={() => { setQuizOpen(false); setQuizStep(0); setQuizAnswers([]); setQuizResult(null) }}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+              className="relative bg-background rounded-2xl shadow-2xl max-w-md w-full overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button onClick={() => { setQuizOpen(false); setQuizStep(0); setQuizAnswers([]); setQuizResult(null) }} className="absolute top-3 right-3 z-10 h-8 w-8 rounded-full bg-muted hover:bg-muted/80 flex items-center justify-center">
+                <X className="h-4 w-4" />
+              </button>
+              <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-6 text-white text-center">
+                <Brain className="h-8 w-8 mx-auto mb-2" />
+                {!quizResult ? (
+                  <>
+                    <h3 className="text-lg font-extrabold">Quel service vous convient ?</h3>
+                    <p className="text-white/80 text-sm mt-1">Répondez à 3 questions rapides</p>
+                    {/* Progress bar */}
+                    <div className="mt-4 flex gap-1.5 justify-center">
+                      {[0, 1, 2].map((s) => (
+                        <div key={s} className={`h-1.5 rounded-full transition-all duration-300 ${s <= quizStep ? 'w-8 bg-white' : 'w-4 bg-white/40'}`} />
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <h3 className="text-lg font-extrabold">Résultat</h3>
+                )}
+              </div>
+              <div className="p-6">
+                {!quizResult ? (
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={quizStep}
+                      initial={{ opacity: 0, x: 30 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -30 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {quizStep === 0 && (
+                        <div className="space-y-3">
+                          <p className="text-sm font-semibold">Quel est votre objectif principal ?</p>
+                          {[
+                            { label: 'Créer une identité visuelle (logo, charte)', val: 'identite' },
+                            { label: 'Avoir un site internet professionnel', val: 'site' },
+                            { label: 'Produire du contenu vidéo', val: 'video' },
+                            { label: 'Attirer des clients sur les réseaux', val: 'reseaux' },
+                            { label: 'Apprendre le design digital', val: 'formation' },
+                          ].map((opt) => (
+                            <button key={opt.val} onClick={() => { setQuizAnswers([opt.val]); setQuizStep(1) }} className="w-full text-left p-3 rounded-xl border border-border hover:border-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/20 text-sm transition-all hover:translate-x-1">
+                              {opt.label}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                      {quizStep === 1 && (
+                        <div className="space-y-3">
+                          <p className="text-sm font-semibold">Quel est votre budget ?</p>
+                          {[
+                            { label: 'Budget limité — je veux tester gratuitement', val: 'gratuit' },
+                            { label: '5 000 – 20 000 FCFA', val: 'petit' },
+                            { label: '20 000 – 50 000 FCFA', val: 'moyen' },
+                            { label: 'Plus de 50 000 FCFA', val: 'grand' },
+                          ].map((opt) => (
+                            <button key={opt.val} onClick={() => { setQuizAnswers(prev => [...prev, opt.val]); setQuizStep(2) }} className="w-full text-left p-3 rounded-xl border border-border hover:border-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/20 text-sm transition-all hover:translate-x-1">
+                              {opt.label}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                      {quizStep === 2 && (
+                        <div className="space-y-3">
+                          <p className="text-sm font-semibold">Quand souhaitez-vous commencer ?</p>
+                          {[
+                            { label: 'Immédiatement — c\'est urgent', val: 'urgent' },
+                            { label: 'Cette semaine', val: 'semaine' },
+                            { label: 'Dans les 2 prochaines semaines', val: '2semaines' },
+                            { label: 'Je me renseigne pour l\'instant', val: 'renseigne' },
+                          ].map((opt) => (
+                            <button key={opt.val} onClick={() => {
+                              const answers = [...quizAnswers, opt.val]
+                              setQuizAnswers(answers)
+                              // Determine result
+                              const goal = answers[0]
+                              const budget = answers[1]
+                              if (goal === 'identite') setQuizResult({ service: 'Design Graphique', icon: Palette, reason: budget === 'gratuit' ? 'Testez l\'Offre Découverte gratuite pour un logo simple, puis passez au Premium pour une identité complète.' : 'L\'Offre Premium Design vous donne un logo vectorisé, une charte graphique complète et tous les fichiers sources.' })
+                              else if (goal === 'site') setQuizResult({ service: 'Création Web', icon: Globe, reason: budget === 'gratuit' ? 'Commencez avec une landing page gratuite, puis évoluez vers un site multi-pages complet.' : 'Un site professionnel multi-pages avec formulaire, SEO, et hébergement inclus est l\'idéal pour vous.' })
+                              else if (goal === 'video') setQuizResult({ service: 'Montage Vidéo', icon: MonitorPlay, reason: budget === 'gratuit' ? 'Essayez le montage découverte gratuit pour un aperçu rapide.' : 'Le montage Premium inclut effets, sous-titres, musique et export optimisé pour tous les réseaux.' })
+                              else if (goal === 'reseaux') setQuizResult({ service: 'Marketing Digital', icon: Megaphone, reason: budget === 'gratuit' ? 'Un post ou affiche gratuit pour tester mon style.' : 'Stratégie complète avec calendrier éditorial, posts, stories et bannières publicitaires.' })
+                              else setQuizResult({ service: 'Formation Design', icon: GraduationCap, reason: 'La formation Design Graphique (Découverte gratuite puis Premium) est parfaite pour apprendre à créer vos propres visuels.' })
+                              setQuizStep(3)
+                            }} className="w-full text-left p-3 rounded-xl border border-border hover:border-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/20 text-sm transition-all hover:translate-x-1">
+                              {opt.label}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </motion.div>
+                  </AnimatePresence>
+                ) : quizResult && (
+                  <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center space-y-4">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-white mx-auto shadow-lg">
+                      <quizResult.icon className="h-8 w-8" />
+                    </div>
+                    <h4 className="text-xl font-extrabold">{quizResult.service}</h4>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{quizResult.reason}</p>
+                    <div className="flex flex-col gap-2 pt-2">
+                      <a
+                        href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! J'ai fait le quiz sur votre site et le résultat m'a recommandé : ${quizResult.service}. Je souhaite en savoir plus !`)}`}
+                        target="_blank" rel="noopener noreferrer"
+                        onClick={() => { setQuizOpen(false); setQuizStep(0); setQuizAnswers([]); setQuizResult(null) }}
+                      >
+                        <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold shadow-lg shadow-emerald-500/20">
+                          <MessageCircle className="h-4 w-4 mr-2" /> En discuter sur WhatsApp
+                        </Button>
+                      </a>
+                      <button onClick={() => { setQuizStep(0); setQuizAnswers([]); setQuizResult(null) }} className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+                        Refaire le quiz
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ═══ QUIZ TRIGGER FLOATING BUTTON ═══ */}
+      <motion.button
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 3, type: 'spring' }}
+        onClick={() => setQuizOpen(true)}
+        className="fixed bottom-[68px] lg:bottom-6 left-1/2 -translate-x-1/2 z-[55] flex items-center gap-2 bg-gradient-to-r from-violet-600 to-purple-600 text-white pl-4 pr-5 py-3 rounded-full shadow-lg shadow-violet-500/30 hover:shadow-xl hover:shadow-violet-500/40 transition-all duration-300 hover:scale-105 group"
+      >
+        <Brain className="h-5 w-5" />
+        <span className="text-sm font-semibold whitespace-nowrap">Quel service vous convient ?</span>
+        <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-medium bg-white/20 px-2 py-0.5 rounded-full">Quiz gratuit</span>
+      </motion.button>
+
       </main>
 
       {/* ═══ 20. FOOTER ═══ */}
