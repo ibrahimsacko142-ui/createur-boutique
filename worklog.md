@@ -86,3 +86,28 @@ Stage Summary:
   6. Scroll-Reveal Animations (À Propos, Garanties, Contact sections)
   7. Sticky Mobile CTA Bar (appears after 500px scroll)
 - Push successful: 86752d3..406d26d main -> main
+
+---
+Task ID: 2
+Agent: Main Agent + subagent
+Task: 6 nouvelles améliorations UX et fonctionnalités
+
+Work Log:
+- Analyzed current state: Header already has dark mode toggle + scroll progress
+- Removed duplicate scroll progress bar from page.tsx
+- Added Welcome Popup (first-time visitors, 6s delay, localStorage)
+- Added Interactive Pricing Estimator (6 services, real-time FCFA calculation)
+- Added CSS confetti effect on form submissions
+- Added availability badges (X/5 places) on service cards
+- Added animated gradient text on key headings
+- Build passed, pushed to Vercel
+
+Stage Summary:
+- 6 features deployed:
+  1. Popup Bienvenue avec offre logo gratuit (6s delay, localStorage)
+  2. Estimateur de Prix interactif (6 services, calcul FCFA en temps réel)
+  3. Effet confetti CSS sur soumission formulaire
+  4. Badges de disponibilité X/5 places sur chaque service
+  5. Texte gradient animé sur titres clés (Hero + CTA Final)
+  6. Suppression doublon barre de progression
+- Push successful: 406d26d..adc1d51
