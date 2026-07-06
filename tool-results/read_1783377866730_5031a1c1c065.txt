@@ -1,0 +1,928 @@
+  1999→                <div className="grid sm:grid-cols-2 gap-4">
+  2000→                  <div className="space-y-2">
+  2001→                    <Label className="text-sm font-semibold">Votre nom *</Label>
+  2002→                    <Input placeholder="Ex: Amadou Diallo" value={quickOrder.name} onChange={(e) => setQuickOrder(prev => ({ ...prev, name: e.target.value }))} className="h-11" />
+  2003→                  </div>
+  2004→                  <div className="space-y-2">
+  2005→                    <Label className="text-sm font-semibold">Téléphone WhatsApp *</Label>
+  2006→                    <Input type="tel" placeholder="+223 XX XX XX XX" value={quickOrder.phone} onChange={(e) => setQuickOrder(prev => ({ ...prev, phone: e.target.value }))} className="h-11" />
+  2007→                  </div>
+  2008→                </div>
+  2009→                <Button
+  2010→                  onClick={() => {
+  2011→                    if (!quickOrder.service || !quickOrder.name || !quickOrder.phone) {
+  2012→                      toast({ title: 'Champs requis', description: 'Service, nom et téléphone sont obligatoires.', variant: 'destructive' })
+  2013→                      return
+  2014→                    }
+  2015→                    const msg = encodeURIComponent(
+  2016→                      `Bonjour Sacko ! Je souhaite un service.\n\n` +
+  2017→                      `Service : ${quickOrder.service}\n` +
+  2018→                      `Secteur : ${quickOrder.description || 'Non précisé'}\n` +
+  2019→                      `Nom : ${quickOrder.name}\n` +
+  2020→                      `Téléphone : ${quickOrder.phone}\n\n` +
+  2021→                      `Je suis prêt(e) à discuter de mon projet. Merci !`
+  2022→                    )
+  2023→                    window.open(`https://wa.me/22397787244?text=${msg}`, '_blank')
+  2024→                    toast({ title: 'Demande envoyée !', description: 'Je vous recontacte personnellement sous 30 minutes.' })
+  2025→                  }}
+  2026→                  className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold h-12 text-sm shadow-lg shadow-emerald-500/20"
+  2027→                >
+  2028→                  <Send className="h-4 w-4 mr-2" /> Envoyer ma demande
+  2029→                </Button>
+  2030→                <p className="text-[11px] text-muted-foreground text-center">
+  2031→                  Vos données restent <strong>privées</strong>. Je vous recontacte uniquement pour votre projet.
+  2032→                </p>
+  2033→              </CardContent>
+  2034→            </Card>
+  2035→          </div>
+  2036→        </section>
+  2037→
+  2038→        {/* ═══ 16. À PROPOS ═══ */}
+  2039→        <section id="apropos" className="py-16 sm:py-20 bg-gradient-to-b from-muted/30 to-background relative overflow-hidden">
+  2040→          <div className="absolute top-10 left-10 h-64 w-64 bg-amber-200/20 dark:bg-amber-900/10 rounded-full blur-3xl" />
+  2041→          <div className="absolute bottom-10 right-10 h-64 w-64 bg-orange-200/15 dark:bg-orange-900/10 rounded-full blur-3xl" />
+  2042→          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  2043→            <div className="grid lg:grid-cols-2 gap-12 items-center">
+  2044→              <div className="space-y-5">
+  2045→                {/* Photo de Sacko */}
+  2046→                <div className="relative">
+  2047→                  <div className="relative rounded-2xl overflow-hidden shadow-2xl border">
+  2048→                    <img src="/demo-photo.png" alt="Sacko - Studio Créatif" className="w-full h-72 sm:h-80 object-cover" />
+  2049→                    <div className="absolute inset-0 bg-gradient-to-t from-amber-900/80 via-amber-900/20 to-transparent" />
+  2050→                    <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
+  2051→                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm mb-2">
+  2052→                        <Palette className="h-6 w-6" />
+  2053→                      </div>
+  2054→                      <h3 className="text-xl font-bold">Sacko</h3>
+  2055→                      <p className="mt-0.5 text-white/80 text-sm">Studio Créatif &bull; Bamako, Mali</p>
+  2056→                    </div>
+  2057→                  </div>
+  2058→                  <div className="absolute -bottom-4 -right-4 bg-white dark:bg-card rounded-xl p-4 shadow-xl border hidden sm:block">
+  2059→                    <div className="flex items-center gap-2.5">
+  2060→                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
+  2061→                        <Zap className="h-4 w-4 text-amber-600" />
+  2062→                      </div>
+  2063→                      <div>
+  2064→                        <p className="text-sm font-bold">50+ Projets livrés</p>
+  2065→                        <p className="text-[10px] text-muted-foreground">À Bamako et au-delà</p>
+  2066→                      </div>
+  2067→                    </div>
+  2068→                  </div>
+  2069→                </div>
+  2070→                {/* Vidéo de présentation */}
+  2071→                <div className="relative rounded-2xl overflow-hidden shadow-xl border">
+  2072→                  <video
+  2073→                    controls
+  2074→                    preload="metadata"
+  2075→                    poster="/demo-photo.png"
+  2076→                    className="w-full h-48 sm:h-56 object-cover bg-black"
+  2077→                  >
+  2078→                    <source src="/demo-video.mp4" type="video/mp4" />
+  2079→                    Votre navigateur ne supporte pas la lecture vidéo.
+  2080→                  </video>
+  2081→                  <div className="absolute top-3 left-3">
+  2082→                    <Badge className="bg-amber-500/90 text-white border-0 text-[10px] font-semibold backdrop-blur-sm">
+  2083→                      <MonitorPlay className="h-3 w-3 mr-1" /> Vidéo de présentation
+  2084→                    </Badge>
+  2085→                  </div>
+  2086→                </div>
+  2087→              </div>
+  2088→
+  2089→              <div>
+  2090→                <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+  2091→                  <Heart className="h-3 w-3 mr-1" /> Qui suis-je
+  2092→                </Badge>
+  2093→                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">À Propos de Sacko</h2>
+  2094→                <div className="mt-6 space-y-4 text-muted-foreground leading-relaxed">
+  2095→                  <p>
+  2096→                    Bienvenue ! Je suis <strong className="text-foreground">Sacko</strong>, créateur digital passionné basé à Bamako. Mon objectif est d&apos;accompagner les entreprises et les porteurs de projets dans la construction d&apos;une <strong className="text-foreground">image de marque forte, professionnelle et mémorable</strong>. De la première idée à la conception finale, je transforme votre vision en une réalité visuelle qui attire et fidélise vos clients.
+  2097→                  </p>
+  2098→                  <p>
+  2099→                    Je maîtrise les outils les plus demandés du marché — <strong className="text-foreground">CapCut Pro, Canva Pro, PicsArt Pro</strong> — et je les mets au service de chaque projet pour garantir des résultats à la hauteur de vos ambitions. Que ce soit un logo percutant, un site web qui convertit, ou une identité visuelle complète, chaque création est pensée pour vous démarquer de la concurrence.
+  2100→                  </p>
+  2101→                  <p>
+  2102→                    Ma mission : <strong className="text-foreground">aider les entrepreneurs et créateurs du Mali et d&apos;Afrique</strong> à prendre le contrôle de leur image numérique. Je crois fermement que chaque business, même le plus modeste, mérite une identité visuelle qui inspire confiance et attire des clients.
+  2103→                  </p>
+  2104→                </div>
+  2105→                <div className="mt-6 grid grid-cols-3 gap-3">
+  2106→                  {[
+  2107→                    { number: '50+', label: 'Marques créées' },
+  2108→                    { number: '100%', label: 'Sur-mesure' },
+  2109→                    { number: '5/5', label: 'Satisfaction' },
+  2110→                  ].map((stat) => (
+  2111→                    <div key={stat.label} className="text-center p-3 rounded-lg bg-muted/50 border">
+  2112→                      <div className="text-lg font-bold text-amber-600">{stat.number}</div>
+  2113→                      <div className="text-[10px] text-muted-foreground">{stat.label}</div>
+  2114→                    </div>
+  2115→                  ))}
+  2116→                </div>
+  2117→                <div className="mt-8 flex flex-wrap gap-3">
+  2118→                  <a href="#services">
+  2119→                    <Button className="bg-amber-500 hover:bg-amber-600 text-white font-semibold">
+  2120→                      Découvrir mes services <ArrowRight className="ml-2 h-4 w-4" />
+  2121→                    </Button>
+  2122→                  </a>
+  2123→                  <a href="#contact">
+  2124→                    <Button variant="outline" className="font-semibold">Me contacter</Button>
+  2125→                  </a>
+  2126→                </div>
+  2127→              </div>
+  2128→            </div>
+  2129→          </div>
+  2130→        </section>
+  2131→
+  2132→        {/* ═══ 17. FAQ ═══ */}
+  2133→        <section id="faq" className="py-16 sm:py-20 bg-muted/30">
+  2134→          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+  2135→            <div className="text-center mb-12">
+  2136→              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+  2137→                <MessageCircle className="h-3 w-3 mr-1" /> FAQ
+  2138→              </Badge>
+  2139→              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Questions Fréquentes</h2>
+  2140→              <p className="mt-3 text-muted-foreground max-w-xl mx-auto">
+  2141→                Les réponses aux questions les plus posées. Si vous ne trouvez pas votre réponse, contactez-moi directement sur WhatsApp.
+  2142→              </p>
+  2143→            </div>
+  2144→            {/* FAQ Search */}
+  2145→            <div className="relative max-w-md mx-auto mb-6">
+  2146→              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+  2147→              <Input
+  2148→                placeholder="Rechercher dans la FAQ..."
+  2149→                value={faqSearch}
+  2150→                onChange={(e) => setFaqSearch(e.target.value)}
+  2151→                className="pl-10 h-10 bg-background border-border rounded-xl text-sm"
+  2152→              />
+  2153→              {faqSearch && (
+  2154→                <button onClick={() => setFaqSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+  2155→                  <X className="h-4 w-4" />
+  2156→                </button>
+  2157→              )}
+  2158→            </div>
+  2159→            <div className="space-y-3">
+  2160→              {(() => {
+  2161→                const faqs = [
+  2162→                  { q: "L'Offre Découverte est-elle vraiment 100% gratuite ?", a: "Oui, totalement. C'est ma manière de vous prouver la qualité de mon travail avant que vous ne décidiez de passer à une offre Premium payante. Aucun engagement requis, aucun frais caché." },
+  2163→                  { q: "Quels sont les délais de livraison ?", a: "Les services \"Carrière Pro\" (CV, Lettres) sont livrés en moins de 24h. Pour les logos simples, comptez 48h, et pour un site web complet, entre 3 et 7 jours selon la complexité. Chaque projet a un suivi personnalisé." },
+  2164→                  { q: "Puis-je demander des modifications si le résultat ne me plaît pas ?", a: "Absolument. Votre satisfaction est ma priorité. Pour l'Offre Découverte, une révision est incluse. Pour les offres Premium, les révisions sont illimitées jusqu'à ce que le résultat vous corresponde parfaitement. Je ne livre que lorsque vous êtes 100% satisfait." },
+  2165→                  { q: "Pourquoi limitez-vous les commandes à 5 par jour ?", a: "Je privilégie la qualité à la quantité. Travailler avec un nombre limité de clients me permet de dédier toute mon attention et mon expertise à chaque pixel de votre projet. Le résultat : des créations qui convertissent." },
+  2166→                  { q: "Comment se passe le paiement ?", a: "Le paiement se fait via Orange Money, Moov Money, Wave ou cartes virtuelles. Je vous envoie les détails de paiement sur WhatsApp dès que nous nous mettons d'accord sur le projet. Le paiement s'effectue avant la livraison." },
+  2167→                  { q: "Les formations sont-elles en ligne ou en présentiel ?", a: "Les formations sont 100% en ligne via WhatsApp et supports vidéo. Vous apprenez à votre rythme, avec un suivi personnalisé et un groupe WhatsApp pour poser vos questions." },
+  2168→                ]
+  2169→                const filtered = faqs.filter((f) => !faqSearch || f.q.toLowerCase().includes(faqSearch.toLowerCase()) || f.a.toLowerCase().includes(faqSearch.toLowerCase()))
+  2170→                return filtered.length === 0 ? (
+  2171→                  <div className="text-center py-8">
+  2172→                    <Search className="h-8 w-8 text-muted-foreground/30 mx-auto mb-2" />
+  2173→                    <p className="text-sm text-muted-foreground">Aucune question ne correspond à votre recherche.</p>
+  2174→                  </div>
+  2175→                ) : filtered.map((faq, i) => {
+  2176→                  const isOpen = faqOpen === `faq-${i}`
+  2177→                  return (
+  2178→                    <Card key={i} className="border-0 shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
+  2179→                      <button
+  2180→                        onClick={() => setFaqOpen(isOpen ? null : `faq-${i}`)}
+  2181→                        aria-expanded={isOpen}
+  2182→                        className="w-full flex items-center justify-between p-5 text-left"
+  2183→                      >
+  2184→                        <h3 className="font-semibold text-sm pr-4">{faq.q}</h3>
+  2185→                        <motion.div
+  2186→                          animate={{ rotate: isOpen ? 180 : 0 }}
+  2187→                          transition={{ duration: 0.2 }}
+  2188→                          className="flex-shrink-0"
+  2189→                        >
+  2190→                          <ChevronUp className="h-4 w-4 text-muted-foreground" />
+  2191→                        </motion.div>
+  2192→                      </button>
+  2193→                      <AnimatePresence initial={false}>
+  2194→                        {isOpen && (
+  2195→                          <motion.div
+  2196→                            initial={{ height: 0, opacity: 0 }}
+  2197→                            animate={{ height: 'auto', opacity: 1 }}
+  2198→                            exit={{ height: 0, opacity: 0 }}
+  2199→                            transition={{ duration: 0.25, ease: 'easeInOut' }}
+  2200→                            className="overflow-hidden"
+  2201→                          >
+  2202→                            <p className="text-sm text-muted-foreground leading-relaxed px-5 pb-5">{faq.a}</p>
+  2203→                          </motion.div>
+  2204→                        )}
+  2205→                      </AnimatePresence>
+  2206→                    </Card>
+  2207→                  )
+  2208→                })
+  2209→              })()}
+  2210→            </div>
+  2211→            <div className="mt-8 text-center">
+  2212→              <p className="text-sm text-muted-foreground">
+  2213→                Vous avez d&apos;autres questions ?{' '}
+  2214→                <a href="#contact" className="text-amber-600 font-medium hover:underline">Contactez-moi</a> ou écrivez-moi directement sur{' '}
+  2215→                <a href="https://wa.me/22397787244" target="_blank" rel="noopener noreferrer" className="text-emerald-600 font-medium hover:underline">WhatsApp</a>.
+  2216→              </p>
+  2217→            </div>
+  2218→          </div>
+  2219→        </section>
+  2220→
+  2221→        {/* ═══ LEAD MAGNET — Cadeau Exclusif ═══ */}
+  2222→        <section className="py-16 sm:py-20">
+  2223→          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+  2224→            <Card className="border-0 shadow-xl overflow-hidden">
+  2225→              <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white p-8 sm:p-10 relative overflow-hidden">
+  2226→                <div className="absolute top-0 right-0 w-40 h-40 bg-amber-500/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+  2227→                <div className="absolute bottom-0 left-0 w-32 h-32 bg-emerald-500/10 rounded-full translate-y-1/2 -translate-x-1/2" />
+  2228→                <div className="relative z-10 text-center mb-8">
+  2229→                  <div className="inline-flex items-center gap-2 bg-amber-500/20 rounded-full px-4 py-1.5 text-amber-300 text-xs font-semibold mb-4 border border-amber-500/20">
+  2230→                    <Gift className="h-3.5 w-3.5" /> Cadeau Exclusif pour les Entrepreneurs
+  2231→                  </div>
+  2232→                  <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-3">
+  2233→                    10 Templates Canva <span className="text-amber-400">Gratuits</span>
+  2234→                  </h2>
+  2235→                  <p className="text-slate-300 leading-relaxed max-w-md mx-auto text-sm">
+  2236→                    <strong className="text-white">Boostez la visibilité de votre business dès aujourd&apos;hui.</strong> Rejoignez ma liste de contacts et recevez instantanément un <strong className="text-white">pack de 10 templates Canva exclusifs</strong> conçus pour les boutiques et créateurs de Bamako.
+  2237→                  </p>
+  2238→                </div>
+  2239→                <div className="relative z-10 flex flex-col sm:flex-row gap-3">
+  2240→                  <Input
+  2241→                    placeholder="Votre prénom"
+  2242→                    value={leadMagnet.name}
+  2243→                    onChange={(e) => setLeadMagnet(prev => ({ ...prev, name: e.target.value }))}
+  2244→                    className="h-11 bg-white/10 border-white/20 text-white placeholder:text-slate-500 focus:border-amber-500/50"
+  2245→                  />
+  2246→                  <Input
+  2247→                    placeholder="Votre numéro WhatsApp ou email"
+  2248→                    value={leadMagnet.contact}
+  2249→                    onChange={(e) => setLeadMagnet(prev => ({ ...prev, contact: e.target.value }))}
+  2250→                    className="h-11 bg-white/10 border-white/20 text-white placeholder:text-slate-500 focus:border-amber-500/50"
+  2251→                  />
+  2252→                  <Button
+  2253→                    onClick={() => {
+  2254→                      if (!leadMagnet.name || !leadMagnet.contact) {
+  2255→                        toast({ title: 'Champs requis', description: 'Prénom et contact sont obligatoires.', variant: 'destructive' })
+  2256→                        return
+  2257→                      }
+  2258→                      const msg = encodeURIComponent(
+  2259→                        `Bonjour Sacko ! Je souhaite recevoir le pack de 10 templates Canva gratuit.\n\nPrénom : ${leadMagnet.name}\nContact : ${leadMagnet.contact}\n\nMerci !`
+  2260→                      )
+  2261→                      window.open(`https://wa.me/22397787244?text=${msg}`, '_blank')
+  2262→                      toast({ title: 'Demande envoyée !', description: 'Vous recevrez votre pack de templates très rapidement.' })
+  2263→                      setLeadMagnet({ name: '', contact: '' })
+  2264→                    }}
+  2265→                    className="h-11 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-sm shadow-lg shadow-amber-500/25 whitespace-nowrap px-6"
+  2266→                  >
+  2267→                    <Gift className="h-4 w-4 mr-1.5" /> Recevoir mon pack
+  2268→                  </Button>
+  2269→                </div>
+  2270→                <p className="relative z-10 text-center text-[11px] text-slate-500 mt-4">
+  2271→                  Aucun spam. Uniquement des ressources et opportunités pour votre business.
+  2272→                </p>
+  2273→              </div>
+  2274→            </Card>
+  2275→          </div>
+  2276→        </section>
+  2277→
+  2278→        {/* ═══ GARANTIES ═══ */}
+  2279→        <section className="py-16 sm:py-20 bg-gradient-to-b from-muted/20 to-background">
+  2280→          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+  2281→            <div className="text-center mb-12">
+  2282→              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+  2283→                <ShieldCheck className="h-3 w-3 mr-1" /> Garanties
+  2284→              </Badge>
+  2285→              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Mes 4 Garanties pour Vous</h2>
+  2286→              <p className="mt-3 text-muted-foreground max-w-xl mx-auto leading-relaxed">
+  2287→                Chaque projet est protégé. Voici les engagements que je prends avec chaque client, sans exception.
+  2288→              </p>
+  2289→            </div>
+  2290→
+  2291→            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+  2292→              {[
+  2293→                {
+  2294→                  icon: ThumbsUp,
+  2295→                  title: 'Satisfaction ou Révision',
+  2296→                  desc: "Votre projet n'est pas terminé tant que vous n'êtes pas 100% satisfait. Révisions incluses.",
+  2297→                  color: 'from-emerald-400 to-teal-500',
+  2298→                  bg: 'bg-emerald-50 dark:bg-emerald-950/20',
+  2299→                },
+  2300→                {
+  2301→                  icon: Timer,
+  2302→                  title: 'Livraison dans les Délais',
+  2303→                  desc: "CV et lettres en 24h, logos en 48h, sites web en 3-7 jours. Promesse tenue.",
+  2304→                  color: 'from-amber-400 to-orange-500',
+  2305→                  bg: 'bg-amber-50 dark:bg-amber-950/20',
+  2306→                },
+  2307→                {
+  2308→                  icon: Lock,
+  2309→                  title: 'Confidentialité Totale',
+  2310→                  desc: 'Vos données, vos idées, vos fichiers restent strictement privés. Aucune partage tiers.',
+  2311→                  color: 'from-blue-400 to-indigo-500',
+  2312→                  bg: 'bg-blue-50 dark:bg-blue-950/20',
+  2313→                },
+  2314→                {
+  2315→                  icon: MessageCircle,
+  2316→                  title: 'Support WhatsApp 7j/7',
+  2317→                  desc: "Un message, une réponse. Je suis disponible pour vous accompagner même après la livraison.",
+  2318→                  color: 'from-purple-400 to-violet-500',
+  2319→                  bg: 'bg-purple-50 dark:bg-purple-950/20',
+  2320→                },
+  2321→              ].map((g) => (
+  2322→                <Card key={g.title} className={`border-0 shadow-md overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${g.bg}`}>
+  2323→                  <div className={`h-1 bg-gradient-to-r ${g.color}`} />
+  2324→                  <CardContent className="p-5 text-center">
+  2325→                    <div className={`inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${g.color} text-white shadow-lg mb-4`}>
+  2326→                      <g.icon className="h-6 w-6" />
+  2327→                    </div>
+  2328→                    <h3 className="text-sm font-extrabold mb-2">{g.title}</h3>
+  2329→                    <p className="text-xs text-muted-foreground leading-relaxed">{g.desc}</p>
+  2330→                  </CardContent>
+  2331→                </Card>
+  2332→              ))}
+  2333→            </div>
+  2334→          </div>
+  2335→        </section>
+  2336→
+  2337→        {/* ═══ 18. CTA FINAL ═══ */}
+  2338→        <section className="py-16 sm:py-20 bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 relative overflow-hidden">
+  2339→          <div className="absolute inset-0">
+  2340→            <div className="absolute top-0 left-1/4 h-64 w-64 bg-white/10 rounded-full blur-3xl" />
+  2341→            <div className="absolute bottom-0 right-1/4 h-64 w-64 bg-white/10 rounded-full blur-3xl" />
+  2342→          </div>
+  2343→          <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
+  2344→            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
+  2345→              Prêt à faire passer votre communication au niveau supérieur ?
+  2346→            </h2>
+  2347→            <p className="mt-4 text-lg text-white/90 max-w-2xl mx-auto leading-relaxed">
+  2348→              N&apos;attendez plus pour donner à votre entreprise l&apos;image qu&apos;elle mérite. Contactez-moi dès aujourd&apos;hui pour discuter de votre projet et obtenir un devis gratuit.
+  2349→            </p>
+  2350→            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+  2351→              <a href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20suis%20pr%C3%AAt%20%C3%A0%20lancer%20mon%20projet%20de%20communication." target="_blank" rel="noopener noreferrer">
+  2352→                <Button size="lg" className="bg-white text-amber-600 hover:bg-white/90 font-bold shadow-xl text-base px-8">
+  2353→                  <MessageCircle className="h-5 w-5 mr-2" /> Commander via WhatsApp
+  2354→                </Button>
+  2355→              </a>
+  2356→              <a href="https://wa.me/22397787244?text=Bonjour%20!%20J%27aimerais%20discuter%20de%20mon%20projet%20avec%20vous." target="_blank" rel="noopener noreferrer">
+  2357→                <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 font-semibold text-base px-8">
+  2358→                  M&apos;envoyer un message <Send className="ml-2 h-4 w-4" />
+  2359→                </Button>
+  2360→              </a>
+  2361→            </div>
+  2362→            <div className="mt-8 flex flex-col items-center gap-4">
+  2363→              <div className="flex items-center gap-5 text-white/80 text-xs font-medium">
+  2364→                <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4" /> Livraison rapide</span>
+  2365→                <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4" /> Satisfaction garantie</span>
+  2366→              </div>
+  2367→              <div className="flex items-center gap-3 text-white/70 text-xs">
+  2368→                <span className="px-3 py-1 rounded-full bg-white/15 border border-white/20 font-medium">Orange Money</span>
+  2369→                <span className="px-3 py-1 rounded-full bg-white/15 border border-white/20 font-medium">Moov Money</span>
+  2370→                <span className="px-3 py-1 rounded-full bg-white/15 border border-white/20 font-medium">Wave</span>
+  2371→                <span className="px-3 py-1 rounded-full bg-white/15 border border-white/20 font-medium">Cartes Virtuelles</span>
+  2372→              </div>
+  2373→            </div>
+  2374→          </div>
+  2375→        </section>
+  2376→
+  2377→        {/* ═══ 19. CONTACT ═══ */}
+  2378→        <section id="contact" className="py-16 sm:py-20 bg-muted/30">
+  2379→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  2380→            <div className="grid lg:grid-cols-2 gap-12">
+  2381→              <div>
+  2382→                <Badge variant="secondary" className="mb-3">
+  2383→                  <Send className="h-3 w-3 mr-1" /> Contact
+  2384→                </Badge>
+  2385→                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Contactez-Moi</h2>
+  2386→                <p className="mt-3 text-muted-foreground leading-relaxed max-w-md">
+  2387→                  Vous avez un projet, une question ou besoin d&apos;un service ? N&apos;hésitez pas à me contacter. Je réponds rapidement.
+  2388→                </p>
+  2389→                <div className="mt-8 space-y-6">
+  2390→                  <div className="flex items-center gap-4">
+  2391→                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30">
+  2392→                      <Mail className="h-5 w-5 text-amber-600" />
+  2393→                    </div>
+  2394→                    <div>
+  2395→                      <p className="text-sm font-medium">Email</p>
+  2396→                      <p className="text-sm text-muted-foreground">contact@createurboutique.com</p>
+  2397→                    </div>
+  2398→                  </div>
+  2399→                  <div className="flex items-center gap-4">
+  2400→                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30">
+  2401→                      <Phone className="h-5 w-5 text-amber-600" />
+  2402→                    </div>
+  2403→                    <div>
+  2404→                      <p className="text-sm font-medium">Téléphone</p>
+  2405→                      <p className="text-sm text-muted-foreground">+223 97 78 72 44</p>
+  2406→                    </div>
+  2407→                  </div>
+  2408→                  <div className="flex items-center gap-4">
+  2409→                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30">
+  2410→                      <MapPin className="h-5 w-5 text-amber-600" />
+  2411→                    </div>
+  2412→                    <div>
+  2413→                      <p className="text-sm font-medium">Localisation</p>
+  2414→                      <p className="text-sm text-muted-foreground">Bamako, Mali</p>
+  2415→                    </div>
+  2416→                  </div>
+  2417→                </div>
+  2418→                <div className="mt-8 flex gap-3">
+  2419→                  <a href="https://www.instagram.com/sk_designer_luxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors" aria-label="Instagram">
+  2420→                    <Instagram className="h-5 w-5 text-amber-600" />
+  2421→                  </a>
+  2422→                  <a href="https://www.facebook.com/skdesignerluxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors" aria-label="Facebook">
+  2423→                    <Facebook className="h-5 w-5 text-amber-600" />
+  2424→                  </a>
+  2425→                  <a href="https://www.tiktok.com/@sk_designer_luxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors" aria-label="TikTok">
+  2426→                    <svg className="h-5 w-5 text-amber-600" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.87a8.16 8.16 0 0 0 4.77 1.52V6.94a4.85 4.85 0 0 1-1.01-.25z" /></svg>
+  2427→                  </a>
+  2428→                </div>
+  2429→              </div>
+  2430→
+  2431→              <form onSubmit={handleSubmitContact} className="space-y-4 rounded-2xl border bg-card p-6 sm:p-8 shadow-sm">
+  2432→                <div className="grid sm:grid-cols-2 gap-4">
+  2433→                  <div className="space-y-2">
+  2434→                    <Label htmlFor="name">Nom *</Label>
+  2435→                    <Input id="name" placeholder="Votre nom" value={contactData.name} onChange={(e) => setContactData({ ...contactData, name: e.target.value })} />
+  2436→                  </div>
+  2437→                  <div className="space-y-2">
+  2438→                    <Label htmlFor="email">Email *</Label>
+  2439→                    <Input id="email" type="email" placeholder="votre@email.com" value={contactData.email} onChange={(e) => setContactData({ ...contactData, email: e.target.value })} />
+  2440→                  </div>
+  2441→                </div>
+  2442→                <div className="space-y-2">
+  2443→                  <Label htmlFor="subject">Sujet</Label>
+  2444→                  <Input id="subject" placeholder="Quel service vous intéresse ?" value={contactData.subject} onChange={(e) => setContactData({ ...contactData, subject: e.target.value })} />
+  2445→                </div>
+  2446→                <div className="space-y-2">
+  2447→                  <Label htmlFor="message">Message *</Label>
+  2448→                  <Textarea id="message" placeholder="Décrivez votre projet ou votre demande..." rows={5} value={contactData.message} onChange={(e) => setContactData({ ...contactData, message: e.target.value })} />
+  2449→                </div>
+  2450→                <Button
+  2451→                  type="submit"
+  2452→                  className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold shadow-lg shadow-amber-500/20"
+  2453→                >
+  2454→                  <span className="flex items-center gap-2">
+  2455→                    <MessageCircle className="h-4 w-4" /> Envoyer via WhatsApp
+  2456→                  </span>
+  2457→                </Button>
+  2458→              </form>
+  2459→            </div>
+  2460→          </div>
+  2461→        </section>
+  2462→      {/* ═══ PORTFOLIO LIGHTBOX ═══ */}
+  2463→      <AnimatePresence>
+  2464→        {lightboxImg && (
+  2465→          <motion.div
+  2466→            initial={{ opacity: 0 }}
+  2467→            animate={{ opacity: 1 }}
+  2468→            exit={{ opacity: 0 }}
+  2469→            className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-8 bg-black/90 backdrop-blur-sm"
+  2470→            onClick={() => setLightboxImg(null)}
+  2471→          >
+  2472→            <motion.div
+  2473→              initial={{ scale: 0.9, opacity: 0 }}
+  2474→              animate={{ scale: 1, opacity: 1 }}
+  2475→              exit={{ scale: 0.9, opacity: 0 }}
+  2476→              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+  2477→              className="relative max-w-5xl w-full max-h-[90vh] overflow-hidden rounded-2xl shadow-2xl"
+  2478→              onClick={(e) => e.stopPropagation()}
+  2479→            >
+  2480→              <img src={lightboxImg.src} alt={lightboxImg.title} className="w-full h-auto max-h-[75vh] object-contain bg-black" />
+  2481→              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-6">
+  2482→                <h3 className="text-white font-bold text-lg">{lightboxImg.title}</h3>
+  2483→                <p className="text-white/70 text-sm mt-1">{lightboxImg.desc}</p>
+  2484→              </div>
+  2485→              <button
+  2486→                onClick={() => setLightboxImg(null)}
+  2487→                className="absolute top-4 right-4 h-10 w-10 flex items-center justify-center rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors backdrop-blur-sm"
+  2488→              >
+  2489→                <X className="h-5 w-5" />
+  2490→              </button>
+  2491→            </motion.div>
+  2492→          </motion.div>
+  2493→        )}
+  2494→      </AnimatePresence>
+  2495→
+  2496→      {/* ═══ SERVICE QUIZ MODAL ═══ */}
+  2497→      <AnimatePresence>
+  2498→        {quizOpen && (
+  2499→          <motion.div
+  2500→            initial={{ opacity: 0 }}
+  2501→            animate={{ opacity: 1 }}
+  2502→            exit={{ opacity: 0 }}
+  2503→            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+  2504→            onClick={() => { setQuizOpen(false); setQuizStep(0); setQuizAnswers([]); setQuizResult(null) }}
+  2505→          >
+  2506→            <motion.div
+  2507→              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+  2508→              animate={{ scale: 1, opacity: 1, y: 0 }}
+  2509→              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+  2510→              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+  2511→              className="relative bg-background rounded-2xl shadow-2xl max-w-md w-full overflow-hidden"
+  2512→              onClick={(e) => e.stopPropagation()}
+  2513→            >
+  2514→              <button onClick={() => { setQuizOpen(false); setQuizStep(0); setQuizAnswers([]); setQuizResult(null) }} className="absolute top-3 right-3 z-10 h-8 w-8 rounded-full bg-muted hover:bg-muted/80 flex items-center justify-center">
+  2515→                <X className="h-4 w-4" />
+  2516→              </button>
+  2517→              <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-6 text-white text-center">
+  2518→                <Brain className="h-8 w-8 mx-auto mb-2" />
+  2519→                {!quizResult ? (
+  2520→                  <>
+  2521→                    <h3 className="text-lg font-extrabold">Quel service vous convient ?</h3>
+  2522→                    <p className="text-white/80 text-sm mt-1">Répondez à 3 questions rapides</p>
+  2523→                    {/* Progress bar */}
+  2524→                    <div className="mt-4 flex gap-1.5 justify-center">
+  2525→                      {[0, 1, 2].map((s) => (
+  2526→                        <div key={s} className={`h-1.5 rounded-full transition-all duration-300 ${s <= quizStep ? 'w-8 bg-white' : 'w-4 bg-white/40'}`} />
+  2527→                      ))}
+  2528→                    </div>
+  2529→                  </>
+  2530→                ) : (
+  2531→                  <h3 className="text-lg font-extrabold">Résultat</h3>
+  2532→                )}
+  2533→              </div>
+  2534→              <div className="p-6">
+  2535→                {!quizResult ? (
+  2536→                  <AnimatePresence mode="wait">
+  2537→                    <motion.div
+  2538→                      key={quizStep}
+  2539→                      initial={{ opacity: 0, x: 30 }}
+  2540→                      animate={{ opacity: 1, x: 0 }}
+  2541→                      exit={{ opacity: 0, x: -30 }}
+  2542→                      transition={{ duration: 0.3 }}
+  2543→                    >
+  2544→                      {quizStep === 0 && (
+  2545→                        <div className="space-y-3">
+  2546→                          <p className="text-sm font-semibold">Quel est votre objectif principal ?</p>
+  2547→                          {[
+  2548→                            { label: 'Créer une identité visuelle (logo, charte)', val: 'identite' },
+  2549→                            { label: 'Avoir un site internet professionnel', val: 'site' },
+  2550→                            { label: 'Produire du contenu vidéo', val: 'video' },
+  2551→                            { label: 'Attirer des clients sur les réseaux', val: 'reseaux' },
+  2552→                            { label: 'Apprendre le design digital', val: 'formation' },
+  2553→                          ].map((opt) => (
+  2554→                            <button key={opt.val} onClick={() => { setQuizAnswers([opt.val]); setQuizStep(1) }} className="w-full text-left p-3 rounded-xl border border-border hover:border-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/20 text-sm transition-all hover:translate-x-1">
+  2555→                              {opt.label}
+  2556→                            </button>
+  2557→                          ))}
+  2558→                        </div>
+  2559→                      )}
+  2560→                      {quizStep === 1 && (
+  2561→                        <div className="space-y-3">
+  2562→                          <p className="text-sm font-semibold">Quel est votre budget ?</p>
+  2563→                          {[
+  2564→                            { label: 'Budget limité — je veux tester gratuitement', val: 'gratuit' },
+  2565→                            { label: '5 000 – 20 000 FCFA', val: 'petit' },
+  2566→                            { label: '20 000 – 50 000 FCFA', val: 'moyen' },
+  2567→                            { label: 'Plus de 50 000 FCFA', val: 'grand' },
+  2568→                          ].map((opt) => (
+  2569→                            <button key={opt.val} onClick={() => { setQuizAnswers(prev => [...prev, opt.val]); setQuizStep(2) }} className="w-full text-left p-3 rounded-xl border border-border hover:border-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/20 text-sm transition-all hover:translate-x-1">
+  2570→                              {opt.label}
+  2571→                            </button>
+  2572→                          ))}
+  2573→                        </div>
+  2574→                      )}
+  2575→                      {quizStep === 2 && (
+  2576→                        <div className="space-y-3">
+  2577→                          <p className="text-sm font-semibold">Quand souhaitez-vous commencer ?</p>
+  2578→                          {[
+  2579→                            { label: 'Immédiatement — c\'est urgent', val: 'urgent' },
+  2580→                            { label: 'Cette semaine', val: 'semaine' },
+  2581→                            { label: 'Dans les 2 prochaines semaines', val: '2semaines' },
+  2582→                            { label: 'Je me renseigne pour l\'instant', val: 'renseigne' },
+  2583→                          ].map((opt) => (
+  2584→                            <button key={opt.val} onClick={() => {
+  2585→                              const answers = [...quizAnswers, opt.val]
+  2586→                              setQuizAnswers(answers)
+  2587→                              // Determine result
+  2588→                              const goal = answers[0]
+  2589→                              const budget = answers[1]
+  2590→                              if (goal === 'identite') setQuizResult({ service: 'Design Graphique', icon: Palette, reason: budget === 'gratuit' ? 'Testez l\'Offre Découverte gratuite pour un logo simple, puis passez au Premium pour une identité complète.' : 'L\'Offre Premium Design vous donne un logo vectorisé, une charte graphique complète et tous les fichiers sources.' })
+  2591→                              else if (goal === 'site') setQuizResult({ service: 'Création Web', icon: Globe, reason: budget === 'gratuit' ? 'Commencez avec une landing page gratuite, puis évoluez vers un site multi-pages complet.' : 'Un site professionnel multi-pages avec formulaire, SEO, et hébergement inclus est l\'idéal pour vous.' })
+  2592→                              else if (goal === 'video') setQuizResult({ service: 'Montage Vidéo', icon: MonitorPlay, reason: budget === 'gratuit' ? 'Essayez le montage découverte gratuit pour un aperçu rapide.' : 'Le montage Premium inclut effets, sous-titres, musique et export optimisé pour tous les réseaux.' })
+  2593→                              else if (goal === 'reseaux') setQuizResult({ service: 'Marketing Digital', icon: Megaphone, reason: budget === 'gratuit' ? 'Un post ou affiche gratuit pour tester mon style.' : 'Stratégie complète avec calendrier éditorial, posts, stories et bannières publicitaires.' })
+  2594→                              else setQuizResult({ service: 'Formation Design', icon: GraduationCap, reason: 'La formation Design Graphique (Découverte gratuite puis Premium) est parfaite pour apprendre à créer vos propres visuels.' })
+  2595→                              setQuizStep(3)
+  2596→                            }} className="w-full text-left p-3 rounded-xl border border-border hover:border-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/20 text-sm transition-all hover:translate-x-1">
+  2597→                              {opt.label}
+  2598→                            </button>
+  2599→                          ))}
+  2600→                        </div>
+  2601→                      )}
+  2602→                    </motion.div>
+  2603→                  </AnimatePresence>
+  2604→                ) : quizResult && (
+  2605→                  <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center space-y-4">
+  2606→                    <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-white mx-auto shadow-lg">
+  2607→                      <quizResult.icon className="h-8 w-8" />
+  2608→                    </div>
+  2609→                    <h4 className="text-xl font-extrabold">{quizResult.service}</h4>
+  2610→                    <p className="text-sm text-muted-foreground leading-relaxed">{quizResult.reason}</p>
+  2611→                    <div className="flex flex-col gap-2 pt-2">
+  2612→                      <a
+  2613→                        href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! J'ai fait le quiz sur votre site et le résultat m'a recommandé : ${quizResult.service}. Je souhaite en savoir plus !`)}`}
+  2614→                        target="_blank" rel="noopener noreferrer"
+  2615→                        onClick={() => { setQuizOpen(false); setQuizStep(0); setQuizAnswers([]); setQuizResult(null) }}
+  2616→                      >
+  2617→                        <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold shadow-lg shadow-emerald-500/20">
+  2618→                          <MessageCircle className="h-4 w-4 mr-2" /> En discuter sur WhatsApp
+  2619→                        </Button>
+  2620→                      </a>
+  2621→                      <button onClick={() => { setQuizStep(0); setQuizAnswers([]); setQuizResult(null) }} className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+  2622→                        Refaire le quiz
+  2623→                      </button>
+  2624→                    </div>
+  2625→                  </motion.div>
+  2626→                )}
+  2627→              </div>
+  2628→            </motion.div>
+  2629→          </motion.div>
+  2630→        )}
+  2631→      </AnimatePresence>
+  2632→
+  2633→      {/* ═══ QUIZ TRIGGER FLOATING BUTTON ═══ */}
+  2634→      <motion.button
+  2635→        initial={{ opacity: 0, scale: 0 }}
+  2636→        animate={{ opacity: 1, scale: 1 }}
+  2637→        transition={{ delay: 3, type: 'spring' }}
+  2638→        onClick={() => setQuizOpen(true)}
+  2639→        className="fixed bottom-[68px] lg:bottom-6 left-1/2 -translate-x-1/2 z-[55] flex items-center gap-2 bg-gradient-to-r from-violet-600 to-purple-600 text-white pl-4 pr-5 py-3 rounded-full shadow-lg shadow-violet-500/30 hover:shadow-xl hover:shadow-violet-500/40 transition-all duration-300 hover:scale-105 group"
+  2640→      >
+  2641→        <Brain className="h-5 w-5" />
+  2642→        <span className="text-sm font-semibold whitespace-nowrap">Quel service vous convient ?</span>
+  2643→        <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-medium bg-white/20 px-2 py-0.5 rounded-full">Quiz gratuit</span>
+  2644→      </motion.button>
+  2645→
+  2646→      </main>
+  2647→
+  2648→      {/* ═══ 20. FOOTER ═══ */}
+  2649→      <Footer />
+  2650→
+  2651→      {/* ═══ 21. BOTTOM MOBILE NAV ═══ */}
+  2652→      <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-background/95 backdrop-blur-xl border-t border-border shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+  2653→        <div className="flex items-center justify-around h-14 px-2">
+  2654→          <a href="#accueil" className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-amber-500 transition-colors py-1 px-2">
+  2655→            <Sparkles className="h-[18px] w-[18px]" />
+  2656→            <span className="text-[9px] font-medium">Accueil</span>
+  2657→          </a>
+  2658→          <a href="#services" className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-amber-500 transition-colors py-1 px-2">
+  2659→            <Layers className="h-[18px] w-[18px]" />
+  2660→            <span className="text-[9px] font-medium">Services</span>
+  2661→          </a>
+  2662→          <a href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20souhaite%20discuter%20d%27un%20projet." target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-0.5 -mt-6">
+  2663→            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 text-white shadow-lg shadow-emerald-500/30">
+  2664→              <MessageCircle className="h-6 w-6" />
+  2665→            </div>
+  2666→            <span className="text-[9px] font-semibold text-emerald-600">WhatsApp</span>
+  2667→          </a>
+  2668→          <a href="#boutique" className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-amber-500 transition-colors py-1 px-2">
+  2669→            <BookOpen className="h-[18px] w-[18px]" />
+  2670→            <span className="text-[9px] font-medium">Boutique</span>
+  2671→          </a>
+  2672→          <a href="#contact" className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-amber-500 transition-colors py-1 px-2">
+  2673→            <Send className="h-[18px] w-[18px]" />
+  2674→            <span className="text-[9px] font-medium">Contact</span>
+  2675→          </a>
+  2676→        </div>
+  2677→      </div>
+  2678→
+  2679→      {/* ═══ BACK TO TOP DESKTOP ═══ */}
+  2680→      <AnimatePresence>
+  2681→        {showBackToTop && (
+  2682→          <motion.button
+  2683→            initial={{ opacity: 0, scale: 0.5, y: 20 }}
+  2684→            animate={{ opacity: 1, scale: 1, y: 0 }}
+  2685→            exit={{ opacity: 0, scale: 0.5, y: 20 }}
+  2686→            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+  2687→            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+  2688→            className="fixed bottom-6 right-6 z-40 hidden lg:flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 text-white shadow-lg shadow-amber-500/30 hover:shadow-xl hover:shadow-amber-500/40 transition-all duration-300 hover:scale-110"
+  2689→            aria-label="Retour en haut"
+  2690→          >
+  2691→            <ChevronUp className="h-5 w-5" />
+  2692→          </motion.button>
+  2693→        )}
+  2694→      </AnimatePresence>
+  2695→
+  2696→      {/* Back to top button - mobile only (above bottom nav) */}
+  2697→      <AnimatePresence>
+  2698→        {showBackToTop && (
+  2699→          <motion.button
+  2700→            initial={{ opacity: 0, scale: 0.5 }}
+  2701→            animate={{ opacity: 1, scale: 1 }}
+  2702→            exit={{ opacity: 0, scale: 0.5 }}
+  2703→            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+  2704→            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+  2705→            className="fixed bottom-[68px] left-4 z-[60] flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 text-white shadow-lg shadow-amber-500/30 lg:hidden"
+  2706→            aria-label="Retour en haut"
+  2707→          >
+  2708→            <ChevronUp className="h-4 w-4" />
+  2709→          </motion.button>
+  2710→        )}
+  2711→      </AnimatePresence>
+  2712→
+  2713→      {/* ═══ FLOATING CART BUTTON ═══ */}
+  2714→      <AnimatePresence>
+  2715→        {cart.length > 0 && (
+  2716→          <motion.button
+  2717→            initial={{ opacity: 0, scale: 0 }}
+  2718→            animate={{ opacity: 1, scale: 1 }}
+  2719→            exit={{ opacity: 0, scale: 0 }}
+  2720→            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+  2721→            onClick={() => setShowCart(!showCart)}
+  2722→            className="fixed bottom-[68px] right-4 z-[60] lg:bottom-6 lg:right-24 lg:z-[41] flex h-12 w-12 items-center justify-center rounded-full bg-amber-500 text-white shadow-lg shadow-amber-500/30 hover:bg-amber-600 hover:shadow-xl transition-all"
+  2723→            aria-label="Voir le panier"
+  2724→          >
+  2725→            <ShoppingCart className="h-5 w-5" />
+  2726→            <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white border-2 border-background">{cart.length}</span>
+  2727→          </motion.button>
+  2728→        )}
+  2729→      </AnimatePresence>
+  2730→
+  2731→      {/* ═══ CART PANEL ═══ */}
+  2732→      <AnimatePresence>
+  2733→        {showCart && cart.length > 0 && (
+  2734→          <motion.div
+  2735→            initial={{ opacity: 0, x: 300 }}
+  2736→            animate={{ opacity: 1, x: 0 }}
+  2737→            exit={{ opacity: 0, x: 300 }}
+  2738→            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+  2739→            className="fixed top-0 right-0 bottom-0 z-[110] w-80 max-w-[85vw] bg-background border-l shadow-2xl flex flex-col"
+  2740→          >
+  2741→            <div className="flex items-center justify-between p-4 border-b">
+  2742→              <h3 className="font-bold text-base flex items-center gap-2">
+  2743→                <ShoppingCart className="h-5 w-5 text-amber-500" />
+  2744→                Mon Panier
+  2745→                <span className="text-sm font-normal text-muted-foreground">({cart.length})</span>
+  2746→              </h3>
+  2747→              <button onClick={() => setShowCart(false)} className="h-8 w-8 rounded-full hover:bg-muted flex items-center justify-center"><X className="h-4 w-4" /></button>
+  2748→            </div>
+  2749→            <div className="flex-1 overflow-y-auto p-4 space-y-2">
+  2750→              {cart.map((title) => {
+  2751→                const book = books.find(b => b.title === title)
+  2752→                return (
+  2753→                  <div key={title} className="flex items-center gap-3 p-2.5 rounded-xl bg-muted/50 border border-border">
+  2754→                    {book && <img src={book.cover} alt="" className="h-12 w-9 object-cover rounded-md shadow-sm" />}
+  2755→                    <div className="flex-1 min-w-0">
+  2756→                      <p className="text-xs font-semibold leading-tight line-clamp-2">{title}</p>
+  2757→                      <p className="text-[10px] text-amber-600 font-bold mt-0.5">1 000 FCFA</p>
+  2758→                    </div>
+  2759→                    <button onClick={() => toggleCart(title)} className="h-7 w-7 rounded-full hover:bg-red-100 dark:hover:bg-red-900/30 flex items-center justify-center text-muted-foreground hover:text-red-500 transition-colors flex-shrink-0">
+  2760→                      <X className="h-3.5 w-3.5" />
+  2761→                    </button>
+  2762→                  </div>
+  2763→                )
+  2764→              })}
+  2765→            </div>
+  2766→            <div className="p-4 border-t space-y-3">
+  2767→              <div className="flex items-center justify-between">
+  2768→                <span className="text-sm font-semibold">Total</span>
+  2769→                <span className="text-xl font-extrabold text-amber-600">{cart.length * 1000} FCFA</span>
+  2770→              </div>
+  2771→              {cart.length >= 3 && (
+  2772→                <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg p-2.5 text-center">
+  2773→                  <p className="text-[11px] text-amber-700 dark:text-amber-400 font-semibold">Pack {cart.length} livres — {Math.min(cart.length * 1000, 7000)} FCFA</p>
+  2774→                  <p className="text-[10px] text-amber-600/70 mt-0.5">Le pack complet 12 livres = 7 000 FCFA</p>
+  2775→                </div>
+  2776→              )}
+  2777→              <a
+  2778→                href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je veux commander ${cart.length} livre(s) :\n\n${cart.map(t => `- ${t} (1 000 FCFA)`).join('\n')}\n\nTotal : ${cart.length * 1000} FCFA. Comment procéder pour le paiement ?`)}`}
+  2779→                target="_blank"
+  2780→                rel="noopener noreferrer"
+  2781→                onClick={() => setShowCart(false)}
+  2782→              >
+  2783→                <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold shadow-lg shadow-emerald-500/20">
+  2784→                  <MessageCircle className="h-4 w-4 mr-2" /> Commander via WhatsApp
+  2785→                </Button>
+  2786→              </a>
+  2787→            </div>
+  2788→          </motion.div>
+  2789→        )}
+  2790→      </AnimatePresence>
+  2791→
+  2792→      {/* ═══ WHATSAPP EXPANDABLE WIDGET ═══ */}
+  2793→      <div className="fixed bottom-6 right-6 z-40 hidden lg:block">
+  2794→        <AnimatePresence>
+  2795→          {showWaWidget && (
+  2796→            <motion.div
+  2797→              initial={{ opacity: 0, y: 10, scale: 0.9 }}
+  2798→              animate={{ opacity: 1, y: 0, scale: 1 }}
+  2799→              exit={{ opacity: 0, y: 10, scale: 0.9 }}
+  2800→              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+  2801→              className="absolute bottom-16 right-0 w-72 bg-background rounded-2xl shadow-2xl border overflow-hidden"
+  2802→            >
+  2803→              {/* Widget header */}
+  2804→              <div className="bg-[#075e54] p-4 flex items-center gap-3">
+  2805→                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white font-bold text-sm shadow-md">S</div>
+  2806→                <div className="flex-1">
+  2807→                  <p className="text-white font-bold text-sm">Sacko — Studio Créatif</p>
+  2808→                  <div className="flex items-center gap-1.5">
+  2809→                    <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" /><span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" /></span>
+  2810→                    <p className="text-white/70 text-[11px]">En ligne — répond en ~5 min</p>
+  2811→                  </div>
+  2812→                </div>
+  2813→                <button onClick={() => setShowWaWidget(false)} className="text-white/70 hover:text-white"><X className="h-4 w-4" /></button>
+  2814→              </div>
+  2815→              {/* Chat preview */}
+  2816→              <div className="p-4 bg-[#ece5dd] dark:bg-[#1a2730]">
+  2817→                <div className="bg-white dark:bg-[#233039] rounded-xl rounded-tl-sm p-3 shadow-sm max-w-[85%]">
+  2818→                  <p className="text-sm text-gray-800 dark:text-gray-200 leading-relaxed">Bonjour ! 👋 Comment puis-je vous aider aujourd'hui ?</p>
+  2819→                  <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-1 text-right">Maintenant</p>
+  2820→                </div>
+  2821→              </div>
+  2822→              {/* CTA */}
+  2823→              <div className="p-3 bg-background">
+  2824→                <a
+  2825→                  href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20souhaite%20discuter%20d%27un%20projet."
+  2826→                  target="_blank"
+  2827→                  rel="noopener noreferrer"
+  2828→                  onClick={() => setShowWaWidget(false)}
+  2829→                >
+  2830→                  <Button className="w-full bg-[#25d366] hover:bg-[#20bd5a] text-white font-semibold h-11 text-sm">
+  2831→                    <MessageCircle className="h-4 w-4 mr-2" /> Démarrer la conversation
+  2832→                  </Button>
+  2833→                </a>
+  2834→              </div>
+  2835→            </motion.div>
+  2836→          )}
+  2837→        </AnimatePresence>
+  2838→        {/* Main WA button */}
+  2839→        {!showWaWidget && (
+  2840→          <motion.button
+  2841→            initial={{ scale: 0 }}
+  2842→            animate={{ scale: 1 }}
+  2843→            className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500 text-white shadow-lg shadow-emerald-500/30 hover:bg-emerald-600 hover:shadow-xl hover:shadow-emerald-500/40 transition-all duration-300 hover:scale-110 group relative"
+  2844→            onClick={() => setShowWaWidget(true)}
+  2845→            aria-label="Contacter sur WhatsApp"
+  2846→          >
+  2847→            <MessageCircle className="h-6 w-6" />
+  2848→            <span className="absolute -top-1 -right-1 flex h-4 w-4">
+  2849→              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+  2850→              <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-white dark:border-background" />
+  2851→            </span>
+  2852→          </motion.button>
+  2853→        )}
+  2854→      </div>
+  2855→
+  2856→      {/* ═══ SOCIAL PROOF NOTIFICATION ═══ */}
+  2857→      <AnimatePresence>
+  2858→        {socialProof && (
+  2859→          <motion.div
+  2860→            initial={{ opacity: 0, y: 50, x: 50 }}
+  2861→            animate={{ opacity: 1, y: 0, x: 0 }}
+  2862→            exit={{ opacity: 0, y: 20, x: 50 }}
+  2863→            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+  2864→            className="fixed bottom-[68px] lg:bottom-6 left-4 z-[70] max-w-xs"
+  2865→          >
+  2866→            <div className="bg-background/95 backdrop-blur-xl border rounded-xl shadow-2xl p-3.5 flex items-center gap-3">
+  2867→              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex-shrink-0">
+  2868→                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+  2869→              </div>
+  2870→              <div className="flex-1 min-w-0">
+  2871→                <p className="text-xs font-bold">{socialProof.name}</p>
+  2872→                <p className="text-[11px] text-muted-foreground leading-tight">{socialProof.action}</p>
+  2873→              </div>
+  2874→              <button onClick={() => setSocialProof(null)} className="text-muted-foreground hover:text-foreground flex-shrink-0">
+  2875→                <X className="h-3.5 w-3.5" />
+  2876→              </button>
+  2877→            </div>
+  2878→          </motion.div>
+  2879→        )}
+  2880→      </AnimatePresence>
+  2881→
+  2882→      {/* ═══ COOKIE CONSENT ═══ */}
+  2883→      <AnimatePresence>
+  2884→        {showCookieConsent && (
+  2885→          <motion.div
+  2886→            initial={{ y: 100 }}
+  2887→            animate={{ y: 0 }}
+  2888→            exit={{ y: 100 }}
+  2889→            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+  2890→            className="fixed bottom-[68px] lg:bottom-0 left-0 right-0 z-[80] p-4"
+  2891→          >
+  2892→            <div className="mx-auto max-w-2xl bg-background/95 backdrop-blur-xl border rounded-2xl shadow-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+  2893→              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30 flex-shrink-0">
+  2894→                <Cookie className="h-5 w-5 text-amber-500" />
+  2895→              </div>
+  2896→              <div className="flex-1">
+  2897→                <p className="text-sm font-semibold">Cookies & Confidentialité</p>
+  2898→                <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+  2899→                  Ce site utilise des cookies pour améliorer votre expérience et mémoriser votre panier. En continuant, vous acceptez notre{' '}
+  2900→                  <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20consulter%20vos%20mentions%20l%C3%A9gales." target="_blank" rel="noopener noreferrer" className="text-amber-600 hover:underline font-medium">politique de confidentialité</a>.
+  2901→                </p>
+  2902→              </div>
+  2903→              <div className="flex gap-2 flex-shrink-0 w-full sm:w-auto">
+  2904→                <Button
+  2905→                  variant="outline"
+  2906→                  size="sm"
+  2907→                  onClick={() => setShowCookieConsent(false)}
+  2908→                  className="text-xs flex-1 sm:flex-none"
+  2909→                >
+  2910→                  Refuser
+  2911→                </Button>
+  2912→                <Button
+  2913→                  size="sm"
+  2914→                  onClick={() => setShowCookieConsent(false)}
+  2915→                  className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold text-xs flex-1 sm:flex-none"
+  2916→                >
+  2917→                  Accepter
+  2918→                </Button>
+  2919→              </div>
+  2920→            </div>
+  2921→          </motion.div>
+  2922→        )}
+  2923→      </AnimatePresence>
+  2924→    </div>
+  2925→  )
+  2926→}

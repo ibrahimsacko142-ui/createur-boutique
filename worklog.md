@@ -45,3 +45,21 @@ Work Log:
 Stage Summary:
 - 6 new features added: Portfolio Lightbox, Book Search, FAQ Search, Service Quiz, Live Visitors, Scroll-triggered Stats
 - All pushed to Vercel successfully
+
+---
+Task ID: 3
+Agent: Sub-agent (features)
+Task: Add 7 new features and improvements to page.tsx
+
+Changes:
+1. **Scroll Progress Bar** — Fixed 3px gradient bar (amber→orange→red) at top of page, width driven by scrollProgress state updated in scroll handler.
+2. **Escape Key Handler** — New useEffect listening for 'Escape' keydown; closes lightbox, book modal, quiz, and cart simultaneously.
+3. **Trust Ticker Marquee** — Horizontal scrolling banner between "Barre de Confiance" and "Comment ça marche" sections, showing 8 trust signals with icons, using existing `.animate-marquee` CSS class.
+4. **Comparison Table (Découverte vs Premium)** — Full feature comparison table with 9 rows placed before Services section; uses CheckCircle2 icons, color-coded columns (emerald for Découverte, amber for Premium).
+5. **Recommended Books ("Populaires en ce moment")** — Horizontal scroll carousel of 4 featured book covers with "TOP" badges, placed before Book Detail Modal in the books section.
+6. **Scroll-Reveal Animations** — Added `motion.div` with `whileInView` fade-up to À Propos grid, Garanties grid, and Contact grid sections.
+7. **Sticky Mobile CTA Bar** — Spring-animated floating WhatsApp CTA button that appears on mobile after 500px scroll, positioned above the bottom nav bar (z-49).
+
+No changes needed to globals.css (marquee animation already present).
+
+Build result: ✅ Compiled successfully, all pages generated.

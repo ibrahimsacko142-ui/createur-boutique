@@ -521,6 +521,8 @@ export default function Home() {
   const [contactData, setContactData] = useState({ name: '', email: '', subject: '', message: '' })
   const [showBanner, setShowBanner] = useState(true)
   const [showBackToTop, setShowBackToTop] = useState(false)
+  const [scrollProgress, setScrollProgress] = useState(0)
+  const [showStickyCta, setShowStickyCta] = useState(false)
   const [portfolioFilter, setPortfolioFilter] = useState('Tous')
   const [quickOrder, setQuickOrder] = useState({ service: '', name: '', phone: '', description: '' })
   const [faqOpen, setFaqOpen] = useState<string | null>(null)
@@ -623,9 +625,26 @@ export default function Home() {
   useEffect(() => {
     const handleScroll = () => {
       setShowBackToTop(window.scrollY > 600)
+      const totalHeight = document.body.scrollHeight - window.innerHeight
+      setScrollProgress(totalHeight > 0 ? (window.scrollY / totalHeight) * 100 : 0)
+      setShowStickyCta(window.scrollY > 500)
     }
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  // Escape key handler for all modals
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setLightboxImg(null)
+        setSelectedBook(null)
+        setQuizOpen(false); setQuizStep(0); setQuizAnswers([]); setQuizResult(null)
+        setShowCart(false)
+      }
+    }
+    window.addEventListener('keydown', handleEsc)
+    return () => window.removeEventListener('keydown', handleEsc)
   }, [])
 
 
@@ -651,6 +670,10 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background pb-20 lg:pb-0 scroll-smooth">
+      {/* ═══ SCROLL PROGRESS BAR ═══ */}
+      <div className="fixed top-0 left-0 right-0 z-50 h-[3px] bg-transparent">
+        <div className="h-full bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 transition-[width] duration-100 ease-out" style={{ width: `${scrollProgress}%` }} />
+      </div>
       <Header />
 
       <main className="flex-1">
@@ -898,6 +921,32 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ═══ TRUST TICKER ═══ */}
+        <div className="py-4 bg-amber-50 dark:bg-amber-950/10 border-y border-amber-200/50 dark:border-amber-800/30 overflow-hidden">
+          <div className="flex animate-marquee whitespace-nowrap">
+            {[...Array(2)].map((_, setIdx) => (
+              <div key={setIdx} className="flex items-center gap-8 mx-4">
+                {[
+                  { icon: '⭐', text: '50+ Marques créées' },
+                  { icon: '🎨', text: '100% Sur-mesure' },
+                  { icon: '⚡', text: 'Livraison en 24-48h' },
+                  { icon: '💰', text: 'Offre Découverte Gratuite' },
+                  { icon: '📱', text: 'Support WhatsApp 7j/7' },
+                  { icon: '🔒', text: 'Paiement Sécurisé' },
+                  { icon: '🏆', text: '5/5 Satisfaction Client' },
+                  { icon: '🇲🇱', text: 'Expert Bamako, Mali' },
+                ].map((item, i) => (
+                  <span key={`${setIdx}-${i}`} className="inline-flex items-center gap-2 text-sm font-medium text-amber-700 dark:text-amber-400 flex-shrink-0">
+                    <span>{item.icon}</span>
+                    <span>{item.text}</span>
+                    <span className="text-amber-300 dark:text-amber-700">•</span>
+                  </span>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* ═══ 5.5 COMMENT ÇA MARCHE ═══ */}
         <section className="py-16 sm:py-20 bg-gradient-to-b from-background to-muted/20">
           <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
@@ -967,6 +1016,71 @@ export default function Home() {
                   </div>
                 ))}
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ═══ COMPARISON TABLE ═══ */}
+        <section className="py-16 sm:py-20 bg-gradient-to-b from-background to-muted/20">
+          <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-10">
+              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+                <Sparkles className="h-3 w-3 mr-1" /> Comparaison
+              </Badge>
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Découverte vs Premium</h2>
+              <p className="mt-3 text-muted-foreground max-w-xl mx-auto">
+                Un aperçu clair de ce que chaque formule inclut. Testez gratuitement, puis passez au niveau supérieur.
+              </p>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="border-b-2 border-border">
+                    <th className="text-left p-4 text-sm font-bold">Fonctionnalité</th>
+                    <th className="p-4 text-sm font-bold text-center">
+                      <span className="inline-flex items-center gap-1.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 px-3 py-1.5 rounded-full text-xs font-bold">
+                        <CheckCircle2 className="h-3.5 w-3.5" /> Découverte
+                      </span>
+                    </th>
+                    <th className="p-4 text-sm font-bold text-center">
+                      <span className="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-md shadow-amber-500/20">
+                        <Star className="h-3.5 w-3.5 fill-current" /> Premium
+                      </span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { feature: 'Prix', decouverte: 'Gratuit', premium: 'Sur devis' },
+                    { feature: 'Nombre de révisions', decouverte: '1 révision', premium: 'Illimité' },
+                    { feature: 'Fichiers sources', decouverte: false, premium: true },
+                    { feature: 'Charte graphique', decouverte: false, premium: true },
+                    { feature: 'Support personnalisé', decouverte: 'Groupe WhatsApp', premium: 'Individuel' },
+                    { feature: 'Certificat', decouverte: false, premium: true },
+                    { feature: 'Suivi post-livraison', decouverte: false, premium: true },
+                    { feature: 'Bonus (Canva Pro, etc.)', decouverte: false, premium: true },
+                    { feature: 'Délai de livraison', decouverte: 'Standard', premium: 'Prioritaire' },
+                  ].map((row, i) => (
+                    <tr key={i} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
+                      <td className="p-4 text-sm font-medium">{row.feature}</td>
+                      <td className="p-4 text-center">
+                        {typeof row.decouverte === 'boolean' ? (
+                          row.decouverte ? <CheckCircle2 className="h-5 w-5 text-emerald-500 mx-auto" /> : <span className="text-muted-foreground text-xs">—</span>
+                        ) : (
+                          <span className="text-sm text-emerald-600 dark:text-emerald-400 font-semibold">{row.decouverte}</span>
+                        )}
+                      </td>
+                      <td className="p-4 text-center bg-amber-50/50 dark:bg-amber-950/10">
+                        {typeof row.premium === 'boolean' ? (
+                          row.premium ? <CheckCircle2 className="h-5 w-5 text-amber-500 mx-auto" /> : <span className="text-muted-foreground text-xs">—</span>
+                        ) : (
+                          <span className="text-sm text-amber-600 dark:text-amber-400 font-bold">{row.premium}</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </section>
@@ -1587,6 +1701,38 @@ export default function Home() {
               ))}
             </div>
 
+            {/* ═══ LIVRES RECOMMANDÉS ═══ */}
+            <div className="mt-10">
+              <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                <Flame className="h-5 w-5 text-orange-500" />
+                Populaires en ce moment
+              </h3>
+              <div className="flex gap-4 overflow-x-auto pb-3 scrollbar-hide">
+                {[
+                  books.find(b => b.title === 'Écrire des livres avec ChatGPT'),
+                  books.find(b => b.title === 'E-marketing & E-commerce'),
+                  books.find(b => b.title === 'WordPress pour les Nuls'),
+                  books.find(b => b.title === 'Programmer en Langage C'),
+                ].filter(Boolean).map((book) => book && (
+                  <div
+                    key={book!.title}
+                    className="flex-shrink-0 w-36 cursor-pointer group"
+                    onClick={() => setSelectedBook(book!)}
+                  >
+                    <div className="relative aspect-[3/4] rounded-xl overflow-hidden shadow-md group-hover:shadow-xl group-hover:-translate-y-1 transition-all duration-300 bg-muted">
+                      <img src={book!.cover} alt={book!.title} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-2 pt-6">
+                        <p className="text-[10px] font-bold text-white line-clamp-2 leading-tight">{book!.title}</p>
+                      </div>
+                      <div className="absolute top-1.5 right-1.5 bg-amber-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-md">
+                        TOP
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
             {/* Book Detail Modal */}
             <AnimatePresence>
               {selectedBook && (
@@ -2040,6 +2186,12 @@ export default function Home() {
           <div className="absolute top-10 left-10 h-64 w-64 bg-amber-200/20 dark:bg-amber-900/10 rounded-full blur-3xl" />
           <div className="absolute bottom-10 right-10 h-64 w-64 bg-orange-200/15 dark:bg-orange-900/10 rounded-full blur-3xl" />
           <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.6 }}
+            >
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div className="space-y-5">
                 {/* Photo de Sacko */}
@@ -2126,6 +2278,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
+            </motion.div>
           </div>
         </section>
 
@@ -2288,6 +2441,12 @@ export default function Home() {
               </p>
             </div>
 
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.6 }}
+            >
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
               {[
                 {
@@ -2331,6 +2490,7 @@ export default function Home() {
                 </Card>
               ))}
             </div>
+            </motion.div>
           </div>
         </section>
 
@@ -2377,6 +2537,12 @@ export default function Home() {
         {/* ═══ 19. CONTACT ═══ */}
         <section id="contact" className="py-16 sm:py-20 bg-muted/30">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.6 }}
+            >
             <div className="grid lg:grid-cols-2 gap-12">
               <div>
                 <Badge variant="secondary" className="mb-3">
@@ -2457,6 +2623,7 @@ export default function Home() {
                 </Button>
               </form>
             </div>
+            </motion.div>
           </div>
         </section>
       {/* ═══ PORTFOLIO LIGHTBOX ═══ */}
@@ -2647,6 +2814,25 @@ export default function Home() {
 
       {/* ═══ 20. FOOTER ═══ */}
       <Footer />
+
+      {/* ═══ STICKY MOBILE CTA ═══ */}
+      <AnimatePresence>
+        {showStickyCta && (
+          <motion.div
+            initial={{ y: 100 }}
+            animate={{ y: 0 }}
+            exit={{ y: 100 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            className="fixed bottom-14 left-0 right-0 z-[49] lg:hidden p-3 bg-gradient-to-t from-background via-background/95 to-transparent"
+          >
+            <a href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20souhaite%20discuter%20d%27un%20projet." target="_blank" rel="noopener noreferrer">
+              <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold h-11 text-sm shadow-lg shadow-emerald-500/30">
+                <MessageCircle className="h-4 w-4 mr-2" /> Discuter de mon projet — Gratuit
+              </Button>
+            </a>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ═══ 21. BOTTOM MOBILE NAV ═══ */}
       <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-background/95 backdrop-blur-xl border-t border-border shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
