@@ -58,6 +58,7 @@ import {
   Play,
   Pause,
   Cookie,
+  Calculator,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -542,6 +543,11 @@ export default function Home() {
   const [cart, setCart] = useLocalStorage<string[]>('sc-cart', [])
   const [showCart, setShowCart] = useState(false)
   const [showCookieConsent, setShowCookieConsent] = useLocalStorage('sc-cookies', true)
+  const [showWelcome, setShowWelcome] = useLocalStorage('sc-welcome', true)
+  const [welcomeVisible, setWelcomeVisible] = useState(false)
+  const [estimatorServices, setEstimatorServices] = useState<string[]>([])
+  const [confettiActive, setConfettiActive] = useState(false)
+  const [availabilitySlots, setAvailabilitySlots] = useState<Record<string, number>>({})
   const [showWaWidget, setShowWaWidget] = useState(false)
   const [testimIndex, setTestimIndex] = useState(0)
   const [testimPaused, setTestimPaused] = useState(false)
@@ -579,6 +585,11 @@ export default function Home() {
   }, [setCart])
 
   const isInCart = useCallback((title: string) => cart.includes(title), [cart])
+
+  const triggerConfetti = useCallback(() => {
+    setConfettiActive(true)
+    setTimeout(() => setConfettiActive(false), 3000)
+  }, [])
 
   // Auto-scroll testimonials
   useEffect(() => {
@@ -633,6 +644,22 @@ export default function Home() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  // Welcome popup for first-time visitors
+  useEffect(() => {
+    if (showWelcome) {
+      const timer = setTimeout(() => setWelcomeVisible(true), 6000)
+      return () => clearTimeout(timer)
+    }
+  }, [showWelcome])
+
+  // Availability slots for service cards
+  useEffect(() => {
+    const slots: Record<string, number> = {}
+    const cats = ['Design Graphique', 'Développement Web', 'Montage Vidéo', 'Formation', 'Marketing Digital']
+    cats.forEach((cat, i) => { slots[cat] = [2, 1, 3, 2, 1][i] })
+    setAvailabilitySlots(slots)
+  }, [])
+
   // Escape key handler for all modals
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
@@ -670,10 +697,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background pb-20 lg:pb-0 scroll-smooth">
-      {/* ═══ SCROLL PROGRESS BAR ═══ */}
-      <div className="fixed top-0 left-0 right-0 z-50 h-[3px] bg-transparent">
-        <div className="h-full bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 transition-[width] duration-100 ease-out" style={{ width: `${scrollProgress}%` }} />
-      </div>
       <Header />
 
       <main className="flex-1">
@@ -734,7 +757,7 @@ export default function Home() {
 
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
                   Donnez vie à vos projets digitaux et{' '}
-                  <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 bg-clip-text text-transparent">
+                  <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 bg-clip-text text-transparent animate-gradient-text">
                     {typedText}<span className="animate-pulse">|</span>
                   </span>
                 </h1>
@@ -1085,6 +1108,101 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ═══ ESTIMATEUR DE PRIX ═══ */}
+        <section className="py-16 sm:py-20">
+          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-10">
+              <Badge variant="secondary" className="mb-3 bg-violet-100 text-violet-700 border-violet-200">
+                <Calculator className="h-3 w-3 mr-1" /> Estimateur
+              </Badge>
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Estimez votre <span className="bg-gradient-to-r from-violet-500 to-purple-500 bg-clip-text text-transparent">budget</span></h2>
+              <p className="mt-3 text-muted-foreground max-w-lg mx-auto">
+                Sélectionnez les services qui vous intéressent et obtenez une estimation instantanée.
+              </p>
+            </div>
+            <Card className="border-2 border-violet-200 dark:border-violet-800 overflow-hidden">
+              <CardContent className="p-6 space-y-4">
+                <div className="grid sm:grid-cols-2 gap-3">
+                  {[
+                    { id: 'logo', label: 'Logo Professionnel', icon: Palette, priceRange: [0, 15000] },
+                    { id: 'site', label: 'Site Web', icon: Globe, priceRange: [0, 50000] },
+                    { id: 'video', label: 'Montage Vidéo', icon: MonitorPlay, priceRange: [0, 20000] },
+                    { id: 'marketing', label: 'Marketing Digital', icon: Megaphone, priceRange: [0, 25000] },
+                    { id: 'cv', label: 'Pack Carrière Pro', icon: FileCheck, priceRange: [700, 3500] },
+                    { id: 'formation', label: 'Formation Premium', icon: GraduationCap, priceRange: [15000, 25000] },
+                  ].map((s) => {
+                    const selected = estimatorServices.includes(s.id)
+                    return (
+                      <button
+                        key={s.id}
+                        onClick={() => setEstimatorServices(prev => selected ? prev.filter(x => x !== s.id) : [...prev, s.id])}
+                        className={`flex items-center gap-3 p-4 rounded-xl border-2 transition-all duration-200 text-left ${
+                          selected
+                            ? 'border-violet-500 bg-violet-50 dark:bg-violet-950/20 shadow-md shadow-violet-500/10'
+                            : 'border-border hover:border-violet-300 dark:hover:border-violet-700 hover:bg-muted/50'
+                        }`}
+                      >
+                        <div className={`flex h-10 w-10 items-center justify-center rounded-lg flex-shrink-0 transition-colors ${
+                          selected ? 'bg-violet-500 text-white' : 'bg-muted text-muted-foreground'
+                        }`}>
+                          <s.icon className="h-5 w-5" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold">{s.label}</p>
+                          <p className="text-[11px] text-muted-foreground">{s.priceRange[0] === 0 ? 'Gratuit –' : ''} {s.priceRange[1].toLocaleString('fr-FR')} FCFA</p>
+                        </div>
+                        <div className={`h-5 w-5 rounded-full border-2 flex items-center justify-center transition-all flex-shrink-0 ${
+                          selected ? 'border-violet-500 bg-violet-500' : 'border-muted-foreground/30'
+                        }`}>
+                          {selected && <CheckCircle2 className="h-3.5 w-3.5 text-white" />}
+                        </div>
+                      </button>
+                    )
+                  })}
+                </div>
+                {estimatorServices.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-950/20 dark:to-purple-950/20 rounded-xl p-5 border border-violet-200 dark:border-violet-800"
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-sm font-bold">{estimatorServices.length} service{estimatorServices.length > 1 ? 's' : ''} sélectionné{estimatorServices.length > 1 ? 's' : ''}</span>
+                      <span className="text-xs text-muted-foreground">Estimation</span>
+                    </div>
+                    <div className="flex items-baseline gap-2 mb-4">
+                      <span className="text-3xl font-extrabold text-violet-600 dark:text-violet-400">
+                        {(() => {
+                          const services = [
+                            { id: 'logo', priceRange: [0, 15000] },
+                            { id: 'site', priceRange: [0, 50000] },
+                            { id: 'video', priceRange: [0, 20000] },
+                            { id: 'marketing', priceRange: [0, 25000] },
+                            { id: 'cv', priceRange: [700, 3500] },
+                            { id: 'formation', priceRange: [15000, 25000] },
+                          ]
+                          const min = estimatorServices.reduce((sum, id) => sum + (services.find(s => s.id === id)?.priceRange[0] || 0), 0)
+                          const max = estimatorServices.reduce((sum, id) => sum + (services.find(s => s.id === id)?.priceRange[1] || 0), 0)
+                          return min === 0 ? `0 – ${max.toLocaleString('fr-FR')}` : `${min.toLocaleString('fr-FR')} – ${max.toLocaleString('fr-FR')}`
+                        })()}
+                      </span>
+                      <span className="text-sm text-muted-foreground font-medium">FCFA</span>
+                    </div>
+                    <a
+                      href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! J'ai utilisé votre estimateur et je suis intéressé(e) par : ${estimatorServices.join(', ')}. Pouvez-vous me faire un devis précis ?`)}`}
+                      target="_blank" rel="noopener noreferrer"
+                    >
+                      <Button className="w-full bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600 text-white font-bold shadow-lg shadow-violet-500/20">
+                        <MessageCircle className="h-4 w-4 mr-2" /> Obtenir un devis précis sur WhatsApp
+                      </Button>
+                    </a>
+                  </motion.div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
         {/* ═══ 6. SERVICES & TARIFS ═══ */}
         <section id="services" className="py-20 sm:py-24">
           <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -1138,6 +1256,15 @@ export default function Home() {
                         <section.icon className="h-5 w-5" />
                       </div>
                       <h3 className="text-lg font-extrabold">{section.cat}</h3>
+                    </div>
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                        <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" /><span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" /></span>
+                        Disponible
+                      </div>
+                      <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/20 px-2 py-0.5 rounded-full border border-amber-200 dark:border-amber-800">
+                        {availabilitySlots[section.cat] || 2}/5 places
+                      </span>
                     </div>
                     <div className="grid sm:grid-cols-2 gap-4">
                       <div className="rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-950/20 p-4 sm:p-5">
@@ -2158,6 +2285,7 @@ export default function Home() {
                       toast({ title: 'Champs requis', description: 'Service, nom et téléphone sont obligatoires.', variant: 'destructive' })
                       return
                     }
+                    triggerConfetti()
                     const msg = encodeURIComponent(
                       `Bonjour Sacko ! Je souhaite un service.\n\n` +
                       `Service : ${quickOrder.service}\n` +
@@ -2408,6 +2536,7 @@ export default function Home() {
                         toast({ title: 'Champs requis', description: 'Prénom et contact sont obligatoires.', variant: 'destructive' })
                         return
                       }
+                      triggerConfetti()
                       const msg = encodeURIComponent(
                         `Bonjour Sacko ! Je souhaite recevoir le pack de 10 templates Canva gratuit.\n\nPrénom : ${leadMagnet.name}\nContact : ${leadMagnet.contact}\n\nMerci !`
                       )
@@ -2502,7 +2631,7 @@ export default function Home() {
           </div>
           <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
-              Prêt à faire passer votre communication au niveau supérieur ?
+              Prêt à faire passer votre communication <span className="bg-gradient-to-r from-white via-yellow-200 to-white bg-clip-text text-transparent animate-gradient-text">au niveau supérieur</span> ?
             </h2>
             <p className="mt-4 text-lg text-white/90 max-w-2xl mx-auto leading-relaxed">
               N&apos;attendez plus pour donner à votre entreprise l&apos;image qu&apos;elle mérite. Contactez-moi dès aujourd&apos;hui pour discuter de votre projet et obtenir un devis gratuit.
@@ -2626,6 +2755,67 @@ export default function Home() {
             </motion.div>
           </div>
         </section>
+      {/* ═══ WELCOME POPUP ═══ */}
+      <AnimatePresence>
+        {welcomeVisible && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[90] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+            onClick={() => { setWelcomeVisible(false); setShowWelcome(false) }}
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0, y: 30 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.8, opacity: 0, y: 30 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+              className="relative bg-background rounded-2xl shadow-2xl max-w-sm w-full overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button onClick={() => { setWelcomeVisible(false); setShowWelcome(false) }} className="absolute top-3 right-3 z-10 h-8 w-8 rounded-full bg-muted hover:bg-muted/80 flex items-center justify-center">
+                <X className="h-4 w-4" />
+              </button>
+              <div className="bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 p-6 text-center text-white">
+                <div className="text-4xl mb-2">👋</div>
+                <h3 className="text-xl font-extrabold">Bienvenue sur Studio Créatif !</h3>
+                <p className="text-white/80 text-sm mt-1">Offre exclusive pour les nouveaux visiteurs</p>
+              </div>
+              <div className="p-6 space-y-4">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-3 p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800">
+                    <Gift className="h-5 w-5 text-emerald-500 flex-shrink-0" />
+                    <div>
+                      <p className="text-sm font-bold text-emerald-700 dark:text-emerald-400">Logo GRATUIT</p>
+                      <p className="text-[11px] text-muted-foreground">Votre premier logo offert, sans engagement</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 p-3 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800">
+                    <Zap className="h-5 w-5 text-amber-500 flex-shrink-0" />
+                    <div>
+                      <p className="text-sm font-bold text-amber-700 dark:text-amber-400">Livraison en 48h</p>
+                      <p className="text-[11px] text-muted-foreground">Résultat rapide et professionnel</p>
+                    </div>
+                  </div>
+                </div>
+                <a
+                  href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20suis%20nouveau%20sur%20votre%20site%20et%20je%20souhaite%20profiter%20de%20l'offre%20bienvenue%20(logo%20gratuit)."
+                  target="_blank" rel="noopener noreferrer"
+                  onClick={() => { setWelcomeVisible(false); setShowWelcome(false) }}
+                >
+                  <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold shadow-lg shadow-emerald-500/20">
+                    <MessageCircle className="h-4 w-4 mr-2" /> Profiter de l'offre
+                  </Button>
+                </a>
+                <button onClick={() => { setWelcomeVisible(false); setShowWelcome(false) }} className="block text-xs text-muted-foreground hover:text-foreground transition-colors mx-auto">
+                  Peut-être plus tard
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* ═══ PORTFOLIO LIGHTBOX ═══ */}
       <AnimatePresence>
         {lightboxImg && (
@@ -3107,6 +3297,26 @@ export default function Home() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* ═══ CONFETTI EFFECT ═══ */}
+      {confettiActive && (
+        <div className="fixed inset-0 z-[200] pointer-events-none overflow-hidden">
+          {Array.from({ length: 40 }).map((_, i) => (
+            <div
+              key={i}
+              className="absolute top-0"
+              style={{
+                left: `${Math.random() * 100}%`,
+                width: `${Math.random() * 8 + 4}px`,
+                height: `${Math.random() * 8 + 4}px`,
+                backgroundColor: ['#f59e0b', '#f97316', '#ef4444', '#10b981', '#8b5cf6', '#ec4899', '#3b82f6'][Math.floor(Math.random() * 7)],
+                borderRadius: Math.random() > 0.5 ? '50%' : '2px',
+                animation: `confettiFall ${2 + Math.random() * 2}s ease-in ${Math.random() * 0.5}s forwards`,
+              }}
+            />
+          ))}
+        </div>
+      )}
     </div>
   )
 }
