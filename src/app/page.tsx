@@ -308,7 +308,6 @@ const books = [
   { title: 'Programmer en Langage C', author: 'Claude Delannoy', desc: 'Les fondamentaux de la programmation C avec exercices corrigés.', cover: '/livres/langage-c.jpg' },
   { title: 'E-marketing & E-commerce', author: 'Émilie Courts', desc: 'Doper ses ventes en ligne pas à pas : visibilité et stratégie web.', cover: '/livres/e-marketing-ecommerce.jpg' },
   { title: 'Le commerce électronique', author: 'Guy Hervier', desc: 'Vendre en ligne et optimiser ses achats sur internet.', cover: '/livres/commerce-electronique.jpg' },
-  { title: 'Le commerce électronique', author: 'Guy Hervier', desc: 'Guide complet pour maîtriser les achats et ventes en ligne.', cover: '/livres/commerce-electronique-2.jpg' },
   { title: 'Manuel de Journalisme Web', author: 'Mark Briggs', desc: 'Blogs, réseaux sociaux, multimédia et journalisme numérique.', cover: '/livres/journalisme-web.jpg' },
   { title: 'Vendre de façon rentable !', author: 'Pierre Maurin', desc: 'Stratégies de vente rentables pour PME et équipes commerciales.', cover: '/livres/vendre-rentable.jpg' },
   { title: 'Écrire des livres avec ChatGPT', author: 'Martín Arellano', desc: 'Utilisez l\'IA ChatGPT pour créer et rédiger vos livres.', cover: '/livres/ecrire-livres-chatgpt.jpg' },
@@ -327,6 +326,7 @@ export default function Home() {
   const [quickOrder, setQuickOrder] = useState({ service: '', name: '', phone: '', description: '' })
   const [faqOpen, setFaqOpen] = useState<string | null>(null)
   const [leadMagnet, setLeadMagnet] = useState({ name: '', contact: '' })
+  const [selectedBook, setSelectedBook] = useState<typeof books[0] | null>(null)
   const { toast } = useToast()
 
 
@@ -362,7 +362,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-background pb-16 lg:pb-0">
+    <div className="min-h-screen flex flex-col bg-background pb-20 lg:pb-0 scroll-smooth">
       <Header />
 
       <main className="flex-1">
@@ -1080,13 +1080,16 @@ export default function Home() {
         </section>
 
         {/* ═══ 10. NOS COACHS ═══ */}
-        <section id="coachs" className="py-16 sm:py-20 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 text-white">
-          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <section id="coachs" className="py-16 sm:py-20 relative overflow-hidden">
+          {/* Animated background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(245,158,11,0.08),transparent_50%),radial-gradient(circle_at_80%_50%,rgba(168,85,247,0.06),transparent_50%)]" />
+          <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <Badge className="mb-3 bg-amber-500/20 text-amber-300 border-amber-500/30 hover:bg-amber-500/30">
                 <Users className="h-3 w-3 mr-1" /> Notre Équipe
               </Badge>
-              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">3 Coachs <span className="text-amber-400">experts</span> à votre service</h2>
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">3 Coachs <span className="text-amber-400">experts</span> à votre service</h2>
               <p className="mt-4 text-slate-400 max-w-2xl mx-auto leading-relaxed">
                 Pas de théorie abstraite : chaque coach pratique activement dans son domaine à Bamako. Vous apprenez de personnes qui vivent de leur compétence au quotidien.
               </p>
@@ -1100,30 +1103,34 @@ export default function Home() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: i * 0.15 }}
-                  className="group relative rounded-2xl bg-slate-800/60 border border-white/10 hover:border-amber-400/30 p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-amber-500/5"
+                  className="group relative rounded-2xl backdrop-blur-xl bg-white/[0.04] border border-white/[0.08] hover:border-amber-400/30 p-6 text-center transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-amber-500/10"
                 >
-                  {/* Avatar */}
-                  <div className="relative mx-auto mb-4">
-                    <div className={`h-20 w-20 rounded-full bg-gradient-to-br ${coach.gradient} flex items-center justify-center text-white text-2xl font-extrabold shadow-lg mx-auto ring-4 ring-slate-800`}>
-                      {coach.initial}
+                  {/* Glow effect on hover */}
+                  <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${coach.gradient} opacity-0 group-hover:opacity-[0.04] transition-opacity duration-500`} />
+                  <div className="relative">
+                    {/* Avatar */}
+                    <div className="relative mx-auto mb-4">
+                      <div className={`h-20 w-20 rounded-full bg-gradient-to-br ${coach.gradient} flex items-center justify-center text-white text-2xl font-extrabold shadow-lg mx-auto ring-4 ring-slate-800/50 group-hover:scale-110 transition-transform duration-300`}>
+                        {coach.initial}
+                      </div>
+                      {i === 0 && (
+                        <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[8px] font-bold px-2.5 py-0.5 rounded-full shadow-lg shadow-amber-500/30">
+                          FONDATEUR
+                        </span>
+                      )}
                     </div>
-                    {i === 0 && (
-                      <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-amber-500 text-white text-[8px] font-bold px-2 py-0.5 rounded-full shadow">
-                        FONDATEUR
-                      </span>
-                    )}
+                    <h3 className="text-base font-extrabold text-white">{coach.name}</h3>
+                    <p className="text-xs text-amber-400 font-semibold mt-0.5">{coach.role}</p>
+                    <p className="text-[10px] text-slate-500 mt-1 font-medium">{coach.speciality}</p>
+                    <p className="text-xs text-slate-400 leading-relaxed mt-3">{coach.bio}</p>
+                    <a
+                      href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je souhaite être encadré(e) par ${coach.name} pour une formation.`)}`}
+                      target="_blank" rel="noopener noreferrer"
+                      className="mt-4 inline-flex items-center gap-1.5 text-[11px] font-semibold text-amber-400 hover:text-amber-300 transition-colors"
+                    >
+                      <MessageCircle className="h-3 w-3" /> Contacter
+                    </a>
                   </div>
-                  <h3 className="text-base font-extrabold text-white">{coach.name}</h3>
-                  <p className="text-xs text-amber-400 font-semibold mt-0.5">{coach.role}</p>
-                  <p className="text-[10px] text-slate-500 mt-1 font-medium">{coach.speciality}</p>
-                  <p className="text-xs text-slate-400 leading-relaxed mt-3">{coach.bio}</p>
-                  <a
-                    href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je souhaite être encadré(e) par ${coach.name} pour une formation.`)}`}
-                    target="_blank" rel="noopener noreferrer"
-                    className="mt-4 inline-flex items-center gap-1.5 text-[11px] font-semibold text-amber-400 hover:text-amber-300 transition-colors"
-                  >
-                    <MessageCircle className="h-3 w-3" /> Contacter
-                  </a>
                 </motion.div>
               ))}
             </div>
@@ -1139,7 +1146,7 @@ export default function Home() {
               </Badge>
               <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Nos <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">Livres & Ebooks</span></h2>
               <p className="mt-4 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                Des guides pratiques rédigés par des experts actifs. Chaque livre est conçu pour vous rendre opérationnel rapidement. Commandez via WhatsApp et recevez votre livre instantanément.
+                Des guides pratiques rédigés par des experts actifs. Cliquez sur un livre pour voir les détails. Commandez via WhatsApp et recevez votre livre instantanément.
               </p>
               <div className="mt-5 inline-flex items-center gap-2 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-full px-5 py-2">
                 <span className="text-2xl font-extrabold text-amber-600">1 000</span>
@@ -1158,7 +1165,10 @@ export default function Home() {
                   className="group flex flex-col"
                 >
                   {/* Book cover with real image */}
-                  <div className="relative aspect-[3/4] rounded-xl overflow-hidden shadow-lg group-hover:shadow-2xl group-hover:-translate-y-2 transition-all duration-300 cursor-pointer bg-muted">
+                  <div
+                    className="relative aspect-[3/4] rounded-xl overflow-hidden shadow-lg group-hover:shadow-2xl group-hover:-translate-y-2 transition-all duration-300 cursor-pointer bg-muted"
+                    onClick={() => setSelectedBook(book)}
+                  >
                     <img
                       src={book.cover}
                       alt={book.title}
@@ -1168,6 +1178,12 @@ export default function Home() {
                     {/* Price tag */}
                     <div className="absolute top-2 right-2 bg-white/95 backdrop-blur-sm text-amber-700 text-[10px] font-extrabold px-2.5 py-1 rounded-lg shadow-md">
                       1 000 F
+                    </div>
+                    {/* Hover overlay */}
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
+                      <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 backdrop-blur-sm text-foreground text-[11px] font-bold px-3 py-1.5 rounded-full shadow-lg">
+                        Voir les détails
+                      </div>
                     </div>
                     {/* Bottom gradient for title */}
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-3 pt-8">
@@ -1183,12 +1199,77 @@ export default function Home() {
                     className="mt-2.5"
                   >
                     <Button variant="outline" size="sm" className="w-full text-[11px] font-semibold h-9 hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-700 transition-colors">
-                      <MessageCircle className="h-3 w-3 mr-1.5" /> Commander via WhatsApp
+                      <MessageCircle className="h-3 w-3 mr-1.5" /> Commander
                     </Button>
                   </a>
                 </motion.div>
               ))}
             </div>
+
+            {/* Book Detail Modal */}
+            <AnimatePresence>
+              {selectedBook && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+                  onClick={() => setSelectedBook(null)}
+                >
+                  <motion.div
+                    initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                    animate={{ scale: 1, opacity: 1, y: 0 }}
+                    exit={{ scale: 0.9, opacity: 0, y: 20 }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                    className="relative bg-background rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <button
+                      onClick={() => setSelectedBook(null)}
+                      className="absolute top-3 right-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/40 text-white hover:bg-black/60 transition-colors backdrop-blur-sm"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                    <div className="flex flex-col sm:flex-row">
+                      <div className="sm:w-48 flex-shrink-0">
+                        <img src={selectedBook.cover} alt={selectedBook.title} className="w-full h-64 sm:h-full object-cover" />
+                      </div>
+                      <div className="p-5 sm:p-6 flex flex-col flex-1">
+                        <Badge variant="secondary" className="w-fit mb-2 bg-amber-100 text-amber-700 border-amber-200 text-[10px]">
+                          <BookOpen className="h-2.5 w-2.5 mr-1" /> Livre à 1 000 FCFA
+                        </Badge>
+                        <h3 className="text-lg font-extrabold leading-tight">{selectedBook.title}</h3>
+                        <p className="text-sm text-muted-foreground mt-1">par <span className="font-semibold text-foreground">{selectedBook.author}</span></p>
+                        <p className="text-sm text-muted-foreground leading-relaxed mt-3 flex-1">{selectedBook.desc}</p>
+                        <div className="mt-4 space-y-2.5">
+                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
+                            <span>Livraison instantanée via WhatsApp</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
+                            <span>Format PDF — lisible sur téléphone et PC</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
+                            <span>Paiement par Orange Money, Wave ou Moov Money</span>
+                          </div>
+                          <a
+                            href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je veux commander le livre : ${selectedBook.title} par ${selectedBook.author} (1 000 FCFA). Comment procéder ?`)}`}
+                            target="_blank" rel="noopener noreferrer"
+                            onClick={() => setSelectedBook(null)}
+                          >
+                            <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold shadow-lg shadow-emerald-500/20">
+                              <MessageCircle className="h-4 w-4 mr-2" /> Commander via WhatsApp
+                            </Button>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* Pack promo */}
             <motion.div
@@ -1204,16 +1285,16 @@ export default function Home() {
                       <FolderDown className="h-6 w-6" />
                     </div>
                     <div>
-                      <h3 className="font-extrabold text-base">Pack Complet — Tous les 10 livres</h3>
-                      <p className="text-sm text-muted-foreground mt-0.5">Économisez 3 000 FCFA en prenant le pack complet</p>
+                      <h3 className="font-extrabold text-base">Pack Complet — Tous les 9 livres</h3>
+                      <p className="text-sm text-muted-foreground mt-0.5">Économisez 2 000 FCFA en prenant le pack complet</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 flex-shrink-0">
                     <div className="text-right">
-                      <span className="text-xs text-muted-foreground line-through">10 000 FCFA</span>
+                      <span className="text-xs text-muted-foreground line-through">9 000 FCFA</span>
                       <div className="text-2xl font-extrabold text-amber-600">7 000 <span className="text-sm font-normal">FCFA</span></div>
                     </div>
-                    <a href={`https://wa.me/22397787244?text=${encodeURIComponent('Bonjour Sacko ! Je veux commander le Pack Complet de 10 livres (7 000 FCFA au lieu de 10 000). Comment procéder ?')}`} target="_blank" rel="noopener noreferrer">
+                    <a href={`https://wa.me/22397787244?text=${encodeURIComponent('Bonjour Sacko ! Je veux commander le Pack Complet de 9 livres (7 000 FCFA au lieu de 9 000). Comment procéder ?')}`} target="_blank" rel="noopener noreferrer">
                       <Button className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-lg shadow-amber-500/20 whitespace-nowrap">
                         <ShoppingCart className="h-4 w-4 mr-1.5" /> Prendre le Pack
                       </Button>
@@ -1874,28 +1955,28 @@ export default function Home() {
 
       {/* ═══ 21. BOTTOM MOBILE NAV ═══ */}
       <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-background/95 backdrop-blur-xl border-t border-border shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
-        <div className="flex items-center justify-around h-16 px-2">
+        <div className="flex items-center justify-around h-14 px-2">
           <a href="#accueil" className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-amber-500 transition-colors py-1 px-2">
-            <Sparkles className="h-5 w-5" />
-            <span className="text-[10px] font-medium">Accueil</span>
+            <Sparkles className="h-[18px] w-[18px]" />
+            <span className="text-[9px] font-medium">Accueil</span>
           </a>
           <a href="#services" className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-amber-500 transition-colors py-1 px-2">
-            <Layers className="h-5 w-5" />
-            <span className="text-[10px] font-medium">Services</span>
+            <Layers className="h-[18px] w-[18px]" />
+            <span className="text-[9px] font-medium">Services</span>
           </a>
-          <a href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20souhaite%20discuter%20d%27un%20projet." target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-0.5 -mt-5">
+          <a href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20souhaite%20discuter%20d%27un%20projet." target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-0.5 -mt-6">
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 text-white shadow-lg shadow-emerald-500/30">
               <MessageCircle className="h-6 w-6" />
             </div>
-            <span className="text-[10px] font-semibold text-emerald-600">WhatsApp</span>
+            <span className="text-[9px] font-semibold text-emerald-600">WhatsApp</span>
           </a>
-          <a href="#formations" className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-amber-500 transition-colors py-1 px-2">
-            <GraduationCap className="h-5 w-5" />
-            <span className="text-[10px] font-medium">Formations</span>
+          <a href="#boutique" className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-amber-500 transition-colors py-1 px-2">
+            <BookOpen className="h-[18px] w-[18px]" />
+            <span className="text-[9px] font-medium">Boutique</span>
           </a>
           <a href="#contact" className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-amber-500 transition-colors py-1 px-2">
-            <Send className="h-5 w-5" />
-            <span className="text-[10px] font-medium">Contact</span>
+            <Send className="h-[18px] w-[18px]" />
+            <span className="text-[9px] font-medium">Contact</span>
           </a>
         </div>
       </div>
@@ -1947,7 +2028,7 @@ export default function Home() {
             exit={{ opacity: 0, scale: 0.5 }}
             transition={{ type: 'spring', stiffness: 300, damping: 25 }}
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="fixed bottom-20 right-4 z-40 flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 text-white shadow-lg shadow-amber-500/30 lg:hidden"
+            className="fixed bottom-[68px] right-4 z-[60] flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 text-white shadow-lg shadow-amber-500/30 lg:hidden"
             aria-label="Retour en haut"
           >
             <ChevronUp className="h-4 w-4" />
