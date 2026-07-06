@@ -147,6 +147,7 @@ function useCountdown(targetDate: Date) {
 function AnimatedStat({ end, suffix, children }: { end: number; suffix?: string; children: React.ReactNode }) {
   const [count, setCount] = useState(0)
   const [started, setStarted] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!started) return
@@ -162,10 +163,21 @@ function AnimatedStat({ end, suffix, children }: { end: number; suffix?: string;
     return () => cancelAnimationFrame(frameId)
   }, [started, end])
 
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setStarted(true); observer.disconnect() } },
+      { threshold: 0.3 }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
   return (
     <div
+      ref={ref}
       className="text-center"
-      onPointerEnter={() => setStarted(true)}
     >
       {children}
       <div className="text-3xl sm:text-4xl font-extrabold text-white mb-1">{count}{suffix}</div>
@@ -533,6 +545,24 @@ export default function Home() {
   const [testimPaused, setTestimPaused] = useState(false)
   const [socialProof, setSocialProof] = useState<{ name: string; action: string; time: number } | null>(null)
 
+  // Portfolio lightbox
+  const [lightboxImg, setLightboxImg] = useState<{ src: string; title: string; desc: string } | null>(null)
+
+  // Book search
+  const [bookSearch, setBookSearch] = useState('')
+
+  // FAQ search
+  const [faqSearch, setFaqSearch] = useState('')
+
+  // Service quiz
+  const [quizOpen, setQuizOpen] = useState(false)
+  const [quizStep, setQuizStep] = useState(0)
+  const [quizAnswers, setQuizAnswers] = useState<string[]>([])
+  const [quizResult, setQuizResult] = useState<{ service: string; icon: typeof Palette; reason: string } | null>(null)
+
+  // Live visitors (simulated)
+  const [liveVisitors, setLiveVisitors] = useState(12)
+
   // Promo countdown: 7 days from now
   const [promoEnd] = useState(() => {
     const d = new Date()
@@ -573,6 +603,18 @@ export default function Home() {
         setTimeout(() => setSocialProof(null), 4000)
       }, p.time)
     })
+  }, [])
+
+  // Live visitors simulation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setLiveVisitors(prev => {
+        const change = Math.random() > 0.5 ? 1 : -1
+        const next = Math.max(8, Math.min(28, prev + change))
+        return next
+      })
+    }, 8000)
+    return () => clearInterval(interval)
   }, [])
 
 
@@ -633,6 +675,10 @@ export default function Home() {
                       Découvrir les services
                     </Button>
                   </a>
+                  <span className="hidden sm:flex items-center gap-1.5 text-[11px] text-white/90 font-medium bg-white/15 px-2.5 py-1 rounded-full">
+                    <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" /><span className="relative inline-flex rounded-full h-2 w-2 bg-red-400" /></span>
+                    {liveVisitors} personne{liveVisitors > 1 ? 's' : ''} en ligne
+                  </span>
                   <button onClick={() => setShowBanner(false)} className="text-white/80 hover:text-white transition-colors" aria-label="Fermer">
                     <X className="h-4 w-4" />
                   </button>
@@ -1439,8 +1485,25 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Category filter pills */}
-            <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
+            {/* Search & Category filter */}
+            <div className="space-y-4 mb-8">
+              {/* Search bar */}
+              <div className="relative max-w-md mx-auto">
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Rechercher un livre par titre, auteur ou mot-clé..."
+                  value={bookSearch}
+                  onChange={(e) => setBookSearch(e.target.value)}
+                  className="pl-10 h-11 bg-background border-border rounded-xl text-sm"
+                />
+                {bookSearch && (
+                  <button onClick={() => setBookSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
+              {/* Category filter pills */}
+            <div className="flex flex-wrap items-center justify-center gap-2">
               {bookCategories.map((cat) => (
                 <button
                   key={cat}
@@ -1457,7 +1520,14 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5">
-              {books.filter((b) => bookFilter === 'Tous' || b.category === bookFilter).map((book, i) => (
+              {books.filter((b) => (bookFilter === 'Tous' || b.category === bookFilter) && (!bookSearch || b.title.toLowerCase().includes(bookSearch.toLowerCase()) || b.author.toLowerCase().includes(bookSearch.toLowerCase()) || b.desc.toLowerCase().includes(bookSearch.toLowerCase()) || b.category.toLowerCase().includes(bookSearch.toLowerCase()))).length === 0 && (
+                <div className="col-span-full text-center py-12">
+                  <Search className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
+                  <p className="text-sm text-muted-foreground">Aucun livre ne correspond à votre recherche.</p>
+                  <button onClick={() => { setBookSearch(''); setBookFilter('Tous') }} className="text-amber-600 text-xs font-semibold mt-2 hover:underline">Réinitialiser les filtres</button>
+                </div>
+              )}
+              {books.filter((b) => (bookFilter === 'Tous' || b.category === bookFilter) && (!bookSearch || b.title.toLowerCase().includes(bookSearch.toLowerCase()) || b.author.toLowerCase().includes(bookSearch.toLowerCase()) || b.desc.toLowerCase().includes(bookSearch.toLowerCase()) || b.category.toLowerCase().includes(bookSearch.toLowerCase()))).map((book, i) => (
                 <motion.div
                   key={book.title + i}
                   initial={{ opacity: 0, y: 20 }}
@@ -1710,7 +1780,8 @@ export default function Home() {
                 { title: 'Montage Promo Produit', category: 'Vidéo', image: 'https://sfile.chatglm.cn/images-ppt/190eb04b2085.jpg', desc: 'Montage vidéo promotionnel pour un lancement de produit' },
                 { title: 'Identité ESIA Business', category: 'Identité', image: 'https://sfile.chatglm.cn/images-ppt/7bfadf1e1582.jpg', desc: 'Charte graphique complète pour une école de business' },
               ].filter((item) => portfolioFilter === 'Tous' || item.category === portfolioFilter).map((item) => (
-                <Card key={item.title} className="overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 h-full group cursor-pointer hover:-translate-y-0.5">
+                <Card key={item.title} className="overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 h-full group cursor-pointer hover:-translate-y-0.5"
+                  onClick={() => setLightboxImg({ src: item.image, title: item.title, desc: item.desc })}>
                   <div className="relative h-48 sm:h-56 overflow-hidden">
                     <img src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
@@ -1720,6 +1791,9 @@ export default function Home() {
                     </div>
                     <div className="absolute top-3 left-3">
                       <Badge className="bg-amber-500/90 text-white border-0 text-[10px] font-semibold backdrop-blur-sm">{item.category}</Badge>
+                    </div>
+                    <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity bg-white/20 backdrop-blur-sm rounded-full p-2">
+                      <Search className="h-4 w-4 text-white" />
                     </div>
                   </div>
                 </Card>
