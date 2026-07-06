@@ -303,19 +303,127 @@ const coaches = [
 ]
 
 /* Livres / Ebooks à vendre */
-const books = [
-  { title: 'Travaux pratiques Word 2016', author: 'Christine Eberhardt', desc: 'Maîtrisez Word 2016 : mise en page, formatage, tableaux et publipostage.', cover: '/livres/word-2016.jpg' },
-  { title: 'Programmer en Langage C', author: 'Claude Delannoy', desc: 'Les fondamentaux de la programmation C avec exercices corrigés.', cover: '/livres/langage-c.jpg' },
-  { title: 'E-marketing & E-commerce', author: 'Émilie Courts', desc: 'Doper ses ventes en ligne pas à pas : visibilité et stratégie web.', cover: '/livres/e-marketing-ecommerce.jpg' },
-  { title: 'Le commerce électronique', author: 'Guy Hervier', desc: 'Vendre en ligne et optimiser ses achats sur internet.', cover: '/livres/commerce-electronique.jpg' },
-  { title: 'Manuel de Journalisme Web', author: 'Mark Briggs', desc: 'Blogs, réseaux sociaux, multimédia et journalisme numérique.', cover: '/livres/journalisme-web.jpg' },
-  { title: 'Vendre de façon rentable !', author: 'Pierre Maurin', desc: 'Stratégies de vente rentables pour PME et équipes commerciales.', cover: '/livres/vendre-rentable.jpg' },
-  { title: 'Écrire des livres avec ChatGPT', author: 'Martín Arellano', desc: 'Utilisez l\'IA ChatGPT pour créer et rédiger vos livres.', cover: '/livres/ecrire-livres-chatgpt.jpg' },
-  { title: 'Développement système sous Linux', author: 'Christophe Blaess', desc: 'Programmation système : multitâche, mémoire, réseau sous Linux.', cover: '/livres/linux-systeme.jpg' },
-  { title: 'Espionnage dans les réseaux TCP/IP', author: 'Zouheir Trabelsi', desc: 'Techniques de sniffing et contre-mesures de sécurité réseau.', cover: '/livres/espionnage-tcp-ip.jpg' },
-  { title: 'WordPress pour les Nuls', author: 'Lisa Sabin-Wilson', desc: 'Créez votre site WordPress : nom de domaine, hébergement, personnalisation, extensions et multimédia.', cover: '/livres/wordpress-nuls.jpg' },
-  { title: 'Programmer avec JavaScript en s\'amusant', author: 'Chris Minnick & Eva Holland', desc: '15 projets fun pour apprendre le JavaScript : jeux, pages web, animation de robot.', cover: '/livres/javascript-amusant.jpg' },
-  { title: 'Stratégie Marketing & Création Publicitaire', author: 'Henri Joannis & Virginie de Barnier', desc: 'De la stratégie marketing à la création publicitaire : magazines, TV, affiches, internet.', cover: '/livres/strategie-marketing-pub.jpg' },
+type Book = {
+  title: string
+  author: string
+  desc: string
+  cover: string
+  category: string
+  excerpt: string
+  keypoints: string[]
+}
+
+const bookCategories = ['Tous', 'Programmation', 'Marketing & Business', 'Web & Digital', 'Sécurité & Réseaux']
+
+const books: Book[] = [
+  {
+    title: 'Travaux pratiques Word 2016',
+    author: 'Christine Eberhardt',
+    desc: 'Maîtrisez Word 2016 : mise en page, formatage, tableaux et publipostage.',
+    cover: '/livres/word-2016.jpg',
+    category: 'Web & Digital',
+    excerpt: 'Ce guide pratique vous accompagne pas à pas dans la maîtrise de Microsoft Word 2016. Depuis la création de documents professionnels jusqu\'au publipostage avancé, chaque chapitre propose des exercices concrets. Vous apprendrez à structurer des rapports, insérer des images et tableaux, gérer les styles et en-têtes, et automatiser vos courriers.',
+    keypoints: ['Mise en page et formatage professionnel', 'Tableaux, images et objets graphiques', 'Styles, en-têtes et pieds de page', 'Documents longs et sommaire automatique', 'Publipostage et fusion de courriers'],
+  },
+  {
+    title: 'Programmer en Langage C',
+    author: 'Claude Delannoy',
+    desc: 'Les fondamentaux de la programmation C avec exercices corrigés.',
+    cover: '/livres/langage-c.jpg',
+    category: 'Programmation',
+    excerpt: 'Ouvrage de référence avec plus de 50 000 exemplaires vendus. Ce livre couvre l\'ensemble du langage C : types de données, opérateurs, structures de contrôle, pointeurs, tableaux, fonctions et allocation dynamique. Chaque chapitre se termine par des exercices corrigés pour vérifier votre compréhension et renforcer vos compétences.',
+    keypoints: ['Types, variables et opérateurs', 'Structures de contrôle et boucles', 'Pointeurs et allocation dynamique', 'Fonctions et portée des variables', 'Exercices corrigés à chaque chapitre'],
+  },
+  {
+    title: 'E-marketing & E-commerce',
+    author: 'Émilie Courts',
+    desc: 'Doper ses ventes en ligne pas à pas : visibilité et stratégie web.',
+    cover: '/livres/e-marketing-ecommerce.jpg',
+    category: 'Marketing & Business',
+    excerpt: 'Un guide actionnable pour booster votre présence en ligne et augmenter vos ventes. De la création de votre site e-commerce à l\'optimisation du référencement naturel, en passant par les réseaux sociaux et la publicité en ligne. Chaque étape est illustrée par des cas concrets et des conseils pratiques.',
+    keypoints: ['Créer et optimiser son site e-commerce', 'Référencement naturel (SEO)', 'Publicité en ligne : Google Ads, Facebook Ads', 'Réseaux sociaux et engagement client', 'Analyse des performances et KPIs'],
+  },
+  {
+    title: 'Le commerce électronique',
+    author: 'Guy Hervier',
+    desc: 'Vendre en ligne et optimiser ses achats sur internet.',
+    cover: '/livres/commerce-electronique.jpg',
+    category: 'Marketing & Business',
+    excerpt: 'Comprenez les rouages du commerce en ligne : de la mise en place d\'une boutique web aux stratégies d\'achat optimisé. Ce livre aborde les aspects techniques, juridiques et marketing de la vente en ligne, avec un focus sur les bonnes pratiques pour maximiser ses conversions et fidéliser sa clientèle.',
+    keypoints: ['Fonctionnement d\'une boutique en ligne', 'Panier d\'achat et paiement sécurisé', 'Logistique et livraison', 'Techniques de conversion et fidélisation', 'Aspects juridiques du e-commerce'],
+  },
+  {
+    title: 'Manuel de Journalisme Web',
+    author: 'Mark Briggs',
+    desc: 'Blogs, réseaux sociaux, multimédia et journalisme numérique.',
+    cover: '/livres/journalisme-web.jpg',
+    category: 'Web & Digital',
+    excerpt: 'L\'ouvrage de référence pour le journalisme à l\'ère numérique. Apprenez à utiliser les blogs, les réseaux sociaux et les outils multimédias pour produire un journalisme de qualité. Couvre le reporting numérique, la vérification des sources en ligne, le storytelling interactif et la monétisation de contenu.',
+    keypoints: ['Reporting et écriture numérique', 'Blogs et plateformes de publication', 'Réseaux sociaux comme outils journalistiques', 'Contenu multimédia : vidéo, audio, infographies', 'Vérification des sources et éthique en ligne'],
+  },
+  {
+    title: 'Vendre de façon rentable !',
+    author: 'Pierre Maurin',
+    desc: 'Stratégies de vente rentables pour PME et équipes commerciales.',
+    cover: '/livres/vendre-rentable.jpg',
+    category: 'Marketing & Business',
+    excerpt: 'Un guide pragmatique pour les dirigeants de PME et leurs équipes commerciales. Découvrez les méthodes pour vendre plus et mieux : prospection efficace, argumentation de vente, gestion des objections, négociation et closing. Des outils concrets applicables immédiatement pour augmenter votre chiffre d\'affaires.',
+    keypoints: ['Prospection et recherche de clients', 'Techniques d\'argumentation et de persuasion', 'Gestion des objections et négociation', 'Fidélisation et montée en gamme', 'Outils et tableaux de bord commerciaux'],
+  },
+  {
+    title: 'Écrire des livres avec ChatGPT',
+    author: 'Martín Arellano',
+    desc: 'Utilisez l\'IA ChatGPT pour créer et rédiger vos livres.',
+    cover: '/livres/ecrire-livres-chatgpt.jpg',
+    category: 'Web & Digital',
+    excerpt: 'Découvrez comment exploiter la puissance de ChatGPT pour écrire vos livres. De l\'idée initiale à la publication, ce guide vous montre comment utiliser l\'IA pour générer des idées, structurer votre plan, rédiger des chapitres, corriger et améliorer votre texte. Un livre essentiel pour les créateurs de contenu du 21e siècle.',
+    keypoints: ['Générer des idées de livres avec l\'IA', 'Structurer un plan et un sommaire', 'Rédiger des chapitres efficacement', 'Correction, réécriture et polishing', 'Stratégies de publication et monétisation'],
+  },
+  {
+    title: 'Développement système sous Linux',
+    author: 'Christophe Blaess',
+    desc: 'Programmation système : multitâche, mémoire, réseau sous Linux.',
+    cover: '/livres/linux-systeme.jpg',
+    category: 'Programmation',
+    excerpt: 'Référence technique pour la programmation système sous Linux. Couvre en profondeur l\'ordonnancement multitâche, la gestion de la mémoire, les communications inter-processus (IPC), la programmation réseau et les signaux. Destiné aux développeurs qui veulent comprendre le fonctionnement interne du noyau Linux.',
+    keypoints: ['Processus et ordonnancement', 'Gestion de la mémoire virtuelle', 'Communications inter-processus (IPC)', 'Programmation réseau et sockets', 'Signaux et gestion des interruptions'],
+  },
+  {
+    title: 'Espionnage dans les réseaux TCP/IP',
+    author: 'Zouheir Trabelsi',
+    desc: 'Techniques de sniffing et contre-mesures de sécurité réseau.',
+    cover: '/livres/espionnage-tcp-ip.jpg',
+    category: 'Sécurité & Réseaux',
+    excerpt: 'Plongez dans les techniques d\'espionnage réseau (sniffing) dans les environnements TCP/IP. Ce livre technique détaille les méthodes d\'interception de données, les outils utilisés par les attaquants, et surtout les contre-mesures et outils anti-sniffers pour protéger votre infrastructure réseau.',
+    keypoints: ['Fonctionnement des protocoles TCP/IP', 'Techniques de sniffing et interception', 'Outils d\'analyse réseau (Wireshark, etc.)', 'Contre-mesures et détection d\'intrusion', 'Sécurisation des communications réseau'],
+  },
+  {
+    title: 'WordPress pour les Nuls',
+    author: 'Lisa Sabin-Wilson',
+    desc: 'Créez votre site WordPress : nom de domaine, hébergement, personnalisation, extensions et multimédia.',
+    cover: '/livres/wordpress-nuls.jpg',
+    category: 'Web & Digital',
+    excerpt: 'Le guide idéal pour créer votre premier site WordPress, même sans aucune compétence technique. Apprenez à choisir votre nom de domaine, configurer votre hébergement, installer WordPress, personnaliser votre thème, installer des extensions essentielles et publier du contenu multimédia.',
+    keypoints: ['Choisir un nom de domaine et un hébergeur', 'Installation et configuration de WordPress', 'Personnalisation avec thèmes et widgets', 'Extensions indispensables (SEO, sécurité, contact)', 'Gestion du Tableau de bord et maintenance'],
+  },
+  {
+    title: 'Programmer avec JavaScript en s\'amusant',
+    author: 'Chris Minnick & Eva Holland',
+    desc: '15 projets fun pour apprendre le JavaScript : jeux, pages web, animation de robot.',
+    cover: '/livres/javascript-amusant.jpg',
+    category: 'Programmation',
+    excerpt: 'Apprenez le JavaScript en vous amusant ! Ce livre propose 15 projets conçus pour les débutants dès 11 ans. Créez des jeux, construisez des pages web interactives et animez un robot. Chaque projet introduit de nouveaux concepts de programmation de manière progressive et ludique.',
+    keypoints: ['15 projets pratiques et ludiques', 'Créer des jeux en JavaScript', 'Construire des pages web interactives', 'Animer des éléments graphiques et robots', 'Accessible dès 11 ans — aucun prérequis'],
+  },
+  {
+    title: 'Stratégie Marketing & Création Publicitaire',
+    author: 'Henri Joannis & Virginie de Barnier',
+    desc: 'De la stratégie marketing à la création publicitaire : magazines, TV, affiches, internet.',
+    cover: '/livres/strategie-marketing-pub.jpg',
+    category: 'Marketing & Business',
+    excerpt: 'L\'ouvrage de référence en stratégie publicitaire couvrant tous les médias : magazines, TV/radio, affiches et internet. Apprenez à construire une stratégie marketing solide, définir un positionnement, créer des messages percutants et choisir les bons canaux de diffusion pour toucher votre cible.',
+    keypoints: ['Élaboration d\'une stratégie marketing', 'Positionnement et segmentation', 'Création publicitaire multi-médias', 'TV, radio, affiches, magazines, internet', 'Mesure d\'efficacité et retour sur investissement'],
+  },
 ]
 
 /* ═══════════════════════════════════════════════
@@ -329,7 +437,8 @@ export default function Home() {
   const [quickOrder, setQuickOrder] = useState({ service: '', name: '', phone: '', description: '' })
   const [faqOpen, setFaqOpen] = useState<string | null>(null)
   const [leadMagnet, setLeadMagnet] = useState({ name: '', contact: '' })
-  const [selectedBook, setSelectedBook] = useState<typeof books[0] | null>(null)
+  const [selectedBook, setSelectedBook] = useState<Book | null>(null)
+  const [bookFilter, setBookFilter] = useState('Tous')
   const { toast } = useToast()
 
 
@@ -1157,8 +1266,25 @@ export default function Home() {
               </div>
             </div>
 
+            {/* Category filter pills */}
+            <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
+              {bookCategories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setBookFilter(cat)}
+                  className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${
+                    bookFilter === cat
+                      ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md shadow-amber-500/20'
+                      : 'bg-muted text-muted-foreground hover:bg-amber-50 hover:text-amber-700 dark:hover:bg-amber-950/30 dark:hover:text-amber-400 border border-transparent hover:border-amber-200 dark:hover:border-amber-800'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5">
-              {books.map((book, i) => (
+              {books.filter((b) => bookFilter === 'Tous' || b.category === bookFilter).map((book, i) => (
                 <motion.div
                   key={book.title + i}
                   initial={{ opacity: 0, y: 20 }}
@@ -1237,36 +1363,61 @@ export default function Home() {
                       <div className="sm:w-48 flex-shrink-0">
                         <img src={selectedBook.cover} alt={selectedBook.title} className="w-full h-64 sm:h-full object-cover" />
                       </div>
-                      <div className="p-5 sm:p-6 flex flex-col flex-1">
-                        <Badge variant="secondary" className="w-fit mb-2 bg-amber-100 text-amber-700 border-amber-200 text-[10px]">
-                          <BookOpen className="h-2.5 w-2.5 mr-1" /> Livre à 1 000 FCFA
-                        </Badge>
+                      <div className="p-5 sm:p-6 flex flex-col flex-1 max-h-[70vh] overflow-y-auto">
+                        <div className="flex items-center gap-2 mb-2 flex-wrap">
+                          <Badge variant="secondary" className="bg-amber-100 text-amber-700 border-amber-200 text-[10px]">
+                            <BookOpen className="h-2.5 w-2.5 mr-1" /> 1 000 FCFA
+                          </Badge>
+                          <Badge variant="outline" className="text-[10px] text-muted-foreground">
+                            {selectedBook.category}
+                          </Badge>
+                        </div>
                         <h3 className="text-lg font-extrabold leading-tight">{selectedBook.title}</h3>
                         <p className="text-sm text-muted-foreground mt-1">par <span className="font-semibold text-foreground">{selectedBook.author}</span></p>
-                        <p className="text-sm text-muted-foreground leading-relaxed mt-3 flex-1">{selectedBook.desc}</p>
-                        <div className="mt-4 space-y-2.5">
-                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
+
+                        {/* Extrait */}
+                        <div className="mt-4 p-3 rounded-xl bg-muted/50 border border-border">
+                          <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">Extrait</p>
+                          <p className="text-sm text-foreground/80 leading-relaxed">{selectedBook.excerpt}</p>
+                        </div>
+
+                        {/* Points clés */}
+                        <div className="mt-4 space-y-1.5">
+                          <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Ce que vous allez apprendre</p>
+                          {selectedBook.keypoints.map((point) => (
+                            <div key={point} className="flex items-start gap-2 text-xs text-foreground/80">
+                              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 mt-0.5 flex-shrink-0" />
+                              <span>{point}</span>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Livraison info */}
+                        <div className="mt-4 pt-3 border-t border-border space-y-1.5">
+                          <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
+                            <Zap className="h-3 w-3 text-amber-500" />
                             <span>Livraison instantanée via WhatsApp</span>
                           </div>
-                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
+                          <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
+                            <FileCheck className="h-3 w-3 text-amber-500" />
                             <span>Format PDF — lisible sur téléphone et PC</span>
                           </div>
-                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
-                            <span>Paiement par Orange Money, Wave ou Moov Money</span>
+                          <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
+                            <ShieldCheck className="h-3 w-3 text-amber-500" />
+                            <span>Paiement : Orange Money, Wave, Moov Money</span>
                           </div>
-                          <a
-                            href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je veux commander le livre : ${selectedBook.title} par ${selectedBook.author} (1 000 FCFA). Comment procéder ?`)}`}
-                            target="_blank" rel="noopener noreferrer"
-                            onClick={() => setSelectedBook(null)}
-                          >
-                            <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold shadow-lg shadow-emerald-500/20">
-                              <MessageCircle className="h-4 w-4 mr-2" /> Commander via WhatsApp
-                            </Button>
-                          </a>
                         </div>
+
+                        <a
+                          href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je veux commander le livre : ${selectedBook.title} par ${selectedBook.author} (1 000 FCFA). Comment procéder ?`)}`}
+                          target="_blank" rel="noopener noreferrer"
+                          onClick={() => setSelectedBook(null)}
+                          className="mt-4"
+                        >
+                          <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold shadow-lg shadow-emerald-500/20">
+                            <MessageCircle className="h-4 w-4 mr-2" /> Commander via WhatsApp
+                          </Button>
+                        </a>
                       </div>
                     </div>
                   </motion.div>
