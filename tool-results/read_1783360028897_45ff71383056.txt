@@ -1,0 +1,502 @@
+  1100→  1100→            </div>
+  1101→  1101→
+  1102→  1102→            {/* 4 Featured formation cards */}
+  1103→  1103→            <div className="space-y-6">
+  1104→  1104→              {featuredFormations.map((form, idx) => (
+  1105→  1105→                <motion.div
+  1106→  1106→                  key={form.id}
+  1107→  1107→                  initial={{ opacity: 0, y: 30 }}
+  1108→  1108→                  whileInView={{ opacity: 1, y: 0 }}
+  1109→  1109→                  viewport={{ once: true, margin: '-50px' }}
+  1110→  1110→                  transition={{ duration: 0.5, delay: idx * 0.1 }}
+  1111→  1111→                  className="relative rounded-2xl bg-slate-800/60 border border-white/10 overflow-hidden hover:border-white/20 transition-all duration-300"
+  1112→  1112→                >
+  1113→  1113→                  {/* Formation header */}
+  1114→  1114→                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-5 sm:p-6 border-b border-white/5">
+  1115→  1115→                    <div className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${form.color} text-white shadow-lg flex-shrink-0`}>
+  1116→  1116→                      <form.icon className="h-6 w-6" />
+  1117→  1117→                    </div>
+  1118→  1118→                    <div className="flex-1 min-w-0">
+  1119→  1119→                      <div className="flex items-center gap-2 flex-wrap">
+  1120→  1120→                        <h3 className="text-lg font-extrabold text-white">{form.title}</h3>
+  1121→  1121→                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+  1122→  1122→                          form.level === 'Débutant' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' :
+  1123→  1123→                          'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+  1124→  1124→                        }`}>{form.level}</span>
+  1125→  1125→                      </div>
+  1126→  1126→                      <p className="text-sm text-slate-400 mt-0.5">{form.subtitle}</p>
+  1127→  1127→                      <div className="flex items-center gap-4 text-[11px] text-slate-500 mt-1.5">
+  1128→  1128→                        <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{form.duration}</span>
+  1129→  1129→                        <span className="flex items-center gap-1"><BookOpen className="h-3 w-3" />{form.lessons}</span>
+  1130→  1130→                        <span className="flex items-center gap-1"><Users className="h-3 w-3" />Coach {form.coach}</span>
+  1131→  1131→                      </div>
+  1132→  1132→                    </div>
+  1133→  1133→                  </div>
+  1134→  1134→
+  1135→  1135→                  {/* Découverte / Premium grid */}
+  1136→  1136→                  <div className="grid sm:grid-cols-2">
+  1137→  1137→                    {/* Découverte */}
+  1138→  1138→                    <div className="p-5 sm:p-6 border-r border-white/5">
+  1139→  1139→                      <div className="flex items-center gap-2 mb-4">
+  1140→  1140→                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-white text-xs font-bold">✓</span>
+  1141→  1141→                        <h4 className="text-sm font-bold text-emerald-400">Offre Découverte — Gratuit</h4>
+  1142→  1142→                      </div>
+  1143→  1143→                      <ul className="space-y-2 mb-5">
+  1144→  1144→                        {form.decouverte.features.map((f, fi) => (
+  1145→  1145→                          <li key={fi} className="flex items-start gap-2 text-xs text-slate-300 leading-relaxed">
+  1146→  1146→                            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 mt-0.5 flex-shrink-0" />
+  1147→  1147→                            {f}
+  1148→  1148→                          </li>
+  1149→  1149→                        ))}
+  1150→  1150→                      </ul>
+  1151→  1151→                      <a
+  1152→  1152→                        href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je veux rejoindre la formation ${form.title} — Offre Découverte (Gratuit).`)}`}
+  1153→  1153→                        target="_blank" rel="noopener noreferrer"
+  1154→  1154→                      >
+  1155→  1155→                        <Button variant="outline" className="w-full border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10 hover:border-emerald-500/50 font-semibold text-xs h-10">
+  1156→  1156→                          <Gift className="h-3.5 w-3.5 mr-1.5" /> Commencer gratuitement
+  1157→  1157→                        </Button>
+  1158→  1158→                      </a>
+  1159→  1159→                    </div>
+  1160→  1160→
+  1161→  1161→                    {/* Premium */}
+  1162→  1162→                    <div className="p-5 sm:p-6 relative">
+  1163→  1163→                      {/* Popular badge */}
+  1164→  1164→                      <div className="absolute top-3 right-3">
+  1165→  1165→                        <span className="inline-flex items-center gap-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[9px] font-bold px-2.5 py-1 rounded-full shadow-lg shadow-amber-500/20">
+  1166→  1166→                          <Star className="h-2.5 w-2.5 fill-current" /> RECOMMANDÉ
+  1167→  1167→                        </span>
+  1168→  1168→                      </div>
+  1169→  1169→                      <div className="flex items-center gap-2 mb-1">
+  1170→  1170→                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-amber-500 to-orange-500 text-white text-xs font-bold">★</span>
+  1171→  1171→                        <h4 className="text-sm font-bold text-amber-400">Offre Premium</h4>
+  1172→  1172→                      </div>
+  1173→  1173→                      <div className="flex items-baseline gap-1 mb-4">
+  1174→  1174→                        <span className="text-2xl font-extrabold text-white">{form.premium.price}</span>
+  1175→  1175→                        <span className="text-sm text-slate-500">FCFA</span>
+  1176→  1176→                      </div>
+  1177→  1177→                      <ul className="space-y-2 mb-4">
+  1178→  1178→                        {form.premium.features.map((f, fi) => (
+  1179→  1179→                          <li key={fi} className="flex items-start gap-2 text-xs text-slate-300 leading-relaxed">
+  1180→  1180→                            <CheckCircle2 className="h-3.5 w-3.5 text-amber-500 mt-0.5 flex-shrink-0" />
+  1181→  1181→                            {f}
+  1182→  1182→                          </li>
+  1183→  1183→                        ))}
+  1184→  1184→                      </ul>
+  1185→  1185→                      {form.premium.bonus && (
+  1186→  1186→                        <div className="flex items-center gap-2 mb-4 px-3 py-2 rounded-lg bg-amber-500/10 border border-amber-500/20">
+  1187→  1187→                          <Gift className="h-3.5 w-3.5 text-amber-400 flex-shrink-0" />
+  1188→  1188→                          <span className="text-[11px] text-amber-300 font-medium">{form.premium.bonus}</span>
+  1189→  1189→                        </div>
+  1190→  1190→                      )}
+  1191→  1191→                      <a
+  1192→  1192→                        href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je suis intéressé(e) par la formation Premium ${form.title} (${form.premium.price} FCFA). Comment y accéder ?`)}`}
+  1193→  1193→                        target="_blank" rel="noopener noreferrer"
+  1194→  1194→                      >
+  1195→  1195→                        <Button className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-10 shadow-lg shadow-amber-500/20">
+  1196→  1196→                          <Rocket className="h-3.5 w-3.5 mr-1.5" /> Passer au Premium
+  1197→  1197→                        </Button>
+  1198→  1198→                      </a>
+  1199→  1199→                    </div>
+  1200→  1200→                  </div>
+  1201→  1201→                </motion.div>
+  1202→  1202→              ))}
+  1203→  1203→            </div>
+  1204→  1204→
+  1205→  1205→            {/* Autres formations disponibles */}
+  1206→  1206→            <div className="mt-12">
+  1207→  1207→              <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-4">Autres formations disponibles</p>
+  1208→  1208→              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+  1209→  1209→                {otherFormations.map((form, i) => (
+  1210→  1210→                  <a
+  1211→  1211→                    key={i}
+  1212→  1212→                    href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je suis intéressé(e) par : ${form.text}. Pouvez-vous me donner plus de détails ?`)}`}
+  1213→  1213→                    target="_blank" rel="noopener noreferrer"
+  1214→  1214→                    className="group flex items-center gap-3 p-3 rounded-xl bg-slate-800/60 border border-white/10 hover:bg-slate-700/60 hover:border-amber-400/30 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-amber-500/5 transition-all duration-300 cursor-pointer"
+  1215→  1215→                  >
+  1216→  1216→                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/5 flex-shrink-0">
+  1217→  1217→                      <form.icon className="h-4 w-4 text-slate-400 group-hover:text-amber-400 transition-colors" />
+  1218→  1218→                    </div>
+  1219→  1219→                    <p className="text-xs font-medium text-slate-300 group-hover:text-white transition-colors flex-1">{form.text}</p>
+  1220→  1220→                    <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full flex-shrink-0 ${
+  1221→  1221→                      form.level === 'Débutant' ? 'bg-emerald-500/20 text-emerald-400' :
+  1222→  1222→                      form.level === 'Intermédiaire' ? 'bg-amber-500/20 text-amber-400' :
+  1223→  1223→                      'bg-violet-500/20 text-violet-400'
+  1224→  1224→                    }`}>{form.level}</span>
+  1225→  1225→                    <ArrowRight className="h-3.5 w-3.5 text-white/20 group-hover:text-amber-400 group-hover:translate-x-0.5 transition-all" />
+  1226→  1226→                  </a>
+  1227→  1227→                ))}
+  1228→  1228→              </div>
+  1229→  1229→            </div>
+  1230→  1230→          </div>
+  1231→  1231→        </section>
+  1232→  1232→
+  1233→  1233→        {/* ═══ 10. NOS COACHS ═══ */}
+  1234→  1234→        <section id="coachs" className="py-16 sm:py-20 relative overflow-hidden">
+  1235→  1235→          {/* Animated background */}
+  1236→  1236→          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950" />
+  1237→  1237→          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(245,158,11,0.08),transparent_50%),radial-gradient(circle_at_80%_50%,rgba(168,85,247,0.06),transparent_50%)]" />
+  1238→  1238→          <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+  1239→  1239→            <div className="text-center mb-12">
+  1240→  1240→              <Badge className="mb-3 bg-amber-500/20 text-amber-300 border-amber-500/30 hover:bg-amber-500/30">
+  1241→  1241→                <Users className="h-3 w-3 mr-1" /> Notre Équipe
+  1242→  1242→              </Badge>
+  1243→  1243→              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">3 Coachs <span className="text-amber-400">experts</span> à votre service</h2>
+  1244→  1244→              <p className="mt-4 text-slate-400 max-w-2xl mx-auto leading-relaxed">
+  1245→  1245→                Pas de théorie abstraite : chaque coach pratique activement dans son domaine à Bamako. Vous apprenez de personnes qui vivent de leur compétence au quotidien.
+  1246→  1246→              </p>
+  1247→  1247→            </div>
+  1248→  1248→
+  1249→  1249→            <div className="grid sm:grid-cols-3 gap-6">
+  1250→  1250→              {coaches.map((coach, i) => (
+  1251→  1251→                <motion.div
+  1252→  1252→                  key={coach.name}
+  1253→  1253→                  initial={{ opacity: 0, y: 20 }}
+  1254→  1254→                  whileInView={{ opacity: 1, y: 0 }}
+  1255→  1255→                  viewport={{ once: true }}
+  1256→  1256→                  transition={{ duration: 0.5, delay: i * 0.15 }}
+  1257→  1257→                  className="group relative rounded-2xl backdrop-blur-xl bg-white/[0.04] border border-white/[0.08] hover:border-amber-400/30 p-6 text-center transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-amber-500/10"
+  1258→  1258→                >
+  1259→  1259→                  {/* Glow effect on hover */}
+  1260→  1260→                  <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${coach.gradient} opacity-0 group-hover:opacity-[0.04] transition-opacity duration-500`} />
+  1261→  1261→                  <div className="relative">
+  1262→  1262→                    {/* Avatar */}
+  1263→  1263→                    <div className="relative mx-auto mb-4">
+  1264→  1264→                      <div className={`h-20 w-20 rounded-full bg-gradient-to-br ${coach.gradient} flex items-center justify-center text-white text-2xl font-extrabold shadow-lg mx-auto ring-4 ring-slate-800/50 group-hover:scale-110 transition-transform duration-300`}>
+  1265→  1265→                        {coach.initial}
+  1266→  1266→                      </div>
+  1267→  1267→                      {i === 0 && (
+  1268→  1268→                        <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[8px] font-bold px-2.5 py-0.5 rounded-full shadow-lg shadow-amber-500/30">
+  1269→  1269→                          FONDATEUR
+  1270→  1270→                        </span>
+  1271→  1271→                      )}
+  1272→  1272→                    </div>
+  1273→  1273→                    <h3 className="text-base font-extrabold text-white">{coach.name}</h3>
+  1274→  1274→                    <p className="text-xs text-amber-400 font-semibold mt-0.5">{coach.role}</p>
+  1275→  1275→                    <p className="text-[10px] text-slate-500 mt-1 font-medium">{coach.speciality}</p>
+  1276→  1276→                    <p className="text-xs text-slate-400 leading-relaxed mt-3">{coach.bio}</p>
+  1277→  1277→                    <a
+  1278→  1278→                      href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je souhaite être encadré(e) par ${coach.name} pour une formation.`)}`}
+  1279→  1279→                      target="_blank" rel="noopener noreferrer"
+  1280→  1280→                      className="mt-4 inline-flex items-center gap-1.5 text-[11px] font-semibold text-amber-400 hover:text-amber-300 transition-colors"
+  1281→  1281→                    >
+  1282→  1282→                      <MessageCircle className="h-3 w-3" /> Contacter
+  1283→  1283→                    </a>
+  1284→  1284→                  </div>
+  1285→  1285→                </motion.div>
+  1286→  1286→              ))}
+  1287→  1287→            </div>
+  1288→  1288→          </div>
+  1289→  1289→        </section>
+  1290→  1290→
+  1291→  1291→        {/* ═══ 11. BOUTIQUE LIVRES ═══ */}
+  1292→  1292→        <section id="boutique" className="py-16 sm:py-20 bg-gradient-to-b from-muted/30 to-background">
+  1293→  1293→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  1294→  1294→            <div className="text-center mb-12">
+  1295→  1295→              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+  1296→  1296→                <BookOpen className="h-3 w-3 mr-1" /> Boutique
+  1297→  1297→              </Badge>
+  1298→  1298→              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Nos <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">Livres & Ebooks</span></h2>
+  1299→  1299→              <p className="mt-4 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+  1300→  1300→                Des guides pratiques rédigés par des experts actifs. Cliquez sur un livre pour voir les détails. Commandez via WhatsApp et recevez votre livre instantanément.
+  1301→  1301→              </p>
+  1302→  1302→              <div className="mt-5 inline-flex items-center gap-2 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-full px-5 py-2">
+  1303→  1303→                <span className="text-2xl font-extrabold text-amber-600">1 000</span>
+  1304→  1304→                <span className="text-sm font-semibold text-amber-700 dark:text-amber-400">FCFA / livre</span>
+  1305→  1305→              </div>
+  1306→  1306→            </div>
+  1307→  1307→
+  1308→  1308→            {/* Category filter pills */}
+  1309→  1309→            <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
+  1310→  1310→              {bookCategories.map((cat) => (
+  1311→  1311→                <button
+  1312→  1312→                  key={cat}
+  1313→  1313→                  onClick={() => setBookFilter(cat)}
+  1314→  1314→                  className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${
+  1315→  1315→                    bookFilter === cat
+  1316→  1316→                      ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md shadow-amber-500/20'
+  1317→  1317→                      : 'bg-muted text-muted-foreground hover:bg-amber-50 hover:text-amber-700 dark:hover:bg-amber-950/30 dark:hover:text-amber-400 border border-transparent hover:border-amber-200 dark:hover:border-amber-800'
+  1318→  1318→                  }`}
+  1319→  1319→                >
+  1320→  1320→                  {cat}
+  1321→  1321→                </button>
+  1322→  1322→              ))}
+  1323→  1323→            </div>
+  1324→  1324→
+  1325→  1325→            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5">
+  1326→  1326→              {books.filter((b) => bookFilter === 'Tous' || b.category === bookFilter).map((book, i) => (
+  1327→  1327→                <motion.div
+  1328→  1328→                  key={book.title + i}
+  1329→  1329→                  initial={{ opacity: 0, y: 20 }}
+  1330→  1330→                  whileInView={{ opacity: 1, y: 0 }}
+  1331→  1331→                  viewport={{ once: true, margin: '-30px' }}
+  1332→  1332→                  transition={{ duration: 0.4, delay: (i % 5) * 0.08 }}
+  1333→  1333→                  className="group flex flex-col"
+  1334→  1334→                >
+  1335→  1335→                  {/* Book cover with real image */}
+  1336→  1336→                  <div
+  1337→  1337→                    className="relative aspect-[3/4] rounded-xl overflow-hidden shadow-lg group-hover:shadow-2xl group-hover:-translate-y-2 transition-all duration-300 cursor-pointer bg-muted"
+  1338→  1338→                    onClick={() => setSelectedBook(book)}
+  1339→  1339→                  >
+  1340→  1340→                    <img
+  1341→  1341→                      src={book.cover}
+  1342→  1342→                      alt={book.title}
+  1343→  1343→                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+  1344→  1344→                      loading="lazy"
+  1345→  1345→                    />
+  1346→  1346→                    {/* Price tag */}
+  1347→  1347→                    <div className="absolute top-2 right-2 bg-white/95 backdrop-blur-sm text-amber-700 text-[10px] font-extrabold px-2.5 py-1 rounded-lg shadow-md">
+  1348→  1348→                      1 000 F
+  1349→  1349→                    </div>
+  1350→  1350→                    {/* Hover overlay */}
+  1351→  1351→                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
+  1352→  1352→                      <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 backdrop-blur-sm text-foreground text-[11px] font-bold px-3 py-1.5 rounded-full shadow-lg">
+  1353→  1353→                        Voir les détails
+  1354→  1354→                      </div>
+  1355→  1355→                    </div>
+  1356→  1356→                    {/* Bottom gradient for title */}
+  1357→  1357→                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-3 pt-8">
+  1358→  1358→                      <h3 className="text-[11px] sm:text-xs font-extrabold text-white leading-tight line-clamp-2">{book.title}</h3>
+  1359→  1359→                      <p className="text-[9px] text-white/70 mt-0.5">{book.author}</p>
+  1360→  1360→                    </div>
+  1361→  1361→                  </div>
+  1362→  1362→                  {/* Order button */}
+  1363→  1363→                  <a
+  1364→  1364→                    href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je veux commander le livre : ${book.title} par ${book.author} (1 000 FCFA). Comment procéder ?`)}`}
+  1365→  1365→                    target="_blank"
+  1366→  1366→                    rel="noopener noreferrer"
+  1367→  1367→                    className="mt-2.5"
+  1368→  1368→                  >
+  1369→  1369→                    <Button variant="outline" size="sm" className="w-full text-[11px] font-semibold h-9 hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-700 transition-colors">
+  1370→  1370→                      <MessageCircle className="h-3 w-3 mr-1.5" /> Commander
+  1371→  1371→                    </Button>
+  1372→  1372→                  </a>
+  1373→  1373→                </motion.div>
+  1374→  1374→              ))}
+  1375→  1375→            </div>
+  1376→  1376→
+  1377→  1377→            {/* Book Detail Modal */}
+  1378→  1378→            <AnimatePresence>
+  1379→  1379→              {selectedBook && (
+  1380→  1380→                <motion.div
+  1381→  1381→                  initial={{ opacity: 0 }}
+  1382→  1382→                  animate={{ opacity: 1 }}
+  1383→  1383→                  exit={{ opacity: 0 }}
+  1384→  1384→                  className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+  1385→  1385→                  onClick={() => setSelectedBook(null)}
+  1386→  1386→                >
+  1387→  1387→                  <motion.div
+  1388→  1388→                    initial={{ scale: 0.9, opacity: 0, y: 20 }}
+  1389→  1389→                    animate={{ scale: 1, opacity: 1, y: 0 }}
+  1390→  1390→                    exit={{ scale: 0.9, opacity: 0, y: 20 }}
+  1391→  1391→                    transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+  1392→  1392→                    className="relative bg-background rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden"
+  1393→  1393→                    onClick={(e) => e.stopPropagation()}
+  1394→  1394→                  >
+  1395→  1395→                    <button
+  1396→  1396→                      onClick={() => setSelectedBook(null)}
+  1397→  1397→                      className="absolute top-3 right-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/40 text-white hover:bg-black/60 transition-colors backdrop-blur-sm"
+  1398→  1398→                    >
+  1399→  1399→                      <X className="h-4 w-4" />
+  1400→  1400→                    </button>
+  1401→  1401→                    <div className="flex flex-col sm:flex-row">
+  1402→  1402→                      <div className="sm:w-48 flex-shrink-0">
+  1403→  1403→                        <img src={selectedBook.cover} alt={selectedBook.title} className="w-full h-64 sm:h-full object-cover" />
+  1404→  1404→                      </div>
+  1405→  1405→                      <div className="p-5 sm:p-6 flex flex-col flex-1 max-h-[70vh] overflow-y-auto">
+  1406→  1406→                        <div className="flex items-center gap-2 mb-2 flex-wrap">
+  1407→  1407→                          <Badge variant="secondary" className="bg-amber-100 text-amber-700 border-amber-200 text-[10px]">
+  1408→  1408→                            <BookOpen className="h-2.5 w-2.5 mr-1" /> 1 000 FCFA
+  1409→  1409→                          </Badge>
+  1410→  1410→                          <Badge variant="outline" className="text-[10px] text-muted-foreground">
+  1411→  1411→                            {selectedBook.category}
+  1412→  1412→                          </Badge>
+  1413→  1413→                        </div>
+  1414→  1414→                        <h3 className="text-lg font-extrabold leading-tight">{selectedBook.title}</h3>
+  1415→  1415→                        <p className="text-sm text-muted-foreground mt-1">par <span className="font-semibold text-foreground">{selectedBook.author}</span></p>
+  1416→  1416→
+  1417→  1417→                        {/* Extrait */}
+  1418→  1418→                        <div className="mt-4 p-3 rounded-xl bg-muted/50 border border-border">
+  1419→  1419→                          <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">Extrait</p>
+  1420→  1420→                          <p className="text-sm text-foreground/80 leading-relaxed">{selectedBook.excerpt}</p>
+  1421→  1421→                        </div>
+  1422→  1422→
+  1423→  1423→                        {/* Points clés */}
+  1424→  1424→                        <div className="mt-4 space-y-1.5">
+  1425→  1425→                          <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Ce que vous allez apprendre</p>
+  1426→  1426→                          {selectedBook.keypoints.map((point) => (
+  1427→  1427→                            <div key={point} className="flex items-start gap-2 text-xs text-foreground/80">
+  1428→  1428→                              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 mt-0.5 flex-shrink-0" />
+  1429→  1429→                              <span>{point}</span>
+  1430→  1430→                            </div>
+  1431→  1431→                          ))}
+  1432→  1432→                        </div>
+  1433→  1433→
+  1434→  1434→                        {/* Livraison info */}
+  1435→  1435→                        <div className="mt-4 pt-3 border-t border-border space-y-1.5">
+  1436→  1436→                          <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
+  1437→  1437→                            <Zap className="h-3 w-3 text-amber-500" />
+  1438→  1438→                            <span>Livraison instantanée via WhatsApp</span>
+  1439→  1439→                          </div>
+  1440→  1440→                          <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
+  1441→  1441→                            <FileCheck className="h-3 w-3 text-amber-500" />
+  1442→  1442→                            <span>Format PDF — lisible sur téléphone et PC</span>
+  1443→  1443→                          </div>
+  1444→  1444→                          <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
+  1445→  1445→                            <ShieldCheck className="h-3 w-3 text-amber-500" />
+  1446→  1446→                            <span>Paiement : Orange Money, Wave, Moov Money</span>
+  1447→  1447→                          </div>
+  1448→  1448→                        </div>
+  1449→  1449→
+  1450→  1450→                        <a
+  1451→  1451→                          href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je veux commander le livre : ${selectedBook.title} par ${selectedBook.author} (1 000 FCFA). Comment procéder ?`)}`}
+  1452→  1452→                          target="_blank" rel="noopener noreferrer"
+  1453→  1453→                          onClick={() => setSelectedBook(null)}
+  1454→  1454→                          className="mt-4"
+  1455→  1455→                        >
+  1456→  1456→                          <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold shadow-lg shadow-emerald-500/20">
+  1457→  1457→                            <MessageCircle className="h-4 w-4 mr-2" /> Commander via WhatsApp
+  1458→  1458→                          </Button>
+  1459→  1459→                        </a>
+  1460→  1460→                      </div>
+  1461→  1461→                    </div>
+  1462→  1462→                  </motion.div>
+  1463→  1463→                </motion.div>
+  1464→  1464→              )}
+  1465→  1465→            </AnimatePresence>
+  1466→  1466→
+  1467→  1467→            {/* Pack promo */}
+  1468→  1468→            <motion.div
+  1469→  1469→              initial={{ opacity: 0, y: 20 }}
+  1470→  1470→              whileInView={{ opacity: 1, y: 0 }}
+  1471→  1471→              viewport={{ once: true }}
+  1472→  1472→              className="mt-10"
+  1473→  1473→            >
+  1474→  1474→              <Card className="border-2 border-amber-300 dark:border-amber-700 overflow-hidden">
+  1475→  1475→                <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 p-5 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+  1476→  1476→                  <div className="flex items-center gap-4">
+  1477→  1477→                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-lg flex-shrink-0">
+  1478→  1478→                      <FolderDown className="h-6 w-6" />
+  1479→  1479→                    </div>
+  1480→  1480→                    <div>
+  1481→  1481→                      <h3 className="font-extrabold text-base">Pack Complet — Tous les 12 livres</h3>
+  1482→  1482→                      <p className="text-sm text-muted-foreground mt-0.5">Économisez 5 000 FCFA en prenant le pack complet</p>
+  1483→  1483→                    </div>
+  1484→  1484→                  </div>
+  1485→  1485→                  <div className="flex items-center gap-3 flex-shrink-0">
+  1486→  1486→                    <div className="text-right">
+  1487→  1487→                      <span className="text-xs text-muted-foreground line-through">12 000 FCFA</span>
+  1488→  1488→                      <div className="text-2xl font-extrabold text-amber-600">7 000 <span className="text-sm font-normal">FCFA</span></div>
+  1489→  1489→                    </div>
+  1490→  1490→                    <a href={`https://wa.me/22397787244?text=${encodeURIComponent('Bonjour Sacko ! Je veux commander le Pack Complet de 12 livres (7 000 FCFA au lieu de 12 000). Comment procéder ?')}`} target="_blank" rel="noopener noreferrer">
+  1491→  1491→                      <Button className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-lg shadow-amber-500/20 whitespace-nowrap">
+  1492→  1492→                        <ShoppingCart className="h-4 w-4 mr-1.5" /> Prendre le Pack
+  1493→  1493→                      </Button>
+  1494→  1494→                    </a>
+  1495→  1495→                  </div>
+  1496→  1496→                </div>
+  1497→  1497→              </Card>
+  1498→  1498→            </motion.div>
+  1499→  1499→          </div>
+  1500→  1500→        </section>
+  1501→  1501→
+  1502→  1502→        {/* ═══ 12. PORTFOLIO ═══ */}
+  1503→  1503→        <section id="portfolio" className="py-16 sm:py-20">
+  1504→  1504→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  1505→  1505→            <div className="text-center mb-12">
+  1506→  1506→              <Badge variant="secondary" className="mb-3 bg-purple-100 text-purple-700 border-purple-200">
+  1507→  1507→                <Eye className="h-3 w-3 mr-1" /> Portfolio
+  1508→  1508→              </Badge>
+  1509→  1509→              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Mes Réalisations</h2>
+  1510→  1510→              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
+  1511→  1511→                Découvrez une sélection de mes meilleurs travaux. Chaque projet est unique et réalisé avec passion pour mes clients.
+  1512→  1512→              </p>
+  1513→  1513→            </div>
+  1514→  1514→
+  1515→  1515→            {/* Filter tabs */}
+  1516→  1516→            <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
+  1517→  1517→              {['Tous', 'Logo', 'Affiche', 'Site Web', 'Vidéo', 'Identité'].map((cat) => (
+  1518→  1518→                <button
+  1519→  1519→                  key={cat}
+  1520→  1520→                  onClick={() => setPortfolioFilter(cat)}
+  1521→  1521→                  className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${portfolioFilter === cat ? 'bg-amber-500 text-white shadow-md shadow-amber-500/25' : 'bg-muted text-muted-foreground hover:bg-accent'}`}
+  1522→  1522→                >
+  1523→  1523→                  {cat}
+  1524→  1524→                </button>
+  1525→  1525→              ))}
+  1526→  1526→            </div>
+  1527→  1527→
+  1528→  1528→            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+  1529→  1529→              {[
+  1530→  1530→                { title: 'Logo Restaurant Le Baobab', category: 'Logo', image: 'https://sfile.chatglm.cn/images-ppt/3e8dbebc34bb.jpg', desc: 'Identité visuelle complète pour un restaurant traditionnel malien' },
+  1531→  1531→                { title: 'Affiche Festival Bamako', category: 'Affiche', image: 'https://sfile.chatglm.cn/images-ppt/0c5c9b1b948b.jpg', desc: 'Affiche événementielle pour un festival culturel à Bamako' },
+  1532→  1532→                { title: 'Site Web MaliTech Solutions', category: 'Site Web', image: 'https://sfile.chatglm.cn/images-ppt/1b5dd4b88cdf.png', desc: 'Site vitrine professionnel pour une entreprise tech malienne' },
+  1533→  1533→                { title: 'Logo Afro Fashion Store', category: 'Logo', image: 'https://sfile.chatglm.cn/images-ppt/57c1b49a60ba.jpg', desc: 'Logo moderne pour une boutique de mode africaine' },
+  1534→  1534→                { title: 'Montage Promo Produit', category: 'Vidéo', image: 'https://sfile.chatglm.cn/images-ppt/190eb04b2085.jpg', desc: 'Montage vidéo promotionnel pour un lancement de produit' },
+  1535→  1535→                { title: 'Identité ESIA Business', category: 'Identité', image: 'https://sfile.chatglm.cn/images-ppt/7bfadf1e1582.jpg', desc: 'Charte graphique complète pour une école de business' },
+  1536→  1536→              ].filter((item) => portfolioFilter === 'Tous' || item.category === portfolioFilter).map((item) => (
+  1537→  1537→                <Card key={item.title} className="overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 h-full group cursor-pointer hover:-translate-y-0.5">
+  1538→  1538→                  <div className="relative h-48 sm:h-56 overflow-hidden">
+  1539→  1539→                    <img src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+  1540→  1540→                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+  1541→  1541→                    <div className="absolute bottom-0 left-0 right-0 p-4 z-10">
+  1542→  1542→                      <h3 className="font-bold text-sm sm:text-base text-white">{item.title}</h3>
+  1543→  1543→                      <p className="text-white/70 text-xs mt-1 line-clamp-2">{item.desc}</p>
+  1544→  1544→                    </div>
+  1545→  1545→                    <div className="absolute top-3 left-3">
+  1546→  1546→                      <Badge className="bg-amber-500/90 text-white border-0 text-[10px] font-semibold backdrop-blur-sm">{item.category}</Badge>
+  1547→  1547→                    </div>
+  1548→  1548→                  </div>
+  1549→  1549→                </Card>
+  1550→  1550→              ))}
+  1551→  1551→            </div>
+  1552→  1552→
+  1553→  1553→            {/* Avant / Après — integrated into Portfolio */}
+  1554→  1554→            <div className="mt-14">
+  1555→  1555→              <h3 className="text-xl font-bold text-center mb-2">Avant / Après</h3>
+  1556→  1556→              <p className="text-sm text-muted-foreground text-center mb-8 max-w-xl mx-auto">Glissez le curseur pour comparer mes transformations. Chaque projet est unique et pensé pour maximiser l&apos;impact visuel.</p>
+  1557→  1557→              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  1558→  1558→                {[
+  1559→  1559→                  { title: 'Refonte Logo Boutique', before: 'https://sfile.chatglm.cn/images-ppt/f972157605f2.jpg', after: 'https://sfile.chatglm.cn/images-ppt/082b6f181c95.jpg', desc: 'Logo basique transformé en identité premium' },
+  1560→  1560→                  { title: 'Affiche Événement', before: 'https://sfile.chatglm.cn/images-ppt/d2c6b53ee01b.jpg', after: 'https://sfile.chatglm.cn/images-ppt/d247ebeec9b2.jpg', desc: 'Affiche simple devenue visuel professionnel' },
+  1561→  1561→                  { title: 'Identité Complète', before: 'https://sfile.chatglm.cn/images-ppt/6c9261ec8848.jpg', after: 'https://sfile.chatglm.cn/images-ppt/0c5c9b1b948b.jpg', desc: "De l'amateur au professionnalisme total" },
+  1562→  1562→                ].map((item, i) => (
+  1563→  1563→                  <Card key={i} className="overflow-hidden border-0 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+  1564→  1564→                    <CardContent className="p-4 space-y-3">
+  1565→  1565→                      <BeforeAfterSlider before={item.before} after={item.after} title={item.title} />
+  1566→  1566→                      <h4 className="font-bold text-sm">{item.title}</h4>
+  1567→  1567→                      <p className="text-xs text-muted-foreground">{item.desc}</p>
+  1568→  1568→                    </CardContent>
+  1569→  1569→                  </Card>
+  1570→  1570→                ))}
+  1571→  1571→              </div>
+  1572→  1572→            </div>
+  1573→  1573→
+  1574→  1574→            <div className="mt-8 text-center">
+  1575→  1575→              <p className="text-sm text-muted-foreground">
+  1576→  1576→                Envie d&apos;un projet similaire ?{' '}
+  1577→  1577→                <a href="https://wa.me/22397787244?text=Bonjour%20!%20J%27ai%20vu%20vos%20réalisations%20et%20je%20souhaite%20un%20projet%20similaire." target="_blank" rel="noopener noreferrer" className="text-amber-600 font-semibold hover:underline">
+  1578→  1578→                  Me contacter
+  1579→  1579→                </a>{' '}et discutons de votre projet !
+  1580→  1580→              </p>
+  1581→  1581→            </div>
+  1582→  1582→          </div>
+  1583→  1583→        </section>
+  1584→  1584→
+  1585→  1585→        {/* ═══ 12. TÉMOIGNAGES (Style WhatsApp) ═══ */}
+  1586→  1586→        <section id="temoignages" className="py-20 sm:py-24 bg-gradient-to-b from-muted/20 to-background relative overflow-hidden">
+  1587→  1587→          <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+  1588→  1588→            <div className="text-center mb-14">
+  1589→  1589→              <Badge variant="secondary" className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200">
+  1590→  1590→                <MessageCircle className="h-3 w-3 mr-1" /> Témoignages
+  1591→  1591→              </Badge>
+  1592→  1592→              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Ils m&apos;ont fait confiance</h2>
+  1593→  1593→              <p className="mt-4 text-muted-foreground max-w-xl mx-auto leading-relaxed">
+  1594→  1594→                Des <strong className="text-foreground">messages réels</strong> de mes clients. Pas de faux avis — que du concret, livré sur WhatsApp.
+  1595→  1595→              </p>
+  1596→  1596→            </div>
+  1597→  1597→
+  1598→  1598→            <div className="max-w-lg mx-auto space-y-4">
+  1599→  1599→              {[
+
+[showing lines 1100-1599 of 2002; use offset=1600 with limit to continue reading]

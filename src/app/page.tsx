@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   ArrowRight,
@@ -55,6 +55,9 @@ import {
   ArrowDown,
   Search,
   Megaphone,
+  Play,
+  Pause,
+  Cookie,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -66,6 +69,79 @@ import { useToast } from '@/hooks/use-toast'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 
+
+/* ─── Typing Text Hook ─── */
+function useTypingText(phrases: string[], typingSpeed = 80, deletingSpeed = 40, pauseDuration = 2000) {
+  const [displayed, setDisplayed] = useState('')
+  const [phraseIndex, setPhraseIndex] = useState(0)
+  const [isDeleting, setIsDeleting] = useState(false)
+
+  useEffect(() => {
+    const currentPhrase = phrases[phraseIndex]
+    let timeout: NodeJS.Timeout
+
+    if (!isDeleting && displayed === currentPhrase) {
+      timeout = setTimeout(() => setIsDeleting(true), pauseDuration)
+    } else if (isDeleting && displayed === '') {
+      setIsDeleting(false)
+      setPhraseIndex((prev) => (prev + 1) % phrases.length)
+    } else {
+      timeout = setTimeout(
+        () => {
+          setDisplayed(
+            isDeleting
+              ? currentPhrase.substring(0, displayed.length - 1)
+              : currentPhrase.substring(0, displayed.length + 1)
+          )
+        },
+        isDeleting ? deletingSpeed : typingSpeed
+      )
+    }
+    return () => clearTimeout(timeout)
+  }, [displayed, isDeleting, phraseIndex, phrases, typingSpeed, deletingSpeed, pauseDuration])
+
+  return displayed
+}
+
+/* ─── useLocalStorage Hook ─── */
+function useLocalStorage<T>(key: string, initialValue: T): [T, (v: T | ((prev: T) => T)) => void] {
+  const [stored, setStored] = useState<T>(() => {
+    if (typeof window === 'undefined') return initialValue
+    try {
+      const item = localStorage.getItem(key)
+      return item ? JSON.parse(item) : initialValue
+    } catch { return initialValue }
+  })
+  const setValue = useCallback((value: T | ((prev: T) => T)) => {
+    setStored(prev => {
+      const next = value instanceof Function ? value(prev) : value
+      if (typeof window !== 'undefined') localStorage.setItem(key, JSON.stringify(next))
+      return next
+    })
+  }, [key])
+  return [stored, setValue]
+}
+
+/* ─── useCountdown Hook ─── */
+function useCountdown(targetDate: Date) {
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 })
+  useEffect(() => {
+    const calc = () => {
+      const diff = targetDate.getTime() - Date.now()
+      if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 }
+      return {
+        days: Math.floor(diff / 86400000),
+        hours: Math.floor((diff % 86400000) / 3600000),
+        minutes: Math.floor((diff % 3600000) / 60000),
+        seconds: Math.floor((diff % 60000) / 1000),
+      }
+    }
+    setTimeLeft(calc())
+    const interval = setInterval(() => setTimeLeft(calc()), 1000)
+    return () => clearInterval(interval)
+  }, [targetDate])
+  return timeLeft
+}
 
 /* ─── Animated Counter Component ─── */
 function AnimatedStat({ end, suffix, children }: { end: number; suffix?: string; children: React.ReactNode }) {
@@ -441,6 +517,64 @@ export default function Home() {
   const [bookFilter, setBookFilter] = useState('Tous')
   const { toast } = useToast()
 
+  // New features
+  const typedText = useTypingText([
+    'démarquez-vous.',
+    'propulsez votre marque.',
+    'attirez vos clients.',
+    'gagnez en visibilité.',
+    'concrétisez vos idées.',
+  ])
+  const [cart, setCart] = useLocalStorage<string[]>('sc-cart', [])
+  const [showCart, setShowCart] = useState(false)
+  const [showCookieConsent, setShowCookieConsent] = useLocalStorage('sc-cookies', true)
+  const [showWaWidget, setShowWaWidget] = useState(false)
+  const [testimIndex, setTestimIndex] = useState(0)
+  const [testimPaused, setTestimPaused] = useState(false)
+  const [socialProof, setSocialProof] = useState<{ name: string; action: string; time: number } | null>(null)
+
+  // Promo countdown: 7 days from now
+  const [promoEnd] = useState(() => {
+    const d = new Date()
+    d.setDate(d.getDate() + 7)
+    d.setHours(23, 59, 59, 0)
+    return d
+  })
+  const countdown = useCountdown(promoEnd)
+
+  const toggleCart = useCallback((title: string) => {
+    setCart(prev => prev.includes(title) ? prev.filter(t => t !== title) : [...prev, title])
+  }, [setCart])
+
+  const isInCart = useCallback((title: string) => cart.includes(title), [cart])
+
+  // Auto-scroll testimonials
+  useEffect(() => {
+    if (testimPaused) return
+    const interval = setInterval(() => {
+      setTestimIndex(prev => (prev + 1) % 4)
+    }, 5000)
+    return () => clearInterval(interval)
+  }, [testimPaused])
+
+  // Social proof notifications
+  useEffect(() => {
+    const proofs = [
+      { name: 'Moussa K.', action: 'a commandé le livre WordPress pour les Nuls', time: 2000 },
+      { name: 'Awa D.', action: 'a réservé la formation Design Graphique', time: 35000 },
+      { name: 'Ibrahim T.', action: 'a commandé le Pack Complet 12 livres', time: 70000 },
+      { name: 'Fatoumata S.', action: 'a demandé un logo professionnel', time: 110000 },
+      { name: 'Oumar B.', action: 'a commandé le livre E-marketing', time: 150000 },
+      { name: 'Djénéba C.', action: 'a réservé la formation Montage Vidéo', time: 195000 },
+    ]
+    proofs.forEach(p => {
+      setTimeout(() => {
+        setSocialProof(p)
+        setTimeout(() => setSocialProof(null), 4000)
+      }, p.time)
+    })
+  }, [])
+
 
 
 
@@ -532,7 +666,7 @@ export default function Home() {
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
                   Donnez vie à vos projets digitaux et{' '}
                   <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 bg-clip-text text-transparent">
-                    démarquez-vous.
+                    {typedText}<span className="animate-pulse">|</span>
                   </span>
                 </h1>
 
@@ -1347,6 +1481,14 @@ export default function Home() {
                     <div className="absolute top-2 right-2 bg-white/95 backdrop-blur-sm text-amber-700 text-[10px] font-extrabold px-2.5 py-1 rounded-lg shadow-md">
                       1 000 F
                     </div>
+                    {/* Cart/Favorite button */}
+                    <button
+                      onClick={(e) => { e.stopPropagation(); toggleCart(book.title); toast({ title: isInCart(book.title) ? 'Retiré du panier' : 'Ajouté au panier !', description: isInCart(book.title) ? '' : `${book.title} est dans votre panier.` }) }}
+                      className={`absolute top-2 left-2 z-10 flex h-8 w-8 items-center justify-center rounded-full shadow-md transition-all duration-200 ${isInCart(book.title) ? 'bg-emerald-500 text-white' : 'bg-white/90 text-muted-foreground hover:text-red-500 backdrop-blur-sm'}`}
+                      aria-label={isInCart(book.title) ? 'Retirer du panier' : 'Ajouter au panier'}
+                    >
+                      <ShoppingCart className="h-4 w-4" />
+                    </button>
                     {/* Hover overlay */}
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
                       <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 backdrop-blur-sm text-foreground text-[11px] font-bold px-3 py-1.5 rounded-full shadow-lg">
@@ -1464,12 +1606,46 @@ export default function Home() {
               )}
             </AnimatePresence>
 
-            {/* Pack promo */}
+            {/* ═══ COUNTDOWN PROMO ═══ */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               className="mt-10"
+            >
+              <Card className="border-2 border-red-300 dark:border-red-800 overflow-hidden">
+                <div className="bg-gradient-to-r from-red-500 via-orange-500 to-amber-500 p-4 sm:p-5 text-white text-center">
+                  <div className="flex items-center justify-center gap-2 mb-2">
+                    <Flame className="h-5 w-5" />
+                    <span className="text-sm sm:text-base font-extrabold uppercase tracking-wider">Offre Spéciale — Fin dans</span>
+                    <Flame className="h-5 w-5" />
+                  </div>
+                  <div className="flex items-center justify-center gap-2 sm:gap-3 mt-3">
+                    {[
+                      { val: countdown.days, label: 'Jours' },
+                      { val: countdown.hours, label: 'Heures' },
+                      { val: countdown.minutes, label: 'Min' },
+                      { val: countdown.seconds, label: 'Sec' },
+                    ].map((unit, i) => (
+                      <div key={unit.label} className="flex items-center gap-2 sm:gap-3">
+                        <div className="bg-white/20 backdrop-blur-sm rounded-lg px-3 py-2 sm:px-4 sm:py-3 min-w-[56px] sm:min-w-[64px] border border-white/20">
+                          <div className="text-2xl sm:text-3xl font-extrabold tabular-nums leading-none">{String(unit.val).padStart(2, '0')}</div>
+                          <div className="text-[9px] sm:text-[10px] font-medium text-white/80 mt-1 uppercase tracking-wider">{unit.label}</div>
+                        </div>
+                        {i < 3 && <span className="text-xl sm:text-2xl font-bold text-white/60 animate-pulse">:</span>}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </Card>
+            </motion.div>
+
+            {/* Pack promo */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mt-6"
             >
               <Card className="border-2 border-amber-300 dark:border-amber-700 overflow-hidden">
                 <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 p-5 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -1582,7 +1758,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ═══ 12. TÉMOIGNAGES (Style WhatsApp) ═══ */}
+        {/* ═══ 12. TÉMOIGNAGES (Style WhatsApp Auto-Carousel) ═══ */}
         <section id="temoignages" className="py-20 sm:py-24 bg-gradient-to-b from-muted/20 to-background relative overflow-hidden">
           <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-14">
@@ -1595,42 +1771,83 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="max-w-lg mx-auto space-y-4">
-              {[
-                { name: 'Amadou Diallo', time: '14:32', text: "Sacko, le logo est parfait ! 🙏 Je l'ai déjà mis sur ma boutique. Mes clients demandent qui a fait ça. Merci fréro, je te recommande à tous mes amis entrepreneurs.", status: 'Lu à 14:35' },
-                { name: 'Fatoumata Traoré', time: '09:15', text: "La formation en design m'a ouvert les yeux. En 2 semaines j'ai déjà créé 3 logos pour des gens de mon quartier et je gagne 15 000 FCFA. C'est fou 🎉", status: 'Lu à 09:20' },
-                { name: 'Ibrahim Keita', time: '18:47', text: "Mon site est en ligne depuis 3 jours et j'ai déjà eu 12 clients qui m'ont trouvé sur Google. Avant personne ne me connaissait en dehors de Hamdallaye. Service exceptionnel.", status: 'Lu à 18:50' },
-                { name: 'Oumar Sidibé', time: '11:03', text: "Les visuels pour mes affiches de boutique sont incroyables. Mon chiffre d'affaires a augmenté de 40% ce mois-ci. Quand est-ce qu'on refait une commande ? 😊", status: 'Lu à 11:08' },
-              ].map((t, i) => (
-                <div key={i} className="flex justify-end">
-                  <div className="max-w-[85%] sm:max-w-[80%]">
-                    {/* WhatsApp bubble */}
-                    <div className="relative">
+            {/* Phone mockup with auto-scrolling testimonials */}
+            <div className="max-w-md mx-auto" onMouseEnter={() => setTestimPaused(true)} onMouseLeave={() => setTestimPaused(false)}>
+              {/* WhatsApp phone frame */}
+              <div className="bg-[#075e54] rounded-t-3xl p-4 flex items-center gap-3">
+                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white font-bold text-sm">S</div>
+                <div className="flex-1">
+                  <p className="text-white font-bold text-sm">Sacko — Studio Créatif</p>
+                  <p className="text-white/60 text-[11px]">En ligne</p>
+                </div>
+                <div className="flex gap-2">
+                  <button onClick={() => setTestimPaused(!testimPaused)} className="h-8 w-8 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors" aria-label={testimPaused ? 'Lecture' : 'Pause'}>
+                    {testimPaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
+                  </button>
+                </div>
+              </div>
+              <div className="bg-[#ece5dd] dark:bg-[#1a2730] rounded-b-3xl p-4 min-h-[280px] flex flex-col justify-center">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={testimIndex}
+                    initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                    transition={{ duration: 0.5, ease: 'easeInOut' }}
+                    className="flex justify-end"
+                  >
+                    <div className="max-w-[85%]">
                       <div className="bg-[#005c4b] rounded-xl rounded-tr-sm px-4 py-3 shadow-sm">
-                        <p className="text-white text-sm leading-relaxed whitespace-pre-wrap">{t.text}</p>
+                        <p className="text-white text-sm leading-relaxed whitespace-pre-wrap">
+                          {[
+                            { name: 'Amadou Diallo', time: '14:32', text: "Sacko, le logo est parfait ! 🙏 Je l'ai déjà mis sur ma boutique. Mes clients demandent qui a fait ça. Merci fréro, je te recommande à tous mes amis entrepreneurs.", status: 'Lu à 14:35' },
+                            { name: 'Fatoumata Traoré', time: '09:15', text: "La formation en design m'a ouvert les yeux. En 2 semaines j'ai déjà créé 3 logos pour des gens de mon quartier et je gagne 15 000 FCFA. C'est fou 🎉", status: 'Lu à 09:20' },
+                            { name: 'Ibrahim Keita', time: '18:47', text: "Mon site est en ligne depuis 3 jours et j'ai déjà eu 12 clients qui m'ont trouvé sur Google. Avant personne ne me connaissait en dehors de Hamdallaye. Service exceptionnel.", status: 'Lu à 18:50' },
+                            { name: 'Oumar Sidibé', time: '11:03', text: "Les visuels pour mes affiches de boutique sont incroyables. Mon chiffre d'affaires a augmenté de 40% ce mois-ci. Quand est-ce qu'on refait une commande ? 😊", status: 'Lu à 11:08' },
+                          ][testimIndex].text}
+                        </p>
                         <div className="flex items-center justify-end gap-1.5 mt-1.5">
-                          <span className="text-white/50 text-[10px]">{t.time}</span>
+                          <span className="text-white/50 text-[10px]">{[
+                            { name: 'Amadou Diallo', time: '14:32' },
+                            { name: 'Fatoumata Traoré', time: '09:15' },
+                            { name: 'Ibrahim Keita', time: '18:47' },
+                            { name: 'Oumar Sidibé', time: '11:03' },
+                          ][testimIndex].time}</span>
                           <svg className="h-4 w-4 text-[#53bdeb]" viewBox="0 0 16 11" fill="currentColor"><path d="M11.071.653a.457.457 0 0 0-.304-.102.493.493 0 0 0-.381.178l-6.19 7.636-2.011-2.085a.463.463 0 0 0-.336-.143.457.457 0 0 0-.336.143.476.476 0 0 0 0 .672l2.359 2.443a.457.457 0 0 0 .336.143c.137 0 .268-.061.381-.178l6.527-8.039a.507.507 0 0 0-.045-.668z"/><path d="M14.071.653a.457.457 0 0 0-.304-.102.493.493 0 0 0-.381.178l-6.19 7.636-1.019-1.056.457-.56a.507.507 0 0 0-.045-.668.457.457 0 0 0-.685 0l-.681.837-.07.012a.463.463 0 0 0-.336.143.476.476 0 0 0 0 .672l2.359 2.443a.457.457 0 0 0 .336.143c.137 0 .268-.061.381-.178l6.527-8.039a.507.507 0 0 0-.045-.668z" opacity=".4"/></svg>
-                          <span className="text-white/40 text-[10px]">{t.status}</span>
                         </div>
                       </div>
+                      <p className="text-[11px] text-muted-foreground mt-1.5 text-right">
+                        — <strong>{[
+                          { name: 'Amadou Diallo' },
+                          { name: 'Fatoumata Traoré' },
+                          { name: 'Ibrahim Keita' },
+                          { name: 'Oumar Sidibé' },
+                        ][testimIndex].name}</strong>, client vérifié
+                      </p>
                     </div>
-                    {/* Client name */}
-                    <p className="text-[11px] text-muted-foreground mt-1 text-right">
-                      — <strong>{t.name}</strong>, client vérifié
-                    </p>
-                  </div>
+                  </motion.div>
+                </AnimatePresence>
+                {/* Dots navigation */}
+                <div className="flex items-center justify-center gap-2 mt-6">
+                  {[0, 1, 2, 3].map((i) => (
+                    <button
+                      key={i}
+                      onClick={() => setTestimIndex(i)}
+                      className={`h-2 rounded-full transition-all duration-300 ${i === testimIndex ? 'w-6 bg-amber-500' : 'w-2 bg-amber-500/30 hover:bg-amber-500/50'}`}
+                      aria-label={`Témoignage ${i + 1}`}
+                    />
+                  ))}
                 </div>
-              ))}
-
-              {/* Trust note */}
-              <div className="pt-4 text-center">
-                <p className="text-xs text-muted-foreground">
-                  Chaque message est <strong className="text-foreground">réel</strong>, reçu directement sur mon WhatsApp.
-                  Envie d&apos;être le prochain ?{' '}
-                  <a href="#commande-rapide" className="text-amber-600 font-semibold hover:underline">Commandez maintenant</a>.
-                </p>
               </div>
+            </div>
+
+            {/* Trust note */}
+            <div className="mt-8 text-center">
+              <p className="text-xs text-muted-foreground">
+                Chaque message est <strong className="text-foreground">réel</strong>, reçu directement sur mon WhatsApp.
+                Envie d&apos;être le prochain ?{' '}
+                <a href="#commande-rapide" className="text-amber-600 font-semibold hover:underline">Commandez maintenant</a>.
+              </p>
             </div>
           </div>
         </section>
@@ -2174,43 +2391,22 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ═══ WHATSAPP FLOTTANT + BACK TO TOP ═══ */}
-      <div className="fixed bottom-6 right-6 z-40 hidden lg:flex flex-col items-end gap-3">
-        {/* Back to top button - desktop only */}
-        <AnimatePresence>
-          {showBackToTop && (
-            <motion.button
-              initial={{ opacity: 0, scale: 0.5, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.5, y: 20 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 text-white shadow-lg shadow-amber-500/30 hover:shadow-xl hover:shadow-amber-500/40 transition-all duration-300 hover:scale-110"
-              aria-label="Retour en haut"
-            >
-              <ChevronUp className="h-5 w-5" />
-            </motion.button>
-          )}
-        </AnimatePresence>
-        {/* WhatsApp button - desktop only */}
-        <a
-          href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20souhaite%20discuter%20d%27un%20projet."
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500 text-white shadow-lg shadow-emerald-500/30 hover:bg-emerald-600 hover:shadow-xl hover:shadow-emerald-500/40 transition-all duration-300 hover:scale-110 group relative"
-          aria-label="Contacter sur WhatsApp"
-        >
-          <MessageCircle className="h-6 w-6" />
-          <span className="absolute -top-1 -right-1 flex h-4 w-4">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-white dark:border-background" />
-          </span>
-          <span className="absolute right-full mr-3 whitespace-nowrap rounded-lg bg-gray-900 text-white px-3 py-1.5 text-xs font-medium shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-            Me contacter sur WhatsApp
-            <span className="absolute top-1/2 -right-1 -translate-y-1/2 h-2 w-2 bg-gray-900 rotate-45" />
-          </span>
-        </a>
-      </div>
+      {/* ═══ BACK TO TOP DESKTOP ═══ */}
+      <AnimatePresence>
+        {showBackToTop && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.5, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.5, y: 20 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="fixed bottom-6 right-6 z-40 hidden lg:flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 text-white shadow-lg shadow-amber-500/30 hover:shadow-xl hover:shadow-amber-500/40 transition-all duration-300 hover:scale-110"
+            aria-label="Retour en haut"
+          >
+            <ChevronUp className="h-5 w-5" />
+          </motion.button>
+        )}
+      </AnimatePresence>
 
       {/* Back to top button - mobile only (above bottom nav) */}
       <AnimatePresence>
@@ -2221,11 +2417,223 @@ export default function Home() {
             exit={{ opacity: 0, scale: 0.5 }}
             transition={{ type: 'spring', stiffness: 300, damping: 25 }}
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="fixed bottom-[68px] right-4 z-[60] flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 text-white shadow-lg shadow-amber-500/30 lg:hidden"
+            className="fixed bottom-[68px] left-4 z-[60] flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 text-white shadow-lg shadow-amber-500/30 lg:hidden"
             aria-label="Retour en haut"
           >
             <ChevronUp className="h-4 w-4" />
           </motion.button>
+        )}
+      </AnimatePresence>
+
+      {/* ═══ FLOATING CART BUTTON ═══ */}
+      <AnimatePresence>
+        {cart.length > 0 && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+            onClick={() => setShowCart(!showCart)}
+            className="fixed bottom-[68px] right-4 z-[60] lg:bottom-6 lg:right-24 lg:z-[41] flex h-12 w-12 items-center justify-center rounded-full bg-amber-500 text-white shadow-lg shadow-amber-500/30 hover:bg-amber-600 hover:shadow-xl transition-all"
+            aria-label="Voir le panier"
+          >
+            <ShoppingCart className="h-5 w-5" />
+            <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white border-2 border-background">{cart.length}</span>
+          </motion.button>
+        )}
+      </AnimatePresence>
+
+      {/* ═══ CART PANEL ═══ */}
+      <AnimatePresence>
+        {showCart && cart.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, x: 300 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 300 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            className="fixed top-0 right-0 bottom-0 z-[110] w-80 max-w-[85vw] bg-background border-l shadow-2xl flex flex-col"
+          >
+            <div className="flex items-center justify-between p-4 border-b">
+              <h3 className="font-bold text-base flex items-center gap-2">
+                <ShoppingCart className="h-5 w-5 text-amber-500" />
+                Mon Panier
+                <span className="text-sm font-normal text-muted-foreground">({cart.length})</span>
+              </h3>
+              <button onClick={() => setShowCart(false)} className="h-8 w-8 rounded-full hover:bg-muted flex items-center justify-center"><X className="h-4 w-4" /></button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-4 space-y-2">
+              {cart.map((title) => {
+                const book = books.find(b => b.title === title)
+                return (
+                  <div key={title} className="flex items-center gap-3 p-2.5 rounded-xl bg-muted/50 border border-border">
+                    {book && <img src={book.cover} alt="" className="h-12 w-9 object-cover rounded-md shadow-sm" />}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-semibold leading-tight line-clamp-2">{title}</p>
+                      <p className="text-[10px] text-amber-600 font-bold mt-0.5">1 000 FCFA</p>
+                    </div>
+                    <button onClick={() => toggleCart(title)} className="h-7 w-7 rounded-full hover:bg-red-100 dark:hover:bg-red-900/30 flex items-center justify-center text-muted-foreground hover:text-red-500 transition-colors flex-shrink-0">
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                )
+              })}
+            </div>
+            <div className="p-4 border-t space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-semibold">Total</span>
+                <span className="text-xl font-extrabold text-amber-600">{cart.length * 1000} FCFA</span>
+              </div>
+              {cart.length >= 3 && (
+                <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg p-2.5 text-center">
+                  <p className="text-[11px] text-amber-700 dark:text-amber-400 font-semibold">Pack {cart.length} livres — {Math.min(cart.length * 1000, 7000)} FCFA</p>
+                  <p className="text-[10px] text-amber-600/70 mt-0.5">Le pack complet 12 livres = 7 000 FCFA</p>
+                </div>
+              )}
+              <a
+                href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je veux commander ${cart.length} livre(s) :\n\n${cart.map(t => `- ${t} (1 000 FCFA)`).join('\n')}\n\nTotal : ${cart.length * 1000} FCFA. Comment procéder pour le paiement ?`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setShowCart(false)}
+              >
+                <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold shadow-lg shadow-emerald-500/20">
+                  <MessageCircle className="h-4 w-4 mr-2" /> Commander via WhatsApp
+                </Button>
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ═══ WHATSAPP EXPANDABLE WIDGET ═══ */}
+      <div className="fixed bottom-6 right-6 z-40 hidden lg:block">
+        <AnimatePresence>
+          {showWaWidget && (
+            <motion.div
+              initial={{ opacity: 0, y: 10, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 10, scale: 0.9 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+              className="absolute bottom-16 right-0 w-72 bg-background rounded-2xl shadow-2xl border overflow-hidden"
+            >
+              {/* Widget header */}
+              <div className="bg-[#075e54] p-4 flex items-center gap-3">
+                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white font-bold text-sm shadow-md">S</div>
+                <div className="flex-1">
+                  <p className="text-white font-bold text-sm">Sacko — Studio Créatif</p>
+                  <div className="flex items-center gap-1.5">
+                    <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" /><span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" /></span>
+                    <p className="text-white/70 text-[11px]">En ligne — répond en ~5 min</p>
+                  </div>
+                </div>
+                <button onClick={() => setShowWaWidget(false)} className="text-white/70 hover:text-white"><X className="h-4 w-4" /></button>
+              </div>
+              {/* Chat preview */}
+              <div className="p-4 bg-[#ece5dd] dark:bg-[#1a2730]">
+                <div className="bg-white dark:bg-[#233039] rounded-xl rounded-tl-sm p-3 shadow-sm max-w-[85%]">
+                  <p className="text-sm text-gray-800 dark:text-gray-200 leading-relaxed">Bonjour ! 👋 Comment puis-je vous aider aujourd'hui ?</p>
+                  <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-1 text-right">Maintenant</p>
+                </div>
+              </div>
+              {/* CTA */}
+              <div className="p-3 bg-background">
+                <a
+                  href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20souhaite%20discuter%20d%27un%20projet."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setShowWaWidget(false)}
+                >
+                  <Button className="w-full bg-[#25d366] hover:bg-[#20bd5a] text-white font-semibold h-11 text-sm">
+                    <MessageCircle className="h-4 w-4 mr-2" /> Démarrer la conversation
+                  </Button>
+                </a>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+        {/* Main WA button */}
+        {!showWaWidget && (
+          <motion.button
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500 text-white shadow-lg shadow-emerald-500/30 hover:bg-emerald-600 hover:shadow-xl hover:shadow-emerald-500/40 transition-all duration-300 hover:scale-110 group relative"
+            onClick={() => setShowWaWidget(true)}
+            aria-label="Contacter sur WhatsApp"
+          >
+            <MessageCircle className="h-6 w-6" />
+            <span className="absolute -top-1 -right-1 flex h-4 w-4">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-white dark:border-background" />
+            </span>
+          </motion.button>
+        )}
+      </div>
+
+      {/* ═══ SOCIAL PROOF NOTIFICATION ═══ */}
+      <AnimatePresence>
+        {socialProof && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, x: 50 }}
+            animate={{ opacity: 1, y: 0, x: 0 }}
+            exit={{ opacity: 0, y: 20, x: 50 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+            className="fixed bottom-[68px] lg:bottom-6 left-4 z-[70] max-w-xs"
+          >
+            <div className="bg-background/95 backdrop-blur-xl border rounded-xl shadow-2xl p-3.5 flex items-center gap-3">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex-shrink-0">
+                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-bold">{socialProof.name}</p>
+                <p className="text-[11px] text-muted-foreground leading-tight">{socialProof.action}</p>
+              </div>
+              <button onClick={() => setSocialProof(null)} className="text-muted-foreground hover:text-foreground flex-shrink-0">
+                <X className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ═══ COOKIE CONSENT ═══ */}
+      <AnimatePresence>
+        {showCookieConsent && (
+          <motion.div
+            initial={{ y: 100 }}
+            animate={{ y: 0 }}
+            exit={{ y: 100 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            className="fixed bottom-[68px] lg:bottom-0 left-0 right-0 z-[80] p-4"
+          >
+            <div className="mx-auto max-w-2xl bg-background/95 backdrop-blur-xl border rounded-2xl shadow-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30 flex-shrink-0">
+                <Cookie className="h-5 w-5 text-amber-500" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-semibold">Cookies & Confidentialité</p>
+                <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+                  Ce site utilise des cookies pour améliorer votre expérience et mémoriser votre panier. En continuant, vous acceptez notre{' '}
+                  <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20consulter%20vos%20mentions%20l%C3%A9gales." target="_blank" rel="noopener noreferrer" className="text-amber-600 hover:underline font-medium">politique de confidentialité</a>.
+                </p>
+              </div>
+              <div className="flex gap-2 flex-shrink-0 w-full sm:w-auto">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowCookieConsent(false)}
+                  className="text-xs flex-1 sm:flex-none"
+                >
+                  Refuser
+                </Button>
+                <Button
+                  size="sm"
+                  onClick={() => setShowCookieConsent(false)}
+                  className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold text-xs flex-1 sm:flex-none"
+                >
+                  Accepter
+                </Button>
+              </div>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>
