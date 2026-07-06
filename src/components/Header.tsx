@@ -9,10 +9,10 @@ import { motion, AnimatePresence } from 'framer-motion'
 const navLinks = [
   { label: 'Accueil', href: '#accueil' },
   { label: 'Services', href: '#services' },
-  { label: 'Carrière Pro', href: '#carriere-pro' },
-  { label: "Gagner de l'argent", href: '#gagner-argent' },
   { label: 'Formations', href: '#formations' },
+  { label: 'Coachs', href: '#coachs' },
   { label: 'Portfolio', href: '#portfolio' },
+  { label: 'Témoignages', href: '#temoignages' },
   { label: 'Contact', href: '#contact' },
 ]
 

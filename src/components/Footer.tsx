@@ -65,8 +65,8 @@ export default function Footer() {
               {[
                 { label: 'Accueil', href: '#accueil' },
                 { label: 'Services', href: '#services' },
-                { label: 'Carrière Pro', href: '#carriere-pro' },
                 { label: 'Formations', href: '#formations' },
+                { label: 'Coachs', href: '#coachs' },
                 { label: 'Portfolio', href: '#portfolio' },
                 { label: 'FAQ', href: '#faq' },
                 { label: 'Contact', href: '#contact' },

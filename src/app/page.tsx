@@ -67,26 +67,10 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 
 
-/* ─── Animated Counter Hook ─── */
-function useCounter(end: number, duration: number = 2000) {
+/* ─── Animated Counter Component ─── */
+function AnimatedStat({ end, suffix, children }: { end: number; suffix?: string; children: React.ReactNode }) {
   const [count, setCount] = useState(0)
   const [started, setStarted] = useState(false)
-  const ref = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !started) {
-          setStarted(true)
-        }
-      },
-      { threshold: 0.3 }
-    )
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [started])
 
   useEffect(() => {
     if (!started) return
@@ -94,15 +78,23 @@ function useCounter(end: number, duration: number = 2000) {
     let frameId: number
     const step = (timestamp: number) => {
       if (!start) start = timestamp
-      const progress = Math.min((timestamp - start) / duration, 1)
+      const progress = Math.min((timestamp - start) / 1500, 1)
       setCount(Math.floor(progress * end))
       if (progress < 1) frameId = requestAnimationFrame(step)
     }
     frameId = requestAnimationFrame(step)
     return () => cancelAnimationFrame(frameId)
-  }, [started, end, duration])
+  }, [started, end])
 
-  return { count, ref }
+  return (
+    <div
+      className="text-center"
+      onPointerEnter={() => setStarted(true)}
+    >
+      {children}
+      <div className="text-3xl sm:text-4xl font-extrabold text-white mb-1">{count}{suffix}</div>
+    </div>
+  )
 }
 
 /* ─── Before / After Slider ─── */
@@ -170,22 +162,144 @@ function BeforeAfterSlider({ before, after }: { before: string; after: string })
 }
 
 /* ─── Static Data ─── */
-const formations = [
-  { text: 'Devenir Designer Pro avec Canva & Illustrator', icon: Palette, price: '5 000', duration: '6h', lessons: '9 leçons', level: 'Débutant' },
-  { text: 'Créer et monétiser des vidéos pour réseaux sociaux', icon: MonitorPlay, price: '7 500', duration: '8h', lessons: '15 leçons', level: 'Intermédiaire' },
-  { text: 'Créer un site web professionnel (No-code + Next.js)', icon: Globe, price: '10 000', duration: '10h', lessons: '12 leçons', level: 'Intermédiaire' },
-  { text: 'Devenir Community Manager pour PME locales', icon: Target, price: '6 000', duration: '7h', lessons: '10 leçons', level: 'Débutant' },
+
+/* 4 Formations vedettes avec formules Découverte / Premium */
+const featuredFormations = [
+  {
+    id: 'design-graphique',
+    title: 'Design Graphique',
+    subtitle: 'Maîtrisez Canva comme un pro',
+    icon: Palette,
+    color: 'from-pink-500 to-rose-500',
+    colorLight: 'bg-pink-50 dark:bg-pink-950/20',
+    borderLight: 'border-pink-200 dark:border-pink-800',
+    duration: '6 semaines',
+    lessons: '18 leçons',
+    level: 'Débutant',
+    coach: 'Sacko',
+    decouverte: {
+      price: 'Gratuit',
+      priceNum: 0,
+      features: ['Interface Canva : maîtrise complète', 'Templates de base et personnalisation', 'Typographie et couleurs', 'Support WhatsApp groupe'],
+    },
+    premium: {
+      price: '15 000',
+      priceNum: 15000,
+      features: ['Tout le programme Découverte', 'Photoshop & Illustrator initiation', 'Création de logos professionnels', 'Branding complet & charte graphique', 'Projet portfolio personnalisé', 'Certificat de participation', 'Suivi individuel post-formation'],
+      bonus: 'Canva Pro offert pendant 30 jours',
+    },
+  },
+  {
+    id: 'montage-video',
+    title: 'Montage Vidéo',
+    subtitle: 'Devenez créateur de contenu vidéo',
+    icon: MonitorPlay,
+    color: 'from-purple-500 to-violet-500',
+    colorLight: 'bg-purple-50 dark:bg-purple-950/20',
+    borderLight: 'border-purple-200 dark:border-purple-800',
+    duration: '6 semaines',
+    lessons: '18 leçons',
+    level: 'Débutant',
+    coach: 'Sacko',
+    decouverte: {
+      price: 'Gratuit',
+      priceNum: 0,
+      features: ['CapCut : interface et outils de base', 'Découpe et montage simple', 'Ajout de musique et textes', 'Export pour réseaux sociaux'],
+    },
+    premium: {
+      price: '20 000',
+      priceNum: 20000,
+      features: ['Tout le programme Découverte', 'Premiere Pro & DaVinci Resolve', 'Effets visuels avancés', 'Motion design & transitions', 'Color grading professionnel', 'Certificat de participation', 'Suivi individuel post-formation'],
+      bonus: 'CapCut Pro offert pendant 30 jours',
+    },
+  },
+  {
+    id: 'creation-web',
+    title: 'Création Web',
+    subtitle: 'Construisez votre site de A à Z',
+    icon: Globe,
+    color: 'from-cyan-500 to-blue-500',
+    colorLight: 'bg-cyan-50 dark:bg-cyan-950/20',
+    borderLight: 'border-cyan-200 dark:border-cyan-800',
+    duration: '6 semaines',
+    lessons: '18 leçons',
+    level: 'Intermédiaire',
+    coach: 'Sacko',
+    decouverte: {
+      price: 'Gratuit',
+      priceNum: 0,
+      features: ['HTML & CSS : les fondamentaux', 'Première page web responsive', 'Hébergement gratuit et mise en ligne', 'Support WhatsApp groupe'],
+    },
+    premium: {
+      price: '25 000',
+      priceNum: 25000,
+      features: ['Tout le programme Découverte', 'JavaScript interactif', 'Site multi-pages complet', 'Formulaire de contact fonctionnel', 'SEO & référencement Google', 'Certificat de participation', 'Suivi individuel post-formation'],
+      bonus: 'Hébergement 1 an offert',
+    },
+  },
+  {
+    id: 'marketing-digital',
+    title: 'Marketing Digital',
+    subtitle: 'Gérez les réseaux sociaux comme un expert',
+    icon: Megaphone,
+    color: 'from-emerald-500 to-teal-500',
+    colorLight: 'bg-emerald-50 dark:bg-emerald-950/20',
+    borderLight: 'border-emerald-200 dark:border-emerald-800',
+    duration: '6 semaines',
+    lessons: '18 leçons',
+    level: 'Débutant',
+    coach: 'Sacko',
+    decouverte: {
+      price: 'Gratuit',
+      priceNum: 0,
+      features: ['Stratégie réseaux sociaux', 'Créer du contenu engageant', 'Facebook & Instagram pour débutants', 'Support WhatsApp groupe'],
+    },
+    premium: {
+      price: '20 000',
+      priceNum: 20000,
+      features: ['Tout le programme Découverte', 'Publicité Facebook & Instagram', 'TikTok & YouTube stratégie', 'Calendrier éditorial complet', 'Analyse des performances', 'Certificat de participation', 'Suivi individuel post-formation'],
+      bonus: 'Pack 50 templates réseaux sociaux',
+    },
+  },
+]
+
+/* Autres formations disponibles */
+const otherFormations = [
   { text: 'Formation complète en Trading', icon: TrendingUp, level: 'Avancé' },
-  { text: 'Formation en Management et Gestion de projets', icon: Building2, level: 'Intermédiaire' },
   { text: 'Formation en Intelligence Artificielle', icon: Brain, level: 'Avancé' },
   { text: 'Formation YouTube et monétisation', icon: Youtube, level: 'Intermédiaire' },
   { text: 'Formation complète en Programmation', icon: Code, level: 'Avancé' },
-  { text: 'Formation en Infographie et Design', icon: PenTool, level: 'Débutant' },
   { text: 'Formation E-commerce', icon: ShoppingCart, level: 'Intermédiaire' },
-  { text: 'Pack 10 000 templates et ressources Canva', icon: FolderDown, level: 'Tous niveaux' },
-  { text: 'Formation en Maintenance informatique', icon: Wrench, level: 'Intermédiaire' },
   { text: 'Formation en Hacking et Sécurité informatique', icon: ShieldCheck, level: 'Avancé' },
   { text: 'Formation Revendeur IPTV', icon: Tv, level: 'Débutant' },
+]
+
+/* Coachs */
+const coaches = [
+  {
+    name: 'Sacko',
+    role: 'Fondateur & Coach Principal',
+    speciality: 'Design Graphique, Branding, Direction Créative',
+    bio: 'Freelance digital à Bamako avec 50+ projets livrés. Expert en design graphique et stratégie visuelle pour entrepreneurs africains.',
+    gradient: 'from-amber-400 via-orange-500 to-red-500',
+    initial: 'S',
+  },
+  {
+    name: 'Coach Moussa',
+    role: 'Expert Montage Vidéo',
+    speciality: 'CapCut, Premiere Pro, Motion Design',
+    bio: 'Spécialiste en montage vidéo et production de contenu pour réseaux sociaux. Plus de 200 vidéos produites pour des marques au Mali.',
+    gradient: 'from-purple-400 via-violet-500 to-indigo-500',
+    initial: 'M',
+  },
+  {
+    name: 'Coach Aminata',
+    role: 'Expert Marketing Digital',
+    speciality: 'Réseaux Sociaux, Publicité, Stratégie',
+    bio: 'Community Manager certifiée avec une expertise en croissance digitale pour PME locales. Gère la présence en ligne de 15+ entreprises.',
+    gradient: 'from-emerald-400 via-teal-500 to-cyan-500',
+    initial: 'A',
+  },
 ]
 
 /* ═══════════════════════════════════════════════
@@ -201,10 +315,6 @@ export default function Home() {
   const [leadMagnet, setLeadMagnet] = useState({ name: '', contact: '' })
   const { toast } = useToast()
 
-
-
-  const stat1 = useCounter(50, 1500)
-  const stat3 = useCounter(100, 1500)
 
 
 
@@ -405,14 +515,13 @@ export default function Home() {
               <p className="mt-2 text-white/80 text-sm">Transparent, impactant, à taille humaine</p>
             </div>
             <div className="grid grid-cols-3 gap-6 sm:gap-12">
-              <div key="stat-1" ref={stat1.ref} className="text-center">
+              <AnimatedStat end={50} suffix="+">
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mx-auto mb-3">
                   <Award className="h-6 w-6 text-white" />
                 </div>
-                <div className="text-3xl sm:text-4xl font-extrabold text-white mb-1">{stat1.count}+</div>
                 <p className="text-sm font-semibold text-white/90">Marques propulsées</p>
                 <p className="text-xs text-white/60 mt-1 leading-relaxed hidden sm:block">Logos, affiches et identités créées avec soin</p>
-              </div>
+              </AnimatedStat>
               <div className="text-center">
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mx-auto mb-3">
                   <Palette className="h-6 w-6 text-white" />
@@ -421,14 +530,13 @@ export default function Home() {
                 <p className="text-sm font-semibold text-white/90">Sur-mesure</p>
                 <p className="text-xs text-white/60 mt-1 leading-relaxed hidden sm:block">Aucun template pré-fait, chaque pixel est pensé pour vous</p>
               </div>
-              <div key="stat-3" ref={stat3.ref} className="text-center">
+              <AnimatedStat end={100} suffix="%">
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mx-auto mb-3">
                   <ThumbsUp className="h-6 w-6 text-white" />
                 </div>
-                <div className="text-3xl sm:text-4xl font-extrabold text-white mb-1">{stat3.count}%</div>
                 <p className="text-sm font-semibold text-white/90">Satisfaction client</p>
                 <p className="text-xs text-white/60 mt-1 leading-relaxed hidden sm:block">Une collaboration basée sur l'écoute et le résultat</p>
-              </div>
+              </AnimatedStat>
             </div>
           </div>
         </section>
@@ -806,136 +914,205 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ═══ 9. FORMATIONS ═══ */}
+        {/* ═══ 9. FORMATIONS VEDETTES ═══ */}
         <section id="formations" className="py-16 sm:py-20 text-white" style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)' }}>
           <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
+            {/* Decorative glow */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="relative text-center mb-12">
               <Badge className="mb-3 bg-amber-500/20 text-amber-300 border-amber-500/30 hover:bg-amber-500/30">
-                <GraduationCap className="h-3 w-3 mr-1" /> Expertise & Formations
+                <GraduationCap className="h-3 w-3 mr-1" /> Formations
               </Badge>
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Formations dispensées par un <span className="text-amber-400">Expert Actif</span></h2>
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">4 Programmes pour <span className="text-amber-400">maîtriser le digital</span></h2>
               <p className="mt-4 text-slate-300 max-w-2xl mx-auto leading-relaxed">
-                Je ne suis pas un simple formateur théorique. Chaque formation est issue de mon expérience terrain à Bamako : vrais projets, vrais clients, vrais revenus. J&apos;aide les entrepreneurs, étudiants et créateurs à développer des compétences immédiatement rentables, avec un suivi personnalisé et des outils professionnels inclus.
+                Chaque programme est conçu pour vous rendre <strong className="text-white">opérationnel rapidement</strong>. Commencez gratuitement avec l&apos;Offre Découverte, puis passez au Premium pour un accompagnement complet avec certificat.
               </p>
+              <div className="flex items-center justify-center gap-6 mt-5 text-xs">
+                <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-emerald-500" /> Découverte = Gratuit</span>
+                <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-amber-500" /> Premium = Prix fixe clair</span>
+              </div>
             </div>
 
-            {/* Premium formation cards */}
-            <div className="grid sm:grid-cols-2 lg:grid-cols-2 gap-5">
-              {formations.filter(f => f.price).map((form, i) => (
-                <a
-                  key={i}
-                  href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je suis intéressé(e) par la formation : ${form.text} (${form.price} FCFA). Comment y accéder ?`)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group relative rounded-2xl bg-slate-800/80 border border-white/10 hover:border-amber-400/50 transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/10 cursor-pointer overflow-hidden"
+            {/* 4 Featured formation cards */}
+            <div className="space-y-6">
+              {featuredFormations.map((form, idx) => (
+                <motion.div
+                  key={form.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-50px' }}
+                  transition={{ duration: 0.5, delay: idx * 0.1 }}
+                  className="relative rounded-2xl bg-slate-800/60 border border-white/10 overflow-hidden hover:border-white/20 transition-all duration-300"
                 >
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-                  <div className="relative p-5 sm:p-6">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500/30 to-orange-500/30 group-hover:from-amber-500/50 group-hover:to-orange-500/50 transition-colors">
-                        <form.icon className="h-5 w-5 text-amber-400" />
-                      </div>
-                      <div className="flex flex-col items-end gap-1.5">
+                  {/* Formation header */}
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-5 sm:p-6 border-b border-white/5">
+                    <div className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${form.color} text-white shadow-lg flex-shrink-0`}>
+                      <form.icon className="h-6 w-6" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h3 className="text-lg font-extrabold text-white">{form.title}</h3>
                         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                           form.level === 'Débutant' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' :
-                          form.level === 'Intermédiaire' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' :
-                          'bg-violet-500/20 text-violet-400 border border-violet-500/30'
+                          'bg-amber-500/20 text-amber-400 border border-amber-500/30'
                         }`}>{form.level}</span>
-                        <span className="text-2xl font-extrabold text-amber-400">{form.price} <span className="text-xs font-normal text-slate-500">FCFA</span></span>
+                      </div>
+                      <p className="text-sm text-slate-400 mt-0.5">{form.subtitle}</p>
+                      <div className="flex items-center gap-4 text-[11px] text-slate-500 mt-1.5">
+                        <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{form.duration}</span>
+                        <span className="flex items-center gap-1"><BookOpen className="h-3 w-3" />{form.lessons}</span>
+                        <span className="flex items-center gap-1"><Users className="h-3 w-3" />Coach {form.coach}</span>
                       </div>
                     </div>
-                    <h3 className="text-sm font-bold text-white leading-snug mb-2">{form.text}</h3>
-                    <div className="flex items-center gap-3 text-[11px] text-slate-400">
-                      <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{form.duration}</span>
-                      <span className="flex items-center gap-1"><BookOpen className="h-3 w-3" />{form.lessons}</span>
-                    </div>
-                    <span className="text-[11px] text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity mt-3 flex items-center gap-1">
-                      <MessageCircle className="h-3 w-3" /> S&apos;inscrire via WhatsApp
-                    </span>
                   </div>
-                </a>
+
+                  {/* Découverte / Premium grid */}
+                  <div className="grid sm:grid-cols-2">
+                    {/* Découverte */}
+                    <div className="p-5 sm:p-6 border-r border-white/5">
+                      <div className="flex items-center gap-2 mb-4">
+                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-white text-xs font-bold">✓</span>
+                        <h4 className="text-sm font-bold text-emerald-400">Offre Découverte — Gratuit</h4>
+                      </div>
+                      <ul className="space-y-2 mb-5">
+                        {form.decouverte.features.map((f, fi) => (
+                          <li key={fi} className="flex items-start gap-2 text-xs text-slate-300 leading-relaxed">
+                            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 mt-0.5 flex-shrink-0" />
+                            {f}
+                          </li>
+                        ))}
+                      </ul>
+                      <a
+                        href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je veux rejoindre la formation ${form.title} — Offre Découverte (Gratuit).`)}`}
+                        target="_blank" rel="noopener noreferrer"
+                      >
+                        <Button variant="outline" className="w-full border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10 hover:border-emerald-500/50 font-semibold text-xs h-10">
+                          <Gift className="h-3.5 w-3.5 mr-1.5" /> Commencer gratuitement
+                        </Button>
+                      </a>
+                    </div>
+
+                    {/* Premium */}
+                    <div className="p-5 sm:p-6 relative">
+                      {/* Popular badge */}
+                      <div className="absolute top-3 right-3">
+                        <span className="inline-flex items-center gap-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[9px] font-bold px-2.5 py-1 rounded-full shadow-lg shadow-amber-500/20">
+                          <Star className="h-2.5 w-2.5 fill-current" /> RECOMMANDÉ
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-amber-500 to-orange-500 text-white text-xs font-bold">★</span>
+                        <h4 className="text-sm font-bold text-amber-400">Offre Premium</h4>
+                      </div>
+                      <div className="flex items-baseline gap-1 mb-4">
+                        <span className="text-2xl font-extrabold text-white">{form.premium.price}</span>
+                        <span className="text-sm text-slate-500">FCFA</span>
+                      </div>
+                      <ul className="space-y-2 mb-4">
+                        {form.premium.features.map((f, fi) => (
+                          <li key={fi} className="flex items-start gap-2 text-xs text-slate-300 leading-relaxed">
+                            <CheckCircle2 className="h-3.5 w-3.5 text-amber-500 mt-0.5 flex-shrink-0" />
+                            {f}
+                          </li>
+                        ))}
+                      </ul>
+                      {form.premium.bonus && (
+                        <div className="flex items-center gap-2 mb-4 px-3 py-2 rounded-lg bg-amber-500/10 border border-amber-500/20">
+                          <Gift className="h-3.5 w-3.5 text-amber-400 flex-shrink-0" />
+                          <span className="text-[11px] text-amber-300 font-medium">{form.premium.bonus}</span>
+                        </div>
+                      )}
+                      <a
+                        href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je suis intéressé(e) par la formation Premium ${form.title} (${form.premium.price} FCFA). Comment y accéder ?`)}`}
+                        target="_blank" rel="noopener noreferrer"
+                      >
+                        <Button className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-10 shadow-lg shadow-amber-500/20">
+                          <Rocket className="h-3.5 w-3.5 mr-1.5" /> Passer au Premium
+                        </Button>
+                      </a>
+                    </div>
+                  </div>
+                </motion.div>
               ))}
             </div>
 
-            {/* Compact formation list */}
-            <div className="mt-8">
-              <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-3">Autres formations disponibles</p>
+            {/* Autres formations disponibles */}
+            <div className="mt-12">
+              <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-4">Autres formations disponibles</p>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                {formations.filter(f => !f.price).map((form, i) => (
+                {otherFormations.map((form, i) => (
                   <a
                     key={i}
-                    href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je suis intéressé(e) par la formation : ${form.text}. Pouvez-vous me donner plus de détails ?`)}`}
+                    href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je suis intéressé(e) par : ${form.text}. Pouvez-vous me donner plus de détails ?`)}`}
                     target="_blank" rel="noopener noreferrer"
-                    className="group flex items-center gap-3 p-3 rounded-xl bg-slate-800/80 border border-white/10 hover:bg-slate-700/80 hover:border-emerald-500/40 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-emerald-500/5 transition-all duration-300 cursor-pointer"
+                    className="group flex items-center gap-3 p-3 rounded-xl bg-slate-800/60 border border-white/10 hover:bg-slate-700/60 hover:border-amber-400/30 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-amber-500/5 transition-all duration-300 cursor-pointer"
                   >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/5 flex-shrink-0">
-                      <form.icon className="h-4 w-4 text-slate-400 group-hover:text-emerald-400 transition-colors" />
+                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/5 flex-shrink-0">
+                      <form.icon className="h-4 w-4 text-slate-400 group-hover:text-amber-400 transition-colors" />
                     </div>
                     <p className="text-xs font-medium text-slate-300 group-hover:text-white transition-colors flex-1">{form.text}</p>
                     <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full flex-shrink-0 ${
                       form.level === 'Débutant' ? 'bg-emerald-500/20 text-emerald-400' :
                       form.level === 'Intermédiaire' ? 'bg-amber-500/20 text-amber-400' :
-                      form.level === 'Avancé' ? 'bg-violet-500/20 text-violet-400' :
-                      'bg-slate-500/20 text-slate-400'
+                      'bg-violet-500/20 text-violet-400'
                     }`}>{form.level}</span>
-                    <ArrowRight className="h-3.5 w-3.5 text-white/20 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all" />
+                    <ArrowRight className="h-3.5 w-3.5 text-white/20 group-hover:text-amber-400 group-hover:translate-x-0.5 transition-all" />
                   </a>
                 ))}
               </div>
             </div>
-
-
           </div>
         </section>
 
-        {/* ═══ 10. COLLECTIF ═══ */}
-        <section id="collectif" className="py-16 sm:py-20 bg-gradient-to-br from-purple-950 via-slate-900 to-indigo-950 text-white">
+        {/* ═══ 10. NOS COACHS ═══ */}
+        <section id="coachs" className="py-16 sm:py-20 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 text-white">
           <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-10">
-              <Badge className="mb-3 bg-purple-500/20 text-purple-300 border-purple-500/30 hover:bg-purple-500/30">
-                <Users className="h-3 w-3 mr-1" /> Collectif
+            <div className="text-center mb-12">
+              <Badge className="mb-3 bg-amber-500/20 text-amber-300 border-amber-500/30 hover:bg-amber-500/30">
+                <Users className="h-3 w-3 mr-1" /> Notre Équipe
               </Badge>
-              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Collectif Studio Créatif</h2>
-              <p className="mt-3 text-slate-400 max-w-xl mx-auto">
-                Rejoins une communauté d&apos;entrepreneurs et créateurs qui s&apos;entraident, partagent des opportunités et grandissent ensemble. Accès illimité aux ressources, formations exclusives et soutien personnalisé.
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">3 Coachs <span className="text-amber-400">experts</span> à votre service</h2>
+              <p className="mt-4 text-slate-400 max-w-2xl mx-auto leading-relaxed">
+                Pas de théorie abstraite : chaque coach pratique activement dans son domaine à Bamako. Vous apprenez de personnes qui vivent de leur compétence au quotidien.
               </p>
             </div>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
-              {[
-                { icon: GraduationCap, text: 'Formations exclusives chaque mois' },
-                { icon: MessageCircle, text: 'Support direct via WhatsApp' },
-                { icon: FolderDown, text: 'Templates & ressources premium' },
-                { icon: Users, text: 'Réseau de +200 entrepreneurs' },
-              ].map((b, i) => (
-                <div key={i} className="flex items-center gap-3 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-500/5 transition-all duration-300">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-500/20 flex-shrink-0">
-                    <b.icon className="h-4 w-4 text-purple-400" />
+            <div className="grid sm:grid-cols-3 gap-6">
+              {coaches.map((coach, i) => (
+                <motion.div
+                  key={coach.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.15 }}
+                  className="group relative rounded-2xl bg-slate-800/60 border border-white/10 hover:border-amber-400/30 p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-amber-500/5"
+                >
+                  {/* Avatar */}
+                  <div className="relative mx-auto mb-4">
+                    <div className={`h-20 w-20 rounded-full bg-gradient-to-br ${coach.gradient} flex items-center justify-center text-white text-2xl font-extrabold shadow-lg mx-auto ring-4 ring-slate-800`}>
+                      {coach.initial}
+                    </div>
+                    {i === 0 && (
+                      <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-amber-500 text-white text-[8px] font-bold px-2 py-0.5 rounded-full shadow">
+                        FONDATEUR
+                      </span>
+                    )}
                   </div>
-                  <p className="text-xs font-medium text-slate-300">{b.text}</p>
-                </div>
+                  <h3 className="text-base font-extrabold text-white">{coach.name}</h3>
+                  <p className="text-xs text-amber-400 font-semibold mt-0.5">{coach.role}</p>
+                  <p className="text-[10px] text-slate-500 mt-1 font-medium">{coach.speciality}</p>
+                  <p className="text-xs text-slate-400 leading-relaxed mt-3">{coach.bio}</p>
+                  <a
+                    href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je souhaite être encadré(e) par ${coach.name} pour une formation.`)}`}
+                    target="_blank" rel="noopener noreferrer"
+                    className="mt-4 inline-flex items-center gap-1.5 text-[11px] font-semibold text-amber-400 hover:text-amber-300 transition-colors"
+                  >
+                    <MessageCircle className="h-3 w-3" /> Contacter
+                  </a>
+                </motion.div>
               ))}
             </div>
-
-            <Card className="border-2 border-purple-400/30 bg-purple-500/10 overflow-hidden">
-              <CardContent className="p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-                <div className="text-center sm:text-left">
-                  <p className="text-sm text-slate-300 mb-1">Abonnement mensuel</p>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-extrabold text-white">2 000</span>
-                    <span className="text-slate-500">–</span>
-                    <span className="text-3xl font-extrabold text-white">3 000 FCFA</span>
-                    <span className="text-sm text-slate-400">/mois</span>
-                  </div>
-                  <p className="text-xs text-slate-500 mt-1">Prix d&apos;appel • Se rentabilise par le volume</p>
-                </div>
-                <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20veux%20rejoindre%20le%20Collectif%20SK%20Designer%20Luxe." target="_blank" rel="noopener noreferrer" className="flex-shrink-0">
-                  <Button size="lg" className="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-bold shadow-xl shadow-purple-500/25 px-8 whitespace-nowrap">
-                    <MessageCircle className="h-5 w-5 mr-2" /> Rejoindre le Collectif
-                  </Button>
-                </a>
-              </CardContent>
-            </Card>
           </div>
         </section>
 
