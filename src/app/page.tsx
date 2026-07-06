@@ -304,21 +304,16 @@ const coaches = [
 
 /* Livres / Ebooks à vendre */
 const books = [
-  { title: 'Guide Complet Montage Vidéo CapCut', desc: 'De débutant à expert : tous les secrets du montage vidéo professionnel avec CapCut.', gradient: 'from-purple-600 to-violet-700', icon: MonitorPlay, pages: '50+ pages' },
-  { title: 'Devenir Designer Pro', desc: 'Maîtrisez le design graphique et créez des visuels professionnels qui vendent.', gradient: 'from-pink-600 to-rose-700', icon: Palette, pages: '40+ pages' },
-  { title: 'Créer un Site Web Professionnel', desc: 'Guide pas à pas pour construire votre site web de A à Z, même sans expérience.', gradient: 'from-cyan-600 to-blue-700', icon: Globe, pages: '45+ pages' },
-  { title: 'Community Manager PME', desc: 'Gérez les réseaux sociaux de PME locales et attirez des clients chaque jour.', gradient: 'from-emerald-600 to-teal-700', icon: Target, pages: '40+ pages' },
-  { title: 'Formation E-commerce', desc: 'Lancez votre boutique en ligne et vendez vos produits sur internet.', gradient: 'from-amber-600 to-orange-700', icon: ShoppingCart, pages: '40+ pages' },
-  { title: 'Formation YouTube & Monétisation', desc: 'Créez une chaîne YouTube rentable et monétisez votre contenu.', gradient: 'from-red-600 to-red-700', icon: Youtube, pages: '40+ pages' },
-  { title: 'Formation Complète en Trading', desc: 'Apprenez les bases du trading et gérez vos investissements.', gradient: 'from-slate-700 to-slate-800', icon: TrendingUp, pages: '45+ pages' },
-  { title: 'Intelligence Artificielle', desc: 'Découvrez comment utiliser l\'IA pour booster votre productivité.', gradient: 'from-indigo-600 to-violet-700', icon: Brain, pages: '40+ pages' },
-  { title: 'Programmation Complète', desc: 'Les fondamentaux de la programmation pour débuter dans le dev.', gradient: 'from-green-600 to-emerald-700', icon: Code, pages: '50+ pages' },
-  { title: 'Infographie et Design', desc: 'Créez des infographies percutantes pour vos réseaux sociaux.', gradient: 'from-fuchsia-600 to-pink-700', icon: PenTool, pages: '35+ pages' },
-  { title: 'Management & Gestion de Projets', desc: 'Gérez vos projets et équipes comme un professionnel.', gradient: 'from-blue-600 to-indigo-700', icon: Building2, pages: '40+ pages' },
-  { title: 'Maintenance Informatique', desc: 'Guide pratique pour entretenir et réparer vos ordinateurs.', gradient: 'from-gray-600 to-gray-700', icon: Wrench, pages: '35+ pages' },
-  { title: 'Hacking & Sécurité Informatique', desc: 'Comprenez les menaces et protégez vos données efficacement.', gradient: 'from-red-700 to-rose-800', icon: ShieldCheck, pages: '45+ pages' },
-  { title: 'Revendeur IPTV', desc: 'Lancez votre activité de revente IPTV et générez des revenus.', gradient: 'from-sky-600 to-cyan-700', icon: Tv, pages: '30+ pages' },
-  { title: 'Pack 10 000 Templates Canva', desc: 'Accédez à 10 000 templates et ressources Canva pour tous vos projets.', gradient: 'from-teal-600 to-emerald-700', icon: FolderDown, pages: 'Catalogue complet' },
+  { title: 'Travaux pratiques Word 2016', author: 'Christine Eberhardt', desc: 'Maîtrisez Word 2016 : mise en page, formatage, tableaux et publipostage.', cover: '/livres/word-2016.jpg' },
+  { title: 'Programmer en Langage C', author: 'Claude Delannoy', desc: 'Les fondamentaux de la programmation C avec exercices corrigés.', cover: '/livres/langage-c.jpg' },
+  { title: 'E-marketing & E-commerce', author: 'Émilie Courts', desc: 'Doper ses ventes en ligne pas à pas : visibilité et stratégie web.', cover: '/livres/e-marketing-ecommerce.jpg' },
+  { title: 'Le commerce électronique', author: 'Guy Hervier', desc: 'Vendre en ligne et optimiser ses achats sur internet.', cover: '/livres/commerce-electronique.jpg' },
+  { title: 'Le commerce électronique', author: 'Guy Hervier', desc: 'Guide complet pour maîtriser les achats et ventes en ligne.', cover: '/livres/commerce-electronique-2.jpg' },
+  { title: 'Manuel de Journalisme Web', author: 'Mark Briggs', desc: 'Blogs, réseaux sociaux, multimédia et journalisme numérique.', cover: '/livres/journalisme-web.jpg' },
+  { title: 'Vendre de façon rentable !', author: 'Pierre Maurin', desc: 'Stratégies de vente rentables pour PME et équipes commerciales.', cover: '/livres/vendre-rentable.jpg' },
+  { title: 'Écrire des livres avec ChatGPT', author: 'Martín Arellano', desc: 'Utilisez l\'IA ChatGPT pour créer et rédiger vos livres.', cover: '/livres/ecrire-livres-chatgpt.jpg' },
+  { title: 'Développement système sous Linux', author: 'Christophe Blaess', desc: 'Programmation système : multitâche, mémoire, réseau sous Linux.', cover: '/livres/linux-systeme.jpg' },
+  { title: 'Espionnage dans les réseaux TCP/IP', author: 'Zouheir Trabelsi', desc: 'Techniques de sniffing et contre-mesures de sécurité réseau.', cover: '/livres/espionnage-tcp-ip.jpg' },
 ]
 
 /* ═══════════════════════════════════════════════
@@ -1152,44 +1147,43 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5">
               {books.map((book, i) => (
                 <motion.div
-                  key={book.title}
+                  key={book.title + i}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: '-30px' }}
                   transition={{ duration: 0.4, delay: (i % 5) * 0.08 }}
                   className="group flex flex-col"
                 >
-                  {/* Book cover */}
-                  <div className={`relative aspect-[3/4] rounded-xl bg-gradient-to-br ${book.gradient} overflow-hidden shadow-lg group-hover:shadow-xl group-hover:-translate-y-1 transition-all duration-300 cursor-pointer`}>
-                    <div className="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-colors" />
-                    {/* Spine effect */}
-                    <div className="absolute left-0 top-0 bottom-0 w-3 bg-black/20" />
-                    {/* Content */}
-                    <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center text-white">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm mb-3 group-hover:scale-110 transition-transform">
-                        <book.icon className="h-6 w-6" />
-                      </div>
-                      <h3 className="text-xs sm:text-sm font-extrabold leading-tight mb-1.5">{book.title}</h3>
-                      <p className="text-[9px] sm:text-[10px] text-white/70 leading-relaxed line-clamp-2">{book.desc}</p>
-                      <span className="mt-auto pt-3 text-[9px] text-white/50 font-medium">{book.pages}</span>
-                    </div>
+                  {/* Book cover with real image */}
+                  <div className="relative aspect-[3/4] rounded-xl overflow-hidden shadow-lg group-hover:shadow-2xl group-hover:-translate-y-2 transition-all duration-300 cursor-pointer bg-muted">
+                    <img
+                      src={book.cover}
+                      alt={book.title}
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
+                    />
                     {/* Price tag */}
-                    <div className="absolute top-2 right-2 bg-white text-amber-700 text-[10px] font-extrabold px-2 py-1 rounded-lg shadow">
+                    <div className="absolute top-2 right-2 bg-white/95 backdrop-blur-sm text-amber-700 text-[10px] font-extrabold px-2.5 py-1 rounded-lg shadow-md">
                       1 000 F
+                    </div>
+                    {/* Bottom gradient for title */}
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-3 pt-8">
+                      <h3 className="text-[11px] sm:text-xs font-extrabold text-white leading-tight line-clamp-2">{book.title}</h3>
+                      <p className="text-[9px] text-white/70 mt-0.5">{book.author}</p>
                     </div>
                   </div>
                   {/* Order button */}
                   <a
-                    href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je veux commander le livre : ${book.title} (1 000 FCFA). Comment procéder ?`)}`}
+                    href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je veux commander le livre : ${book.title} par ${book.author} (1 000 FCFA). Comment procéder ?`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mt-2.5"
                   >
-                    <Button variant="outline" size="sm" className="w-full text-[11px] font-semibold h-9 hover:bg-amber-50 hover:border-amber-300 hover:text-amber-700 transition-colors">
-                      <MessageCircle className="h-3 w-3 mr-1.5" /> Commander
+                    <Button variant="outline" size="sm" className="w-full text-[11px] font-semibold h-9 hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-700 transition-colors">
+                      <MessageCircle className="h-3 w-3 mr-1.5" /> Commander via WhatsApp
                     </Button>
                   </a>
                 </motion.div>
@@ -1210,16 +1204,16 @@ export default function Home() {
                       <FolderDown className="h-6 w-6" />
                     </div>
                     <div>
-                      <h3 className="font-extrabold text-base">Pack Complet — Tous les 15 livres</h3>
-                      <p className="text-sm text-muted-foreground mt-0.5">Économisez 5 000 FCFA en prenant le pack complet</p>
+                      <h3 className="font-extrabold text-base">Pack Complet — Tous les 10 livres</h3>
+                      <p className="text-sm text-muted-foreground mt-0.5">Économisez 3 000 FCFA en prenant le pack complet</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 flex-shrink-0">
                     <div className="text-right">
-                      <span className="text-xs text-muted-foreground line-through">15 000 FCFA</span>
-                      <div className="text-2xl font-extrabold text-amber-600">10 000 <span className="text-sm font-normal">FCFA</span></div>
+                      <span className="text-xs text-muted-foreground line-through">10 000 FCFA</span>
+                      <div className="text-2xl font-extrabold text-amber-600">7 000 <span className="text-sm font-normal">FCFA</span></div>
                     </div>
-                    <a href={`https://wa.me/22397787244?text=${encodeURIComponent('Bonjour Sacko ! Je veux commander le Pack Complet de 15 livres (10 000 FCFA au lieu de 15 000). Comment procéder ?')}`} target="_blank" rel="noopener noreferrer">
+                    <a href={`https://wa.me/22397787244?text=${encodeURIComponent('Bonjour Sacko ! Je veux commander le Pack Complet de 10 livres (7 000 FCFA au lieu de 10 000). Comment procéder ?')}`} target="_blank" rel="noopener noreferrer">
                       <Button className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-lg shadow-amber-500/20 whitespace-nowrap">
                         <ShoppingCart className="h-4 w-4 mr-1.5" /> Prendre le Pack
                       </Button>
