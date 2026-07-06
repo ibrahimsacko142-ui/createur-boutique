@@ -510,13 +510,21 @@ export default function Home() {
 
         {/* ═══ 2. HERO ═══ */}
         <section id="accueil" className="relative overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-white dark:from-amber-950/20 dark:via-orange-950/10 dark:to-background">
-          <div className="absolute top-0 -right-40 h-[500px] w-[500px] rounded-full bg-amber-200/40 dark:bg-amber-800/10 blur-3xl" />
-          <div className="absolute -bottom-20 -left-40 h-[400px] w-[400px] rounded-full bg-orange-200/30 dark:bg-orange-800/10 blur-3xl" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[300px] w-[300px] rounded-full bg-red-100/30 dark:bg-red-900/10 blur-3xl" />
+          {/* Animated gradient orbs */}
+          <div className="absolute top-0 -right-40 h-[500px] w-[500px] rounded-full bg-amber-200/40 dark:bg-amber-800/10 blur-3xl animate-pulse" />
+          <div className="absolute -bottom-20 -left-40 h-[400px] w-[400px] rounded-full bg-orange-200/30 dark:bg-orange-800/10 blur-3xl" style={{ animationDelay: '1s', animationDuration: '4s' }} />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[300px] w-[300px] rounded-full bg-red-100/30 dark:bg-red-900/10 blur-3xl" style={{ animationDelay: '2s', animationDuration: '5s' }} />
+          {/* Subtle grid pattern */}
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(245,158,11,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(245,158,11,0.03)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,black,transparent)]" />
 
           <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div>
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
                 <Badge variant="secondary" className="mb-4 px-3 py-1 text-xs font-medium bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800 shadow-sm">
                   <Sparkles className="h-3 w-3 mr-1" /> Studio Créatif Indépendant
                 </Badge>
@@ -531,32 +539,48 @@ export default function Home() {
                 <p className="mt-6 text-lg text-muted-foreground leading-relaxed max-w-lg">
                   Création de logos, sites web et visuels sur-mesure pour propulser les entrepreneurs et créateurs de Bamako et d&apos;ailleurs. Chaque projet est une opportunité de transformer votre vision en une réalité qui attire et fidélise.
                 </p>
+                </motion.div>
 
-                <div className="mt-8 flex flex-wrap gap-3">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className="mt-8 flex flex-wrap gap-3"
+                >
                   <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20discuter%20de%20mon%20projet." target="_blank" rel="noopener noreferrer">
                     <Button size="lg" className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 hover:from-amber-600 hover:via-orange-600 hover:to-red-600 text-white font-semibold shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 transition-all duration-200 hover:scale-105 active:scale-95">
                       <Rocket className="mr-2 h-4 w-4" /> Lancer mon projet
                     </Button>
                   </a>
-                  <a href="https://wa.me/22397787244?text=Bonjour%20!%20J%27aimerais%20obtenir%20un%20devis%20gratuit%20pour%20mon%20projet." target="_blank" rel="noopener noreferrer">
+                  <a href="#boutique">
                     <Button size="lg" variant="outline" className="font-semibold hover:bg-accent transition-transform duration-200 hover:scale-105 active:scale-95">
-                      Obtenir un devis gratuit <ArrowRight className="ml-2 h-4 w-4" />
+                      <BookOpen className="mr-2 h-4 w-4" /> Voir la Boutique
                     </Button>
                   </a>
-                </div>
+                </motion.div>
 
-                <div className="mt-10 flex flex-wrap gap-3">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                  className="mt-10 flex flex-wrap gap-3"
+                >
                   {['Design Graphique', 'Sites Web', 'Montage Vidéo', 'Marketing Digital'].map((tag) => (
-                    <span key={tag} className="inline-flex items-center gap-1.5 rounded-full bg-white/80 dark:bg-white/5 border px-3.5 py-1.5 text-xs font-medium text-amber-700 dark:text-amber-400 border-amber-200/80 dark:border-amber-800 shadow-sm">
+                    <span key={tag} className="inline-flex items-center gap-1.5 rounded-full bg-white/80 dark:bg-white/5 border px-3.5 py-1.5 text-xs font-medium text-amber-700 dark:text-amber-400 border-amber-200/80 dark:border-amber-800 shadow-sm backdrop-blur-sm hover:-translate-y-0.5 transition-transform cursor-default">
                       <CheckCircle2 className="h-3 w-3 text-emerald-500" /> {tag}
                     </span>
                   ))}
-                </div>
+                </motion.div>
 
-                <div className="mt-8 flex items-center gap-4">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.4 }}
+                  className="mt-8 flex items-center gap-4"
+                >
                   <div className="flex -space-x-2">
                     {['from-amber-400 to-orange-500', 'from-emerald-400 to-teal-500', 'from-purple-400 to-pink-500', 'from-blue-400 to-cyan-500'].map((g, i) => (
-                      <div key={i} className={`h-8 w-8 rounded-full border-2 border-white bg-gradient-to-br ${g}`} />
+                      <div key={i} className={`h-8 w-8 rounded-full border-2 border-white dark:border-slate-900 bg-gradient-to-br ${g}`} />
                     ))}
                   </div>
                   <div>
@@ -567,11 +591,16 @@ export default function Home() {
                       ))}
                     </div>
                   </div>
-                </div>
+                </motion.div>
               </div>
 
               {/* Hero Visual */}
-              <div className="hidden lg:block">
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="hidden lg:block"
+              >
                 <div className="relative">
                   <div className="absolute -inset-4 bg-gradient-to-r from-amber-400/20 via-orange-400/20 to-red-400/20 rounded-3xl blur-2xl" />
                   <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/20">
@@ -585,16 +614,18 @@ export default function Home() {
                       </div>
                     </div>
                   </div>
-                  <div className="absolute -bottom-6 -left-6 bg-white dark:bg-card rounded-xl shadow-xl p-3 border flex items-center gap-3 hover:scale-105 transition-transform cursor-default">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
-                      <Award className="h-5 w-5 text-amber-500" />
-                    </div>
-                    <div>
-                      <p className="text-xs font-bold">50+ Marques</p>
-                      <p className="text-[10px] text-muted-foreground">Propulsées</p>
+                  <div className="absolute -bottom-6 -left-6 bg-white/90 dark:bg-card/90 backdrop-blur-xl rounded-xl shadow-xl p-3 border hover:scale-105 transition-transform cursor-default">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
+                        <Award className="h-5 w-5 text-amber-500" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold">50+ Marques</p>
+                        <p className="text-[10px] text-muted-foreground">Propulsées</p>
+                      </div>
                     </div>
                   </div>
-                  <div className="absolute -top-4 -right-4 bg-white dark:bg-card rounded-xl shadow-xl p-3 border hover:scale-105 transition-transform cursor-default">
+                  <div className="absolute -top-4 -right-4 bg-white/90 dark:bg-card/90 backdrop-blur-xl rounded-xl shadow-xl p-3 border hover:scale-105 transition-transform cursor-default">
                     <div className="flex items-center gap-2">
                       <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30">
                         <CheckCircle2 className="h-5 w-5 text-emerald-500" />
@@ -606,7 +637,7 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             </div>
           </div>
         </section>
@@ -614,7 +645,7 @@ export default function Home() {
         {/* ═══ 3. QUICK SERVICE ACCESS BAR ═══ */}
         <section className="py-6 border-b bg-background">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+            <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
               {[
                 { label: 'Logo', icon: Palette },
                 { label: 'Site Web', icon: Globe },
@@ -624,8 +655,8 @@ export default function Home() {
                 { label: 'Canva Pro', icon: Layers },
                 { label: 'CapCut Pro', icon: Scissors },
               ].map((s) => (
-                <a key={s.label} href="#services" className="flex-shrink-0 flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl bg-muted/50 hover:bg-muted hover:-translate-y-0.5 hover:shadow-md transition-all duration-300">
-                  <s.icon className="h-5 w-5 text-amber-500" />
+                <a key={s.label} href="#services" className="flex-shrink-0 flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl bg-muted/50 hover:bg-gradient-to-br hover:from-amber-50 hover:to-orange-50 dark:hover:from-amber-950/20 dark:hover:to-orange-950/20 hover:-translate-y-0.5 hover:shadow-md hover:shadow-amber-500/10 hover:border-amber-200 dark:hover:border-amber-800 border border-transparent transition-all duration-300 group">
+                  <s.icon className="h-5 w-5 text-amber-500 group-hover:scale-110 transition-transform" />
                   <span className="text-xs font-medium">{s.label}</span>
                 </a>
               ))}
@@ -872,13 +903,15 @@ export default function Home() {
         </section>
 
         {/* ═══ 7. CARRIÈRE PRO ═══ */}
-        <section id="carriere-pro" className="py-16 sm:py-20 bg-gradient-to-b from-slate-900 via-slate-900 to-background text-white">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <section id="carriere-pro" className="py-16 sm:py-20 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-900 to-background" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(59,130,246,0.08),transparent_50%),radial-gradient(circle_at_70%_70%,rgba(245,158,11,0.06),transparent_50%)]" />
+          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-white">
             <div className="text-center mb-12">
               <Badge className="mb-3 bg-blue-500/20 text-blue-300 border-blue-500/30 hover:bg-blue-500/30">
                 <GraduationCap className="h-3 w-3 mr-1" /> Carrière Pro
               </Badge>
-              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Offre à la Carte</h2>
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Offre à la <span className="text-blue-400">Carte</span></h2>
               <p className="mt-3 text-slate-400 max-w-xl mx-auto">
                 5 services clés pour booster votre employabilité. Chaque prestation est livrée sous 24h.
               </p>
@@ -892,24 +925,27 @@ export default function Home() {
                 { icon: Target, name: 'Objectif Entretien', sub: 'Préparation entretien', price: '500', hook: "Les questions pièges de votre secteur, décortiquées.", color: 'from-amber-500 to-orange-500' },
                 { icon: BadgeCheck, name: 'Réseautage Pro', sub: 'Carte de visite', price: '1 500', hook: 'Un premier contact, une impression durable.', color: 'from-rose-500 to-pink-500' },
               ].map((s) => (
-                <Card key={s.name} className="h-full bg-slate-800/80 border border-white/10 hover:border-white/20 transition-all duration-300 hover:-translate-y-0.5">
-                  <CardContent className="p-6">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className={`flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br ${s.color} text-white shadow-lg`}>
-                        <s.icon className="h-5 w-5" />
+                <Card key={s.name} className="h-full backdrop-blur-xl bg-white/[0.04] border border-white/[0.08] hover:border-blue-400/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-500/5 group">
+                  <CardContent className="p-6 relative">
+                    <div className={`absolute inset-0 rounded-xl bg-gradient-to-br ${s.color} opacity-0 group-hover:opacity-[0.04] transition-opacity duration-500`} />
+                    <div className="relative">
+                      <div className="flex items-start justify-between mb-4">
+                        <div className={`flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br ${s.color} text-white shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                          <s.icon className="h-5 w-5" />
+                        </div>
+                        <span className="text-xl font-extrabold text-white">{s.price} <span className="text-xs font-normal text-slate-400">FCFA</span></span>
                       </div>
-                      <span className="text-xl font-extrabold text-white">{s.price} <span className="text-xs font-normal text-slate-400">FCFA</span></span>
+                      <h3 className="text-lg font-bold text-white">{s.name}</h3>
+                      <p className="text-xs text-slate-500 mb-2">{s.sub}</p>
+                      <p className="text-sm text-slate-300 leading-relaxed mb-4">{s.hook}</p>
+                      <a
+                        href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je souhaite commander : ${s.name} (${s.sub}) — ${s.price} FCFA.`)}`}
+                        target="_blank" rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-400 hover:text-blue-300 transition-colors"
+                      >
+                        Commander <ArrowRight className="h-3.5 w-3.5" />
+                      </a>
                     </div>
-                    <h3 className="text-lg font-bold text-white">{s.name}</h3>
-                    <p className="text-xs text-slate-500 mb-2">{s.sub}</p>
-                    <p className="text-sm text-slate-300 leading-relaxed mb-4">{s.hook}</p>
-                    <a
-                      href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je souhaite commander : ${s.name} (${s.sub}) — ${s.price} FCFA.`)}`}
-                      target="_blank" rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-amber-400 hover:text-amber-300 transition-colors"
-                    >
-                      Commander <ArrowRight className="h-3.5 w-3.5" />
-                    </a>
                   </CardContent>
                 </Card>
               ))}
@@ -1003,28 +1039,31 @@ export default function Home() {
                   revenus: '50 000 – 300 000 FCFA/mois',
                 },
               ].map((d) => (
-                <Card key={d.title} className="overflow-hidden border-0 shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+                <Card key={d.title} className="overflow-hidden border-0 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
                   <div className={`h-1 bg-gradient-to-r ${d.color}`} />
-                  <CardContent className="p-5">
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className={`flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${d.color} text-white shadow-md flex-shrink-0`}>
-                        <d.icon className="h-5 w-5" />
+                  <CardContent className="p-5 relative">
+                    <div className={`absolute inset-x-0 top-0 h-32 bg-gradient-to-br ${d.color} opacity-0 group-hover:opacity-[0.03] transition-opacity duration-500 rounded-t-none`} />
+                    <div className="relative">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className={`flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${d.color} text-white shadow-md flex-shrink-0 group-hover:scale-110 transition-transform duration-300`}>
+                          <d.icon className="h-5 w-5" />
+                        </div>
+                        <div className="min-w-0">
+                          <h3 className="font-bold text-sm leading-tight">{d.title}</h3>
+                          <p className="text-sm font-extrabold text-emerald-600 dark:text-emerald-400">{d.price}</p>
+                        </div>
                       </div>
-                      <div className="min-w-0">
-                        <h3 className="font-bold text-sm leading-tight">{d.title}</h3>
-                        <p className="text-sm font-extrabold text-emerald-600 dark:text-emerald-400">{d.price}</p>
+                      <p className="text-xs text-muted-foreground leading-relaxed mb-4">{d.desc}</p>
+                      <div className="flex items-center justify-between pt-3 border-t">
+                        <span className="text-[11px] text-muted-foreground">Revenus : <strong className="text-amber-600 dark:text-amber-400">{d.revenus}</strong></span>
+                        <a
+                          href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je suis intéressé(e) par : ${d.title}. J'aimerais en savoir plus.`)}`}
+                          target="_blank" rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-600 hover:text-amber-700 dark:text-amber-400 transition-colors"
+                        >
+                          Détails <ArrowRight className="h-3 w-3" />
+                        </a>
                       </div>
-                    </div>
-                    <p className="text-xs text-muted-foreground leading-relaxed mb-4">{d.desc}</p>
-                    <div className="flex items-center justify-between pt-3 border-t">
-                      <span className="text-[11px] text-muted-foreground">Revenus : <strong className="text-amber-600 dark:text-amber-400">{d.revenus}</strong></span>
-                      <a
-                        href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je suis intéressé(e) par : ${d.title}. J'aimerais en savoir plus.`)}`}
-                        target="_blank" rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-600 hover:text-amber-700 dark:text-amber-400 transition-colors"
-                      >
-                        Détails <ArrowRight className="h-3 w-3" />
-                      </a>
                     </div>
                   </CardContent>
                 </Card>
