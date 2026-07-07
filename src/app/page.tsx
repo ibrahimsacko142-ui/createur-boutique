@@ -59,6 +59,7 @@ import {
   Pause,
   Cookie,
   Calculator,
+  Share2,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -372,22 +373,25 @@ const coaches = [
     bio: 'Freelance digital à Bamako avec 50+ projets livrés. Expert en design graphique et stratégie visuelle pour entrepreneurs africains.',
     gradient: 'from-amber-400 via-orange-500 to-red-500',
     initial: 'S',
+    stats: [{ value: '50+', label: 'Projets' }, { value: '3 ans', label: 'Expérience' }, { value: '100%', label: 'Satisfaction' }],
   },
   {
-    name: 'Coach Moussa',
-    role: 'Expert Montage Vidéo',
-    speciality: 'CapCut, Premiere Pro, Motion Design',
-    bio: 'Spécialiste en montage vidéo et production de contenu pour réseaux sociaux. Plus de 200 vidéos produites pour des marques au Mali.',
-    gradient: 'from-purple-400 via-violet-500 to-indigo-500',
-    initial: 'M',
+    name: 'Camara Leh',
+    role: 'Coach Développement Web',
+    speciality: 'JavaScript, React, Next.js, Base de données',
+    bio: "Développeur full-stack passionné. Spécialiste en création de sites web modernes et applications web performantes. Plus de 30 projets web livrés pour des entreprises au Mali et en Afrique de l'Ouest.",
+    gradient: 'from-blue-400 via-cyan-500 to-teal-500',
+    initial: 'CL',
+    stats: [{ value: '30+', label: 'Sites web' }, { value: '2 ans', label: 'Expérience' }, { value: '15+', label: 'Clients' }],
   },
   {
-    name: 'Coach Aminata',
-    role: 'Expert Marketing Digital',
-    speciality: 'Réseaux Sociaux, Publicité, Stratégie',
-    bio: 'Community Manager certifiée avec une expertise en croissance digitale pour PME locales. Gère la présence en ligne de 15+ entreprises.',
-    gradient: 'from-emerald-400 via-teal-500 to-cyan-500',
-    initial: 'A',
+    name: 'Kante',
+    role: 'Coach Marketing Digital',
+    speciality: 'Publicité Facebook/Instagram, TikTok, Stratégie de contenu',
+    bio: 'Expert en marketing digital et community management. Gère la présence en ligne de 20+ entreprises. Spécialiste des publicités payantes sur Facebook, Instagram et TikTok avec un ROI mesurable.',
+    gradient: 'from-emerald-400 via-green-500 to-lime-500',
+    initial: 'K',
+    stats: [{ value: '20+', label: 'Entreprises' }, { value: '2 ans', label: 'Expérience' }, { value: '500K+', label: 'Budget géré' }],
   },
 ]
 
@@ -552,6 +556,8 @@ export default function Home() {
   const [testimIndex, setTestimIndex] = useState(0)
   const [testimPaused, setTestimPaused] = useState(false)
   const [socialProof, setSocialProof] = useState<{ name: string; action: string; time: number } | null>(null)
+  const [shareToast, setShareToast] = useState(false)
+  const [activeDotSection, setActiveDotSection] = useState('accueil')
 
   // Portfolio lightbox
   const [lightboxImg, setLightboxImg] = useState<{ src: string; title: string; desc: string } | null>(null)
@@ -674,6 +680,27 @@ export default function Home() {
     return () => window.removeEventListener('keydown', handleEsc)
   }, [])
 
+  // Intersection observer for side nav dots
+  useEffect(() => {
+    const sectionIds = ['accueil', 'services', 'formations', 'coachs', 'boutique', 'portfolio', 'contact']
+    const observers: IntersectionObserver[] = []
+    sectionIds.forEach(id => {
+      const el = document.getElementById(id)
+      if (!el) return
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) setActiveDotSection(id)
+          })
+        },
+        { rootMargin: '-20% 0px -60% 0px', threshold: 0 }
+      )
+      observer.observe(el)
+      observers.push(observer)
+    })
+    return () => observers.forEach(o => o.disconnect())
+  }, [])
+
 
 
 
@@ -742,6 +769,11 @@ export default function Home() {
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[300px] w-[300px] rounded-full bg-red-100/30 dark:bg-red-900/10 blur-3xl" style={{ animationDelay: '2s', animationDuration: '5s' }} />
           {/* Subtle grid pattern */}
           <div className="absolute inset-0 bg-[linear-gradient(rgba(245,158,11,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(245,158,11,0.03)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,black,transparent)]" />
+
+          {/* Floating shapes */}
+          <div className="absolute top-20 right-20 w-16 h-16 rounded-xl bg-amber-300/20 dark:bg-amber-600/10 animate-float-slow hidden lg:block" />
+          <div className="absolute bottom-32 right-40 w-10 h-10 rounded-full bg-orange-300/25 dark:bg-orange-600/10 animate-float-medium hidden lg:block" />
+          <div className="absolute top-40 left-20 w-8 h-8 rounded-lg bg-red-300/20 dark:bg-red-600/10 rotate-45 animate-float-fast hidden lg:block" />
 
           <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -1248,7 +1280,7 @@ export default function Home() {
                   premium: { title: 'Offre Premium', desc: "Stratégie complète : affiches, posts, stories, bannières publicitaires pour Facebook/Instagram/TikTok. Charte visuelle réseaux sociaux, calendrier éditorial de 7 jours." },
                 },
               ].map((section) => (
-                <Card key={section.cat} className={`border ${section.borderColor} overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5`}>
+                <Card key={section.cat} className={`border ${section.borderColor} overflow-hidden transition-all duration-500 hover:shadow-2xl hover:-translate-y-1.5 hover:scale-[1.01]`}>
                   <div className={`h-1.5 bg-gradient-to-r ${section.color}`} />
                   <CardContent className="p-5 sm:p-7">
                     <div className="flex items-center gap-3 mb-5">
@@ -1655,13 +1687,15 @@ export default function Home() {
         <section id="coachs" className="py-16 sm:py-20 relative overflow-hidden">
           {/* Animated background */}
           <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(245,158,11,0.08),transparent_50%),radial-gradient(circle_at_80%_50%,rgba(168,85,247,0.06),transparent_50%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(245,158,11,0.08),transparent_50%),radial-gradient(circle_at_80%_50%,rgba(6,182,212,0.06),transparent_50%),radial-gradient(circle_at_50%_80%,rgba(16,185,129,0.05),transparent_50%)]" />
           <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <Badge className="mb-3 bg-amber-500/20 text-amber-300 border-amber-500/30 hover:bg-amber-500/30">
                 <Users className="h-3 w-3 mr-1" /> Notre Équipe
               </Badge>
               <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">3 Coachs <span className="text-amber-400">experts</span> à votre service</h2>
+              {/* Animated underline */}
+              <div className="mt-4 mx-auto h-1 w-24 rounded-full bg-gradient-to-r from-amber-400 via-orange-500 to-red-500" />
               <p className="mt-4 text-slate-400 max-w-2xl mx-auto leading-relaxed">
                 Pas de théorie abstraite : chaque coach pratique activement dans son domaine à Bamako. Vous apprenez de personnes qui vivent de leur compétence au quotidien.
               </p>
@@ -1671,36 +1705,58 @@ export default function Home() {
               {coaches.map((coach, i) => (
                 <motion.div
                   key={coach.name}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: i * 0.15 }}
-                  className="group relative rounded-2xl backdrop-blur-xl bg-white/[0.04] border border-white/[0.08] hover:border-amber-400/30 p-6 text-center transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-amber-500/10"
+                  className="group relative rounded-2xl backdrop-blur-xl bg-white/[0.04] border border-white/[0.08] hover:border-amber-400/30 p-6 sm:p-8 text-center transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl hover:shadow-amber-500/10"
                 >
-                  {/* Glow effect on hover */}
-                  <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${coach.gradient} opacity-0 group-hover:opacity-[0.04] transition-opacity duration-500`} />
+                  {/* Glow effect */}
+                  <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${coach.gradient} opacity-0 group-hover:opacity-[0.06] transition-opacity duration-500`} />
                   <div className="relative">
                     {/* Avatar */}
-                    <div className="relative mx-auto mb-4">
-                      <div className={`h-20 w-20 rounded-full bg-gradient-to-br ${coach.gradient} flex items-center justify-center text-white text-2xl font-extrabold shadow-lg mx-auto ring-4 ring-slate-800/50 group-hover:scale-110 transition-transform duration-300`}>
+                    <div className="relative mx-auto mb-5">
+                      <div className={`h-24 w-24 rounded-full bg-gradient-to-br ${coach.gradient} flex items-center justify-center text-white text-3xl font-extrabold shadow-2xl mx-auto ring-4 ring-slate-800/50 group-hover:scale-110 transition-transform duration-500`}>
                         {coach.initial}
                       </div>
                       {i === 0 && (
-                        <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[8px] font-bold px-2.5 py-0.5 rounded-full shadow-lg shadow-amber-500/30">
+                        <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[8px] font-bold px-3 py-1 rounded-full shadow-lg shadow-amber-500/30 whitespace-nowrap">
                           FONDATEUR
                         </span>
                       )}
                     </div>
-                    <h3 className="text-base font-extrabold text-white">{coach.name}</h3>
-                    <p className="text-xs text-amber-400 font-semibold mt-0.5">{coach.role}</p>
-                    <p className="text-[10px] text-slate-500 mt-1 font-medium">{coach.speciality}</p>
-                    <p className="text-xs text-slate-400 leading-relaxed mt-3">{coach.bio}</p>
+                    <h3 className="text-lg font-extrabold text-white">{coach.name}</h3>
+                    <p className="text-xs text-amber-400 font-semibold mt-1">{coach.role}</p>
+
+                    {/* Skill tags */}
+                    <div className="flex flex-wrap items-center justify-center gap-1.5 mt-3">
+                      {coach.speciality.split(', ').map((skill) => (
+                        <span key={skill} className="text-[10px] font-medium text-slate-400 bg-white/[0.06] border border-white/[0.08] px-2 py-0.5 rounded-full">
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* Bio */}
+                    <p className="text-xs text-slate-400 leading-relaxed mt-4">{coach.bio}</p>
+
+                    {/* Stats */}
+                    <div className="flex items-center justify-center gap-4 mt-4 pt-4 border-t border-white/[0.06]">
+                      {coach.stats.map((stat) => (
+                        <div key={stat.label} className="text-center">
+                          <div className="text-base font-extrabold text-white">{stat.value}</div>
+                          <div className="text-[9px] text-slate-500">{stat.label}</div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* WhatsApp button */}
                     <a
                       href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je souhaite être encadré(e) par ${coach.name} pour une formation.`)}`}
                       target="_blank" rel="noopener noreferrer"
-                      className="mt-4 inline-flex items-center gap-1.5 text-[11px] font-semibold text-amber-400 hover:text-amber-300 transition-colors"
+                      className="mt-5 inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs font-bold shadow-lg shadow-emerald-500/20 hover:from-emerald-600 hover:to-teal-600 hover:shadow-emerald-500/30 transition-all hover:scale-105"
                     >
-                      <MessageCircle className="h-3 w-3" /> Contacter
+                      <MessageCircle className="h-3.5 w-3.5" /> Contacter {coach.name.split(' ')[0]}
                     </a>
                   </div>
                 </motion.div>
@@ -3000,6 +3056,34 @@ export default function Home() {
         <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-medium bg-white/20 px-2 py-0.5 rounded-full">Quiz gratuit</span>
       </motion.button>
 
+      {/* ═══ SIDE NAVIGATION DOTS (desktop) ═══ */}
+      <div className="fixed right-4 top-1/2 -translate-y-1/2 z-30 hidden xl:flex flex-col gap-2.5">
+        {[
+          { id: 'accueil', label: 'Accueil' },
+          { id: 'services', label: 'Services' },
+          { id: 'formations', label: 'Formations' },
+          { id: 'coachs', label: 'Coachs' },
+          { id: 'boutique', label: 'Boutique' },
+          { id: 'portfolio', label: 'Portfolio' },
+          { id: 'contact', label: 'Contact' },
+        ].map((item) => (
+          <a
+            key={item.id}
+            href={`#${item.id}`}
+            className="group flex items-center gap-2.5 justify-end"
+          >
+            <span className="text-[10px] font-medium text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+              {item.label}
+            </span>
+            <span className={`h-2.5 rounded-full transition-all duration-300 ${
+              activeDotSection === item.id
+                ? 'w-2.5 bg-amber-500 shadow-md shadow-amber-500/30'
+                : 'w-2 bg-muted-foreground/30 group-hover:bg-amber-500/50'
+            }`} />
+          </a>
+        ))}
+      </div>
+
       </main>
 
       {/* ═══ 20. FOOTER ═══ */}
@@ -3061,11 +3145,48 @@ export default function Home() {
             exit={{ opacity: 0, scale: 0.5, y: 20 }}
             transition={{ type: 'spring', stiffness: 300, damping: 25 }}
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="fixed bottom-6 right-6 z-40 hidden lg:flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 text-white shadow-lg shadow-amber-500/30 hover:shadow-xl hover:shadow-amber-500/40 transition-all duration-300 hover:scale-110"
+            className="fixed bottom-6 right-20 z-40 hidden lg:flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 text-white shadow-lg shadow-amber-500/30 hover:shadow-xl hover:shadow-amber-500/40 transition-all duration-300 hover:scale-110"
             aria-label="Retour en haut"
           >
             <ChevronUp className="h-5 w-5" />
           </motion.button>
+        )}
+      </AnimatePresence>
+
+      {/* ═══ SHARE BUTTON ═══ */}
+      <motion.button
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 25, delay: 0.1 }}
+        onClick={async () => {
+          if (navigator.share) {
+            try {
+              await navigator.share({ title: 'Studio Créatif — Sacko', text: 'Découvre Studio Créatif ! Design, sites web, formations à Bamako.', url: window.location.href })
+            } catch {}
+          } else {
+            await navigator.clipboard.writeText(window.location.href)
+            setShareToast(true)
+            setTimeout(() => setShareToast(false), 2000)
+          }
+        }}
+        className="fixed bottom-6 right-6 z-40 hidden lg:flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/30 hover:shadow-xl hover:scale-110 transition-all"
+        aria-label="Partager le site"
+      >
+        <Share2 className="h-5 w-5" />
+      </motion.button>
+
+      {/* Share toast */}
+      <AnimatePresence>
+        {shareToast && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            className="fixed bottom-20 right-6 z-40 hidden lg:block bg-foreground text-background text-xs font-medium px-3 py-2 rounded-lg shadow-lg"
+          >
+            Lien copié !
+          </motion.div>
         )}
       </AnimatePresence>
 
