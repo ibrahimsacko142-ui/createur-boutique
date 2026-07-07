@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://momodeveloper.mtn.com",
+    "name": "MoMo Developer Portal",
+    "snippet": "The MoMo Remittance API enables secure, cross-border money transfers via the MTN Mobile Money platform. It allows licensed remittance providers to send funds",
+    "host_name": "momodeveloper.mtn.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.orange.com/apis/om-webpay",
+    "name": "Orange Money Web Payment / M Payment (1.0) API – Overview",
+    "snippet": "Once a merchant has subscribed to Orange Money Web Payment / M Payment, the service directly integrates into its website using our APIs, which are easy to ...",
+    "host_name": "developer.orange.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://orystack.com/integration-des-apis-mobile-money-en-afrique-de-louest-guide-technique-pour-les-equipes-produit",
+    "name": "Intégration des APIs Mobile Money en Afrique de l'Ouest - OryStack",
+    "snippet": "MTN Mobile Money, Moov ・ intégrations réalisées en 2024-2025. Les APIs Mobile Money évoluent rapidement. Orange Money Sénégal, CI, Mali, ...",
+    "host_name": "orystack.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.paynote.africa/api-mtn-mobile-money-votre-solution-de-paiement-securise",
+    "name": "API MTN Mobile Money : Votre Solution de paiement sécurisé",
+    "snippet": "vous accompagne étape par étape dans l'implémentation de l'API de paiement et de remboursement MTN Mobile Money Cameroun. En savoir plus. Paiement web.",
+    "host_name": "www.paynote.africa",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://elyonpay.com/api.html",
+    "name": "API de paiement ElyonPay – Intégration Mobile Money & Carte en",
+    "snippet": "Intégrez MTN Mobile Money, Orange Money, Wave et Moov Money dans votre application avec une seule API unifiée. Cartes bancaires. Acceptez Visa, Mastercard avec ...",
+    "host_name": "elyonpay.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.ericsson.com/en/cases/2023/mtn-mobile-money-open-apis",
+    "name": "MTN Mobile Money Open APIs: Driving fintech innovation - Ericsson",
+    "snippet": "The MTN Mobile Money Open APIs provide developers complimentary access to the MTN Mobile Money proprietary software platform and enable them to create ...",
+    "host_name": "www.ericsson.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://payougo.com",
+    "name": "Paiements simplifiés & sécurisés en ligne, mobile money, Orange",
+    "snippet": "Paiements simplifiés & sécurisés en ligne et en magasin via mobile money, Orange, MTN & cartes bancaires. Avec PayouGo, créez un compte marchand en ligne ...",
+    "host_name": "payougo.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://community.shopify.com/t/need-a-developer-to-intergrate-a-check-out-payment-using-mtn-and-orange-mobile-money-momo-api/6281?page=5",
+    "name": "Need a developer to Intergrate a Check out Payment Using MTN",
+    "snippet": "To use the app, you must have an MTN MoMo Developer Account to access your API keys. Sign up here: https://momodeveloper.mtn.com/signup",
+    "host_name": "community.shopify.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=7BK37ktcDG0",
+    "name": "How to integrate MTN MOMO API 2024 (Sandbox) #1 - Introduction",
+    "snippet": "Welcome to an exciting new series on this channel! In this series, we'll focus on integrating MTN MOMO. I'll guide you through the process ...",
+    "host_name": "www.youtube.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://kolonell.com/en/blog/mtn-momo-api-ghana-ivory-coast-2026",
+    "name": "MTN MoMo API Ghana IC: integrate Mobile Money 2026 - Kolonell",
+    "snippet": "MTN MoMo Open API 2026 integration guide: Ghana, Ivory Coast, Cameroon. Collections, Disbursements, Node.js code + pricing.",
+    "host_name": "kolonell.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

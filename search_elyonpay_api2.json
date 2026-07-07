@@ -1,0 +1,47 @@
+[
+  {
+    "url": "https://www.elyonpay.com/en/api.html",
+    "name": "Payment Solution Africa & Europe — Mobile Money, Cards | ElyonPay",
+    "snippet": "Our API is designed to be easy to implement with just a few lines of code. ElyonPay API – Request to Pay. JavaScript. PHP Python. Copy",
+    "host_name": "www.elyonpay.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://api-reference.checkout.com",
+    "name": "Checkout.com API Reference",
+    "snippet": "Our APIs accept and return JSON in the HTTP body, and return standard HTTP response codes. You can consume the APIs directly using any HTTP or REST library.",
+    "host_name": "api-reference.checkout.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://doc.gopay.com",
+    "name": "GoPay technical documentation",
+    "snippet": "This documentation describes the integration of the GoPay payment gateway using the REST API. It is targeted at developers.",
+    "host_name": "doc.gopay.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.2checkout.com/api-reference",
+    "name": "REST API Reference - 2Checkout Documentation",
+    "snippet": "The REST API Reference provides a comprehensive guide for developers looking to integrate seamlessly with 2Checkout's payment processing ...",
+    "host_name": "docs.2checkout.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.authorize.net/api/reference/index.html",
+    "name": "API Reference - Authorize.net Developer Center",
+    "snippet": "Payment Transactions. The createTransactionRequest function enables you to submit a wide variety of transaction requests, depending on how you structure it.",
+    "host_name": "developer.authorize.net",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]

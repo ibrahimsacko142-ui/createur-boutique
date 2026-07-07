@@ -1,0 +1,47 @@
+[
+  {
+    "url": "https://momo.mtn.com/api",
+    "name": "API – momo.mtn.com",
+    "snippet": "Receive and approve Mobile Money payments on your website by scanning a QR code. ... MoMo API: Getting transaction status and account balance. Tap to unmute.",
+    "host_name": "momo.mtn.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.orange.com/apis/om-webpay",
+    "name": "Orange Money Web Payment / M Payment (1.0) API – Overview",
+    "snippet": "Orange Money Web Payment / M Payment 1.0 ... Enable your customer to pay for your products through Orange Money on your website or your mobile application.",
+    "host_name": "developer.orange.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=skGbP69dwLc",
+    "name": "One API for Mobile Money & Card Payments | Stripe | MTN - YouTube",
+    "snippet": "So I built DGateway — a unified payment gateway that sits between your app and every provider. One API key. One endpoint. One webhook format ...",
+    "host_name": "www.youtube.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://lobehub.com/fr/skills/africandigitalassetframework-africa-stack-skills-mtn-momo",
+    "name": "MTN Mobile Money API (MTN MoMo) | Sk - LobeHub",
+    "snippet": "Mobile Money API (MTN MoMo) provides RESTful endpoints to collect payments (Request to Pay), disburse funds, perform remittances across MTN ...",
+    "host_name": "lobehub.com",
+    "rank": 3,
+    "date": "Jul 3, 2026",
+    "favicon": ""
+  },
+  {
+    "url": "https://developers.paydunya.com/doc/EN/api_deboursement",
+    "name": "API PUSH - PayDunya Documentation",
+    "snippet": "You can make disbursements to your customers in several ways, namely through ORANGE MONEY PURSE , the PayDunya account and many others.",
+    "host_name": "developers.paydunya.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]

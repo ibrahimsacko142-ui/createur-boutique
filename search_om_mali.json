@@ -1,0 +1,47 @@
+[
+  {
+    "url": "https://developer.orange.com/apis/om-webpay",
+    "name": "Orange Money Web Payment / M Payment (1.0) API – Overview",
+    "snippet": "Enable your customer to pay for your products through Orange Money on your website or your mobile application. service directly integrates into its website ...",
+    "host_name": "developer.orange.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.orange.com/products/payment",
+    "name": "Payment - Orange Developer",
+    "snippet": "Enable your customers to pay online via Orange Money on your website or mobile app. Supports secure OTP validation and is available in multiple African ...",
+    "host_name": "developer.orange.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=dEvYvu-4C6c",
+    "name": "Orange Money Web payment walkthrough - YouTube",
+    "snippet": "Orange Money Web payment walkthrough on Orange Developer. To subscribe to the Orange Money Web Payment API, ...",
+    "host_name": "www.youtube.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://pt.scribd.com/document/638670689/Orange-Money-WebPay-Dev-Getting-started-Orange-Developer",
+    "name": "Orange Money WebPay Dev Getting Started Orange Developer",
+    "snippet": "Rating 5.0 (2) This document provides information and steps for merchants to integrate the Orange Money Web Payment API for testing purposes.",
+    "host_name": "pt.scribd.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://community.shopify.com/t/orange-money-payment-integration/409390",
+    "name": "Orange money payment integration - Shopify Community",
+    "snippet": "In Settings → Payments → Manual payment methods, add “Orange Money.” · Provide instructions for customers to send money to your Orange account ...",
+    "host_name": "community.shopify.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]

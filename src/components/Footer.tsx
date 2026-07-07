@@ -125,9 +125,9 @@ export default function Footer() {
           <h3 className="text-xs font-semibold uppercase tracking-wider mb-3 text-center">Paiements sécurisés acceptés</h3>
           <div className="flex flex-wrap items-center justify-center gap-2.5">
             {[
-              { label: 'Orange Money', short: 'OM', color: 'bg-orange-500', bgLight: 'bg-orange-100 dark:bg-orange-900/30', textLight: 'text-orange-700 dark:text-orange-400' },
-              { label: 'MTN MoMo', short: 'Mo', color: 'bg-yellow-500', bgLight: 'bg-yellow-100 dark:bg-yellow-900/30', textLight: 'text-yellow-700 dark:text-yellow-400' },
-              { label: 'Wave', short: 'W', color: 'bg-sky-500', bgLight: 'bg-sky-100 dark:bg-sky-900/30', textLight: 'text-sky-700 dark:text-sky-400' },
+              { label: 'Orange Money Mali', short: 'OM', color: 'bg-orange-500', bgLight: 'bg-orange-100 dark:bg-orange-900/30', textLight: 'text-orange-700 dark:text-orange-400' },
+              { label: 'MTN MoMo Mali', short: 'Mo', color: 'bg-yellow-500', bgLight: 'bg-yellow-100 dark:bg-yellow-900/30', textLight: 'text-yellow-700 dark:text-yellow-400' },
+              { label: 'Hub2', short: 'H2', color: 'bg-indigo-500', bgLight: 'bg-indigo-100 dark:bg-indigo-900/30', textLight: 'text-indigo-700 dark:text-indigo-400' },
             ].map((p) => (
               <span key={p.label} className={`inline-flex items-center gap-1.5 rounded-lg ${p.bgLight} border border-transparent px-3 py-1.5 text-[11px] font-bold ${p.textLight}`}>
                 <span className={`h-2 w-2 rounded-full ${p.color}`} />

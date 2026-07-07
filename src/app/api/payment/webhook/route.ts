@@ -1,40 +1,54 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-// ═══ KKIAPAY Webhook — Reçoit les notifications de paiement automatique ═══
-// Quand un paiement est validé, Kkiapay envoie un POST ici avec les détails
+// ═══ HUB2 Webhook — Reçoit les notifications de paiement automatique ═══
+// Hub2 envoie un POST quand le statut d'un paiement change
+// Documentation : https://docs.hub2.io/integration/en/payments/payments_examples
 
-const KKIAPIAY_SECRET_KEY = process.env.KKIAPIAY_SECRET_KEY || ''
-const KKIAPIAY_PUBLIC_KEY = process.env.KKIAPIAY_PUBLIC_KEY || ''
+const HUB2_WEBHOOK_SECRET = process.env.HUB2_WEBHOOK_SECRET || ''
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
 
-    // Kkiapay webhook payload structure
-    const {
-      tx_key,
-      amount,
-      currency,
-      status,          // 'success' | 'failed' | 'pending'
-      reason,          // reason for failure if any
-      transaction_id,  // our custom meta.transaction_id
-      customer,
-      meta,
-      performed_at,
-    } = body
+    // Hub2 webhook payload — structure typique :
+    // {
+    //   event: 'payment.succeeded' | 'payment.failed' | 'payment.action_required',
+    //   data: {
+    //     id: 'pay_xxx',
+    //     paymentIntentId: 'pi_xxx',
+    //     status: 'succeeded' | 'failed' | 'pending' | 'action_required',
+    //     amount: 1000,
+    //     currency: 'XOF',
+    //     provider: { name: 'Orange', country: 'ML' },
+    //     customerReference: '223XXXXXXXX',
+    //     purchaseReference: 'SC-XXXXX',
+    //     createdAt: '2025-01-01T00:00:00.000Z',
+    //     updatedAt: '2025-01-01T00:00:05.000Z',
+    //   }
+    // }
 
-    console.log(`[Kkiapay Webhook] tx_key=${tx_key} status=${status} amount=${amount} ${currency}`)
+    const event = body.event || ''
+    const data = body.data || body
 
-    if (status === 'success' || status === 'SUCCESS') {
+    const paymentIntentId = data.paymentIntentId || data.payment_intent_id || ''
+    const status = data.status || ''
+    const amount = data.amount || 0
+    const currency = data.currency || 'XOF'
+    const purchaseRef = data.purchaseReference || data.purchase_reference || ''
+    const customerRef = data.customerReference || data.customer_reference || ''
+    const provider = data.provider?.name || 'Mobile Money'
+
+    console.log(`[Hub2 Webhook] event=${event} status=${status} amount=${amount} ${currency} intent=${paymentIntentId}`)
+
+    if (status === 'succeeded' || event === 'payment.succeeded') {
       // ═══ PAIEMENT VALIDÉ ═══
-      const orderId = meta?.transaction_id || transaction_id || tx_key
-      const customerName = customer?.name || 'Client'
-      const customerPhone = customer?.phone || ''
+      const orderId = purchaseRef || paymentIntentId
+      const customerPhone = customerRef || ''
 
-      console.log(`[Kkiapay] PAID: ${orderId} — ${amount} ${currency} — ${customerName}`)
+      console.log(`[Hub2] PAID: ${orderId} — ${amount} ${currency} — ${provider}`)
 
       // Auto-notify Sacko via WhatsApp
-      const waMessage = `💰 *PAIEMENT REÇU — Kkiapay*\n\n📋 Référence : ${orderId}\n👤 Client : ${customerName}\n📱 Tél : ${customerPhone}\n💳 Montant : ${Number(amount).toLocaleString('fr-FR')} ${currency}\n🟢 Statut : VALIDÉ AUTOMATIQUEMENT\n📅 Date : ${performed_at || new Date().toLocaleString('fr-FR', { timeZone: 'Africa/Bamako' })}\n\n✅ Le client a payé via Kkiapay (Orange Money / MTN MoMo / Wave).\nLivrez le produit dès maintenant !`
+      const waMessage = `💰 *PAIEMENT REÇU — Hub2*\n\n📋 Référence : ${orderId}\n📱 Client : ${customerPhone}\n💳 Montant : ${Number(amount).toLocaleString('fr-FR')} ${currency}\n📡 Opérateur : ${provider}\n🟢 Statut : VALIDÉ AUTOMATIQUEMENT\n📅 Date : ${new Date().toLocaleString('fr-FR', { timeZone: 'Africa/Bamako' })}\n\n✅ Le client a payé via Hub2 (${provider}).\nLivrez le produit dès maintenant !`
 
       // Fire and forget
       fetch(`https://wa.me/22397787244?text=${encodeURIComponent(waMessage)}`).catch(() => {})
@@ -42,44 +56,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: true, message: 'Paiement confirmé' })
     }
 
-    if (status === 'failed' || status === 'FAILED' || status === 'cancelled') {
-      console.log(`[Kkiapay] FAILED: tx_key=${tx_key} reason=${reason}`)
-      return NextResponse.json({ success: false, message: `Paiement échoué: ${reason || 'Annulé'}` })
+    if (status === 'failed' || event === 'payment.failed') {
+      console.log(`[Hub2] FAILED: intent=${paymentIntentId}`)
+      return NextResponse.json({ success: false, message: 'Paiement échoué' })
     }
 
-    // Pending or unknown status
+    // Pending, action_required, or other status
     return NextResponse.json({ success: true, message: `Statut: ${status}` })
   } catch (error) {
-    console.error('[Kkiapay Webhook] Error:', error)
+    console.error('[Hub2 Webhook] Error:', error)
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
-  }
-}
-
-// GET — Vérifier le statut d'une transaction Kkiapay
-export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url)
-  const txKey = searchParams.get('tx_key')
-
-  if (!txKey) {
-    return NextResponse.json({ error: 'tx_key requis' }, { status: 400 })
-  }
-
-  if (!KKIAPIAY_SECRET_KEY) {
-    return NextResponse.json({ error: 'Paiement non configuré', demo: true }, { status: 503 })
-  }
-
-  try {
-    const response = await fetch(`https://api.kkiapay.me/v2/transactions/${txKey}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${KKIAPIAY_SECRET_KEY}`,
-        'Content-Type': 'application/json',
-      },
-    })
-
-    const data = await response.json()
-    return NextResponse.json(data)
-  } catch {
-    return NextResponse.json({ error: 'Erreur vérification' }, { status: 500 })
   }
 }
