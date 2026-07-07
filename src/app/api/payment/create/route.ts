@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const CINETPAY_API_KEY = process.env.CINETPAY_API_KEY || ''
-const CINETPAY_SITE_ID = process.env.CINETPAY_SITE_ID || ''
-const CINETPAY_BASE_URL = 'https://api.cinetpay.com/v2'
+// ═══ KKIAPAY — Fonctionne au Mali (Orange Money, MTN MoMo, Wave) ═══
+const KKIAPIAY_SECRET_KEY = process.env.KKIAPIAY_SECRET_KEY || ''
+const KKIAPIAY_PUBLIC_KEY = process.env.KKIAPIAY_PUBLIC_KEY || ''
+const KKIAPIAY_BASE_URL = 'https://api.kkiapay.me/v2'
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,7 +16,6 @@ export async function POST(req: NextRequest) {
       customerPhone,
       customerEmail,
       transactionId,
-      channels,
     } = body
 
     // Validation
@@ -25,66 +25,75 @@ export async function POST(req: NextRequest) {
     if (!customerName || !customerPhone) {
       return NextResponse.json({ error: 'Nom et téléphone requis' }, { status: 400 })
     }
-    if (!CINETPAY_API_KEY || !CINETPAY_SITE_ID) {
+
+    // Check if Kkiapay is configured
+    if (!KKIAPIAY_SECRET_KEY || !KKIAPIAY_PUBLIC_KEY) {
       return NextResponse.json({
-        error: 'Paiement non configuré',
-        message: 'Les clés CinetPay ne sont pas configurées. Contactez l\'administrateur.',
+        error: 'Paiement en cours de configuration',
+        message: 'Les clés Kkiapay ne sont pas encore configurées. Le mode démonstration est actif.',
         demo: true,
       }, { status: 503 })
     }
 
-    // Generate unique transaction ID
+    // Generate unique transaction reference
     const txId = transactionId || `SC-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`
 
-    // Create CinetPay payment
-    const cinetPayResponse = await fetch(`${CINETPAY_BASE_URL}/payment`, {
+    // Clean phone number for Mali (+223 prefix)
+    let phone = customerPhone.replace(/\s/g, '')
+    if (phone.startsWith('0')) phone = phone.substring(1)
+    if (!phone.startsWith('+223') && !phone.startsWith('223')) phone = `223${phone}`
+
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || ''
+
+    // Create Kkiapay transaction
+    const kkiapayResponse = await fetch(`${KKIAPIAY_BASE_URL}/transactions`, {
       method: 'POST',
       headers: {
+        'Authorization': `Bearer ${KKIAPIAY_SECRET_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        apikey: CINETPAY_API_KEY,
-        site_id: CINETPAY_SITE_ID,
-        transaction_id: txId,
         amount: amount,
         currency: 'XOF',
-        description: description || 'Commande Studio Créatif',
-        customer_name: customerName,
-        customer_phone: customerPhone.replace(/\s/g, ''),
-        customer_email: customerEmail || '',
-        channels: channels || 'ALL',
-        return_url: `${process.env.NEXT_PUBLIC_BASE_URL || ''}/#boutique`,
-        notify_url: `${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/payment/webhook`,
-        metadata: JSON.stringify({
+        description: description || `Commande Studio Créatif — ${txId}`,
+        customer: {
+          name: customerName,
+          email: customerEmail || `${customerName.toLowerCase().replace(/\s/g, '.')}@studio-creatif.ml`,
+          phone: phone,
+        },
+        channels: 'MOBILE_MONEY',
+        callback_url: `${baseUrl}/api/payment/webhook`,
+        return_url: `${baseUrl}/#boutique`,
+        meta: {
+          transaction_id: txId,
           source: 'studio-creatif',
-          customerName,
-          customerPhone,
-          customerEmail,
-        }),
-        lang: 'fr',
+        },
       }),
     })
 
-    const data = await cinetPayResponse.json()
+    const data = await kkiapayResponse.json()
 
-    if (data.code === '201') {
+    if (data.transaction && data.transaction.tx_key) {
+      // Kkiapay returns tx_key — build the payment widget URL
+      const paymentUrl = `https://widget.kkiapay.me/v2/?tx_key=${data.transaction.tx_key}&public_key=${KKIAPIAY_PUBLIC_KEY}`
+
       return NextResponse.json({
         success: true,
-        payment_url: data.data.payment_url,
-        payment_token: data.data.payment_token,
+        payment_url: paymentUrl,
+        tx_key: data.transaction.tx_key,
         transaction_id: txId,
       })
     } else {
-      console.error('CinetPay error:', data)
+      console.error('Kkiapay error:', data)
       return NextResponse.json({
         error: 'Erreur lors de la création du paiement',
-        details: data.message || data.code,
+        details: data.message || 'Vérifiez vos clés Kkiapay.',
       }, { status: 500 })
     }
   } catch (error) {
     console.error('Payment create error:', error)
     return NextResponse.json({
-      error: 'Erreur serveur',
+      error: 'Erreur serveur de paiement',
     }, { status: 500 })
   }
 }

@@ -1,98 +1,80 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-// CinetPay webhook endpoint
-// Receives payment notifications from CinetPay
+// ═══ KKIAPAY Webhook — Reçoit les notifications de paiement automatique ═══
+// Quand un paiement est validé, Kkiapay envoie un POST ici avec les détails
+
+const KKIAPIAY_SECRET_KEY = process.env.KKIAPIAY_SECRET_KEY || ''
+const KKIAPIAY_PUBLIC_KEY = process.env.KKIAPIAY_PUBLIC_KEY || ''
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
 
+    // Kkiapay webhook payload structure
     const {
-      transaction_id,
-      cpm_trans_id,
-      cpm_amount,
-      cpm_currency,
-      cpm_custom,
-      cpm_phone_prefixe,
-      cpm_phone_num,
-      cpm_trans_status,
-      cpm_payment_date,
-      cpm_payid,
-      signature,
-      cpm_site_id,
+      tx_key,
+      amount,
+      currency,
+      status,          // 'success' | 'failed' | 'pending'
+      reason,          // reason for failure if any
+      transaction_id,  // our custom meta.transaction_id
+      customer,
+      meta,
+      performed_at,
     } = body
 
-    // Verify required fields
-    if (!cpm_trans_status || !transaction_id) {
-      return NextResponse.json({ error: 'Données manquantes' }, { status: 400 })
-    }
+    console.log(`[Kkiapay Webhook] tx_key=${tx_key} status=${status} amount=${amount} ${currency}`)
 
-    const status = cpm_trans_status
-    const amount = cpm_amount
-    const phone = `${cpm_phone_prefixe || ''}${cpm_phone_num || ''}`
+    if (status === 'success' || status === 'SUCCESS') {
+      // ═══ PAIEMENT VALIDÉ ═══
+      const orderId = meta?.transaction_id || transaction_id || tx_key
+      const customerName = customer?.name || 'Client'
+      const customerPhone = customer?.phone || ''
 
-    console.log(`[CinetPay Webhook] Transaction ${transaction_id}: status=${status}, amount=${amount} ${cpm_currency}, phone=${phone}`)
+      console.log(`[Kkiapay] PAID: ${orderId} — ${amount} ${currency} — ${customerName}`)
 
-    if (status === 'ACCEPTED' || status === 'completed') {
-      // Payment successful!
-      // In production, you would:
-      // 1. Save to database
-      // 2. Send WhatsApp notification to Sacko
-      // 3. Send confirmation email to customer
-      // 4. Deliver the digital product
+      // Auto-notify Sacko via WhatsApp
+      const waMessage = `💰 *PAIEMENT REÇU — Kkiapay*\n\n📋 Référence : ${orderId}\n👤 Client : ${customerName}\n📱 Tél : ${customerPhone}\n💳 Montant : ${Number(amount).toLocaleString('fr-FR')} ${currency}\n🟢 Statut : VALIDÉ AUTOMATIQUEMENT\n📅 Date : ${performed_at || new Date().toLocaleString('fr-FR', { timeZone: 'Africa/Bamako' })}\n\n✅ Le client a payé via Kkiapay (Orange Money / MTN MoMo / Wave).\nLivrez le produit dès maintenant !`
 
-      console.log(`[CinetPay] PAID: ${transaction_id} — ${amount} XOF — Phone: ${phone}`)
-
-      // Auto-notify Sacko via WhatsApp (server-side)
-      const customerName = body.cpm_custom ? JSON.parse(body.cpm_custom).customerName || 'Client' : 'Client'
-      const customerPhone = body.cpm_custom ? JSON.parse(body.cpm_custom).customerPhone || phone : phone
-      const waMessage = `💰 *PAIEMENT REÇU*\n\n📋 Référence : ${transaction_id}\n👤 Client : ${customerName}\n📱 Tél : ${customerPhone}\n💳 Montant : ${Number(amount).toLocaleString('fr-FR')} ${cpm_currency}\n📅 Date : ${cpm_payment_date || new Date().toISOString()}\n\n✅ Paiement validé automatiquement par CinetPay.`
-
-      // Fire and forget WhatsApp notification
+      // Fire and forget
       fetch(`https://wa.me/22397787244?text=${encodeURIComponent(waMessage)}`).catch(() => {})
 
       return NextResponse.json({ success: true, message: 'Paiement confirmé' })
     }
 
-    if (status === 'REFUSED' || status === 'CANCELLED') {
-      console.log(`[CinetPay] FAILED: ${transaction_id} — status=${status}`)
-      return NextResponse.json({ success: false, message: 'Paiement refusé ou annulé' })
+    if (status === 'failed' || status === 'FAILED' || status === 'cancelled') {
+      console.log(`[Kkiapay] FAILED: tx_key=${tx_key} reason=${reason}`)
+      return NextResponse.json({ success: false, message: `Paiement échoué: ${reason || 'Annulé'}` })
     }
 
-    // Pending status
+    // Pending or unknown status
     return NextResponse.json({ success: true, message: `Statut: ${status}` })
   } catch (error) {
-    console.error('[CinetPay Webhook] Error:', error)
+    console.error('[Kkiapay Webhook] Error:', error)
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
   }
 }
 
-// GET endpoint for checking payment status
+// GET — Vérifier le statut d'une transaction Kkiapay
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
-  const transactionId = searchParams.get('transaction_id')
+  const txKey = searchParams.get('tx_key')
 
-  if (!transactionId) {
-    return NextResponse.json({ error: 'transaction_id requis' }, { status: 400 })
+  if (!txKey) {
+    return NextResponse.json({ error: 'tx_key requis' }, { status: 400 })
   }
 
-  const CINETPAY_API_KEY = process.env.CINETPAY_API_KEY || ''
-  const CINETPAY_SITE_ID = process.env.CINETPAY_SITE_ID || ''
-
-  if (!CINETPAY_API_KEY || !CINETPAY_SITE_ID) {
+  if (!KKIAPIAY_SECRET_KEY) {
     return NextResponse.json({ error: 'Paiement non configuré', demo: true }, { status: 503 })
   }
 
   try {
-    const response = await fetch(`${CINETPAY_SITE_ID}` || '', {
-      method: 'POST',
+    const response = await fetch(`https://api.kkiapay.me/v2/transactions/${txKey}`, {
+      method: 'GET',
       headers: {
+        'Authorization': `Bearer ${KKIAPIAY_SECRET_KEY}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        apikey: CINETPAY_API_KEY,
-        site_id: CINETPAY_SITE_ID,
-        transaction_id: transactionId,
-      }),
     })
 
     const data = await response.json()

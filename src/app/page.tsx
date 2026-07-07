@@ -581,7 +581,7 @@ export default function Home() {
   const [showCheckout, setShowCheckout] = useState(false)
   const [checkoutStep, setCheckoutStep] = useState(0) // 0=recap, 1=info, 2=method, 3=processing, 4=success
   const [checkoutInfo, setCheckoutInfo] = useState({ name: '', phone: '', email: '' })
-  const [paymentMethod, setPaymentMethod] = useState<'orange' | 'mtn' | 'wave' | 'paypal' | null>(null)
+  const [paymentMethod, setPaymentMethod] = useState<'orange' | 'mtn' | 'wave' | null>(null)
   const [orderId, setOrderId] = useState('')
   const [paymentProcessing, setPaymentProcessing] = useState(false)
   const [checkoutItem, setCheckoutItem] = useState<{ type: 'cart' | 'book' | 'service'; title: string; price: number; qty?: number } | null>(null)
@@ -652,11 +652,10 @@ export default function Home() {
       orange: 'ORANGE_MONEY',
       mtn: 'MTN_MONEY',
       wave: 'WAVE',
-      paypal: 'PAYPAL',
     }
 
     try {
-      // Call our API to create CinetPay payment
+      // Call our API to create Kkiapay payment
       const res = await fetch('/api/payment/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -679,7 +678,7 @@ export default function Home() {
           setPaymentProcessing(false)
           setCheckoutStep(4)
           triggerConfetti()
-          const methodNames = { orange: 'Orange Money', mtn: 'MTN Mobile Money', wave: 'Wave', paypal: 'PayPal' }
+          const methodNames = { orange: 'Orange Money', mtn: 'MTN Mobile Money', wave: 'Wave' }
           const methodName = paymentMethod ? methodNames[paymentMethod] : 'Non spécifié'
           const msg = `🛒 *NOUVELLE COMMANDE*\n\n📋 Référence : ${id}\n👤 Client : ${checkoutInfo.name}\n📱 Tél : ${checkoutInfo.phone}\n📧 Email : ${checkoutInfo.email || 'Non renseigné'}\n💳 Paiement : ${methodName}\n\n📚 Articles (${items.length}) :\n${items.map(t => `  • ${t} — 1 000 FCFA`).join('\n')}\n\n💰 *Total : ${total.toLocaleString('fr-FR')} FCFA*\n\n⏰ ${new Date().toLocaleString('fr-FR', { timeZone: 'Africa/Bamako' })}`
           window.open(`https://wa.me/22397787244?text=${encodeURIComponent(msg)}`, '_blank')
@@ -688,35 +687,43 @@ export default function Home() {
       }
 
       if (data.success && data.payment_url) {
-        // Real CinetPay — open payment popup
+        // Real Kkiapay — open payment widget popup
         setPaymentProcessing(false)
         setShowCheckout(false)
 
-        // Open CinetPay in a popup window
+        // Open Kkiapay widget in a popup
         const popup = window.open(
           data.payment_url,
-          'CinetPay-Paiement',
-          'width=450,height=650,scrollbars=yes,resizable=yes'
+          'Kkiapay-Paiement',
+          'width=420,height=700,scrollbars=yes,resizable=yes'
         )
 
         // Listen for popup close to check status
         if (popup) {
+          const txKey = data.tx_key || id
           const checkClosed = setInterval(() => {
             if (popup.closed) {
               clearInterval(checkClosed)
-              // Check payment status
-              fetch(`/api/payment/webhook?transaction_id=${id}`)
+              // Check payment status via Kkiapay API
+              fetch(`/api/payment/webhook?tx_key=${txKey}`)
                 .then(r => r.json())
                 .then(status => {
-                  if (status.code === '00' || status.data?.status === 'ACCEPTED') {
+                  const txStatus = status.transaction?.status || status.status
+                  if (txStatus === 'success' || txStatus === 'SUCCESS' || status.code === '00') {
                     setCheckoutStep(4)
                     setShowCheckout(true)
                     setPaymentProcessing(false)
                     triggerConfetti()
+                  } else if (txStatus === 'failed' || txStatus === 'FAILED' || txStatus === 'cancelled') {
+                    toast({
+                      title: 'Paiement échoué',
+                      description: 'Le paiement n\'a pas abouti. Veuillez réessayer ou payer via WhatsApp.',
+                      variant: 'destructive',
+                    })
                   } else {
                     toast({
-                      title: 'Paiement en attente',
-                      description: 'Votre paiement est en cours de vérification. Vous recevrez une confirmation via WhatsApp.',
+                      title: 'Paiement en cours de vérification',
+                      description: 'Votre paiement est en cours. Sacko recevra une confirmation automatique dès validation.',
                     })
                   }
                 })
@@ -2061,7 +2068,6 @@ export default function Home() {
                     <span className="inline-flex items-center gap-1 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 text-[10px] font-bold px-2 py-1 rounded-md">OM</span>
                     <span className="inline-flex items-center gap-1 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 text-[10px] font-bold px-2 py-1 rounded-md">MoMo</span>
                     <span className="inline-flex items-center gap-1 bg-sky-100 dark:bg-sky-900/30 text-sky-700 dark:text-sky-400 text-[10px] font-bold px-2 py-1 rounded-md">Wave</span>
-                    <span className="inline-flex items-center gap-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-[10px] font-bold px-2 py-1 rounded-md">PayPal</span>
                   </div>
                 </div>
               </div>
@@ -3902,7 +3908,7 @@ export default function Home() {
                 </div>
                 <div className="flex items-center gap-1.5 mt-1">
                   <ShieldCheck className="h-3 w-3 text-white/80" />
-                  <p className="text-[11px] text-white/80">Paiement automatique via CinetPay — Orange Money, MTN MoMo, Wave, PayPal</p>
+                  <p className="text-[11px] text-white/80">Paiement automatique via Kkiapay — Orange Money, MTN MoMo, Wave</p>
                 </div>
                 {/* Progress bar */}
                 <div className="flex gap-1.5 mt-3">
@@ -4093,23 +4099,6 @@ export default function Home() {
                           {paymentMethod === 'wave' && <div className="h-2 w-2 rounded-full bg-white" />}
                         </div>
                       </button>
-
-                      {/* PayPal */}
-                      <button
-                        onClick={() => setPaymentMethod('paypal')}
-                        className={`w-full flex items-center gap-3.5 p-4 rounded-xl border-2 transition-all duration-200 text-left ${paymentMethod === 'paypal' ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/20 shadow-lg shadow-blue-500/10' : 'border-border hover:border-blue-300 dark:hover:border-blue-800 hover:bg-muted/50'}`}
-                      >
-                        <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center flex-shrink-0 shadow-md">
-                          <span className="text-white font-extrabold text-lg">PP</span>
-                        </div>
-                        <div className="flex-1">
-                          <p className="font-bold text-sm">PayPal</p>
-                          <p className="text-[11px] text-muted-foreground">Paiement international sécurisé par PayPal</p>
-                        </div>
-                        <div className={`h-5 w-5 rounded-full border-2 flex items-center justify-center transition-colors ${paymentMethod === 'paypal' ? 'border-blue-500 bg-blue-500' : 'border-muted-foreground/30'}`}>
-                          {paymentMethod === 'paypal' && <div className="h-2 w-2 rounded-full bg-white" />}
-                        </div>
-                      </button>
                     </div>
 
                     <div className="flex gap-2">
@@ -4129,7 +4118,7 @@ export default function Home() {
                     <div className="flex items-center justify-center gap-3 pt-1 flex-wrap">
                       <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
                         <Shield className="h-3 w-3 text-emerald-500" />
-                        <span>CinetPay</span>
+                        <span>Kkiapay</span>
                       </div>
                       <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
                         <Lock className="h-3 w-3 text-emerald-500" />
@@ -4159,7 +4148,7 @@ export default function Home() {
                     <div className="text-center">
                       <h4 className="font-bold text-base">Connexion au serveur de paiement...</h4>
                       <p className="text-sm text-muted-foreground mt-1">Veuillez ne pas fermer cette page</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">Ouverture de la page de paiement sécurisée CinetPay</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">Ouverture de la page de paiement sécurisée Kkiapay</p>
                     </div>
                     <div className="w-full max-w-xs space-y-2">
                       <div className="flex items-center gap-2">
@@ -4168,7 +4157,7 @@ export default function Home() {
                       </div>
                       <div className="flex items-center gap-2 opacity-60">
                         <div className="h-4 w-4 rounded-full border-2 border-emerald-400 border-t-transparent animate-spin" />
-                        <span className="text-xs text-muted-foreground">Connexion à CinetPay...</span>
+                        <span className="text-xs text-muted-foreground">Connexion à Kkiapay...</span>
                       </div>
                     </div>
                   </motion.div>
@@ -4202,7 +4191,7 @@ export default function Home() {
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-xs text-muted-foreground">Méthode</span>
-                        <span className="text-xs font-semibold">{paymentMethod === 'orange' ? 'Orange Money' : paymentMethod === 'mtn' ? 'MTN MoMo' : paymentMethod === 'wave' ? 'Wave' : 'PayPal'}</span>
+                        <span className="text-xs font-semibold">{paymentMethod === 'orange' ? 'Orange Money' : paymentMethod === 'mtn' ? 'MTN MoMo' : 'Wave'}</span>
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-xs text-muted-foreground">Articles</span>
