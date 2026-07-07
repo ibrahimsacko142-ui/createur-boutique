@@ -579,12 +579,50 @@ export default function Home() {
 
   // Checkout / Payment
   const [showCheckout, setShowCheckout] = useState(false)
-  const [checkoutStep, setCheckoutStep] = useState(0) // 0=recap, 1=info, 2=method, 3=processing, 4=success
+  const [checkoutStep, setCheckoutStep] = useState(0) // 0=recap, 1=info, 2=processing, 3=success
   const [checkoutInfo, setCheckoutInfo] = useState({ name: '', phone: '', email: '' })
-  const [paymentMethod, setPaymentMethod] = useState<'orange' | 'mtn' | 'wave' | null>(null)
   const [orderId, setOrderId] = useState('')
   const [paymentProcessing, setPaymentProcessing] = useState(false)
   const [checkoutItem, setCheckoutItem] = useState<{ type: 'cart' | 'book' | 'service'; title: string; price: number; qty?: number } | null>(null)
+
+  // Gérer le retour après paiement Maketou
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('payment_success') === 'true') {
+      const cartId = params.get('cartId')
+      const order = params.get('order')
+      // Nettoyer l'URL
+      window.history.replaceState({}, '', window.location.pathname + '#boutique')
+      // Vérifier le statut du paiement
+      if (cartId) {
+        setOrderId(order || cartId)
+        setShowCheckout(true)
+        setCheckoutStep(3) // processing
+        setPaymentProcessing(true)
+        // Vérifier le statut auprès de Maketou
+        fetch(`/api/payment/status?cartId=${cartId}`)
+          .then(r => r.json())
+          .then(data => {
+            setPaymentProcessing(false)
+            if (data.status === 'completed') {
+              setCheckoutStep(4)
+              triggerConfetti()
+            } else {
+              toast({
+                title: 'Paiement en attente',
+                description: 'Votre paiement est en cours de vérification. Sacko sera notifié automatiquement dès confirmation.',
+              })
+              setShowCheckout(false)
+            }
+          })
+          .catch(() => {
+            setPaymentProcessing(false)
+            setShowCheckout(false)
+            toast({ title: 'Paiement envoyé', description: 'Votre commande a été enregistrée.' })
+          })
+      }
+    }
+  }, [])
 
   // Live visitors (simulated)
   const [liveVisitors, setLiveVisitors] = useState(12)
@@ -628,7 +666,6 @@ export default function Home() {
     }
     setCheckoutStep(0)
     setCheckoutInfo({ name: '', phone: '', email: '' })
-    setPaymentMethod(null)
     setPaymentProcessing(false)
     setOrderId('')
     setShowCart(false)
@@ -643,81 +680,54 @@ export default function Home() {
   const processPayment = useCallback(async () => {
     const id = generateOrderId()
     setOrderId(id)
-    setCheckoutStep(3)
+    setCheckoutStep(2)
     setPaymentProcessing(true)
 
     const total = checkoutItem ? checkoutItem.price : (cart.length >= 12 ? 7000 : cart.length * 1000)
     const items = checkoutItem ? [checkoutItem.title] : cart
-    const methodNames = { orange: 'Orange Money', mtn: 'MTN MoMo', wave: 'Wave' }
 
     try {
-      // Call our API to create Hub2 payment
+      // Appeler notre API pour créer le panier Maketou
       const res = await fetch('/api/payment/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           amount: total,
+          product: items.length === 1 ? items[0] : `${items.length} article(s)`,
           description: `Studio Créatif — ${items.length} article(s)`,
           customerName: checkoutInfo.name,
           customerPhone: checkoutInfo.phone,
           customerEmail: checkoutInfo.email || '',
           transactionId: id,
-          paymentMethod: paymentMethod || undefined,
         }),
       })
 
       const data = await res.json()
 
       if (data.demo) {
-        // Hub2 not configured — fall back to WhatsApp notification
+        // Maketou non configuré — fallback WhatsApp
         setTimeout(() => {
           setPaymentProcessing(false)
           setCheckoutStep(4)
           triggerConfetti()
-          const methodName = paymentMethod ? methodNames[paymentMethod] : 'Non spécifié'
-          const msg = `🛒 *NOUVELLE COMMANDE*\n\n📋 Référence : ${id}\n👤 Client : ${checkoutInfo.name}\n📱 Tél : ${checkoutInfo.phone}\n📧 Email : ${checkoutInfo.email || 'Non renseigné'}\n💳 Paiement : ${methodName}\n\n📚 Articles (${items.length}) :\n${items.map(t => `  • ${t} — 1 000 FCFA`).join('\n')}\n\n💰 *Total : ${total.toLocaleString('fr-FR')} FCFA*\n\n⏰ ${new Date().toLocaleString('fr-FR', { timeZone: 'Africa/Bamako' })}`
+          const msg = `🛒 *NOUVELLE COMMANDE*\n\n📋 Référence : ${id}\n👤 Client : ${checkoutInfo.name}\n📱 Tél : ${checkoutInfo.phone}\n📧 Email : ${checkoutInfo.email || 'Non renseigné'}\n\n📚 Articles (${items.length}) :\n${items.map(t => `  • ${t} — 1 000 FCFA`).join('\n')}\n\n💰 *Total : ${total.toLocaleString('fr-FR')} FCFA*\n\n⏰ ${new Date().toLocaleString('fr-FR', { timeZone: 'Africa/Bamako' })}`
           window.open(`https://wa.me/22397787244?text=${encodeURIComponent(msg)}`, '_blank')
         }, 3000)
         return
       }
 
-      if (data.success) {
-        const methodName = paymentMethod ? methodNames[paymentMethod] : 'Mobile Money'
-
-        if (data.status === 'succeeded') {
-          // Paiement immédiatement validé (rare, possible en sandbox)
-          setPaymentProcessing(false)
-          setCheckoutStep(4)
-          triggerConfetti()
-          return
-        }
-
-        if (data.action_required && data.customer_message) {
-          // Le client doit faire une action (USSD, OTP, etc.)
-          setPaymentProcessing(false)
-          setCheckoutStep(4)
-          triggerConfetti()
-          toast({
-            title: 'Confirmez le paiement sur votre téléphone',
-            description: data.customer_message,
-          })
-          // Envoyer aussi la commande par WhatsApp comme backup
-          const msg = `🛒 *NOUVELLE COMMANDE — Hub2*\n\n📋 Référence : ${id}\n👤 Client : ${checkoutInfo.name}\n📱 Tél : ${checkoutInfo.phone}\n💳 Méthode : ${methodName}\n💰 Montant : ${total.toLocaleString('fr-FR')} FCFA\n📡 Statut : Paiement initié\n\n⏰ ${new Date().toLocaleString('fr-FR', { timeZone: 'Africa/Bamako' })}`
-          window.open(`https://wa.me/22397787244?text=${encodeURIComponent(msg)}`, '_blank')
-          return
-        }
-
-        // Paiement en cours de traitement
+      if (data.success && data.redirect_url) {
+        // Rediriger le client vers la page de paiement Maketou
         setPaymentProcessing(false)
-        setCheckoutStep(4)
-        triggerConfetti()
+        setShowCheckout(false)
+        setCart([])
+        setCheckoutItem(null)
         toast({
-          title: 'Paiement en cours',
-          description: `Votre paiement via ${methodName} est en cours de traitement. Sacko recevra une confirmation automatique.`,
+          title: 'Redirection vers le paiement...',
+          description: 'Vous allez être redirigé vers la page de paiement sécurisé Maketou.',
         })
-        // Envoyer la commande par WhatsApp
-        const msg = `🛒 *NOUVELLE COMMANDE — Hub2*\n\n📋 Référence : ${id}\n👤 Client : ${checkoutInfo.name}\n📱 Tél : ${checkoutInfo.phone}\n💳 Méthode : ${methodName}\n💰 Montant : ${total.toLocaleString('fr-FR')} FCFA\n📡 Statut : En traitement\n\n⏰ ${new Date().toLocaleString('fr-FR', { timeZone: 'Africa/Bamako' })}`
-        window.open(`https://wa.me/22397787244?text=${encodeURIComponent(msg)}`, '_blank')
+        // Rediriger vers Maketou
+        window.location.href = data.redirect_url
       } else {
         setPaymentProcessing(false)
         toast({
@@ -725,7 +735,7 @@ export default function Home() {
           description: data.error || data.details || 'Impossible de créer le paiement. Veuillez réessayer ou contacter via WhatsApp.',
           variant: 'destructive',
         })
-        setCheckoutStep(2)
+        setCheckoutStep(1)
       }
     } catch {
       setPaymentProcessing(false)
@@ -734,9 +744,9 @@ export default function Home() {
         description: 'Impossible de joindre le serveur de paiement. Vérifiez votre connexion et réessayez.',
         variant: 'destructive',
       })
-      setCheckoutStep(2)
+      setCheckoutStep(1)
     }
-  }, [checkoutItem, cart, checkoutInfo, paymentMethod, generateOrderId, triggerConfetti, toast])
+  }, [checkoutItem, cart, checkoutInfo, generateOrderId, triggerConfetti, toast])
 
   // Auto-scroll testimonials
   useEffect(() => {
@@ -1284,7 +1294,7 @@ export default function Home() {
                   { icon: Zap, title: 'Réactivité Extraordinaire', desc: "Réponse en moins de 30 minutes sur WhatsApp. Pas de formulaire sans suivi, pas d'attente de 48h. Je suis disponible 7j/7.", color: 'from-amber-400 to-orange-500' },
                   { icon: Target, title: '100% Personnalisé', desc: "Aucun template pré-fait. Chaque projet est conçu de zéro selon votre identité, vos couleurs et votre vision. Votre marque est unique.", color: 'from-emerald-400 to-teal-500' },
                   { icon: ThumbsUp, title: 'Satisfaction Garantie', desc: 'Révisions illimitées sur les offres Premium. Je ne livre que lorsque vous êtes 100% satisfait du résultat final.', color: 'from-blue-400 to-indigo-500' },
-                  { icon: Lock, title: 'Paiement Sécurisé', desc: 'Payez via Orange Money Mali ou MTN MoMo Mali grâce à Hub2. Le paiement est automatique et sécurisé. Confirmation instantanée pour Sacko.', color: 'from-purple-400 to-violet-500' },
+                  { icon: Lock, title: 'Paiement Sécurisé', desc: 'Payez via Maketou (Orange Money, MTN MoMo, carte bancaire). Le paiement est automatique et sécurisé. Confirmation instantanée pour Sacko.', color: 'from-purple-400 to-violet-500' },
                   { icon: Users, title: '3 Experts Unis', desc: 'Sacko pour le design, Camara Leh pour le web, Kante pour le marketing. Trois coachs complémentaires pour couvrir tous vos besoins.', color: 'from-cyan-400 to-blue-500' },
                   { icon: Heart, title: 'Passion Africaine', desc: 'Nous comprenons le marché malien et africain. Nos créations sont pensées pour plaire à votre clientele locale et vous démarquer.', color: 'from-rose-400 to-pink-500' },
                 ].map((item, i) => (
@@ -2272,7 +2282,7 @@ export default function Home() {
                           </div>
                           <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
                             <ShieldCheck className="h-3 w-3 text-amber-500" />
-                            <span>Paiement : Orange Money Mali, MTN MoMo Mali</span>
+                            <span>Paiement : Maketou (Orange Money, MTN MoMo, Carte)</span>
                           </div>
                         </div>
 
@@ -2835,7 +2845,7 @@ export default function Home() {
                   { q: "Quels sont les délais de livraison ?", a: "Les services \"Carrière Pro\" (CV, Lettres) sont livrés en moins de 24h. Pour les logos simples, comptez 48h, et pour un site web complet, entre 3 et 7 jours selon la complexité. Chaque projet a un suivi personnalisé." },
                   { q: "Puis-je demander des modifications si le résultat ne me plaît pas ?", a: "Absolument. Votre satisfaction est ma priorité. Pour l'Offre Découverte, une révision est incluse. Pour les offres Premium, les révisions sont illimitées jusqu'à ce que le résultat vous corresponde parfaitement. Je ne livre que lorsque vous êtes 100% satisfait." },
                   { q: "Pourquoi limitez-vous les commandes à 5 par jour ?", a: "Je privilégie la qualité à la quantité. Travailler avec un nombre limité de clients me permet de dédier toute mon attention et mon expertise à chaque pixel de votre projet. Le résultat : des créations qui convertissent." },
-                  { q: "Comment se passe le paiement ?", a: "Le paiement se fait automatiquement via Hub2 (Orange Money Mali ou MTN MoMo Mali). Vous choisissez votre opérateur, entrez votre numéro, et confirmez sur votre téléphone. Sacko reçoit la confirmation automatiquement. En mode démonstration, la commande est envoyée par WhatsApp." },
+                  { q: "Comment se passe le paiement ?", a: "Le paiement se fait automatiquement via Maketou. Après avoir rempli vos informations, vous êtes redirigé vers la page de paiement sécurisé Maketou où vous choisissez Orange Money, MTN MoMo ou carte bancaire. Sacko reçoit la confirmation automatiquement. En mode démonstration, la commande est envoyée par WhatsApp." },
                   { q: "Les formations sont-elles en ligne ou en présentiel ?", a: "Les formations sont 100% en ligne via WhatsApp et supports vidéo. Vous apprenez à votre rythme, avec un suivi personnalisé et un groupe WhatsApp pour poser vos questions." },
                 ]
                 const filtered = faqs.filter((f) => !faqSearch || f.q.toLowerCase().includes(faqSearch.toLowerCase()) || f.a.toLowerCase().includes(faqSearch.toLowerCase()))
@@ -3111,7 +3121,7 @@ export default function Home() {
               <div className="flex items-center gap-3 text-white/70 text-xs">
                 <span className="px-3 py-1 rounded-full bg-orange-500/20 border border-orange-400/30 font-medium">Orange Money</span>
                 <span className="px-3 py-1 rounded-full bg-yellow-500/20 border border-yellow-400/30 font-medium">MTN MoMo</span>
-                <span className="px-3 py-1 rounded-full bg-white/15 border border-white/20 font-medium">Hub2</span>
+                <span className="px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 font-medium">Maketou</span>
               </div>
             </div>
           </div>
@@ -3894,16 +3904,18 @@ export default function Home() {
                 </div>
                 <div className="flex items-center gap-1.5 mt-1">
                   <ShieldCheck className="h-3 w-3 text-white/80" />
-                  <p className="text-[11px] text-white/80">Paiement automatique via Hub2 — Orange Money Mali, MTN MoMo Mali</p>
+                  <p className="text-[11px] text-white/80">Paiement automatique via Maketou — Orange Money, MTN MoMo, Carte bancaire</p>
                 </div>
                 {/* Progress bar */}
                 <div className="flex gap-1.5 mt-3">
-                  {[0, 1, 2, 3, 4].map((s) => (
+                  {[0, 1, 2, 3].map((s) => (
                     <div key={s} className={`h-1 flex-1 rounded-full transition-all duration-500 ${s <= checkoutStep ? 'bg-white' : 'bg-white/30'}`} />
                   ))}
                 </div>
                 <div className="flex justify-between mt-1">
                   <span className="text-[9px] text-white/60">Récapitulatif</span>
+                  <span className="text-[9px] text-white/60">Vos infos</span>
+                  <span className="text-[9px] text-white/60">Paiement</span>
                   <span className="text-[9px] text-white/60">Confirmation</span>
                 </div>
               </div>
@@ -4023,68 +4035,40 @@ export default function Home() {
                   </motion.div>
                 )}
 
-                {/* ─── STEP 2: Payment Method ─── */}
+                {/* ─── STEP 2: Confirm & Pay ─── */}
                 {checkoutStep === 2 && (
                   <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-4">
                     <div className="text-center">
                       <div className="h-14 w-14 mx-auto rounded-2xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mb-3">
                         <Lock className="h-7 w-7 text-emerald-500" />
                       </div>
-                      <h4 className="font-bold text-base">Méthode de Paiement</h4>
-                      <p className="text-xs text-muted-foreground mt-0.5">Choisissez votre moyen de paiement préféré</p>
+                      <h4 className="font-bold text-base">Confirmez votre commande</h4>
+                      <p className="text-xs text-muted-foreground mt-0.5">Vous serez redirigé vers la page de paiement sécurisé Maketou</p>
                     </div>
 
-                    <div className="space-y-2.5">
-                      {/* Orange Money */}
-                      <button
-                        onClick={() => setPaymentMethod('orange')}
-                        className={`w-full flex items-center gap-3.5 p-4 rounded-xl border-2 transition-all duration-200 text-left ${paymentMethod === 'orange' ? 'border-orange-500 bg-orange-50 dark:bg-orange-950/20 shadow-lg shadow-orange-500/10' : 'border-border hover:border-orange-300 dark:hover:border-orange-800 hover:bg-muted/50'}`}
-                      >
-                        <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center flex-shrink-0 shadow-md">
-                          <span className="text-white font-extrabold text-lg">OM</span>
-                        </div>
-                        <div className="flex-1">
-                          <p className="font-bold text-sm">Orange Money</p>
-                          <p className="text-[11px] text-muted-foreground">Paiement via Orange Money Mali (Hub2)</p>
-                        </div>
-                        <div className={`h-5 w-5 rounded-full border-2 flex items-center justify-center transition-colors ${paymentMethod === 'orange' ? 'border-orange-500 bg-orange-500' : 'border-muted-foreground/30'}`}>
-                          {paymentMethod === 'orange' && <div className="h-2 w-2 rounded-full bg-white" />}
-                        </div>
-                      </button>
+                    <div className="bg-muted/50 border border-border rounded-xl p-3.5 space-y-2">
+                      <div className="flex justify-between text-xs">
+                        <span className="text-muted-foreground">Nom</span>
+                        <span className="font-semibold">{checkoutInfo.name}</span>
+                      </div>
+                      <div className="flex justify-between text-xs">
+                        <span className="text-muted-foreground">Téléphone</span>
+                        <span className="font-semibold">{checkoutInfo.phone}</span>
+                      </div>
+                      <div className="flex justify-between text-xs">
+                        <span className="text-muted-foreground">Email</span>
+                        <span className="font-semibold">{checkoutInfo.email || '—'}</span>
+                      </div>
+                      <div className="border-t pt-2 flex justify-between text-sm">
+                        <span className="font-bold">Total</span>
+                        <span className="font-extrabold text-emerald-600">{getCartTotal().toLocaleString('fr-FR')} FCFA</span>
+                      </div>
+                    </div>
 
-                      {/* MTN MoMo */}
-                      <button
-                        onClick={() => setPaymentMethod('mtn')}
-                        className={`w-full flex items-center gap-3.5 p-4 rounded-xl border-2 transition-all duration-200 text-left ${paymentMethod === 'mtn' ? 'border-yellow-500 bg-yellow-50 dark:bg-yellow-950/20 shadow-lg shadow-yellow-500/10' : 'border-border hover:border-yellow-300 dark:hover:border-yellow-800 hover:bg-muted/50'}`}
-                      >
-                        <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center flex-shrink-0 shadow-md">
-                          <span className="text-white font-extrabold text-lg">Mo</span>
-                        </div>
-                        <div className="flex-1">
-                          <p className="font-bold text-sm">MTN Mobile Money</p>
-                          <p className="text-[11px] text-muted-foreground">Payez avec votre compte MTN MoMo Mali (Hub2)</p>
-                        </div>
-                        <div className={`h-5 w-5 rounded-full border-2 flex items-center justify-center transition-colors ${paymentMethod === 'mtn' ? 'border-yellow-500 bg-yellow-500' : 'border-muted-foreground/30'}`}>
-                          {paymentMethod === 'mtn' && <div className="h-2 w-2 rounded-full bg-white" />}
-                        </div>
-                      </button>
-
-                      {/* Wave */}
-                      <button
-                        onClick={() => setPaymentMethod('wave')}
-                        className={`w-full flex items-center gap-3.5 p-4 rounded-xl border-2 transition-all duration-200 text-left ${paymentMethod === 'wave' ? 'border-sky-500 bg-sky-50 dark:bg-sky-950/20 shadow-lg shadow-sky-500/10' : 'border-border hover:border-sky-300 dark:hover:border-sky-800 hover:bg-muted/50'}`}
-                      >
-                        <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-sky-400 to-sky-600 flex items-center justify-center flex-shrink-0 shadow-md">
-                          <span className="text-white font-extrabold text-sm">W</span>
-                        </div>
-                        <div className="flex-1">
-                          <p className="font-bold text-sm">Wave</p>
-                          <p className="text-[11px] text-muted-foreground">Transfert via Wave (bientôt disponible)</p>
-                        </div>
-                        <div className={`h-5 w-5 rounded-full border-2 flex items-center justify-center transition-colors ${paymentMethod === 'wave' ? 'border-sky-500 bg-sky-500' : 'border-muted-foreground/30'}`}>
-                          {paymentMethod === 'wave' && <div className="h-2 w-2 rounded-full bg-white" />}
-                        </div>
-                      </button>
+                    <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-xl p-3">
+                      <p className="text-[11px] text-amber-700 dark:text-amber-400 text-center">
+                        💡 Le paiement se fait via <strong>Maketou</strong> — Orange Money, MTN MoMo, carte bancaire disponible sur la page de paiement.
+                      </p>
                     </div>
 
                     <div className="flex gap-2">
@@ -4092,19 +4076,17 @@ export default function Home() {
                         <ArrowDown className="h-4 w-4 mr-2 rotate-180" /> Retour
                       </Button>
                       <Button
-                        onClick={() => { if (paymentMethod) processPayment(); else toast({ title: 'Méthode requise', description: 'Veuillez choisir un moyen de paiement.' }) }}
-                        disabled={!paymentMethod}
-                        className="flex-1 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold h-11 text-sm disabled:opacity-50"
+                        onClick={() => processPayment()}
+                        className="flex-1 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold h-11 text-sm"
                       >
-                        <ShieldCheck className="h-4 w-4 mr-2" /> Confirmer le paiement
+                        <ShieldCheck className="h-4 w-4 mr-2" /> Payer {getCartTotal().toLocaleString('fr-FR')} F
                       </Button>
                     </div>
 
-                    {/* Security badges */}
                     <div className="flex items-center justify-center gap-3 pt-1 flex-wrap">
                       <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
                         <Shield className="h-3 w-3 text-emerald-500" />
-                        <span>Kkiapay</span>
+                        <span>Maketou</span>
                       </div>
                       <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
                         <Lock className="h-3 w-3 text-emerald-500" />
@@ -4132,18 +4114,18 @@ export default function Home() {
                       </div>
                     </div>
                     <div className="text-center">
-                      <h4 className="font-bold text-base">Connexion au serveur de paiement...</h4>
-                      <p className="text-sm text-muted-foreground mt-1">Veuillez ne pas fermer cette page</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">Ouverture de la page de paiement sécurisée Kkiapay</p>
+                      <h4 className="font-bold text-base">Vérification du paiement...</h4>
+                      <p className="text-sm text-muted-foreground mt-1">Vérification auprès de Maketou</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">Veuillez ne pas fermer cette page</p>
                     </div>
                     <div className="w-full max-w-xs space-y-2">
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                        <span className="text-xs text-muted-foreground">Vérification de la commande...</span>
+                        <span className="text-xs text-muted-foreground">Paiement reçu par Maketou...</span>
                       </div>
                       <div className="flex items-center gap-2 opacity-60">
                         <div className="h-4 w-4 rounded-full border-2 border-emerald-400 border-t-transparent animate-spin" />
-                        <span className="text-xs text-muted-foreground">Connexion à Kkiapay...</span>
+                        <span className="text-xs text-muted-foreground">Vérification du statut...</span>
                       </div>
                     </div>
                   </motion.div>
@@ -4177,7 +4159,7 @@ export default function Home() {
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-xs text-muted-foreground">Méthode</span>
-                        <span className="text-xs font-semibold">{paymentMethod === 'orange' ? 'Orange Money' : paymentMethod === 'mtn' ? 'MTN MoMo' : 'Wave'}</span>
+                        <span className="text-xs font-semibold">Maketou</span>
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-xs text-muted-foreground">Articles</span>
