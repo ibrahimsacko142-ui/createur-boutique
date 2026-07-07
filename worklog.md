@@ -111,3 +111,28 @@ Stage Summary:
   5. Texte gradient animé sur titres clés (Hero + CTA Final)
   6. Suppression doublon barre de progression
 - Push successful: 406d26d..adc1d51
+
+---
+Task ID: 3
+Agent: Main Agent
+Task: Update coaches (Sacko/Camara Leh/Kante), redesign coachs section, add share button, side nav dots, glow hover, floating particles
+
+Work Log:
+- Updated coaches data: replaced Coach Moussa and Coach Aminata with Camara Leh (Dev Web) and Kante (Marketing Digital)
+- Added `stats` field to each coach with project/experience/client metrics
+- Redesigned "Nos Coachs" section: larger avatars (h-24), skill tag badges, per-coach stats row, individual WhatsApp CTA buttons, animated underline, extra radial gradient backgrounds
+- Added Share2 icon import from lucide-react
+- Added shareToast state and activeDotSection state
+- Added intersection observer useEffect to track active section for side nav dots
+- Added share button (fixed, desktop, right-6) with navigator.share / clipboard fallback + toast notification
+- Added side navigation dots (fixed, desktop xl+, right-4, 7 section links with active state)
+- Updated service card hover: duration-500, shadow-2xl, -translate-y-1.5, scale-[1.01]
+- Added floating particle CSS keyframes (float slow/medium/fast) to globals.css
+- Added 3 floating decorative shapes in hero (amber square, orange circle, red diamond, lg only)
+- Moved back-to-top desktop button to right-20 to avoid overlap with share button
+- Build passed successfully, pushed to GitHub
+
+Stage Summary:
+- Coaches updated: Sacko (Fondateur), Camara Leh (Dev Web), Kante (Marketing Digital)
+- 6 new features: redesigned coach cards, share button, side nav dots, service card glow, floating particles, back-to-top repositioned
+- Push successful: adc1d51..e267147
