@@ -136,3 +136,37 @@ Stage Summary:
 - Coaches updated: Sacko (Fondateur), Camara Leh (Dev Web), Kante (Marketing Digital)
 - 6 new features: redesigned coach cards, share button, side nav dots, service card glow, floating particles, back-to-top repositioned
 - Push successful: adc1d51..e267147
+
+---
+Task ID: 4
+Agent: Main Agent
+Task: Add 8 new features/improvements (batch 2)
+
+Work Log:
+- Read full page.tsx (3443 lines) and worklog.md to understand current state
+- Identified exact insertion points for all 8 features
+- Added `selectedCoach` state and updated Escape key handler to close coach modal
+- Added CSS animations to globals.css (waveShift, shimmer, pulseRing, scrollbar-hide)
+- Added wave SVG divider between Hero and Quick Service Access Bar
+- Added wave SVG divider before CTA Final section
+- Added "Outils Maîtrisés" scrolling marquee strip after Comment ça marche section (14 tools)
+- Added "Pourquoi Nous Choisir" section after Outils strip (6 advantage cards)
+- Added "Résultats Clients" section after Garanties section (4 client result cards)
+- Added Coach Detail Modal with skills, bio, formations list, and WhatsApp CTA per coach
+- Made coach cards clickable (onClick + cursor-pointer)
+- Added 4 testimonial cards grid below phone mockup testimonials
+- Added improved Cookie Consent Banner (accept/refuse, spring animation)
+- Added "Moyens de Paiement" section before Footer (Orange Money, Wave, Moov Money, Carte Virtuelle)
+- Build passed successfully, pushed to GitHub
+
+Stage Summary:
+- 8 new features added and deployed:
+  1. Résultats Clients section (4 client success stories with metrics)
+  2. Outils Maîtrisés scrolling strip (14 tools/technologies)
+  3. Coach Detail Modal (clickable cards, skills, bio, formations, WhatsApp CTA)
+  4. Animated SVG Wave Dividers (after hero, before CTA Final)
+  5. Expanded Testimonials (4 additional card-based testimonials)
+  6. Improved Cookie Consent Banner (spring animation, accept/refuse)
+  7. Pourquoi Nous Choisir section (6 advantage cards)
+  8. Moyens de Paiement section (4 payment methods)
+- Push successful: e267147..acd83fc
