@@ -64,14 +64,14 @@ export async function POST(req: NextRequest) {
     if (phone.startsWith('0')) phone = phone.substring(1)
     if (!phone.startsWith('+223') && !phone.startsWith('223')) phone = `223${phone}`
 
-    // ═══ Créer le panier Maketou ═══
+    // Créer le panier Maketou
     const maketouBody: Record<string, unknown> = {
       productDocumentId: productId,
       email: customerEmail || `${firstName.toLowerCase()}.${lastName.toLowerCase()}@client.studio-creatif.ml`,
       firstName,
       lastName,
       phone: phone || undefined,
-      redirectURL: `${BASE_URL}/?payment_success=true&cartId=CART_PLACEHOLDER&order=${orderId}`,
+      redirectURL: `${BASE_URL}/?payment_success=true&order=${orderId}`,
       meta: {
         orderId,
         product: product || description || 'Commande',

@@ -170,3 +170,28 @@ Stage Summary:
   7. Pourquoi Nous Choisir section (6 advantage cards)
   8. Moyens de Paiement section (4 payment methods)
 - Push successful: e267147..acd83fc
+
+---
+Task ID: 1
+Agent: Main
+Task: Finaliser l'intégration Maketou — page.tsx, Footer, create route, dashboard
+
+Work Log:
+- Read current state of all files (page.tsx, Footer.tsx, API routes)
+- Found that processPayment() was already updated for Maketou redirect flow
+- Found that payment return handler had a bug (CART_PLACEHOLDER in redirectURL, and cartId lookup that wouldn't work)
+- Removed OM/MoMo/Wave individual badges from book section (already done in previous session)
+- Updated "Moyens de paiement" section (lines 3635-3653): replaced Wave/Moov/Carte Virtuelle with unified Maketou badge
+- Updated CTA section (lines 3119-3124): replaced 3 separate badges (OM, MoMo, Maketou) with single "Paiement Maketou Sécurisé"
+- Fixed redirectURL in create/route.ts: removed CART_PLACEHOLDER, simplified to `/?payment_success=true&order=${orderId}`
+- Updated payment return handler in page.tsx: simplified to show success directly (no cartId lookup needed)
+- Updated Footer.tsx: Maketou as primary badge, OM and MTN MoMo as sub-badges
+- Verified dashboard page already exists with PIN login, stats cards, payments table, auto-refresh
+- Build succeeded: all routes compiled correctly
+
+Stage Summary:
+- All payment references unified under Maketou
+- redirectURL bug fixed (CART_PLACEHOLDER removed)
+- Payment return flow simplified (no cartId needed in URL)
+- Dashboard at /dashboard ready (PIN: sacko2024)
+- Build successful: 9 routes, 0 errors

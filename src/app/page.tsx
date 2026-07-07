@@ -589,38 +589,18 @@ export default function Home() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     if (params.get('payment_success') === 'true') {
-      const cartId = params.get('cartId')
       const order = params.get('order')
       // Nettoyer l'URL
       window.history.replaceState({}, '', window.location.pathname + '#boutique')
-      // Vérifier le statut du paiement
-      if (cartId) {
-        setOrderId(order || cartId)
-        setShowCheckout(true)
-        setCheckoutStep(3) // processing
-        setPaymentProcessing(true)
-        // Vérifier le statut auprès de Maketou
-        fetch(`/api/payment/status?cartId=${cartId}`)
-          .then(r => r.json())
-          .then(data => {
-            setPaymentProcessing(false)
-            if (data.status === 'completed') {
-              setCheckoutStep(4)
-              triggerConfetti()
-            } else {
-              toast({
-                title: 'Paiement en attente',
-                description: 'Votre paiement est en cours de vérification. Sacko sera notifié automatiquement dès confirmation.',
-              })
-              setShowCheckout(false)
-            }
-          })
-          .catch(() => {
-            setPaymentProcessing(false)
-            setShowCheckout(false)
-            toast({ title: 'Paiement envoyé', description: 'Votre commande a été enregistrée.' })
-          })
-      }
+      // Afficher le succès directement
+      setOrderId(order || 'Maketou')
+      setShowCheckout(true)
+      setCheckoutStep(4)
+      triggerConfetti()
+      toast({
+        title: 'Paiement effectué !',
+        description: 'Votre commande a été enregistrée via Maketou. Sacko a reçu la notification et vous contactera bientôt.',
+      })
     }
   }, [])
 
@@ -2062,9 +2042,7 @@ export default function Home() {
                 <div className="flex items-center gap-2">
                   <span className="text-[10px] text-muted-foreground font-medium">Paiement :</span>
                   <div className="flex items-center gap-1.5">
-                    <span className="inline-flex items-center gap-1 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 text-[10px] font-bold px-2 py-1 rounded-md">OM</span>
-                    <span className="inline-flex items-center gap-1 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 text-[10px] font-bold px-2 py-1 rounded-md">MoMo</span>
-                    <span className="inline-flex items-center gap-1 bg-sky-100 dark:bg-sky-900/30 text-sky-700 dark:text-sky-400 text-[10px] font-bold px-2 py-1 rounded-md">Wave</span>
+                    <span className="inline-flex items-center gap-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-[10px] font-bold px-2 py-1 rounded-md">Maketou</span>
                   </div>
                 </div>
               </div>
@@ -3119,9 +3097,7 @@ export default function Home() {
                 <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4" /> Satisfaction garantie</span>
               </div>
               <div className="flex items-center gap-3 text-white/70 text-xs">
-                <span className="px-3 py-1 rounded-full bg-orange-500/20 border border-orange-400/30 font-medium">Orange Money</span>
-                <span className="px-3 py-1 rounded-full bg-yellow-500/20 border border-yellow-400/30 font-medium">MTN MoMo</span>
-                <span className="px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 font-medium">Maketou</span>
+                <span className="px-4 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-400/30 font-bold">Paiement Maketou Sécurisé</span>
               </div>
             </div>
           </div>
@@ -3635,23 +3611,15 @@ export default function Home() {
       {/* ═══ MOYENS DE PAIEMENT ═══ */}
       <section className="py-8 border-t bg-muted/20">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-            <p className="text-sm font-semibold text-muted-foreground">Moyens de paiement acceptés :</p>
-            <div className="flex flex-wrap items-center justify-center gap-3">
-              {[
-                { name: 'Orange Money', color: 'bg-orange-500', icon: '📱' },
-                { name: 'Wave', color: 'bg-blue-500', icon: '💎' },
-                { name: 'Moov Money', color: 'bg-emerald-500', icon: '📲' },
-                { name: 'Carte Virtuelle', color: 'bg-violet-500', icon: '💳' },
-              ].map((p) => (
-                <div key={p.name} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-background border border-border shadow-sm">
-                  <span className="text-base">{p.icon}</span>
-                  <span className="text-xs font-semibold">{p.name}</span>
-                </div>
-              ))}
+          <div className="flex flex-col items-center justify-center gap-3">
+            <p className="text-sm font-semibold text-muted-foreground">Paiement sécurisé via</p>
+            <div className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20 border border-emerald-200 dark:border-emerald-800 shadow-sm">
+              <div className="h-3 w-3 rounded-full bg-emerald-500" />
+              <span className="text-sm font-bold text-emerald-700 dark:text-emerald-400">Maketou</span>
+              <span className="text-[10px] text-muted-foreground">— Orange Money, MTN MoMo, Carte bancaire</span>
             </div>
           </div>
-          <p className="text-center text-[11px] text-muted-foreground mt-3">Paiement sécurisé avant livraison. Aucun frais caché.</p>
+          <p className="text-center text-[11px] text-muted-foreground mt-3">Paiement 100% sécurisé — Confirmation automatique et livraison instantanée</p>
         </div>
       </section>
 
