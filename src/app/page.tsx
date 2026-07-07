@@ -640,25 +640,109 @@ export default function Home() {
     setTimeout(() => setConfettiActive(false), 3000)
   }, [])
 
-  const processPayment = useCallback(() => {
+  const processPayment = useCallback(async () => {
     const id = generateOrderId()
     setOrderId(id)
     setCheckoutStep(3)
     setPaymentProcessing(true)
-    // Simulate payment processing
-    setTimeout(() => {
+
+    const total = checkoutItem ? checkoutItem.price : (cart.length >= 12 ? 7000 : cart.length * 1000)
+    const items = checkoutItem ? [checkoutItem.title] : cart
+    const methodChannels: Record<string, string> = {
+      orange: 'ORANGE_MONEY',
+      mtn: 'MTN_MONEY',
+      wave: 'WAVE',
+      paypal: 'PAYPAL',
+    }
+
+    try {
+      // Call our API to create CinetPay payment
+      const res = await fetch('/api/payment/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: total,
+          description: `Studio Créatif — ${items.length} article(s)`,
+          customerName: checkoutInfo.name,
+          customerPhone: checkoutInfo.phone,
+          customerEmail: checkoutInfo.email || '',
+          transactionId: id,
+          channels: paymentMethod ? methodChannels[paymentMethod] : 'ALL',
+        }),
+      })
+
+      const data = await res.json()
+
+      if (data.demo) {
+        // CinetPay not configured — fall back to simulation
+        setTimeout(() => {
+          setPaymentProcessing(false)
+          setCheckoutStep(4)
+          triggerConfetti()
+          const methodNames = { orange: 'Orange Money', mtn: 'MTN Mobile Money', wave: 'Wave', paypal: 'PayPal' }
+          const methodName = paymentMethod ? methodNames[paymentMethod] : 'Non spécifié'
+          const msg = `🛒 *NOUVELLE COMMANDE*\n\n📋 Référence : ${id}\n👤 Client : ${checkoutInfo.name}\n📱 Tél : ${checkoutInfo.phone}\n📧 Email : ${checkoutInfo.email || 'Non renseigné'}\n💳 Paiement : ${methodName}\n\n📚 Articles (${items.length}) :\n${items.map(t => `  • ${t} — 1 000 FCFA`).join('\n')}\n\n💰 *Total : ${total.toLocaleString('fr-FR')} FCFA*\n\n⏰ ${new Date().toLocaleString('fr-FR', { timeZone: 'Africa/Bamako' })}`
+          window.open(`https://wa.me/22397787244?text=${encodeURIComponent(msg)}`, '_blank')
+        }, 3000)
+        return
+      }
+
+      if (data.success && data.payment_url) {
+        // Real CinetPay — open payment popup
+        setPaymentProcessing(false)
+        setShowCheckout(false)
+
+        // Open CinetPay in a popup window
+        const popup = window.open(
+          data.payment_url,
+          'CinetPay-Paiement',
+          'width=450,height=650,scrollbars=yes,resizable=yes'
+        )
+
+        // Listen for popup close to check status
+        if (popup) {
+          const checkClosed = setInterval(() => {
+            if (popup.closed) {
+              clearInterval(checkClosed)
+              // Check payment status
+              fetch(`/api/payment/webhook?transaction_id=${id}`)
+                .then(r => r.json())
+                .then(status => {
+                  if (status.code === '00' || status.data?.status === 'ACCEPTED') {
+                    setCheckoutStep(4)
+                    setShowCheckout(true)
+                    setPaymentProcessing(false)
+                    triggerConfetti()
+                  } else {
+                    toast({
+                      title: 'Paiement en attente',
+                      description: 'Votre paiement est en cours de vérification. Vous recevrez une confirmation via WhatsApp.',
+                    })
+                  }
+                })
+                .catch(() => {})
+            }
+          }, 1000)
+        }
+      } else {
+        setPaymentProcessing(false)
+        toast({
+          title: 'Erreur de paiement',
+          description: data.error || data.details || 'Impossible de créer le paiement. Veuillez réessayer ou contacter via WhatsApp.',
+          variant: 'destructive',
+        })
+        setCheckoutStep(2)
+      }
+    } catch {
       setPaymentProcessing(false)
-      setCheckoutStep(4)
-      triggerConfetti()
-      // Auto-notify via WhatsApp
-      const total = checkoutItem ? checkoutItem.price : (cart.length >= 12 ? 7000 : cart.length * 1000)
-      const items = checkoutItem ? [checkoutItem.title] : cart
-      const methodNames = { orange: 'Orange Money', mtn: 'MTN Mobile Money', wave: 'Wave', paypal: 'PayPal' }
-      const methodName = paymentMethod ? methodNames[paymentMethod] : 'Non spécifié'
-      const msg = `🛒 *NOUVELLE COMMANDE*\n\n📋 Référence : ${id}\n👤 Client : ${checkoutInfo.name}\n📱 Tél : ${checkoutInfo.phone}\n📧 Email : ${checkoutInfo.email || 'Non renseigné'}\n💳 Paiement : ${methodName}\n\n📚 Articles (${items.length}) :\n${items.map(t => `  • ${t} — 1 000 FCFA`).join('\n')}\n\n💰 *Total : ${total.toLocaleString('fr-FR')} FCFA*\n\n⏰ ${new Date().toLocaleString('fr-FR', { timeZone: 'Africa/Bamako' })}`
-      window.open(`https://wa.me/22397787244?text=${encodeURIComponent(msg)}`, '_blank')
-    }, 3000)
-  }, [checkoutItem, cart, checkoutInfo, paymentMethod, generateOrderId, triggerConfetti])
+      toast({
+        title: 'Erreur de connexion',
+        description: 'Impossible de joindre le serveur de paiement. Vérifiez votre connexion et réessayez.',
+        variant: 'destructive',
+      })
+      setCheckoutStep(2)
+    }
+  }, [checkoutItem, cart, checkoutInfo, paymentMethod, generateOrderId, triggerConfetti, toast])
 
   // Auto-scroll testimonials
   useEffect(() => {
@@ -3818,7 +3902,7 @@ export default function Home() {
                 </div>
                 <div className="flex items-center gap-1.5 mt-1">
                   <ShieldCheck className="h-3 w-3 text-white/80" />
-                  <p className="text-[11px] text-white/80">Cryptage SSL — Paiement 100% sécurisé</p>
+                  <p className="text-[11px] text-white/80">Paiement automatique via CinetPay — Orange Money, MTN MoMo, Wave, PayPal</p>
                 </div>
                 {/* Progress bar */}
                 <div className="flex gap-1.5 mt-3">
@@ -4042,18 +4126,22 @@ export default function Home() {
                     </div>
 
                     {/* Security badges */}
-                    <div className="flex items-center justify-center gap-4 pt-1">
+                    <div className="flex items-center justify-center gap-3 pt-1 flex-wrap">
                       <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
                         <Shield className="h-3 w-3 text-emerald-500" />
-                        <span>SSL Sécurisé</span>
+                        <span>CinetPay</span>
                       </div>
                       <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
                         <Lock className="h-3 w-3 text-emerald-500" />
-                        <span>Données protégées</span>
+                        <span>SSL 256-bit</span>
                       </div>
                       <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
                         <CheckCircle2 className="h-3 w-3 text-emerald-500" />
-                        <span>Remboursement</span>
+                        <span>Paiement automatique</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                        <Zap className="h-3 w-3 text-emerald-500" />
+                        <span>Confirmation instantanée</span>
                       </div>
                     </div>
                   </motion.div>
@@ -4065,29 +4153,22 @@ export default function Home() {
                     <div className="relative">
                       <div className="h-20 w-20 rounded-full border-4 border-amber-200 dark:border-amber-800 border-t-amber-500 animate-spin" />
                       <div className="absolute inset-0 flex items-center justify-center">
-                        {paymentMethod === 'orange' && <span className="text-2xl font-extrabold text-orange-500">OM</span>}
-                        {paymentMethod === 'mtn' && <span className="text-2xl font-extrabold text-yellow-500">Mo</span>}
-                        {paymentMethod === 'wave' && <span className="text-2xl font-extrabold text-sky-500">W</span>}
-                        {paymentMethod === 'paypal' && <span className="text-2xl font-extrabold text-blue-500">PP</span>}
+                        <Lock className="h-8 w-8 text-amber-500" />
                       </div>
                     </div>
                     <div className="text-center">
-                      <h4 className="font-bold text-base">Traitement en cours...</h4>
+                      <h4 className="font-bold text-base">Connexion au serveur de paiement...</h4>
                       <p className="text-sm text-muted-foreground mt-1">Veuillez ne pas fermer cette page</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">Connexion au serveur de paiement sécurisé</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">Ouverture de la page de paiement sécurisée CinetPay</p>
                     </div>
                     <div className="w-full max-w-xs space-y-2">
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                        <span className="text-xs text-muted-foreground">Vérification des informations...</span>
+                        <span className="text-xs text-muted-foreground">Vérification de la commande...</span>
                       </div>
-                      <div className={`flex items-center gap-2 transition-opacity duration-500 ${paymentProcessing ? 'opacity-40' : 'opacity-100'}`}>
-                        <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                        <span className="text-xs text-muted-foreground">Validation du paiement...</span>
-                      </div>
-                      <div className={`flex items-center gap-2 transition-opacity duration-500 ${paymentProcessing ? 'opacity-20' : 'opacity-100'}`}>
-                        <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                        <span className="text-xs text-muted-foreground">Confirmation de la commande...</span>
+                      <div className="flex items-center gap-2 opacity-60">
+                        <div className="h-4 w-4 rounded-full border-2 border-emerald-400 border-t-transparent animate-spin" />
+                        <span className="text-xs text-muted-foreground">Connexion à CinetPay...</span>
                       </div>
                     </div>
                   </motion.div>
