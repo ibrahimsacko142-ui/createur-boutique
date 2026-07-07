@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://docs-api.maketou.com",
+    "name": "Documentation API | Maketou",
+    "snippet": "L'API publique de Maketou vous permet d'intégrer facilement un système de paiement et de vente de produits numériques dans vos applications. Commencez à vendre ... Missing: developer endpoint checkout cart",
+    "host_name": "docs-api.maketou.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs-api.maketou.com/docs/introduction",
+    "name": "Introduction - Documentation API | Maketou",
+    "snippet": "L'API publique de Maketou vous permet d'intégrer les fonctionnalités de vente et de paiement de Maketou directement dans vos applications. Cette documentation ... Missing: developer checkout cart",
+    "host_name": "docs-api.maketou.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.magnolia-cms.com/ecommerce/ecommerce-rest-endpoints/checkout-endpoint-v2",
+    "name": "Checkout endpoint v2 - Magnolia Docs",
+    "snippet": "Sets the address for checkout and gets a list of shipping methods for a cart. Make sure the cart has at least one item, otherwise empty is returned. Request URL.",
+    "host_name": "docs.magnolia-cms.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://api2cart.com/news/cart-api-2",
+    "name": "Cart API: A Developer's Guide to Seamless eCommerce Integration",
+    "snippet": "The API gives you full programmatic control over the cart's contents and state in the backend. This frees you up to build a completely custom, ...",
+    "host_name": "api2cart.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://crystallize.com/blog/advanced-graphql-api-usage",
+    "name": "Advanced GraphQL API Usage in Crystallize",
+    "snippet": "Manipulating the Shopping Cart. We released the Shop API to tackle the challenge of managing the cart functionality of your e-commerce store.",
+    "host_name": "crystallize.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.adobe.com/commerce/webapi/rest",
+    "name": "REST API Overview - Adobe Developer",
+    "snippet": "The REST API documentation describes the REST APIs that are available in these versions of Adobe Commerce and Magento Open Source. Endpoints.",
+    "host_name": "developer.adobe.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://apps.make.com/extensiv-9nhxk1",
+    "name": "Extensiv by Maxmel Tech - Apps Documentation - Make",
+    "snippet": "Create a Cart. Creates a new shopping cart for a user, allowing them to add and manage items they wish to purchase.",
+    "host_name": "apps.make.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.rapyd.net/en/create-checkout-page.html",
+    "name": "Create Checkout Page - Rapyd Docs",
+    "snippet": "Create a checkout page that makes a payment. This method can be used by all clients without the need for PCI certification.",
+    "host_name": "docs.rapyd.net",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://addyo.substack.com/p/how-good-is-ai-at-coding-react-really",
+    "name": "How Good Is AI at Coding React (Really)? - Elevate | Addy Osmani",
+    "snippet": "A data-driven look at what AI can and can't do for React developers - and what you can do about it.",
+    "host_name": "addyo.substack.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://api-reference.checkout.com",
+    "name": "Checkout.com API Reference",
+    "snippet": "It only has access to a limited set of our APIs – mostly those called as part of your payment environment. Server-to-server authentication. Use your secret key or OAuth for server-to-server communication. Support for API keys depends on the endpoint. Never share your OAuth credentials, API keys, or access tokens. Keep them guarded and secure.",
+    "host_name": "api-reference.checkout.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]
