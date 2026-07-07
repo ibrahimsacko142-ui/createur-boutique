@@ -574,6 +574,9 @@ export default function Home() {
   const [quizAnswers, setQuizAnswers] = useState<string[]>([])
   const [quizResult, setQuizResult] = useState<{ service: string; icon: typeof Palette; reason: string } | null>(null)
 
+  // Coach detail modal
+  const [selectedCoach, setSelectedCoach] = useState<typeof coaches[0] | null>(null)
+
   // Live visitors (simulated)
   const [liveVisitors, setLiveVisitors] = useState(12)
 
@@ -674,6 +677,7 @@ export default function Home() {
         setSelectedBook(null)
         setQuizOpen(false); setQuizStep(0); setQuizAnswers([]); setQuizResult(null)
         setShowCart(false)
+        setSelectedCoach(null)
       }
     }
     window.addEventListener('keydown', handleEsc)
@@ -900,6 +904,13 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Wave divider */}
+        <div className="relative h-12 -mt-1 overflow-hidden">
+          <svg className="absolute bottom-0 w-full" viewBox="0 0 1440 48" fill="none" preserveAspectRatio="none">
+            <path d="M0 48L60 42C120 36 240 24 360 20C480 16 600 20 720 26C840 32 960 40 1080 40C1200 40 1320 32 1380 28L1440 24V48H1380C1320 48 1200 48 1080 48C960 48 840 48 720 48C600 48 480 48 360 48C240 48 120 48 60 48H0Z" className="fill-background" />
+          </svg>
+        </div>
+
         {/* ═══ 3. QUICK SERVICE ACCESS BAR ═══ */}
         <section className="py-6 border-b bg-background">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -1072,6 +1083,90 @@ export default function Home() {
                 ))}
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* ═══ OUTILS MAÎTRISÉS ═══ */}
+        <div className="py-8 bg-muted/30 border-y overflow-hidden">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-6">
+            <p className="text-center text-xs font-bold uppercase tracking-widest text-muted-foreground">
+              <Wrench className="h-3.5 w-3.5 inline mr-1.5" /> Outils & Technologies que nous maîtrisons
+            </p>
+          </div>
+          <div className="flex animate-marquee whitespace-nowrap">
+            {[...Array(2)].map((_, setIdx) => (
+              <div key={setIdx} className="flex items-center gap-10 mx-5">
+                {[
+                  { name: 'Canva Pro', emoji: '🎨' },
+                  { name: 'CapCut Pro', emoji: '🎬' },
+                  { name: 'PicsArt Pro', emoji: '📸' },
+                  { name: 'Photoshop', emoji: '🖌️' },
+                  { name: 'Illustrator', emoji: '✏️' },
+                  { name: 'Premiere Pro', emoji: '🎞️' },
+                  { name: 'DaVinci Resolve', emoji: '🪄' },
+                  { name: 'Figma', emoji: '🎯' },
+                  { name: 'HTML/CSS', emoji: '🌐' },
+                  { name: 'JavaScript', emoji: '⚡' },
+                  { name: 'React/Next.js', emoji: '⚛️' },
+                  { name: 'WordPress', emoji: '📝' },
+                  { name: 'Meta Business', emoji: '📊' },
+                  { name: 'TikTok Ads', emoji: '🎵' },
+                ].map((tool, i) => (
+                  <span key={`${setIdx}-${i}`} className="inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors flex-shrink-0">
+                    <span className="text-xl">{tool.emoji}</span>
+                    <span>{tool.name}</span>
+                  </span>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ═══ POURQUOI NOUS CHOISIR ═══ */}
+        <section className="py-16 sm:py-20">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.6 }}
+            >
+              <div className="text-center mb-12">
+                <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+                  <Sparkles className="h-3 w-3 mr-1" /> Avantages
+                </Badge>
+                <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Pourquoi <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">nous choisir</span> ?</h2>
+                <p className="mt-3 text-muted-foreground max-w-xl mx-auto leading-relaxed">
+                  Ce qui nous distingue des autres freelances et agences à Bamako.
+                </p>
+              </div>
+
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[
+                  { icon: Zap, title: 'Réactivité Extraordinaire', desc: "Réponse en moins de 30 minutes sur WhatsApp. Pas de formulaire sans suivi, pas d'attente de 48h. Je suis disponible 7j/7.", color: 'from-amber-400 to-orange-500' },
+                  { icon: Target, title: '100% Personnalisé', desc: "Aucun template pré-fait. Chaque projet est conçu de zéro selon votre identité, vos couleurs et votre vision. Votre marque est unique.", color: 'from-emerald-400 to-teal-500' },
+                  { icon: ThumbsUp, title: 'Satisfaction Garantie', desc: 'Révisions illimitées sur les offres Premium. Je ne livre que lorsque vous êtes 100% satisfait du résultat final.', color: 'from-blue-400 to-indigo-500' },
+                  { icon: Lock, title: 'Paiement Sécurisé', desc: 'Payez via Orange Money, Wave, Moov Money ou cartes virtuelles. Paiement avant livraison, aucun risque.', color: 'from-purple-400 to-violet-500' },
+                  { icon: Users, title: '3 Experts Unis', desc: 'Sacko pour le design, Camara Leh pour le web, Kante pour le marketing. Trois coachs complémentaires pour couvrir tous vos besoins.', color: 'from-cyan-400 to-blue-500' },
+                  { icon: Heart, title: 'Passion Africaine', desc: 'Nous comprenons le marché malien et africain. Nos créations sont pensées pour plaire à votre clientele locale et vous démarquer.', color: 'from-rose-400 to-pink-500' },
+                ].map((item, i) => (
+                  <motion.div
+                    key={item.title}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: i * 0.08 }}
+                    className="group p-6 rounded-2xl border border-border hover:border-amber-200 dark:hover:border-amber-800 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+                  >
+                    <div className={`inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${item.color} text-white shadow-lg mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
+                      <item.icon className="h-6 w-6" />
+                    </div>
+                    <h3 className="text-base font-extrabold mb-2">{item.title}</h3>
+                    <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
           </div>
         </section>
 
@@ -1709,7 +1804,8 @@ export default function Home() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: i * 0.15 }}
-                  className="group relative rounded-2xl backdrop-blur-xl bg-white/[0.04] border border-white/[0.08] hover:border-amber-400/30 p-6 sm:p-8 text-center transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl hover:shadow-amber-500/10"
+                  onClick={() => setSelectedCoach(coach)}
+                  className="group relative rounded-2xl backdrop-blur-xl bg-white/[0.04] border border-white/[0.08] hover:border-amber-400/30 p-6 sm:p-8 text-center transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl hover:shadow-amber-500/10 cursor-pointer"
                 >
                   {/* Glow effect */}
                   <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${coach.gradient} opacity-0 group-hover:opacity-[0.06] transition-opacity duration-500`} />
@@ -2256,6 +2352,41 @@ export default function Home() {
           </div>
         </section>
 
+            {/* Testimonial cards grid */}
+            <div className="mt-10 grid sm:grid-cols-2 gap-4">
+              {[
+                { name: 'Aminata Coulibaly', text: "La formation Marketing Digital a changé ma façon de voir les réseaux sociaux. En 1 mois, j'ai géré 3 comptes et je gagne maintenant 50 000 FCFA par mois. Merci Kante pour l'accompagnement !", rating: 5 },
+                { name: 'Moussa Traoré', text: "Mon site web créé par Camara Leh est incroyable. Il est rapide, beau et mes clients le trouvent facilement sur Google. Un vrai game changer pour mon entreprise.", rating: 5 },
+                { name: 'Djénéba Diarra', text: "Sacko a refait toute mon identité visuelle : logo, cartes de visite, affiches. Mes clients me disent que je looks professionnel maintenant. Service au top !", rating: 5 },
+                { name: 'Ibrahim Kanté', text: "J'ai suivi la formation Création Web et en 3 semaines j'ai pu créer mon propre site e-commerce. Je vends mes produits en ligne maintenant. Formation pratique et efficace.", rating: 5 },
+              ].map((t, i) => (
+                <motion.div
+                  key={t.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: i * 0.1 }}
+                  className="p-5 rounded-xl bg-muted/50 border border-border hover:border-amber-200 dark:hover:border-amber-800 transition-all hover:shadow-md"
+                >
+                  <div className="flex items-center gap-0.5 mb-2">
+                    {[...Array(t.rating)].map((_, s) => (
+                      <Star key={s} className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                    ))}
+                  </div>
+                  <p className="text-sm text-foreground/80 leading-relaxed mb-3">"{t.text}"</p>
+                  <div className="flex items-center gap-2">
+                    <div className="h-8 w-8 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white text-xs font-bold">
+                      {t.name.split(' ').map(n => n[0]).join('')}
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold">{t.name}</p>
+                      <p className="text-[10px] text-muted-foreground">Client vérifié</p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
 
 
 
@@ -2679,6 +2810,70 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ═══ RÉSULTATS CLIENTS ═══ */}
+        <section className="py-16 sm:py-20 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 dark:from-emerald-950/20 dark:via-teal-950/10 dark:to-cyan-950/20" />
+          <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.6 }}
+            >
+              <div className="text-center mb-12">
+                <Badge variant="secondary" className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200">
+                  <TrendingUp className="h-3 w-3 mr-1" /> Résultats
+                </Badge>
+                <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Ils ont <span className="text-emerald-600 dark:text-emerald-400">transformé leur business</span></h2>
+                <p className="mt-3 text-muted-foreground max-w-xl mx-auto leading-relaxed">
+                  Des résultats concrets, mesurables. Voici ce que nos clients ont accompli après avoir travaillé avec Studio Créatif.
+                </p>
+              </div>
+
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                {[
+                  { client: 'Boutique Le Baobab', metric: '+40%', desc: "d'augmentation du chiffre d'affaires en 1 mois grâce au nouveau logo et aux visuels réseaux sociaux", icon: TrendingUp, color: 'from-emerald-500 to-teal-500' },
+                  { client: 'MaliTech Solutions', metric: '+200', desc: 'visiteurs/jour sur le nouveau site web en seulement 2 semaines après le lancement', icon: Users, color: 'from-blue-500 to-indigo-500' },
+                  { client: 'Restaurant Djoliba', metric: '3x', desc: "plus de commandes en ligne après la refonte de l'identité visuelle complète et des affiches promotionnelles", icon: Award, color: 'from-amber-500 to-orange-500' },
+                  { client: 'Salon Awa Beauty', metric: '15K+', desc: 'vues sur la vidéo promotionnelle TikTok en 48h, générant 20+ nouvelles clientes', icon: Eye, color: 'from-purple-500 to-violet-500' },
+                ].map((result, i) => (
+                  <motion.div
+                    key={result.client}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: i * 0.1 }}
+                    className="group relative bg-background rounded-2xl border border-border p-5 sm:p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-emerald-200 dark:hover:border-emerald-800"
+                  >
+                    <div className={`inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${result.color} text-white shadow-lg mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                      <result.icon className="h-6 w-6" />
+                    </div>
+                    <div className="text-3xl font-extrabold bg-gradient-to-r bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 mb-1">{result.metric}</div>
+                    <h3 className="text-sm font-bold mb-2">{result.client}</h3>
+                    <p className="text-xs text-muted-foreground leading-relaxed">{result.desc}</p>
+                  </motion.div>
+                ))}
+              </div>
+
+              <div className="mt-8 text-center">
+                <p className="text-sm text-muted-foreground">
+                  Envie de résultats similaires ?{' '}
+                  <a href="https://wa.me/22397787244?text=Bonjour%20!%20J%27ai%20vu%20vos%20r%C3%A9sultats%20clients%20et%20je%20veux%20la%20m%C3%Aamme%20chose%20pour%20mon%20business." target="_blank" rel="noopener noreferrer" className="text-emerald-600 font-semibold hover:underline">
+                    Discutons de votre projet
+                  </a>
+                </p>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Wave divider */}
+        <div className="relative h-16 -mt-1 overflow-hidden">
+          <svg className="absolute bottom-0 w-full" viewBox="0 0 1440 64" fill="none" preserveAspectRatio="none">
+            <path d="M0 64L48 58C96 52 192 40 288 34C384 28 480 28 576 32C672 36 768 44 864 46C960 48 1056 44 1152 38C1248 32 1344 24 1392 20L1440 16V64H0Z" className="fill-amber-500" />
+          </svg>
+        </div>
+
         {/* ═══ 18. CTA FINAL ═══ */}
         <section className="py-16 sm:py-20 bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 relative overflow-hidden">
           <div className="absolute inset-0">
@@ -2811,6 +3006,144 @@ export default function Home() {
             </motion.div>
           </div>
         </section>
+      {/* ═══ COACH DETAIL MODAL ═══ */}
+      <AnimatePresence>
+        {selectedCoach && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+            onClick={() => setSelectedCoach(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+              className="relative bg-background rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className={`bg-gradient-to-r ${selectedCoach.gradient} p-6 text-white relative`}>
+                <button onClick={() => setSelectedCoach(null)} className="absolute top-3 right-3 h-8 w-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors">
+                  <X className="h-4 w-4" />
+                </button>
+                <div className="flex items-center gap-4">
+                  <div className="h-20 w-20 rounded-full bg-white/20 flex items-center justify-center text-3xl font-extrabold ring-4 ring-white/30">
+                    {selectedCoach.initial}
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-extrabold">{selectedCoach.name}</h3>
+                    <p className="text-white/80 text-sm mt-0.5">{selectedCoach.role}</p>
+                    <div className="flex gap-4 mt-2">
+                      {selectedCoach.stats.map((s) => (
+                        <div key={s.label}>
+                          <span className="text-lg font-extrabold">{s.value}</span>
+                          <span className="text-[10px] text-white/60 ml-1">{s.label}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="p-6 space-y-4">
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-2">Compétences</p>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedCoach.speciality.split(', ').map((skill) => (
+                      <span key={skill} className="px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-950/20 text-amber-700 dark:text-amber-400 text-xs font-semibold border border-amber-200 dark:border-amber-800">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-2">Biographie</p>
+                  <p className="text-sm text-foreground/80 leading-relaxed">{selectedCoach.bio}</p>
+                </div>
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-2">Formations dispensées</p>
+                  <div className="space-y-2">
+                    {selectedCoach.name === 'Sacko' && (
+                      <>
+                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>Design Graphique (Canva, Photoshop, Illustrator)</span></div>
+                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>Branding & Identité Visuelle</span></div>
+                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>Montage Vidéo (CapCut, Premiere Pro)</span></div>
+                      </>
+                    )}
+                    {selectedCoach.name === 'Camara Leh' && (
+                      <>
+                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>Création Web (HTML, CSS, JavaScript)</span></div>
+                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>Frameworks modernes (React, Next.js)</span></div>
+                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>WordPress & Solutions e-commerce</span></div>
+                      </>
+                    )}
+                    {selectedCoach.name === 'Kante' && (
+                      <>
+                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>Marketing Digital & Stratégie</span></div>
+                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>Publicité Facebook & Instagram Ads</span></div>
+                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>TikTok & YouTube Growth</span></div>
+                      </>
+                    )}
+                  </div>
+                </div>
+                <a
+                  href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je souhaite être encadré(e) par ${selectedCoach.name} pour une formation. Pouvez-vous me donner plus de détails ?`)}`}
+                  target="_blank" rel="noopener noreferrer"
+                  onClick={() => setSelectedCoach(null)}
+                >
+                  <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold shadow-lg shadow-emerald-500/20 mt-2">
+                    <MessageCircle className="h-4 w-4 mr-2" /> Contacter {selectedCoach.name} via WhatsApp
+                  </Button>
+                </a>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ═══ COOKIE CONSENT BANNER ═══ */}
+      <AnimatePresence>
+        {showCookieConsent && (
+          <motion.div
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            className="fixed bottom-16 lg:bottom-6 left-4 right-4 lg:left-auto lg:right-6 lg:w-96 z-[80] bg-background/95 backdrop-blur-xl rounded-2xl border shadow-2xl p-5"
+          >
+            <div className="flex items-start gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30 flex-shrink-0">
+                <Cookie className="h-5 w-5 text-amber-600" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-sm font-bold mb-1">Nous respectons votre vie privée</h3>
+                <p className="text-xs text-muted-foreground leading-relaxed mb-3">
+                  Nous utilisons des cookies pour améliorer votre expérience, analyser le trafic et afficher des contenus personnalisés. En continuant, vous acceptez nos cookies.
+                </p>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => setShowCookieConsent(false)}
+                    size="sm"
+                    className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold text-xs h-9"
+                  >
+                    Accepter
+                  </Button>
+                  <Button
+                    onClick={() => setShowCookieConsent(false)}
+                    variant="outline"
+                    size="sm"
+                    className="text-xs h-9"
+                  >
+                    Refuser
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* ═══ WELCOME POPUP ═══ */}
       <AnimatePresence>
         {welcomeVisible && (
@@ -3085,6 +3418,29 @@ export default function Home() {
       </div>
 
       </main>
+
+      {/* ═══ MOYENS DE PAIEMENT ═══ */}
+      <section className="py-8 border-t bg-muted/20">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+            <p className="text-sm font-semibold text-muted-foreground">Moyens de paiement acceptés :</p>
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              {[
+                { name: 'Orange Money', color: 'bg-orange-500', icon: '📱' },
+                { name: 'Wave', color: 'bg-blue-500', icon: '💎' },
+                { name: 'Moov Money', color: 'bg-emerald-500', icon: '📲' },
+                { name: 'Carte Virtuelle', color: 'bg-violet-500', icon: '💳' },
+              ].map((p) => (
+                <div key={p.name} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-background border border-border shadow-sm">
+                  <span className="text-base">{p.icon}</span>
+                  <span className="text-xs font-semibold">{p.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <p className="text-center text-[11px] text-muted-foreground mt-3">Paiement sécurisé avant livraison. Aucun frais caché.</p>
+        </div>
+      </section>
 
       {/* ═══ 20. FOOTER ═══ */}
       <Footer />
