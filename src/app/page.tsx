@@ -60,6 +60,7 @@ import {
   Cookie,
   Calculator,
   Share2,
+  ExternalLink,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -522,6 +523,8 @@ const books: Book[] = [
 /* ═══════════════════════════════════════════════
    MAIN PAGE
    ═══════════════════════════════════════════════ */
+const TALIOPAY_URL = process.env.NEXT_PUBLIC_TALIOPAY_STORE_URL || ''
+
 export default function Home() {
   const [contactData, setContactData] = useState({ name: '', email: '', subject: '', message: '' })
   const [showBanner, setShowBanner] = useState(true)
@@ -663,9 +666,43 @@ export default function Home() {
 
     const total = checkoutItem ? checkoutItem.price : (cart.length >= 12 ? 7000 : cart.length * 1000)
     const items = checkoutItem ? [checkoutItem.title] : cart
+    const isDigitalProduct = !checkoutItem || checkoutItem.type === 'book' || checkoutItem.type === 'cart'
+      || checkoutItem.title.includes('Pack') || checkoutItem.title.includes('Formation')
 
+    // ─── Produits digitaux → Taliopay ───
+    if (TALIOPAY_URL && TALIOPAY_URL !== 'https://www.taliopay.com/VOTRE_BOUTIQUE' && isDigitalProduct) {
+      // Enregistrer la commande localement
+      try {
+        await fetch('/api/payments', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            cartId: id,
+            orderId: id,
+            amount: total,
+            product: items.length === 1 ? items[0] : `${items.length} article(s)`,
+            customerName: checkoutInfo.name,
+            customerPhone: checkoutInfo.phone,
+            customerEmail: checkoutInfo.email || '',
+            status: 'waiting_payment',
+            createdAt: new Date().toISOString(),
+          }),
+        }).catch(() => {})
+      } catch { /* non bloquant */ }
+
+      setTimeout(() => {
+        setPaymentProcessing(false)
+        setCheckoutStep(4)
+        triggerConfetti()
+        setCart([])
+        setCheckoutItem(null)
+        window.open(TALIOPAY_URL, '_blank')
+      }, 2000)
+      return
+    }
+
+    // ─── Services personnalisés → WhatsApp ───
     try {
-      // Enregistrer la commande et obtenir le lien WhatsApp
       const res = await fetch('/api/payment/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -684,7 +721,6 @@ export default function Home() {
       const data = await res.json()
 
       if (data.success && data.whatsapp_url) {
-        // Succès — ouvrir WhatsApp avec le récapitulatif
         setTimeout(() => {
           setPaymentProcessing(false)
           setCheckoutStep(4)
@@ -2027,7 +2063,7 @@ export default function Home() {
                 <div className="flex items-center gap-2">
                   <span className="text-[10px] text-muted-foreground font-medium">Paiement :</span>
                   <div className="flex items-center gap-1.5">
-                    <span className="inline-flex items-center gap-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-[10px] font-bold px-2 py-1 rounded-md">CinetPay</span>
+                    <span className="inline-flex items-center gap-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-[10px] font-bold px-2 py-1 rounded-md">Taliopay</span>
                   </div>
                 </div>
               </div>
@@ -3809,7 +3845,7 @@ export default function Home() {
                   onClick={() => openCheckout()}
                   className="flex-1 bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 hover:from-amber-600 hover:via-orange-600 hover:to-red-600 text-white font-bold shadow-lg shadow-amber-500/20 h-11 text-sm"
                 >
-                  <Lock className="h-4 w-4 mr-2" /> Payer maintenant
+                  <ExternalLink className="h-4 w-4 mr-2" /> Payer sur Taliopay
                 </Button>
               </div>
             </div>
@@ -4030,16 +4066,16 @@ export default function Home() {
                       </Button>
                       <Button
                         onClick={() => processPayment()}
-                        className="flex-1 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold h-11 text-sm"
+                        className="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold h-11 text-sm"
                       >
-                        <ShieldCheck className="h-4 w-4 mr-2" /> Payer {getCartTotal().toLocaleString('fr-FR')} F
+                        <ExternalLink className="h-4 w-4 mr-2" /> Payer {getCartTotal().toLocaleString('fr-FR')} F sur Taliopay
                       </Button>
                     </div>
 
                     <div className="flex items-center justify-center gap-3 pt-1 flex-wrap">
                       <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
                         <Shield className="h-3 w-3 text-emerald-500" />
-                        <span>CinetPay</span>
+                        <span>Taliopay</span>
                       </div>
                       <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
                         <Lock className="h-3 w-3 text-emerald-500" />
@@ -4068,17 +4104,17 @@ export default function Home() {
                     </div>
                     <div className="text-center">
                       <h4 className="font-bold text-base">Vérification du paiement...</h4>
-                      <p className="text-sm text-muted-foreground mt-1">Vérification auprès de CinetPay</p>
+                      <p className="text-sm text-muted-foreground mt-1">Redirection vers Taliopay...</p>
                       <p className="text-xs text-muted-foreground mt-0.5">Veuillez ne pas fermer cette page</p>
                     </div>
                     <div className="w-full max-w-xs space-y-2">
                       <div className="flex items-center gap-2">
-                        <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                        <span className="text-xs text-muted-foreground">Envoi vers WhatsApp...</span>
+                        <CheckCircle2 className="h-4 w-4 text-blue-500" />
+                        <span className="text-xs text-muted-foreground">Redirection vers Taliopay...</span>
                       </div>
                       <div className="flex items-center gap-2 opacity-60">
-                        <div className="h-4 w-4 rounded-full border-2 border-emerald-400 border-t-transparent animate-spin" />
-                        <span className="text-xs text-muted-foreground">Vérification du statut...</span>
+                        <div className="h-4 w-4 rounded-full border-2 border-blue-400 border-t-transparent animate-spin" />
+                        <span className="text-xs text-muted-foreground">Ouverture de la page de paiement...</span>
                       </div>
                     </div>
                   </motion.div>
@@ -4112,7 +4148,7 @@ export default function Home() {
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-xs text-muted-foreground">Méthode</span>
-                        <span className="text-xs font-semibold">CinetPay</span>
+                        <span className="text-xs font-semibold">Taliopay</span>
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-xs text-muted-foreground">Articles</span>
@@ -4124,13 +4160,13 @@ export default function Home() {
                       </div>
                     </div>
 
-                    <div className="w-full bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800 rounded-xl p-3.5">
+                    <div className="w-full bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-xl p-3.5">
                       <div className="flex items-start gap-2.5">
-                        <MessageCircle className="h-5 w-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+                        <ExternalLink className="h-5 w-5 text-blue-500 flex-shrink-0 mt-0.5" />
                         <div>
-                          <p className="text-xs font-bold text-emerald-700 dark:text-emerald-400">Confirmation envoyée !</p>
-                          <p className="text-[11px] text-emerald-600/80 dark:text-emerald-400/70 mt-0.5 leading-relaxed">
-                            Votre commande a été transmise à Sacko via WhatsApp. Il va vous contacter pour confirmer et guider le paiement. Gardez votre référence : <strong>{orderId}</strong>
+                          <p className="text-xs font-bold text-blue-700 dark:text-blue-400">Redirigé vers Taliopay !</p>
+                          <p className="text-[11px] text-blue-600/80 dark:text-blue-400/70 mt-0.5 leading-relaxed">
+                            Vous avez été redirigé vers Taliopay pour finaliser le paiement en toute sécurité (Orange Money, Moov Money, carte bancaire). Si la page ne s&apos;est pas ouverte, <a href={TALIOPAY_URL} target="_blank" rel="noopener noreferrer" className="underline font-bold">cliquez ici</a>. Référence : <strong>{orderId}</strong>
                           </p>
                         </div>
                       </div>

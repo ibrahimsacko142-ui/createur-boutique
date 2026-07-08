@@ -1,15 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-// ═══ API Dashboard — Liste des paiements ═══
-// GET /api/payments — Retourne tous les paiements connus avec statut à jour
-// Cette route vérifie le statut via l'API CinetPay
+// ═══ API Dashboard — Liste des commandes ═══
+// GET /api/payments — Retourne toutes les commandes avec statut
+// POST /api/payments — Enregistre une commande
+// PATCH /api/payments — Met à jour le statut d'une commande
 
-const CINETPAY_API_KEY = process.env.CINETPAY_API_KEY || ''
-const CINETPAY_SITE_ID = process.env.CINETPAY_SITE_ID || ''
 const ADMIN_PIN = process.env.ADMIN_PIN || 'sacko2024'
 
-// ═══ Store partagé des paiements ═══
-// Sur Vercel serverless, ce Map vit le temps de l'instance
+// ═══ Store partagé des commandes ═══
 interface StoredPayment {
   cartId: string
   orderId: string
@@ -59,50 +57,8 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
     }
 
-    // Récupérer tous les paiements stockés
-    let payments = getPayments()
-
-    // Si CinetPay est configuré, vérifier le statut en temps réel pour les paiements récents (derniers 24h)
-    if (CINETPAY_API_KEY && CINETPAY_API_KEY !== 'VOTRE_CLE_API_ICI') {
-      const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000
-      const recentPayments = payments.filter(p => new Date(p.createdAt).getTime() > oneDayAgo && p.status !== 'completed')
-
-      // Vérifier le statut en parallèle (max 5 à la fois)
-      const batches = []
-      for (let i = 0; i < recentPayments.length; i += 5) {
-        batches.push(recentPayments.slice(i, i + 5))
-      }
-
-      for (const batch of batches) {
-        await Promise.allSettled(
-          batch.map(async (payment) => {
-            try {
-              const res = await fetch('https://api-checkout.cinetpay.com/v2/payment/check', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  apikey: CINETPAY_API_KEY,
-                  site_id: CINETPAY_SITE_ID,
-                  transaction_id: payment.cartId,
-                }),
-              })
-              if (res.ok) {
-                const data = await res.json()
-                const txnData = data.data || data
-                const cpStatus = txnData.status || txnData.cpm_trans_status || 'PENDING'
-                const mapped = cpStatus === 'VALIDATED' ? 'completed' : cpStatus === 'REFUSED' || cpStatus === 'CANCELLED' ? 'payment_failed' : 'waiting_payment'
-                updatePaymentStatus(payment.cartId, mapped)
-              }
-            } catch {
-              // Ignore les erreurs de vérification individuelle
-            }
-          })
-        )
-      }
-
-      // Re-récupérer les paiements mis à jour
-      payments = getPayments()
-    }
+    // Récupérer toutes les commandes stockées
+    const payments = getPayments()
 
     // Stats résumées
     const total = payments.length
@@ -122,7 +78,7 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// POST — Enregistrer un paiement (appelé par create/route.ts)
+// POST — Enregistrer une commande
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
@@ -151,7 +107,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// PATCH — Mettre à jour le statut d'un paiement (appelé par webhook)
+// PATCH — Mettre à jour le statut d'une commande
 export async function PATCH(req: NextRequest) {
   try {
     const body = await req.json()

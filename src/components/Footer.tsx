@@ -1,4 +1,4 @@
-import { Instagram, Facebook, Mail, MapPin, Phone, MessageCircle, Sparkles, Heart } from 'lucide-react'
+import { Instagram, Facebook, Mail, MapPin, Phone, MessageCircle, Sparkles, Heart, ExternalLink } from 'lucide-react'
 // TikTok SVG icon component
 function TikTokIcon({ className = 'h-[1.125rem] w-[1.125rem]' }: { className?: string }) {
   return (
@@ -122,11 +122,11 @@ export default function Footer() {
 
         {/* Modes de paiement acceptés */}
         <div className="mt-8 pt-6 border-t">
-          <h3 className="text-xs font-semibold uppercase tracking-wider mb-3 text-center">Paiement via WhatsApp</h3>
+          <h3 className="text-xs font-semibold uppercase tracking-wider mb-3 text-center">Paiement sécurisé via Taliopay</h3>
           <div className="flex flex-wrap items-center justify-center gap-2.5">
-            <span className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 border border-transparent px-4 py-1.5 text-[11px] font-bold text-emerald-700 dark:text-emerald-400">
-              <span className="h-2 w-2 rounded-full bg-emerald-500" />
-              WhatsApp
+            <span className="inline-flex items-center gap-1.5 rounded-lg bg-blue-100 dark:bg-blue-900/30 border border-transparent px-4 py-1.5 text-[11px] font-bold text-blue-700 dark:text-blue-400">
+              <span className="h-2 w-2 rounded-full bg-blue-500" />
+              Taliopay
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-lg bg-orange-100 dark:bg-orange-900/30 border border-transparent px-3 py-1.5 text-[10px] font-bold text-orange-700 dark:text-orange-400">
               <span className="h-2 w-2 rounded-full bg-orange-500" />
@@ -134,10 +134,14 @@ export default function Footer() {
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-lg bg-yellow-100 dark:bg-yellow-900/30 border border-transparent px-3 py-1.5 text-[10px] font-bold text-yellow-700 dark:text-yellow-400">
               <span className="h-2 w-2 rounded-full bg-yellow-500" />
-              MTN MoMo
+              Moov Money
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-lg bg-purple-100 dark:bg-purple-900/30 border border-transparent px-3 py-1.5 text-[10px] font-bold text-purple-700 dark:text-purple-400">
+              <span className="h-2 w-2 rounded-full bg-purple-500" />
+              Carte Visa / MC
             </span>
           </div>
-          <p className="text-[10px] text-muted-foreground text-center mt-2">Commande simple — Confirmation instantanée — Livraison via WhatsApp</p>
+          <p className="text-[10px] text-muted-foreground text-center mt-2">Paiement automatique — Livraison instantanée — Retrait immédiat</p>
         </div>
 
         <div className="mt-8 border-t pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
