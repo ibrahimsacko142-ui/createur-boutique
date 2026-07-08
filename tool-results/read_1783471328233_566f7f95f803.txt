@@ -1,0 +1,502 @@
+  1001→                        {['Design Graphique', 'Sites Web', 'Montage Vidéo', 'Formations'].map((t) => (
+  1002→                          <span key={t} className="px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-white text-xs font-medium border border-white/10">{t}</span>
+  1003→                        ))}
+  1004→                      </div>
+  1005→                    </div>
+  1006→                  </div>
+  1007→                  <div className="absolute -bottom-6 -left-6 bg-white/90 dark:bg-card/90 backdrop-blur-xl rounded-xl shadow-xl p-3 border hover:scale-105 transition-transform cursor-default">
+  1008→                    <div className="flex items-center gap-3">
+  1009→                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
+  1010→                        <Award className="h-5 w-5 text-amber-500" />
+  1011→                      </div>
+  1012→                      <div>
+  1013→                        <p className="text-xs font-bold">50+ Marques</p>
+  1014→                        <p className="text-[10px] text-muted-foreground">Propulsées</p>
+  1015→                      </div>
+  1016→                    </div>
+  1017→                  </div>
+  1018→                  <div className="absolute -top-4 -right-4 bg-white/90 dark:bg-card/90 backdrop-blur-xl rounded-xl shadow-xl p-3 border hover:scale-105 transition-transform cursor-default">
+  1019→                    <div className="flex items-center gap-2">
+  1020→                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30">
+  1021→                        <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+  1022→                      </div>
+  1023→                      <div>
+  1024→                        <p className="text-xs font-bold">100% Sur-mesure</p>
+  1025→                        <p className="text-[10px] text-muted-foreground">Chaque pixel pensé pour vous</p>
+  1026→                      </div>
+  1027→                    </div>
+  1028→                  </div>
+  1029→                </div>
+  1030→              </motion.div>
+  1031→            </div>
+  1032→          </div>
+  1033→        </section>
+  1034→
+  1035→        {/* Wave divider */}
+  1036→        <div className="relative h-12 -mt-1 overflow-hidden">
+  1037→          <svg className="absolute bottom-0 w-full" viewBox="0 0 1440 48" fill="none" preserveAspectRatio="none">
+  1038→            <path d="M0 48L60 42C120 36 240 24 360 20C480 16 600 20 720 26C840 32 960 40 1080 40C1200 40 1320 32 1380 28L1440 24V48H1380C1320 48 1200 48 1080 48C960 48 840 48 720 48C600 48 480 48 360 48C240 48 120 48 60 48H0Z" className="fill-background" />
+  1039→          </svg>
+  1040→        </div>
+  1041→
+  1042→        {/* ═══ 3. QUICK SERVICE ACCESS BAR ═══ */}
+  1043→        <section className="py-6 border-b bg-background">
+  1044→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  1045→            <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+  1046→              {[
+  1047→                { label: 'Logo', icon: Palette },
+  1048→                { label: 'Site Web', icon: Globe },
+  1049→                { label: 'Vidéo', icon: MonitorPlay },
+  1050→                { label: 'Affiche', icon: PenTool },
+  1051→                { label: 'Formation', icon: GraduationCap },
+  1052→                { label: 'Canva Pro', icon: Layers },
+  1053→                { label: 'CapCut Pro', icon: Scissors },
+  1054→              ].map((s) => (
+  1055→                <a key={s.label} href="#services" className="flex-shrink-0 flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl bg-muted/50 hover:bg-gradient-to-br hover:from-amber-50 hover:to-orange-50 dark:hover:from-amber-950/20 dark:hover:to-orange-950/20 hover:-translate-y-0.5 hover:shadow-md hover:shadow-amber-500/10 hover:border-amber-200 dark:hover:border-amber-800 border border-transparent transition-all duration-300 group">
+  1056→                  <s.icon className="h-5 w-5 text-amber-500 group-hover:scale-110 transition-transform" />
+  1057→                  <span className="text-xs font-medium">{s.label}</span>
+  1058→                </a>
+  1059→              ))}
+  1060→            </div>
+  1061→          </div>
+  1062→        </section>
+  1063→
+  1064→        {/* ═══ 4. STATISTIQUES ═══ */}
+  1065→        <section className="py-12 sm:py-16 bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 relative overflow-hidden">
+  1066→          <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+  1067→            <div className="text-center mb-10">
+  1068→              <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">Ce que je fais, en chiffres</h2>
+  1069→              <p className="mt-2 text-white/80 text-sm">Transparent, impactant, à taille humaine</p>
+  1070→            </div>
+  1071→            <div className="grid grid-cols-3 gap-6 sm:gap-12">
+  1072→              <AnimatedStat end={50} suffix="+">
+  1073→                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mx-auto mb-3">
+  1074→                  <Award className="h-6 w-6 text-white" />
+  1075→                </div>
+  1076→                <p className="text-sm font-semibold text-white/90">Marques propulsées</p>
+  1077→                <p className="text-xs text-white/60 mt-1 leading-relaxed hidden sm:block">Logos, affiches et identités créées avec soin</p>
+  1078→              </AnimatedStat>
+  1079→              <div className="text-center">
+  1080→                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mx-auto mb-3">
+  1081→                  <Palette className="h-6 w-6 text-white" />
+  1082→                </div>
+  1083→                <div className="text-3xl sm:text-4xl font-extrabold text-white mb-1">100%</div>
+  1084→                <p className="text-sm font-semibold text-white/90">Sur-mesure</p>
+  1085→                <p className="text-xs text-white/60 mt-1 leading-relaxed hidden sm:block">Aucun template pré-fait, chaque pixel est pensé pour vous</p>
+  1086→              </div>
+  1087→              <AnimatedStat end={100} suffix="%">
+  1088→                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mx-auto mb-3">
+  1089→                  <ThumbsUp className="h-6 w-6 text-white" />
+  1090→                </div>
+  1091→                <p className="text-sm font-semibold text-white/90">Satisfaction client</p>
+  1092→                <p className="text-xs text-white/60 mt-1 leading-relaxed hidden sm:block">Une collaboration basée sur l'écoute et le résultat</p>
+  1093→              </AnimatedStat>
+  1094→            </div>
+  1095→          </div>
+  1096→        </section>
+  1097→
+  1098→        {/* ═══ 5. BARRE DE CONFIANCE ═══ */}
+  1099→        <section className="py-6 border-b bg-background">
+  1100→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  1101→            <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10">
+  1102→              {[
+  1103→                { icon: ShieldCheck, label: 'Qualité Garantie' },
+  1104→                { icon: Zap, label: 'Livraison Rapide' },
+  1105→                { icon: CheckCircle2, label: 'Satisfaction Garantie' },
+  1106→                { icon: Gift, label: '100% Gratuit' },
+  1107→                { icon: MessageCircle, label: 'Support WhatsApp' },
+  1108→              ].map((item) => (
+  1109→                <div key={item.label} className="flex items-center gap-2 text-muted-foreground">
+  1110→                  <item.icon className="h-4 w-4 text-amber-500" />
+  1111→                  <span className="text-xs font-medium whitespace-nowrap">{item.label}</span>
+  1112→                </div>
+  1113→              ))}
+  1114→            </div>
+  1115→          </div>
+  1116→        </section>
+  1117→
+  1118→        {/* ═══ TRUST TICKER ═══ */}
+  1119→        <div className="py-4 bg-amber-50 dark:bg-amber-950/10 border-y border-amber-200/50 dark:border-amber-800/30 overflow-hidden">
+  1120→          <div className="flex animate-marquee whitespace-nowrap">
+  1121→            {[...Array(2)].map((_, setIdx) => (
+  1122→              <div key={setIdx} className="flex items-center gap-8 mx-4">
+  1123→                {[
+  1124→                  { icon: '⭐', text: '50+ Marques créées' },
+  1125→                  { icon: '🎨', text: '100% Sur-mesure' },
+  1126→                  { icon: '⚡', text: 'Livraison en 24-48h' },
+  1127→                  { icon: '💰', text: 'Offre Découverte Gratuite' },
+  1128→                  { icon: '📱', text: 'Support WhatsApp 7j/7' },
+  1129→                  { icon: '🔒', text: 'Paiement Sécurisé' },
+  1130→                  { icon: '🏆', text: '5/5 Satisfaction Client' },
+  1131→                  { icon: '🇲🇱', text: 'Expert Bamako, Mali' },
+  1132→                ].map((item, i) => (
+  1133→                  <span key={`${setIdx}-${i}`} className="inline-flex items-center gap-2 text-sm font-medium text-amber-700 dark:text-amber-400 flex-shrink-0">
+  1134→                    <span>{item.icon}</span>
+  1135→                    <span>{item.text}</span>
+  1136→                    <span className="text-amber-300 dark:text-amber-700">•</span>
+  1137→                  </span>
+  1138→                ))}
+  1139→              </div>
+  1140→            ))}
+  1141→          </div>
+  1142→        </div>
+  1143→
+  1144→        {/* ═══ 5.5 COMMENT ÇA MARCHE ═══ */}
+  1145→        <section className="py-16 sm:py-20 bg-gradient-to-b from-background to-muted/20">
+  1146→          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+  1147→            <div className="text-center mb-12">
+  1148→              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+  1149→                <Zap className="h-3 w-3 mr-1" /> Processus
+  1150→              </Badge>
+  1151→              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Comment ça marche ?</h2>
+  1152→              <p className="mt-3 text-muted-foreground max-w-xl mx-auto leading-relaxed">
+  1153→                4 étapes simples pour concrétiser votre projet. De votre première idée à la livraison finale, je vous accompagne à chaque étape.
+  1154→              </p>
+  1155→            </div>
+  1156→
+  1157→            <div className="relative">
+  1158→              {/* Ligne de connexion verticale (desktop) / horizontale (mobile) */}
+  1159→              <div className="hidden sm:block absolute top-16 left-[calc(12.5%+20px)] right-[calc(12.5%+20px)] h-0.5 bg-gradient-to-r from-amber-300 via-orange-400 to-red-400 opacity-40" />
+  1160→
+  1161→              <div className="grid sm:grid-cols-4 gap-6 sm:gap-4">
+  1162→                {[
+  1163→                  {
+  1164→                    step: '01',
+  1165→                    icon: MessageCircle,
+  1166→                    title: 'Contactez-moi',
+  1167→                    desc: "Envoyez-moi un message sur WhatsApp ou remplissez le formulaire. Décrivez votre projet en quelques mots.",
+  1168→                    color: 'from-amber-400 to-amber-500',
+  1169→                    bg: 'bg-amber-50 dark:bg-amber-950/20',
+  1170→                    border: 'border-amber-200 dark:border-amber-800',
+  1171→                  },
+  1172→                  {
+  1173→                    step: '02',
+  1174→                    icon: Search,
+  1175→                    title: 'Brief & Devis',
+  1176→                    desc: "Je vous pose les bonnes questions pour comprendre vos besoins. Vous recevez une proposition claire avec délai et prix.",
+  1177→                    color: 'from-orange-400 to-orange-500',
+  1178→                    bg: 'bg-orange-50 dark:bg-orange-950/20',
+  1179→                    border: 'border-orange-200 dark:border-orange-800',
+  1180→                  },
+  1181→                  {
+  1182→                    step: '03',
+  1183→                    icon: PenTool,
+  1184→                    title: 'Création',
+  1185→                    desc: "Je conçois votre projet avec soin. Vous recevez des aperçus et pouvez demander des ajustements.",
+  1186→                    color: 'from-red-400 to-red-500',
+  1187→                    bg: 'bg-red-50 dark:bg-red-950/20',
+  1188→                    border: 'border-red-200 dark:border-red-800',
+  1189→                  },
+  1190→                  {
+  1191→                    step: '04',
+  1192→                    icon: Rocket,
+  1193→                    title: 'Livraison',
+  1194→                    desc: "Fichiers sources livrés en haute qualité. Suivi après livraison pour s'assurer que tout est parfait.",
+  1195→                    color: 'from-emerald-400 to-emerald-500',
+  1196→                    bg: 'bg-emerald-50 dark:bg-emerald-950/20',
+  1197→                    border: 'border-emerald-200 dark:border-emerald-800',
+  1198→                  },
+  1199→                ].map((s, i) => (
+  1200→                  <div key={s.step} className={`relative text-center p-5 rounded-2xl border ${s.border} ${s.bg} transition-all duration-300 hover:-translate-y-1 hover:shadow-lg`}>
+  1201→                    <div className={`inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${s.color} text-white shadow-lg mb-3`}>
+  1202→                      <s.icon className="h-5 w-5" />
+  1203→                    </div>
+  1204→                    <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Étape {s.step}</div>
+  1205→                    <h3 className="text-sm font-extrabold mb-2">{s.title}</h3>
+  1206→                    <p className="text-xs text-muted-foreground leading-relaxed">{s.desc}</p>
+  1207→                    {i < 3 && (
+  1208→                      <ArrowDown className="h-5 w-5 text-amber-400 mx-auto mt-3 sm:hidden" />
+  1209→                    )}
+  1210→                  </div>
+  1211→                ))}
+  1212→              </div>
+  1213→            </div>
+  1214→          </div>
+  1215→        </section>
+  1216→
+  1217→        {/* ═══ OUTILS MAÎTRISÉS ═══ */}
+  1218→        <div className="py-8 bg-muted/30 border-y overflow-hidden">
+  1219→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-6">
+  1220→            <p className="text-center text-xs font-bold uppercase tracking-widest text-muted-foreground">
+  1221→              <Wrench className="h-3.5 w-3.5 inline mr-1.5" /> Outils & Technologies que nous maîtrisons
+  1222→            </p>
+  1223→          </div>
+  1224→          <div className="flex animate-marquee whitespace-nowrap">
+  1225→            {[...Array(2)].map((_, setIdx) => (
+  1226→              <div key={setIdx} className="flex items-center gap-10 mx-5">
+  1227→                {[
+  1228→                  { name: 'Canva Pro', emoji: '🎨' },
+  1229→                  { name: 'CapCut Pro', emoji: '🎬' },
+  1230→                  { name: 'PicsArt Pro', emoji: '📸' },
+  1231→                  { name: 'Photoshop', emoji: '🖌️' },
+  1232→                  { name: 'Illustrator', emoji: '✏️' },
+  1233→                  { name: 'Premiere Pro', emoji: '🎞️' },
+  1234→                  { name: 'DaVinci Resolve', emoji: '🪄' },
+  1235→                  { name: 'Figma', emoji: '🎯' },
+  1236→                  { name: 'HTML/CSS', emoji: '🌐' },
+  1237→                  { name: 'JavaScript', emoji: '⚡' },
+  1238→                  { name: 'React/Next.js', emoji: '⚛️' },
+  1239→                  { name: 'WordPress', emoji: '📝' },
+  1240→                  { name: 'Meta Business', emoji: '📊' },
+  1241→                  { name: 'TikTok Ads', emoji: '🎵' },
+  1242→                ].map((tool, i) => (
+  1243→                  <span key={`${setIdx}-${i}`} className="inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors flex-shrink-0">
+  1244→                    <span className="text-xl">{tool.emoji}</span>
+  1245→                    <span>{tool.name}</span>
+  1246→                  </span>
+  1247→                ))}
+  1248→              </div>
+  1249→            ))}
+  1250→          </div>
+  1251→        </div>
+  1252→
+  1253→        {/* ═══ POURQUOI NOUS CHOISIR ═══ */}
+  1254→        <section className="py-16 sm:py-20">
+  1255→          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+  1256→            <motion.div
+  1257→              initial={{ opacity: 0, y: 30 }}
+  1258→              whileInView={{ opacity: 1, y: 0 }}
+  1259→              viewport={{ once: true, margin: '-50px' }}
+  1260→              transition={{ duration: 0.6 }}
+  1261→            >
+  1262→              <div className="text-center mb-12">
+  1263→                <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+  1264→                  <Sparkles className="h-3 w-3 mr-1" /> Avantages
+  1265→                </Badge>
+  1266→                <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Pourquoi <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">nous choisir</span> ?</h2>
+  1267→                <p className="mt-3 text-muted-foreground max-w-xl mx-auto leading-relaxed">
+  1268→                  Ce qui nous distingue des autres freelances et agences à Bamako.
+  1269→                </p>
+  1270→              </div>
+  1271→
+  1272→              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  1273→                {[
+  1274→                  { icon: Zap, title: 'Réactivité Extraordinaire', desc: "Réponse en moins de 30 minutes sur WhatsApp. Pas de formulaire sans suivi, pas d'attente de 48h. Je suis disponible 7j/7.", color: 'from-amber-400 to-orange-500' },
+  1275→                  { icon: Target, title: '100% Personnalisé', desc: "Aucun template pré-fait. Chaque projet est conçu de zéro selon votre identité, vos couleurs et votre vision. Votre marque est unique.", color: 'from-emerald-400 to-teal-500' },
+  1276→                  { icon: ThumbsUp, title: 'Satisfaction Garantie', desc: 'Révisions illimitées sur les offres Premium. Je ne livre que lorsque vous êtes 100% satisfait du résultat final.', color: 'from-blue-400 to-indigo-500' },
+  1277→                  { icon: Lock, title: 'Paiement Sécurisé', desc: 'Payez via CinetPay (Orange Money, MTN MoMo, carte bancaire). Le paiement est automatique et sécurisé. Confirmation instantanée pour Sacko.', color: 'from-purple-400 to-violet-500' },
+  1278→                  { icon: Users, title: '3 Experts Unis', desc: 'Sacko pour le design, Camara Leh pour le web, Kante pour le marketing. Trois coachs complémentaires pour couvrir tous vos besoins.', color: 'from-cyan-400 to-blue-500' },
+  1279→                  { icon: Heart, title: 'Passion Africaine', desc: 'Nous comprenons le marché malien et africain. Nos créations sont pensées pour plaire à votre clientele locale et vous démarquer.', color: 'from-rose-400 to-pink-500' },
+  1280→                ].map((item, i) => (
+  1281→                  <motion.div
+  1282→                    key={item.title}
+  1283→                    initial={{ opacity: 0, y: 20 }}
+  1284→                    whileInView={{ opacity: 1, y: 0 }}
+  1285→                    viewport={{ once: true }}
+  1286→                    transition={{ duration: 0.4, delay: i * 0.08 }}
+  1287→                    className="group p-6 rounded-2xl border border-border hover:border-amber-200 dark:hover:border-amber-800 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+  1288→                  >
+  1289→                    <div className={`inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${item.color} text-white shadow-lg mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
+  1290→                      <item.icon className="h-6 w-6" />
+  1291→                    </div>
+  1292→                    <h3 className="text-base font-extrabold mb-2">{item.title}</h3>
+  1293→                    <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
+  1294→                  </motion.div>
+  1295→                ))}
+  1296→              </div>
+  1297→            </motion.div>
+  1298→          </div>
+  1299→        </section>
+  1300→
+  1301→        {/* ═══ COMPARISON TABLE ═══ */}
+  1302→        <section className="py-16 sm:py-20 bg-gradient-to-b from-background to-muted/20">
+  1303→          <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+  1304→            <div className="text-center mb-10">
+  1305→              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+  1306→                <Sparkles className="h-3 w-3 mr-1" /> Comparaison
+  1307→              </Badge>
+  1308→              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Découverte vs Premium</h2>
+  1309→              <p className="mt-3 text-muted-foreground max-w-xl mx-auto">
+  1310→                Un aperçu clair de ce que chaque formule inclut. Testez gratuitement, puis passez au niveau supérieur.
+  1311→              </p>
+  1312→            </div>
+  1313→            <div className="overflow-x-auto">
+  1314→              <table className="w-full border-collapse">
+  1315→                <thead>
+  1316→                  <tr className="border-b-2 border-border">
+  1317→                    <th className="text-left p-4 text-sm font-bold">Fonctionnalité</th>
+  1318→                    <th className="p-4 text-sm font-bold text-center">
+  1319→                      <span className="inline-flex items-center gap-1.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 px-3 py-1.5 rounded-full text-xs font-bold">
+  1320→                        <CheckCircle2 className="h-3.5 w-3.5" /> Découverte
+  1321→                      </span>
+  1322→                    </th>
+  1323→                    <th className="p-4 text-sm font-bold text-center">
+  1324→                      <span className="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-md shadow-amber-500/20">
+  1325→                        <Star className="h-3.5 w-3.5 fill-current" /> Premium
+  1326→                      </span>
+  1327→                    </th>
+  1328→                  </tr>
+  1329→                </thead>
+  1330→                <tbody>
+  1331→                  {[
+  1332→                    { feature: 'Prix', decouverte: 'Gratuit', premium: 'Sur devis' },
+  1333→                    { feature: 'Nombre de révisions', decouverte: '1 révision', premium: 'Illimité' },
+  1334→                    { feature: 'Fichiers sources', decouverte: false, premium: true },
+  1335→                    { feature: 'Charte graphique', decouverte: false, premium: true },
+  1336→                    { feature: 'Support personnalisé', decouverte: 'Groupe WhatsApp', premium: 'Individuel' },
+  1337→                    { feature: 'Certificat', decouverte: false, premium: true },
+  1338→                    { feature: 'Suivi post-livraison', decouverte: false, premium: true },
+  1339→                    { feature: 'Bonus (Canva Pro, etc.)', decouverte: false, premium: true },
+  1340→                    { feature: 'Délai de livraison', decouverte: 'Standard', premium: 'Prioritaire' },
+  1341→                  ].map((row, i) => (
+  1342→                    <tr key={i} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
+  1343→                      <td className="p-4 text-sm font-medium">{row.feature}</td>
+  1344→                      <td className="p-4 text-center">
+  1345→                        {typeof row.decouverte === 'boolean' ? (
+  1346→                          row.decouverte ? <CheckCircle2 className="h-5 w-5 text-emerald-500 mx-auto" /> : <span className="text-muted-foreground text-xs">—</span>
+  1347→                        ) : (
+  1348→                          <span className="text-sm text-emerald-600 dark:text-emerald-400 font-semibold">{row.decouverte}</span>
+  1349→                        )}
+  1350→                      </td>
+  1351→                      <td className="p-4 text-center bg-amber-50/50 dark:bg-amber-950/10">
+  1352→                        {typeof row.premium === 'boolean' ? (
+  1353→                          row.premium ? <CheckCircle2 className="h-5 w-5 text-amber-500 mx-auto" /> : <span className="text-muted-foreground text-xs">—</span>
+  1354→                        ) : (
+  1355→                          <span className="text-sm text-amber-600 dark:text-amber-400 font-bold">{row.premium}</span>
+  1356→                        )}
+  1357→                      </td>
+  1358→                    </tr>
+  1359→                  ))}
+  1360→                </tbody>
+  1361→              </table>
+  1362→            </div>
+  1363→          </div>
+  1364→        </section>
+  1365→
+  1366→        {/* ═══ ESTIMATEUR DE PRIX ═══ */}
+  1367→        <section className="py-16 sm:py-20">
+  1368→          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+  1369→            <div className="text-center mb-10">
+  1370→              <Badge variant="secondary" className="mb-3 bg-violet-100 text-violet-700 border-violet-200">
+  1371→                <Calculator className="h-3 w-3 mr-1" /> Estimateur
+  1372→              </Badge>
+  1373→              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Estimez votre <span className="bg-gradient-to-r from-violet-500 to-purple-500 bg-clip-text text-transparent">budget</span></h2>
+  1374→              <p className="mt-3 text-muted-foreground max-w-lg mx-auto">
+  1375→                Sélectionnez les services qui vous intéressent et obtenez une estimation instantanée.
+  1376→              </p>
+  1377→            </div>
+  1378→            <Card className="border-2 border-violet-200 dark:border-violet-800 overflow-hidden">
+  1379→              <CardContent className="p-6 space-y-4">
+  1380→                <div className="grid sm:grid-cols-2 gap-3">
+  1381→                  {[
+  1382→                    { id: 'logo', label: 'Logo Professionnel', icon: Palette, priceRange: [0, 15000] },
+  1383→                    { id: 'site', label: 'Site Web', icon: Globe, priceRange: [0, 50000] },
+  1384→                    { id: 'video', label: 'Montage Vidéo', icon: MonitorPlay, priceRange: [0, 20000] },
+  1385→                    { id: 'marketing', label: 'Marketing Digital', icon: Megaphone, priceRange: [0, 25000] },
+  1386→                    { id: 'cv', label: 'Pack Carrière Pro', icon: FileCheck, priceRange: [700, 3500] },
+  1387→                    { id: 'formation', label: 'Formation Premium', icon: GraduationCap, priceRange: [15000, 25000] },
+  1388→                  ].map((s) => {
+  1389→                    const selected = estimatorServices.includes(s.id)
+  1390→                    return (
+  1391→                      <button
+  1392→                        key={s.id}
+  1393→                        onClick={() => setEstimatorServices(prev => selected ? prev.filter(x => x !== s.id) : [...prev, s.id])}
+  1394→                        className={`flex items-center gap-3 p-4 rounded-xl border-2 transition-all duration-200 text-left ${
+  1395→                          selected
+  1396→                            ? 'border-violet-500 bg-violet-50 dark:bg-violet-950/20 shadow-md shadow-violet-500/10'
+  1397→                            : 'border-border hover:border-violet-300 dark:hover:border-violet-700 hover:bg-muted/50'
+  1398→                        }`}
+  1399→                      >
+  1400→                        <div className={`flex h-10 w-10 items-center justify-center rounded-lg flex-shrink-0 transition-colors ${
+  1401→                          selected ? 'bg-violet-500 text-white' : 'bg-muted text-muted-foreground'
+  1402→                        }`}>
+  1403→                          <s.icon className="h-5 w-5" />
+  1404→                        </div>
+  1405→                        <div className="flex-1 min-w-0">
+  1406→                          <p className="text-sm font-semibold">{s.label}</p>
+  1407→                          <p className="text-[11px] text-muted-foreground">{s.priceRange[0] === 0 ? 'Gratuit –' : ''} {s.priceRange[1].toLocaleString('fr-FR')} FCFA</p>
+  1408→                        </div>
+  1409→                        <div className={`h-5 w-5 rounded-full border-2 flex items-center justify-center transition-all flex-shrink-0 ${
+  1410→                          selected ? 'border-violet-500 bg-violet-500' : 'border-muted-foreground/30'
+  1411→                        }`}>
+  1412→                          {selected && <CheckCircle2 className="h-3.5 w-3.5 text-white" />}
+  1413→                        </div>
+  1414→                      </button>
+  1415→                    )
+  1416→                  })}
+  1417→                </div>
+  1418→                {estimatorServices.length > 0 && (
+  1419→                  <motion.div
+  1420→                    initial={{ opacity: 0, y: 10 }}
+  1421→                    animate={{ opacity: 1, y: 0 }}
+  1422→                    className="bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-950/20 dark:to-purple-950/20 rounded-xl p-5 border border-violet-200 dark:border-violet-800"
+  1423→                  >
+  1424→                    <div className="flex items-center justify-between mb-3">
+  1425→                      <span className="text-sm font-bold">{estimatorServices.length} service{estimatorServices.length > 1 ? 's' : ''} sélectionné{estimatorServices.length > 1 ? 's' : ''}</span>
+  1426→                      <span className="text-xs text-muted-foreground">Estimation</span>
+  1427→                    </div>
+  1428→                    <div className="flex items-baseline gap-2 mb-4">
+  1429→                      <span className="text-3xl font-extrabold text-violet-600 dark:text-violet-400">
+  1430→                        {(() => {
+  1431→                          const services = [
+  1432→                            { id: 'logo', priceRange: [0, 15000] },
+  1433→                            { id: 'site', priceRange: [0, 50000] },
+  1434→                            { id: 'video', priceRange: [0, 20000] },
+  1435→                            { id: 'marketing', priceRange: [0, 25000] },
+  1436→                            { id: 'cv', priceRange: [700, 3500] },
+  1437→                            { id: 'formation', priceRange: [15000, 25000] },
+  1438→                          ]
+  1439→                          const min = estimatorServices.reduce((sum, id) => sum + (services.find(s => s.id === id)?.priceRange[0] || 0), 0)
+  1440→                          const max = estimatorServices.reduce((sum, id) => sum + (services.find(s => s.id === id)?.priceRange[1] || 0), 0)
+  1441→                          return min === 0 ? `0 – ${max.toLocaleString('fr-FR')}` : `${min.toLocaleString('fr-FR')} – ${max.toLocaleString('fr-FR')}`
+  1442→                        })()}
+  1443→                      </span>
+  1444→                      <span className="text-sm text-muted-foreground font-medium">FCFA</span>
+  1445→                    </div>
+  1446→                    <a
+  1447→                      href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! J'ai utilisé votre estimateur et je suis intéressé(e) par : ${estimatorServices.join(', ')}. Pouvez-vous me faire un devis précis ?`)}`}
+  1448→                      target="_blank" rel="noopener noreferrer"
+  1449→                    >
+  1450→                      <Button className="w-full bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600 text-white font-bold shadow-lg shadow-violet-500/20">
+  1451→                        <MessageCircle className="h-4 w-4 mr-2" /> Obtenir un devis précis sur WhatsApp
+  1452→                      </Button>
+  1453→                    </a>
+  1454→                  </motion.div>
+  1455→                )}
+  1456→              </CardContent>
+  1457→            </Card>
+  1458→          </div>
+  1459→        </section>
+  1460→
+  1461→        {/* ═══ 6. SERVICES & TARIFS ═══ */}
+  1462→        <section id="services" className="py-20 sm:py-24">
+  1463→          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+  1464→            <div className="text-center mb-12">
+  1465→              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+  1466→                <Sparkles className="h-3 w-3 mr-1" /> Tarifs
+  1467→              </Badge>
+  1468→              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Mes Services</h2>
+  1469→              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+  1470→                Chaque service existe en deux formules : testez gratuitement avec l&apos;Offre Découverte, puis passez au Premium pour un résultat professionnel complet.
+  1471→              </p>
+  1472→              <div className="flex items-center justify-center gap-6 mt-5 text-xs">
+  1473→                <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-emerald-500" /> Découverte = Gratuit</span>
+  1474→                <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-amber-500" /> Premium = Sur devis via WhatsApp</span>
+  1475→              </div>
+  1476→            </div>
+  1477→
+  1478→            <div className="space-y-8">
+  1479→              {[
+  1480→                {
+  1481→                  cat: 'Design Graphique', icon: Palette, color: 'from-pink-500 to-rose-500', borderColor: 'border-pink-200 dark:border-pink-800',
+  1482→                  decouverte: { title: 'Offre Découverte — Gratuit', desc: "Un logo simple pour démarrer. Texte stylisé + icône basique, 2 propositions au choix, 1 révision incluse. Idéal pour tester mon style avant de vous engager." },
+  1483→                  premium: { title: 'Offre Premium', desc: "Logo professionnel vectorisé, décliné en couleur et noir/blanc, charte graphique complète (couleurs, typographies), fichiers sources livrés (AI, PSD, PNG haute résolution), révisions illimitées jusqu'à satisfaction." },
+  1484→                },
+  1485→                {
+  1486→                  cat: 'Développement Web', icon: Globe, color: 'from-blue-500 to-indigo-500', borderColor: 'border-blue-200 dark:border-blue-800',
+  1487→                  decouverte: { title: 'Offre Découverte — Gratuite', desc: 'Une landing page 1 page, responsive (mobile/ordinateur), pour présenter votre activité en ligne rapidement.' },
+  1488→                  premium: { title: 'Offre Premium', desc: 'Site multi-pages sur mesure, formulaire de contact fonctionnel, déploiement et hébergement inclus, nom de domaine personnalisé, maintenance mensuelle disponible en option.' },
+  1489→                },
+  1490→                {
+  1491→                  cat: 'Montage Vidéo', icon: MonitorPlay, color: 'from-purple-500 to-violet-500', borderColor: 'border-purple-200 dark:border-purple-800',
+  1492→                  decouverte: { title: 'Offre Découverte — Gratuite', desc: "Montage court (moins d'une minute), coupe simple sans effets avancés. Parfait pour un aperçu rapide." },
+  1493→                  premium: { title: 'Offre Premium', desc: 'Montage complet avec effets visuels, sous-titres, musique libre de droits, export optimisé pour réseaux sociaux ou YouTube.' },
+  1494→                },
+  1495→                {
+  1496→                  cat: 'Formation', icon: GraduationCap, color: 'from-emerald-500 to-teal-500', borderColor: 'border-emerald-200 dark:border-emerald-800',
+  1497→                  decouverte: { title: 'Offre Découverte — Gratuite', desc: "Session d'initiation de 30 minutes pour découvrir mes outils et méthodes." },
+  1498→                  premium: { title: 'Offre Premium', desc: 'Parcours de formation complet avec suivi personnalisé, support après formation, et certificat de participation.' },
+  1499→                },
+  1500→                {
+
+[showing lines 1001-1500 of 4335; use offset=1501 with limit to continue reading]

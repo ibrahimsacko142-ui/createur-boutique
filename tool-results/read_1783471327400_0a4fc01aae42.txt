@@ -1,0 +1,502 @@
+  3501→                            { label: '20 000 – 50 000 FCFA', val: 'moyen' },
+  3502→                            { label: 'Plus de 50 000 FCFA', val: 'grand' },
+  3503→                          ].map((opt) => (
+  3504→                            <button key={opt.val} onClick={() => { setQuizAnswers(prev => [...prev, opt.val]); setQuizStep(2) }} className="w-full text-left p-3 rounded-xl border border-border hover:border-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/20 text-sm transition-all hover:translate-x-1">
+  3505→                              {opt.label}
+  3506→                            </button>
+  3507→                          ))}
+  3508→                        </div>
+  3509→                      )}
+  3510→                      {quizStep === 2 && (
+  3511→                        <div className="space-y-3">
+  3512→                          <p className="text-sm font-semibold">Quand souhaitez-vous commencer ?</p>
+  3513→                          {[
+  3514→                            { label: 'Immédiatement — c\'est urgent', val: 'urgent' },
+  3515→                            { label: 'Cette semaine', val: 'semaine' },
+  3516→                            { label: 'Dans les 2 prochaines semaines', val: '2semaines' },
+  3517→                            { label: 'Je me renseigne pour l\'instant', val: 'renseigne' },
+  3518→                          ].map((opt) => (
+  3519→                            <button key={opt.val} onClick={() => {
+  3520→                              const answers = [...quizAnswers, opt.val]
+  3521→                              setQuizAnswers(answers)
+  3522→                              // Determine result
+  3523→                              const goal = answers[0]
+  3524→                              const budget = answers[1]
+  3525→                              if (goal === 'identite') setQuizResult({ service: 'Design Graphique', icon: Palette, reason: budget === 'gratuit' ? 'Testez l\'Offre Découverte gratuite pour un logo simple, puis passez au Premium pour une identité complète.' : 'L\'Offre Premium Design vous donne un logo vectorisé, une charte graphique complète et tous les fichiers sources.' })
+  3526→                              else if (goal === 'site') setQuizResult({ service: 'Création Web', icon: Globe, reason: budget === 'gratuit' ? 'Commencez avec une landing page gratuite, puis évoluez vers un site multi-pages complet.' : 'Un site professionnel multi-pages avec formulaire, SEO, et hébergement inclus est l\'idéal pour vous.' })
+  3527→                              else if (goal === 'video') setQuizResult({ service: 'Montage Vidéo', icon: MonitorPlay, reason: budget === 'gratuit' ? 'Essayez le montage découverte gratuit pour un aperçu rapide.' : 'Le montage Premium inclut effets, sous-titres, musique et export optimisé pour tous les réseaux.' })
+  3528→                              else if (goal === 'reseaux') setQuizResult({ service: 'Marketing Digital', icon: Megaphone, reason: budget === 'gratuit' ? 'Un post ou affiche gratuit pour tester mon style.' : 'Stratégie complète avec calendrier éditorial, posts, stories et bannières publicitaires.' })
+  3529→                              else setQuizResult({ service: 'Formation Design', icon: GraduationCap, reason: 'La formation Design Graphique (Découverte gratuite puis Premium) est parfaite pour apprendre à créer vos propres visuels.' })
+  3530→                              setQuizStep(3)
+  3531→                            }} className="w-full text-left p-3 rounded-xl border border-border hover:border-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/20 text-sm transition-all hover:translate-x-1">
+  3532→                              {opt.label}
+  3533→                            </button>
+  3534→                          ))}
+  3535→                        </div>
+  3536→                      )}
+  3537→                    </motion.div>
+  3538→                  </AnimatePresence>
+  3539→                ) : quizResult && (
+  3540→                  <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center space-y-4">
+  3541→                    <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-white mx-auto shadow-lg">
+  3542→                      <quizResult.icon className="h-8 w-8" />
+  3543→                    </div>
+  3544→                    <h4 className="text-xl font-extrabold">{quizResult.service}</h4>
+  3545→                    <p className="text-sm text-muted-foreground leading-relaxed">{quizResult.reason}</p>
+  3546→                    <div className="flex flex-col gap-2 pt-2">
+  3547→                      <a
+  3548→                        href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! J'ai fait le quiz sur votre site et le résultat m'a recommandé : ${quizResult.service}. Je souhaite en savoir plus !`)}`}
+  3549→                        target="_blank" rel="noopener noreferrer"
+  3550→                        onClick={() => { setQuizOpen(false); setQuizStep(0); setQuizAnswers([]); setQuizResult(null) }}
+  3551→                      >
+  3552→                        <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold shadow-lg shadow-emerald-500/20">
+  3553→                          <MessageCircle className="h-4 w-4 mr-2" /> En discuter sur WhatsApp
+  3554→                        </Button>
+  3555→                      </a>
+  3556→                      <button onClick={() => { setQuizStep(0); setQuizAnswers([]); setQuizResult(null) }} className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+  3557→                        Refaire le quiz
+  3558→                      </button>
+  3559→                    </div>
+  3560→                  </motion.div>
+  3561→                )}
+  3562→              </div>
+  3563→            </motion.div>
+  3564→          </motion.div>
+  3565→        )}
+  3566→      </AnimatePresence>
+  3567→
+  3568→      {/* ═══ QUIZ TRIGGER FLOATING BUTTON ═══ */}
+  3569→      <motion.button
+  3570→        initial={{ opacity: 0, scale: 0 }}
+  3571→        animate={{ opacity: 1, scale: 1 }}
+  3572→        transition={{ delay: 3, type: 'spring' }}
+  3573→        onClick={() => setQuizOpen(true)}
+  3574→        className="fixed bottom-[68px] lg:bottom-6 left-1/2 -translate-x-1/2 z-[55] flex items-center gap-2 bg-gradient-to-r from-violet-600 to-purple-600 text-white pl-4 pr-5 py-3 rounded-full shadow-lg shadow-violet-500/30 hover:shadow-xl hover:shadow-violet-500/40 transition-all duration-300 hover:scale-105 group"
+  3575→      >
+  3576→        <Brain className="h-5 w-5" />
+  3577→        <span className="text-sm font-semibold whitespace-nowrap">Quel service vous convient ?</span>
+  3578→        <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-medium bg-white/20 px-2 py-0.5 rounded-full">Quiz gratuit</span>
+  3579→      </motion.button>
+  3580→
+  3581→      {/* ═══ SIDE NAVIGATION DOTS (desktop) ═══ */}
+  3582→      <div className="fixed right-4 top-1/2 -translate-y-1/2 z-30 hidden xl:flex flex-col gap-2.5">
+  3583→        {[
+  3584→          { id: 'accueil', label: 'Accueil' },
+  3585→          { id: 'services', label: 'Services' },
+  3586→          { id: 'formations', label: 'Formations' },
+  3587→          { id: 'coachs', label: 'Coachs' },
+  3588→          { id: 'boutique', label: 'Boutique' },
+  3589→          { id: 'portfolio', label: 'Portfolio' },
+  3590→          { id: 'contact', label: 'Contact' },
+  3591→        ].map((item) => (
+  3592→          <a
+  3593→            key={item.id}
+  3594→            href={`#${item.id}`}
+  3595→            className="group flex items-center gap-2.5 justify-end"
+  3596→          >
+  3597→            <span className="text-[10px] font-medium text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+  3598→              {item.label}
+  3599→            </span>
+  3600→            <span className={`h-2.5 rounded-full transition-all duration-300 ${
+  3601→              activeDotSection === item.id
+  3602→                ? 'w-2.5 bg-amber-500 shadow-md shadow-amber-500/30'
+  3603→                : 'w-2 bg-muted-foreground/30 group-hover:bg-amber-500/50'
+  3604→            }`} />
+  3605→          </a>
+  3606→        ))}
+  3607→      </div>
+  3608→
+  3609→      </main>
+  3610→
+  3611→      {/* ═══ MOYENS DE PAIEMENT ═══ */}
+  3612→      <section className="py-8 border-t bg-muted/20">
+  3613→        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+  3614→          <div className="flex flex-col items-center justify-center gap-3">
+  3615→            <p className="text-sm font-semibold text-muted-foreground">Paiement sécurisé via</p>
+  3616→            <div className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20 border border-emerald-200 dark:border-emerald-800 shadow-sm">
+  3617→              <div className="h-3 w-3 rounded-full bg-emerald-500" />
+  3618→              <span className="text-sm font-bold text-emerald-700 dark:text-emerald-400">CinetPay</span>
+  3619→              <span className="text-[10px] text-muted-foreground">— Orange Money, MTN MoMo, Carte bancaire</span>
+  3620→            </div>
+  3621→          </div>
+  3622→          <p className="text-center text-[11px] text-muted-foreground mt-3">Paiement 100% sécurisé — Confirmation automatique et livraison instantanée</p>
+  3623→        </div>
+  3624→      </section>
+  3625→
+  3626→      {/* ═══ 20. FOOTER ═══ */}
+  3627→      <Footer />
+  3628→
+  3629→      {/* ═══ STICKY MOBILE CTA ═══ */}
+  3630→      <AnimatePresence>
+  3631→        {showStickyCta && (
+  3632→          <motion.div
+  3633→            initial={{ y: 100 }}
+  3634→            animate={{ y: 0 }}
+  3635→            exit={{ y: 100 }}
+  3636→            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+  3637→            className="fixed bottom-14 left-0 right-0 z-[49] lg:hidden p-3 bg-gradient-to-t from-background via-background/95 to-transparent"
+  3638→          >
+  3639→            <a href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20souhaite%20discuter%20d%27un%20projet." target="_blank" rel="noopener noreferrer">
+  3640→              <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold h-11 text-sm shadow-lg shadow-emerald-500/30">
+  3641→                <MessageCircle className="h-4 w-4 mr-2" /> Discuter de mon projet — Gratuit
+  3642→              </Button>
+  3643→            </a>
+  3644→          </motion.div>
+  3645→        )}
+  3646→      </AnimatePresence>
+  3647→
+  3648→      {/* ═══ 21. BOTTOM MOBILE NAV ═══ */}
+  3649→      <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-background/95 backdrop-blur-xl border-t border-border shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+  3650→        <div className="flex items-center justify-around h-14 px-2">
+  3651→          <a href="#accueil" className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-amber-500 transition-colors py-1 px-2">
+  3652→            <Sparkles className="h-[18px] w-[18px]" />
+  3653→            <span className="text-[9px] font-medium">Accueil</span>
+  3654→          </a>
+  3655→          <a href="#services" className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-amber-500 transition-colors py-1 px-2">
+  3656→            <Layers className="h-[18px] w-[18px]" />
+  3657→            <span className="text-[9px] font-medium">Services</span>
+  3658→          </a>
+  3659→          <a href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20souhaite%20discuter%20d%27un%20projet." target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-0.5 -mt-6">
+  3660→            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 text-white shadow-lg shadow-emerald-500/30">
+  3661→              <MessageCircle className="h-6 w-6" />
+  3662→            </div>
+  3663→            <span className="text-[9px] font-semibold text-emerald-600">WhatsApp</span>
+  3664→          </a>
+  3665→          <a href="#boutique" className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-amber-500 transition-colors py-1 px-2">
+  3666→            <BookOpen className="h-[18px] w-[18px]" />
+  3667→            <span className="text-[9px] font-medium">Boutique</span>
+  3668→          </a>
+  3669→          <a href="#contact" className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-amber-500 transition-colors py-1 px-2">
+  3670→            <Send className="h-[18px] w-[18px]" />
+  3671→            <span className="text-[9px] font-medium">Contact</span>
+  3672→          </a>
+  3673→        </div>
+  3674→      </div>
+  3675→
+  3676→      {/* ═══ BACK TO TOP DESKTOP ═══ */}
+  3677→      <AnimatePresence>
+  3678→        {showBackToTop && (
+  3679→          <motion.button
+  3680→            initial={{ opacity: 0, scale: 0.5, y: 20 }}
+  3681→            animate={{ opacity: 1, scale: 1, y: 0 }}
+  3682→            exit={{ opacity: 0, scale: 0.5, y: 20 }}
+  3683→            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+  3684→            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+  3685→            className="fixed bottom-6 right-20 z-40 hidden lg:flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 text-white shadow-lg shadow-amber-500/30 hover:shadow-xl hover:shadow-amber-500/40 transition-all duration-300 hover:scale-110"
+  3686→            aria-label="Retour en haut"
+  3687→          >
+  3688→            <ChevronUp className="h-5 w-5" />
+  3689→          </motion.button>
+  3690→        )}
+  3691→      </AnimatePresence>
+  3692→
+  3693→      {/* ═══ SHARE BUTTON ═══ */}
+  3694→      <motion.button
+  3695→        initial={{ opacity: 0, scale: 0 }}
+  3696→        animate={{ opacity: 1, scale: 1 }}
+  3697→        exit={{ opacity: 0, scale: 0 }}
+  3698→        transition={{ type: 'spring', stiffness: 300, damping: 25, delay: 0.1 }}
+  3699→        onClick={async () => {
+  3700→          if (navigator.share) {
+  3701→            try {
+  3702→              await navigator.share({ title: 'Studio Créatif — Sacko', text: 'Découvre Studio Créatif ! Design, sites web, formations à Bamako.', url: window.location.href })
+  3703→            } catch {}
+  3704→          } else {
+  3705→            await navigator.clipboard.writeText(window.location.href)
+  3706→            setShareToast(true)
+  3707→            setTimeout(() => setShareToast(false), 2000)
+  3708→          }
+  3709→        }}
+  3710→        className="fixed bottom-6 right-6 z-40 hidden lg:flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/30 hover:shadow-xl hover:scale-110 transition-all"
+  3711→        aria-label="Partager le site"
+  3712→      >
+  3713→        <Share2 className="h-5 w-5" />
+  3714→      </motion.button>
+  3715→
+  3716→      {/* Share toast */}
+  3717→      <AnimatePresence>
+  3718→        {shareToast && (
+  3719→          <motion.div
+  3720→            initial={{ opacity: 0, y: 10 }}
+  3721→            animate={{ opacity: 1, y: 0 }}
+  3722→            exit={{ opacity: 0, y: 10 }}
+  3723→            className="fixed bottom-20 right-6 z-40 hidden lg:block bg-foreground text-background text-xs font-medium px-3 py-2 rounded-lg shadow-lg"
+  3724→          >
+  3725→            Lien copié !
+  3726→          </motion.div>
+  3727→        )}
+  3728→      </AnimatePresence>
+  3729→
+  3730→      {/* Back to top button - mobile only (above bottom nav) */}
+  3731→      <AnimatePresence>
+  3732→        {showBackToTop && (
+  3733→          <motion.button
+  3734→            initial={{ opacity: 0, scale: 0.5 }}
+  3735→            animate={{ opacity: 1, scale: 1 }}
+  3736→            exit={{ opacity: 0, scale: 0.5 }}
+  3737→            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+  3738→            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+  3739→            className="fixed bottom-[68px] left-4 z-[60] flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 text-white shadow-lg shadow-amber-500/30 lg:hidden"
+  3740→            aria-label="Retour en haut"
+  3741→          >
+  3742→            <ChevronUp className="h-4 w-4" />
+  3743→          </motion.button>
+  3744→        )}
+  3745→      </AnimatePresence>
+  3746→
+  3747→      {/* ═══ FLOATING CART BUTTON ═══ */}
+  3748→      <AnimatePresence>
+  3749→        {cart.length > 0 && (
+  3750→          <motion.button
+  3751→            initial={{ opacity: 0, scale: 0 }}
+  3752→            animate={{ opacity: 1, scale: 1 }}
+  3753→            exit={{ opacity: 0, scale: 0 }}
+  3754→            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+  3755→            onClick={() => setShowCart(!showCart)}
+  3756→            className="fixed bottom-[68px] right-4 z-[60] lg:bottom-6 lg:right-24 lg:z-[41] flex h-12 w-12 items-center justify-center rounded-full bg-amber-500 text-white shadow-lg shadow-amber-500/30 hover:bg-amber-600 hover:shadow-xl transition-all"
+  3757→            aria-label="Voir le panier"
+  3758→          >
+  3759→            <ShoppingCart className="h-5 w-5" />
+  3760→            <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white border-2 border-background">{cart.length}</span>
+  3761→          </motion.button>
+  3762→        )}
+  3763→      </AnimatePresence>
+  3764→
+  3765→      {/* ═══ CART PANEL ═══ */}
+  3766→      <AnimatePresence>
+  3767→        {showCart && cart.length > 0 && (
+  3768→          <motion.div
+  3769→            initial={{ opacity: 0, x: 300 }}
+  3770→            animate={{ opacity: 1, x: 0 }}
+  3771→            exit={{ opacity: 0, x: 300 }}
+  3772→            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+  3773→            className="fixed top-0 right-0 bottom-0 z-[110] w-80 max-w-[85vw] bg-background border-l shadow-2xl flex flex-col"
+  3774→          >
+  3775→            <div className="flex items-center justify-between p-4 border-b">
+  3776→              <h3 className="font-bold text-base flex items-center gap-2">
+  3777→                <ShoppingCart className="h-5 w-5 text-amber-500" />
+  3778→                Mon Panier
+  3779→                <span className="text-sm font-normal text-muted-foreground">({cart.length})</span>
+  3780→              </h3>
+  3781→              <button onClick={() => setShowCart(false)} className="h-8 w-8 rounded-full hover:bg-muted flex items-center justify-center"><X className="h-4 w-4" /></button>
+  3782→            </div>
+  3783→            <div className="flex-1 overflow-y-auto p-4 space-y-2">
+  3784→              {cart.map((title) => {
+  3785→                const book = books.find(b => b.title === title)
+  3786→                return (
+  3787→                  <div key={title} className="flex items-center gap-3 p-2.5 rounded-xl bg-muted/50 border border-border">
+  3788→                    {book && <img src={book.cover} alt="" className="h-12 w-9 object-cover rounded-md shadow-sm" />}
+  3789→                    <div className="flex-1 min-w-0">
+  3790→                      <p className="text-xs font-semibold leading-tight line-clamp-2">{title}</p>
+  3791→                      <p className="text-[10px] text-amber-600 font-bold mt-0.5">1 000 FCFA</p>
+  3792→                    </div>
+  3793→                    <button onClick={() => toggleCart(title)} className="h-7 w-7 rounded-full hover:bg-red-100 dark:hover:bg-red-900/30 flex items-center justify-center text-muted-foreground hover:text-red-500 transition-colors flex-shrink-0">
+  3794→                      <X className="h-3.5 w-3.5" />
+  3795→                    </button>
+  3796→                  </div>
+  3797→                )
+  3798→              })}
+  3799→            </div>
+  3800→            <div className="p-4 border-t space-y-3">
+  3801→              <div className="flex items-center justify-between">
+  3802→                <span className="text-sm font-semibold">Total</span>
+  3803→                <span className="text-xl font-extrabold text-amber-600">{cart.length * 1000} FCFA</span>
+  3804→              </div>
+  3805→              {cart.length >= 3 && (
+  3806→                <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg p-2.5 text-center">
+  3807→                  <p className="text-[11px] text-amber-700 dark:text-amber-400 font-semibold">Pack {cart.length} livres — {Math.min(cart.length * 1000, 7000)} FCFA</p>
+  3808→                  <p className="text-[10px] text-amber-600/70 mt-0.5">Le pack complet 12 livres = 7 000 FCFA</p>
+  3809→                </div>
+  3810→              )}
+  3811→              <div className="flex gap-2">
+  3812→                <a
+  3813→                  href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je veux commander ${cart.length} livre(s) :\n\n${cart.map(t => `- ${t} (1 000 FCFA)`).join('\n')}\n\nTotal : ${cart.length * 1000} FCFA. Comment procéder pour le paiement ?`)}`}
+  3814→                  target="_blank"
+  3815→                  rel="noopener noreferrer"
+  3816→                  onClick={() => setShowCart(false)}
+  3817→                  className="flex-1"
+  3818→                >
+  3819→                  <Button variant="outline" className="w-full border-emerald-300 text-emerald-700 hover:bg-emerald-50 font-semibold h-11 text-sm">
+  3820→                    <MessageCircle className="h-4 w-4 mr-2" /> WhatsApp
+  3821→                  </Button>
+  3822→                </a>
+  3823→                <Button
+  3824→                  onClick={() => openCheckout()}
+  3825→                  className="flex-1 bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 hover:from-amber-600 hover:via-orange-600 hover:to-red-600 text-white font-bold shadow-lg shadow-amber-500/20 h-11 text-sm"
+  3826→                >
+  3827→                  <Lock className="h-4 w-4 mr-2" /> Payer maintenant
+  3828→                </Button>
+  3829→              </div>
+  3830→            </div>
+  3831→          </motion.div>
+  3832→        )}
+  3833→      </AnimatePresence>
+  3834→
+  3835→      {/* ═══ CHECKOUT / PAYMENT MODAL ═══ */}
+  3836→      <AnimatePresence>
+  3837→        {showCheckout && (
+  3838→          <motion.div
+  3839→            initial={{ opacity: 0 }}
+  3840→            animate={{ opacity: 1 }}
+  3841→            exit={{ opacity: 0 }}
+  3842→            className="fixed inset-0 z-[200] flex items-center justify-center p-4"
+  3843→          >
+  3844→            {/* Backdrop */}
+  3845→            <motion.div
+  3846→              initial={{ opacity: 0 }}
+  3847→              animate={{ opacity: 1 }}
+  3848→              exit={{ opacity: 0 }}
+  3849→              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+  3850→              onClick={() => { if (!paymentProcessing) setShowCheckout(false) }}
+  3851→            />
+  3852→
+  3853→            {/* Modal */}
+  3854→            <motion.div
+  3855→              initial={{ opacity: 0, scale: 0.9, y: 30 }}
+  3856→              animate={{ opacity: 1, scale: 1, y: 0 }}
+  3857→              exit={{ opacity: 0, scale: 0.9, y: 30 }}
+  3858→              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+  3859→              className="relative z-10 w-full max-w-md bg-background rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
+  3860→            >
+  3861→              {/* Header */}
+  3862→              <div className="relative bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 p-4 text-white flex-shrink-0">
+  3863→                <button
+  3864→                  onClick={() => { if (!paymentProcessing) setShowCheckout(false) }}
+  3865→                  className="absolute top-3 right-3 h-8 w-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors"
+  3866→                >
+  3867→                  <X className="h-4 w-4" />
+  3868→                </button>
+  3869→                <div className="flex items-center gap-2">
+  3870→                  <Lock className="h-5 w-5" />
+  3871→                  <h3 className="font-bold text-lg">Paiement Sécurisé</h3>
+  3872→                </div>
+  3873→                <div className="flex items-center gap-1.5 mt-1">
+  3874→                  <ShieldCheck className="h-3 w-3 text-white/80" />
+  3875→                  <p className="text-[11px] text-white/80">Paiement automatique via CinetPay — Orange Money, MTN MoMo, Carte bancaire</p>
+  3876→                </div>
+  3877→                {/* Progress bar */}
+  3878→                <div className="flex gap-1.5 mt-3">
+  3879→                  {[0, 1, 2, 3].map((s) => (
+  3880→                    <div key={s} className={`h-1 flex-1 rounded-full transition-all duration-500 ${s <= checkoutStep ? 'bg-white' : 'bg-white/30'}`} />
+  3881→                  ))}
+  3882→                </div>
+  3883→                <div className="flex justify-between mt-1">
+  3884→                  <span className="text-[9px] text-white/60">Récapitulatif</span>
+  3885→                  <span className="text-[9px] text-white/60">Vos infos</span>
+  3886→                  <span className="text-[9px] text-white/60">Paiement</span>
+  3887→                  <span className="text-[9px] text-white/60">Confirmation</span>
+  3888→                </div>
+  3889→              </div>
+  3890→
+  3891→              {/* Content */}
+  3892→              <div className="flex-1 overflow-y-auto p-5">
+  3893→                {/* ─── STEP 0: Order Recap ─── */}
+  3894→                {checkoutStep === 0 && (
+  3895→                  <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-4">
+  3896→                    <div className="text-center">
+  3897→                      <div className="h-14 w-14 mx-auto rounded-2xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-3">
+  3898→                        <ShoppingCart className="h-7 w-7 text-amber-500" />
+  3899→                      </div>
+  3900→                      <h4 className="font-bold text-base">Votre Commande</h4>
+  3901→                      <p className="text-xs text-muted-foreground mt-0.5">Vérifiez votre sélection avant de payer</p>
+  3902→                    </div>
+  3903→
+  3904→                    <div className="space-y-2 max-h-48 overflow-y-auto">
+  3905→                      {(checkoutItem ? [checkoutItem.title] : cart).map((title, i) => {
+  3906→                        const book = books.find(b => b.title === title)
+  3907→                        return (
+  3908→                          <div key={i} className="flex items-center gap-3 p-2.5 rounded-xl bg-muted/50 border border-border">
+  3909→                            {book ? (
+  3910→                              <img src={book.cover} alt="" className="h-11 w-8 object-cover rounded-md shadow-sm" />
+  3911→                            ) : (
+  3912→                              <div className="h-11 w-8 rounded-md bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center flex-shrink-0">
+  3913→                                <BookOpen className="h-4 w-4 text-amber-500" />
+  3914→                              </div>
+  3915→                            )}
+  3916→                            <div className="flex-1 min-w-0">
+  3917→                              <p className="text-xs font-semibold leading-tight line-clamp-2">{title}</p>
+  3918→                              <p className="text-[10px] text-amber-600 font-bold mt-0.5">1 000 FCFA</p>
+  3919→                            </div>
+  3920→                          </div>
+  3921→                        )
+  3922→                      })}
+  3923→                    </div>
+  3924→
+  3925→                    <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4">
+  3926→                      <div className="flex items-center justify-between mb-1">
+  3927→                        <span className="text-sm font-semibold">Sous-total</span>
+  3928→                        <span className="text-sm font-medium">{(checkoutItem ? 1 : cart.length)} article(s)</span>
+  3929→                      </div>
+  3930→                      <div className="flex items-center justify-between">
+  3931→                        <span className="text-base font-bold">Total à payer</span>
+  3932→                        <span className="text-2xl font-extrabold text-amber-600">{getCartTotal().toLocaleString('fr-FR')} <span className="text-sm">FCFA</span></span>
+  3933→                      </div>
+  3934→                    </div>
+  3935→
+  3936→                    <Button onClick={() => setCheckoutStep(1)} className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold h-12 text-sm">
+  3937→                      Continuer <ArrowRight className="h-4 w-4 ml-2" />
+  3938→                    </Button>
+  3939→                  </motion.div>
+  3940→                )}
+  3941→
+  3942→                {/* ─── STEP 1: Customer Info ─── */}
+  3943→                {checkoutStep === 1 && (
+  3944→                  <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-4">
+  3945→                    <div className="text-center">
+  3946→                      <div className="h-14 w-14 mx-auto rounded-2xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-3">
+  3947→                        <UserCheck className="h-7 w-7 text-blue-500" />
+  3948→                      </div>
+  3949→                      <h4 className="font-bold text-base">Vos Informations</h4>
+  3950→                      <p className="text-xs text-muted-foreground mt-0.5">Renseignez vos coordonnées pour la livraison</p>
+  3951→                    </div>
+  3952→
+  3953→                    <div className="space-y-3">
+  3954→                      <div>
+  3955→                        <Label className="text-xs font-semibold mb-1.5 block">Nom complet *</Label>
+  3956→                        <Input
+  3957→                          placeholder="Ex: Amadou Diallo"
+  3958→                          value={checkoutInfo.name}
+  3959→                          onChange={(e) => setCheckoutInfo({ ...checkoutInfo, name: e.target.value })}
+  3960→                          className="h-11 rounded-xl text-sm"
+  3961→                        />
+  3962→                      </div>
+  3963→                      <div>
+  3964→                        <Label className="text-xs font-semibold mb-1.5 block">Numéro de téléphone *</Label>
+  3965→                        <div className="relative">
+  3966→                          <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+  3967→                          <Input
+  3968→                            placeholder="Ex: 70 12 34 56 / 07 XX XX XX"
+  3969→                            value={checkoutInfo.phone}
+  3970→                            onChange={(e) => setCheckoutInfo({ ...checkoutInfo, phone: e.target.value })}
+  3971→                            className="pl-10 h-11 rounded-xl text-sm"
+  3972→                            type="tel"
+  3973→                          />
+  3974→                        </div>
+  3975→                        <p className="text-[10px] text-muted-foreground mt-1">Le même numéro que votre compte mobile money</p>
+  3976→                      </div>
+  3977→                      <div>
+  3978→                        <Label className="text-xs font-semibold mb-1.5 block">Email (optionnel)</Label>
+  3979→                        <div className="relative">
+  3980→                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+  3981→                          <Input
+  3982→                            placeholder="votre@email.com"
+  3983→                            value={checkoutInfo.email}
+  3984→                            onChange={(e) => setCheckoutInfo({ ...checkoutInfo, email: e.target.value })}
+  3985→                            className="pl-10 h-11 rounded-xl text-sm"
+  3986→                            type="email"
+  3987→                          />
+  3988→                        </div>
+  3989→                      </div>
+  3990→                    </div>
+  3991→
+  3992→                    <div className="flex gap-2">
+  3993→                      <Button variant="outline" onClick={() => setCheckoutStep(0)} className="flex-1 h-11 font-semibold text-sm">
+  3994→                        <ArrowDown className="h-4 w-4 mr-2 rotate-180" /> Retour
+  3995→                      </Button>
+  3996→                      <Button
+  3997→                        onClick={() => { if (checkoutInfo.name.trim() && checkoutInfo.phone.trim()) setCheckoutStep(2); else toast({ title: 'Champs requis', description: 'Veuillez remplir votre nom et numéro de téléphone.' }) }}
+  3998→                        className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold h-11 text-sm"
+  3999→                      >
+  4000→                        Continuer <ArrowRight className="h-4 w-4 ml-2" />
+
+[showing lines 3501-4000 of 4335; use offset=4001 with limit to continue reading]

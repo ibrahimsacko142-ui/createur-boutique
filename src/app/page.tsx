@@ -585,21 +585,19 @@ export default function Home() {
   const [paymentProcessing, setPaymentProcessing] = useState(false)
   const [checkoutItem, setCheckoutItem] = useState<{ type: 'cart' | 'book' | 'service'; title: string; price: number; qty?: number } | null>(null)
 
-  // Gérer le retour après paiement CinetPay
+  // Gérer le retour après commande
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
-    if (params.get('payment_success') === 'true') {
+    if (params.get('order_success') === 'true') {
       const txn = params.get('txn_id') || params.get('order')
-      // Nettoyer l'URL
       window.history.replaceState({}, '', window.location.pathname + '#boutique')
-      // Afficher le succès directement
-      setOrderId(txn || 'CinetPay')
+      setOrderId(txn || 'SC')
       setShowCheckout(true)
       setCheckoutStep(4)
       triggerConfetti()
       toast({
-        title: 'Paiement effectué !',
-        description: 'Votre commande a été enregistrée via CinetPay. Sacko a reçu la notification et vous contactera bientôt.',
+        title: 'Commande envoyée !',
+        description: 'Votre commande a été enregistrée. Sacko va vous contacter sur WhatsApp pour confirmer.',
       })
     }
   }, [])
@@ -667,7 +665,7 @@ export default function Home() {
     const items = checkoutItem ? [checkoutItem.title] : cart
 
     try {
-      // Appeler notre API pour créer le paiement CinetPay
+      // Enregistrer la commande et obtenir le lien WhatsApp
       const res = await fetch('/api/payment/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -679,40 +677,27 @@ export default function Home() {
           customerPhone: checkoutInfo.phone,
           customerEmail: checkoutInfo.email || '',
           transactionId: id,
+          items,
         }),
       })
 
       const data = await res.json()
 
-      if (data.demo) {
-        // CinetPay non configuré — fallback WhatsApp
+      if (data.success && data.whatsapp_url) {
+        // Succès — ouvrir WhatsApp avec le récapitulatif
         setTimeout(() => {
           setPaymentProcessing(false)
           setCheckoutStep(4)
           triggerConfetti()
-          const msg = `🛒 *NOUVELLE COMMANDE*\n\n📋 Référence : ${id}\n👤 Client : ${checkoutInfo.name}\n📱 Tél : ${checkoutInfo.phone}\n📧 Email : ${checkoutInfo.email || 'Non renseigné'}\n\n📚 Articles (${items.length}) :\n${items.map(t => `  • ${t} — 1 000 FCFA`).join('\n')}\n\n💰 *Total : ${total.toLocaleString('fr-FR')} FCFA*\n\n⏰ ${new Date().toLocaleString('fr-FR', { timeZone: 'Africa/Bamako' })}`
-          window.open(`https://wa.me/22397787244?text=${encodeURIComponent(msg)}`, '_blank')
-        }, 3000)
-        return
-      }
-
-      if (data.success && data.redirect_url) {
-        // Rediriger le client vers la page de paiement CinetPay
-        setPaymentProcessing(false)
-        setShowCheckout(false)
-        setCart([])
-        setCheckoutItem(null)
-        toast({
-          title: 'Redirection vers le paiement...',
-          description: 'Vous allez être redirigé vers la page de paiement sécurisé CinetPay.',
-        })
-        // Rediriger vers CinetPay
-        window.location.href = data.redirect_url
+          setCart([])
+          setCheckoutItem(null)
+          window.open(data.whatsapp_url, '_blank')
+        }, 2500)
       } else {
         setPaymentProcessing(false)
         toast({
-          title: 'Erreur de paiement',
-          description: data.error || data.details || 'Impossible de créer le paiement. Veuillez réessayer ou contacter via WhatsApp.',
+          title: 'Erreur',
+          description: data.error || 'Impossible de créer la commande. Réessayez ou contactez via WhatsApp.',
           variant: 'destructive',
         })
         setCheckoutStep(1)
@@ -721,7 +706,7 @@ export default function Home() {
       setPaymentProcessing(false)
       toast({
         title: 'Erreur de connexion',
-        description: 'Impossible de joindre le serveur de paiement. Vérifiez votre connexion et réessayez.',
+        description: 'Vérifiez votre connexion et réessayez.',
         variant: 'destructive',
       })
       setCheckoutStep(1)
@@ -1274,7 +1259,7 @@ export default function Home() {
                   { icon: Zap, title: 'Réactivité Extraordinaire', desc: "Réponse en moins de 30 minutes sur WhatsApp. Pas de formulaire sans suivi, pas d'attente de 48h. Je suis disponible 7j/7.", color: 'from-amber-400 to-orange-500' },
                   { icon: Target, title: '100% Personnalisé', desc: "Aucun template pré-fait. Chaque projet est conçu de zéro selon votre identité, vos couleurs et votre vision. Votre marque est unique.", color: 'from-emerald-400 to-teal-500' },
                   { icon: ThumbsUp, title: 'Satisfaction Garantie', desc: 'Révisions illimitées sur les offres Premium. Je ne livre que lorsque vous êtes 100% satisfait du résultat final.', color: 'from-blue-400 to-indigo-500' },
-                  { icon: Lock, title: 'Paiement Sécurisé', desc: 'Payez via CinetPay (Orange Money, MTN MoMo, carte bancaire). Le paiement est automatique et sécurisé. Confirmation instantanée pour Sacko.', color: 'from-purple-400 to-violet-500' },
+                  { icon: Lock, title: 'Paiement via WhatsApp', desc: 'Commandez et payez directement via WhatsApp avec Orange Money, MTN MoMo ou autre. Simple, rapide et sécurisé. Confirmation instantanée pour Sacko.', color: 'from-purple-400 to-violet-500' },
                   { icon: Users, title: '3 Experts Unis', desc: 'Sacko pour le design, Camara Leh pour le web, Kante pour le marketing. Trois coachs complémentaires pour couvrir tous vos besoins.', color: 'from-cyan-400 to-blue-500' },
                   { icon: Heart, title: 'Passion Africaine', desc: 'Nous comprenons le marché malien et africain. Nos créations sont pensées pour plaire à votre clientele locale et vous démarquer.', color: 'from-rose-400 to-pink-500' },
                 ].map((item, i) => (
@@ -2260,7 +2245,7 @@ export default function Home() {
                           </div>
                           <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
                             <ShieldCheck className="h-3 w-3 text-amber-500" />
-                            <span>Paiement : CinetPay (Orange Money, MTN MoMo, Carte)</span>
+                            <span>Paiement : WhatsApp (Orange Money, MTN MoMo)</span>
                           </div>
                         </div>
 
@@ -2823,7 +2808,7 @@ export default function Home() {
                   { q: "Quels sont les délais de livraison ?", a: "Les services \"Carrière Pro\" (CV, Lettres) sont livrés en moins de 24h. Pour les logos simples, comptez 48h, et pour un site web complet, entre 3 et 7 jours selon la complexité. Chaque projet a un suivi personnalisé." },
                   { q: "Puis-je demander des modifications si le résultat ne me plaît pas ?", a: "Absolument. Votre satisfaction est ma priorité. Pour l'Offre Découverte, une révision est incluse. Pour les offres Premium, les révisions sont illimitées jusqu'à ce que le résultat vous corresponde parfaitement. Je ne livre que lorsque vous êtes 100% satisfait." },
                   { q: "Pourquoi limitez-vous les commandes à 5 par jour ?", a: "Je privilégie la qualité à la quantité. Travailler avec un nombre limité de clients me permet de dédier toute mon attention et mon expertise à chaque pixel de votre projet. Le résultat : des créations qui convertissent." },
-                  { q: "Comment se passe le paiement ?", a: "Le paiement se fait automatiquement via CinetPay. Après avoir rempli vos informations, vous êtes redirigé vers la page de paiement sécurisé CinetPay où vous choisissez Orange Money, MTN MoMo ou carte bancaire. Sacko reçoit la confirmation automatiquement. En mode démonstration, la commande est envoyée par WhatsApp." },
+                  { q: "Comment se passe le paiement ?", a: "Après avoir rempli le formulaire de commande, vous êtes redirigé vers WhatsApp avec un récapitulatif complet. Sacko reçoit votre commande instantanément et vous guide pour le paiement via Orange Money, MTN MoMo ou tout autre moyen. C'est simple, rapide et direct." },
                   { q: "Les formations sont-elles en ligne ou en présentiel ?", a: "Les formations sont 100% en ligne via WhatsApp et supports vidéo. Vous apprenez à votre rythme, avec un suivi personnalisé et un groupe WhatsApp pour poser vos questions." },
                 ]
                 const filtered = faqs.filter((f) => !faqSearch || f.q.toLowerCase().includes(faqSearch.toLowerCase()) || f.a.toLowerCase().includes(faqSearch.toLowerCase()))
@@ -3097,7 +3082,7 @@ export default function Home() {
                 <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4" /> Satisfaction garantie</span>
               </div>
               <div className="flex items-center gap-3 text-white/70 text-xs">
-                <span className="px-4 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-400/30 font-bold">Paiement CinetPay Sécurisé</span>
+                <span className="px-4 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-400/30 font-bold">Commande via WhatsApp</span>
               </div>
             </div>
           </div>
@@ -3612,14 +3597,14 @@ export default function Home() {
       <section className="py-8 border-t bg-muted/20">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center justify-center gap-3">
-            <p className="text-sm font-semibold text-muted-foreground">Paiement sécurisé via</p>
+            <p className="text-sm font-semibold text-muted-foreground">Commande & Paiement via</p>
             <div className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20 border border-emerald-200 dark:border-emerald-800 shadow-sm">
               <div className="h-3 w-3 rounded-full bg-emerald-500" />
-              <span className="text-sm font-bold text-emerald-700 dark:text-emerald-400">CinetPay</span>
-              <span className="text-[10px] text-muted-foreground">— Orange Money, MTN MoMo, Carte bancaire</span>
+              <span className="text-sm font-bold text-emerald-700 dark:text-emerald-400">WhatsApp</span>
+              <span className="text-[10px] text-muted-foreground">— Orange Money, MTN MoMo</span>
             </div>
           </div>
-          <p className="text-center text-[11px] text-muted-foreground mt-3">Paiement 100% sécurisé — Confirmation automatique et livraison instantanée</p>
+          <p className="text-center text-[11px] text-muted-foreground mt-3">Commande simple — Confirmation via WhatsApp — Paiement par Orange Money ou MTN MoMo</p>
         </div>
       </section>
 
@@ -3868,11 +3853,11 @@ export default function Home() {
                 </button>
                 <div className="flex items-center gap-2">
                   <Lock className="h-5 w-5" />
-                  <h3 className="font-bold text-lg">Paiement Sécurisé</h3>
+                  <h3 className="font-bold text-lg">Commande Sécurisée</h3>
                 </div>
                 <div className="flex items-center gap-1.5 mt-1">
                   <ShieldCheck className="h-3 w-3 text-white/80" />
-                  <p className="text-[11px] text-white/80">Paiement automatique via CinetPay — Orange Money, MTN MoMo, Carte bancaire</p>
+                  <p className="text-[11px] text-white/80">Confirmation instantanée via WhatsApp — Orange Money, MTN MoMo</p>
                 </div>
                 {/* Progress bar */}
                 <div className="flex gap-1.5 mt-3">
@@ -3883,7 +3868,7 @@ export default function Home() {
                 <div className="flex justify-between mt-1">
                   <span className="text-[9px] text-white/60">Récapitulatif</span>
                   <span className="text-[9px] text-white/60">Vos infos</span>
-                  <span className="text-[9px] text-white/60">Paiement</span>
+                  <span className="text-[9px] text-white/60">Étape</span>
                   <span className="text-[9px] text-white/60">Confirmation</span>
                 </div>
               </div>
@@ -4011,7 +3996,7 @@ export default function Home() {
                         <Lock className="h-7 w-7 text-emerald-500" />
                       </div>
                       <h4 className="font-bold text-base">Confirmez votre commande</h4>
-                      <p className="text-xs text-muted-foreground mt-0.5">Vous serez redirigé vers la page de paiement sécurisé CinetPay</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">Vous serez redirigé vers WhatsApp pour confirmer votre commande</p>
                     </div>
 
                     <div className="bg-muted/50 border border-border rounded-xl p-3.5 space-y-2">
@@ -4035,7 +4020,7 @@ export default function Home() {
 
                     <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-xl p-3">
                       <p className="text-[11px] text-amber-700 dark:text-amber-400 text-center">
-                        💡 Le paiement se fait via <strong>CinetPay</strong> — Orange Money, MTN MoMo, carte bancaire disponible sur la page de paiement.
+                        💡 Après confirmation, vous serez redirigé vers <strong>WhatsApp</strong> pour finaliser avec Sacko. Paiement via Orange Money, MTN MoMo ou autre.
                       </p>
                     </div>
 
@@ -4089,7 +4074,7 @@ export default function Home() {
                     <div className="w-full max-w-xs space-y-2">
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                        <span className="text-xs text-muted-foreground">Paiement reçu par CinetPay...</span>
+                        <span className="text-xs text-muted-foreground">Envoi vers WhatsApp...</span>
                       </div>
                       <div className="flex items-center gap-2 opacity-60">
                         <div className="h-4 w-4 rounded-full border-2 border-emerald-400 border-t-transparent animate-spin" />
@@ -4112,8 +4097,8 @@ export default function Home() {
                     </motion.div>
 
                     <div className="text-center">
-                      <h4 className="font-extrabold text-xl text-emerald-600">Paiement Réussi !</h4>
-                      <p className="text-sm text-muted-foreground mt-1">Votre commande a été confirmée</p>
+                      <h4 className="font-extrabold text-xl text-emerald-600">Commande Envoyée !</h4>
+                      <p className="text-sm text-muted-foreground mt-1">Votre commande a été enregistrée</p>
                     </div>
 
                     <div className="w-full bg-muted/50 border border-border rounded-xl p-4 space-y-2.5">
@@ -4145,7 +4130,7 @@ export default function Home() {
                         <div>
                           <p className="text-xs font-bold text-emerald-700 dark:text-emerald-400">Confirmation envoyée !</p>
                           <p className="text-[11px] text-emerald-600/80 dark:text-emerald-400/70 mt-0.5 leading-relaxed">
-                            Votre commande a été transmise à Sacko via WhatsApp. Vous recevrez vos livres dans les plus brefs délais. Gardez votre référence : <strong>{orderId}</strong>
+                            Votre commande a été transmise à Sacko via WhatsApp. Il va vous contacter pour confirmer et guider le paiement. Gardez votre référence : <strong>{orderId}</strong>
                           </p>
                         </div>
                       </div>
@@ -4160,7 +4145,7 @@ export default function Home() {
                         Fermer
                       </Button>
                       <a
-                        href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je viens de payer ma commande ${orderId}. Voici mon numéro : ${checkoutInfo.phone}`)}`}
+                        href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je viens de passer la commande ${orderId}. Voici mon numéro : ${checkoutInfo.phone}`)}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex-1"

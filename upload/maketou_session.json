@@ -1,0 +1,198 @@
+{
+  "cookies": [
+    {
+      "name": "visitor-country",
+      "value": "HK",
+      "domain": "app.maketou.com",
+      "path": "/",
+      "expires": 1783507945.650489,
+      "size": 17,
+      "httpOnly": false,
+      "secure": false,
+      "session": false
+    },
+    {
+      "name": "MUID",
+      "value": "056A208C2887685F0A44370329606902",
+      "domain": ".bing.com",
+      "path": "/",
+      "expires": 1817160746.967513,
+      "size": 36,
+      "httpOnly": false,
+      "secure": true,
+      "session": false,
+      "sameSite": "None"
+    },
+    {
+      "name": "MR",
+      "value": "0",
+      "domain": ".c.bing.com",
+      "path": "/",
+      "expires": 1784069546.968038,
+      "size": 3,
+      "httpOnly": false,
+      "secure": true,
+      "session": false,
+      "sameSite": "None"
+    },
+    {
+      "name": "SRM_B",
+      "value": "056A208C2887685F0A44370329606902",
+      "domain": ".c.bing.com",
+      "path": "/",
+      "expires": 1817165001.558761,
+      "size": 37,
+      "httpOnly": false,
+      "secure": true,
+      "session": false,
+      "sameSite": "None"
+    },
+    {
+      "name": "MUID",
+      "value": "056A208C2887685F0A44370329606902",
+      "domain": ".clarity.ms",
+      "path": "/",
+      "expires": 1817160746.020239,
+      "size": 36,
+      "httpOnly": false,
+      "secure": true,
+      "session": false,
+      "sameSite": "None"
+    },
+    {
+      "name": "MR",
+      "value": "0",
+      "domain": ".c.clarity.ms",
+      "path": "/",
+      "expires": 1784069546.020279,
+      "size": 3,
+      "httpOnly": false,
+      "secure": true,
+      "session": false,
+      "sameSite": "None"
+    },
+    {
+      "name": "_fbp",
+      "value": "fb.1.1783464747113.292694734760989278",
+      "domain": ".maketou.com",
+      "path": "/",
+      "expires": 1791248101.0,
+      "size": 41,
+      "httpOnly": false,
+      "secure": false,
+      "session": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "cw_conversation",
+      "value": "eyJhbGciOiJIUzI1NiJ9.eyJzb3VyY2VfaWQiOiIzMmRhNjRjNy1iZmVkLTQyNjgtOGY2Ny1kNTA3NGZhOGRhYzAiLCJpbmJveF9pZCI6MX0.AmWLEYMul2gmpgL3WYYB_pibpyOpc12RcTm1jx3clIM",
+      "domain": "app.maketou.com",
+      "path": "/",
+      "expires": 1815008102.0,
+      "size": 167,
+      "httpOnly": false,
+      "secure": false,
+      "session": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "cw_user_jxZ2xDQbPhuDc4Qi7LLRLzMS",
+      "value": "2fb558ae506242ac03812e762626d182",
+      "domain": "app.maketou.com",
+      "path": "/",
+      "expires": 1815004270.0,
+      "size": 64,
+      "httpOnly": false,
+      "secure": false,
+      "session": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_clck",
+      "value": "124vav6%5E2%5Eg7k%5E0%5E2379",
+      "domain": ".maketou.com",
+      "path": "/",
+      "expires": 1815004949.0,
+      "size": 33,
+      "httpOnly": false,
+      "secure": false,
+      "session": false
+    },
+    {
+      "name": "CLID",
+      "value": "7973ed82efa34cc48c65fff6065124be.20260707.20270708",
+      "domain": "www.clarity.ms",
+      "path": "/",
+      "expires": 1815005000.330502,
+      "size": 54,
+      "httpOnly": true,
+      "secure": true,
+      "session": false,
+      "sameSite": "None"
+    },
+    {
+      "name": "SM",
+      "value": "C",
+      "domain": ".c.clarity.ms",
+      "path": "/",
+      "expires": -1.0,
+      "size": 3,
+      "httpOnly": false,
+      "secure": true,
+      "session": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "_clsk",
+      "value": "1fjdibu%5E1783472124650%5E26%5E1%5Ee.clarity.ms%2Fcollect",
+      "domain": ".maketou.com",
+      "path": "/",
+      "expires": 1783558524.0,
+      "size": 62,
+      "httpOnly": false,
+      "secure": false,
+      "session": false
+    }
+  ],
+  "origins": [
+    {
+      "origin": "https://app.maketou.com",
+      "localStorage": [
+        {
+          "name": "jwt-token",
+          "value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTAwODI1NS0wNjkzLTQ1Y2ItYWQyNS04YTYzOGEyNmEzZjUiLCJ0eXBlIjoiQUNDRVNTX1RPS0VOIiwicm9sZSI6IlVTRVIiLCJ0b2tlblZlcnNpb24iOjEsImlhdCI6MTc4MzQ3MTgwMSwiZXhwIjoxNzgzNDgyNjAxfQ.TNdNEHw9wca9InpR-br0fbnHc9p-Ki1YF8m54D3EcbHFM6eY4vdWB4SOmTnq3lVc--Jg6VusC9B567-vQnAHDO3kaZ8GuKRTQOcsn_wp6EycGo_Ceur_FKnr9bpzN_wYAqZCcjd1SOmld7OJgStPJJErObmfYlI4J-Q-mQMYhjN9ezRft2fZTvH_tkjO4sFqBgRkqFMzPpD-irJCM_CGmi-SvG8A1Ivxfq9JRysk9ZETuL3BAGwTjBb-pG8D23Hu6IAoUJ-XqXg5Qu80EF0BSNLRBLSuYHyIiHTHPE4GHMx76FqAPaMVMbYRTdltTgFN0yRaklSuYpfIFiVG_XV30Q"
+        },
+        {
+          "name": "lastExternalReferrerTime",
+          "value": "1783472101394"
+        },
+        {
+          "name": "maketou_refresh_token",
+          "value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTAwODI1NS0wNjkzLTQ1Y2ItYWQyNS04YTYzOGEyNmEzZjUiLCJ0eXBlIjoiUkVGUkVTSF9UT0tFTiIsInJvbGUiOiJVU0VSIiwicmVmcmVzaFRva2VuVmVyc2lvbiI6MSwiaWF0IjoxNzgzNDY4MTczLCJleHAiOjE3ODM1OTc3NzN9.M3qeo8N4rJiSH0UyvPQSn5DETF9R4Y5l8tTUnP6nr6NNMzwMsB4ebzHMd9ymyFYyf1YUe72HiQFbWXT7KNuduwGzx4IKIG8oqzt3nSExpJqW9mNQck8o4ebDBuFphadIuEATn3LVAi0G5NGg88IJMbdhseOuHyf6_X4pd9onNqLuZ59Kxemu34Gxf7-aKDDSlojfQ5kwxIYNqDVFhQMNU9YKp4DuckmhyT1_NgqwmLOhamB0bTRkEDndc0C661z0uEvn3x-2EOSY4yxU-D0NlDmf79iZp3rOEEmvU1IYvTsCzoVUR4r3yWwoUpmln51LiR0kxv7US1mTYijycQrwAw"
+        },
+        {
+          "name": "lastExternalReferrer",
+          "value": "empty"
+        },
+        {
+          "name": "maketou_access_token",
+          "value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTAwODI1NS0wNjkzLTQ1Y2ItYWQyNS04YTYzOGEyNmEzZjUiLCJ0eXBlIjoiQUNDRVNTX1RPS0VOIiwicm9sZSI6IlVTRVIiLCJ0b2tlblZlcnNpb24iOjEsImlhdCI6MTc4MzQ2ODE3MywiZXhwIjoxNzgzNDc4OTczfQ.fpakv4FI1D0aF9D3dXETYNThsOZzwn9TS9C2P0TauRsmrFFAyHzw694zFBruPvqPb6S4sNp0XoCUecygVjLWhVcCoSl_6jdnBheyCsvwsUKFahS7pAatQ9sLfWj1QyI7zvc2XycjJzX6w7cewzDaPWNHQLQOa5ChJjh3XCOQXnxkJZzVnoqVyLp8Cadr6ohGRn6Np4XU_Ftw0FRsEGUDpomxlz1cZR1PzsThbB0tRN4aX73EqJs7pqFwBO9Cwg8x4_FWzkWkosLlxlobIEp9D5OHUUt_SdKbqpSdFQ02WR-8B3pqFq2iUdY-QxsGcLHIQ0fzO6lmOXR1J7VxsCDjPw"
+        },
+        {
+          "name": "jwt-refresh-token",
+          "value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTAwODI1NS0wNjkzLTQ1Y2ItYWQyNS04YTYzOGEyNmEzZjUiLCJ0eXBlIjoiUkVGUkVTSF9UT0tFTiIsInJvbGUiOiJVU0VSIiwicmVmcmVzaFRva2VuVmVyc2lvbiI6MSwiaWF0IjoxNzgzNDcxODAxLCJleHAiOjE3ODM2MDE0MDF9.TsEPAPpdNt1Mgs52v23Os9Hiy-AjjgqNNNRIHWoxngnUJUBdhIdR8aEOTiMSMGgp4DYkq5S3dIRA-dXwup12RubjClF1L0JwOqZmhVA0Ve5lX7PS0PPJKlTGZnITQcGbnH5eYoCwD2qLvtqE6nmCkDBbGqGVokuPaS1jk1RzJdNcQvLDTSQZgqJA6FnAC57TXxQ-iTuoqyld7GP0HhcHVEMVy68uYnsYlcZ1zuluQblqiOZIGrY6MfOx7tL1ehvkyYTWd6qfxVSF04K4kbdDaF4ayUxOAw26nTL842QJW_M-zGGYZck9ywiOQo-o-o0p8PDU_zZp-RY0KqCzlf_vCA"
+        },
+        {
+          "name": "store_dashboard_confetti_shown_0103649e-d133-4154-9bb5-4f8ba1213caf",
+          "value": "true"
+        }
+      ],
+      "sessionStorage": [
+        {
+          "name": "_cltk",
+          "value": "r7zgoy"
+        }
+      ]
+    }
+  ]
+}

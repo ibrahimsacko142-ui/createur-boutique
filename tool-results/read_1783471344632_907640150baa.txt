@@ -1,0 +1,502 @@
+     1→  3501→                            { label: '20 000 – 50 000 FCFA', val: 'moyen' },
+     2→  3502→                            { label: 'Plus de 50 000 FCFA', val: 'grand' },
+     3→  3503→                          ].map((opt) => (
+     4→  3504→                            <button key={opt.val} onClick={() => { setQuizAnswers(prev => [...prev, opt.val]); setQuizStep(2) }} className="w-full text-left p-3 rounded-xl border border-border hover:border-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/20 text-sm transition-all hover:translate-x-1">
+     5→  3505→                              {opt.label}
+     6→  3506→                            </button>
+     7→  3507→                          ))}
+     8→  3508→                        </div>
+     9→  3509→                      )}
+    10→  3510→                      {quizStep === 2 && (
+    11→  3511→                        <div className="space-y-3">
+    12→  3512→                          <p className="text-sm font-semibold">Quand souhaitez-vous commencer ?</p>
+    13→  3513→                          {[
+    14→  3514→                            { label: 'Immédiatement — c\'est urgent', val: 'urgent' },
+    15→  3515→                            { label: 'Cette semaine', val: 'semaine' },
+    16→  3516→                            { label: 'Dans les 2 prochaines semaines', val: '2semaines' },
+    17→  3517→                            { label: 'Je me renseigne pour l\'instant', val: 'renseigne' },
+    18→  3518→                          ].map((opt) => (
+    19→  3519→                            <button key={opt.val} onClick={() => {
+    20→  3520→                              const answers = [...quizAnswers, opt.val]
+    21→  3521→                              setQuizAnswers(answers)
+    22→  3522→                              // Determine result
+    23→  3523→                              const goal = answers[0]
+    24→  3524→                              const budget = answers[1]
+    25→  3525→                              if (goal === 'identite') setQuizResult({ service: 'Design Graphique', icon: Palette, reason: budget === 'gratuit' ? 'Testez l\'Offre Découverte gratuite pour un logo simple, puis passez au Premium pour une identité complète.' : 'L\'Offre Premium Design vous donne un logo vectorisé, une charte graphique complète et tous les fichiers sources.' })
+    26→  3526→                              else if (goal === 'site') setQuizResult({ service: 'Création Web', icon: Globe, reason: budget === 'gratuit' ? 'Commencez avec une landing page gratuite, puis évoluez vers un site multi-pages complet.' : 'Un site professionnel multi-pages avec formulaire, SEO, et hébergement inclus est l\'idéal pour vous.' })
+    27→  3527→                              else if (goal === 'video') setQuizResult({ service: 'Montage Vidéo', icon: MonitorPlay, reason: budget === 'gratuit' ? 'Essayez le montage découverte gratuit pour un aperçu rapide.' : 'Le montage Premium inclut effets, sous-titres, musique et export optimisé pour tous les réseaux.' })
+    28→  3528→                              else if (goal === 'reseaux') setQuizResult({ service: 'Marketing Digital', icon: Megaphone, reason: budget === 'gratuit' ? 'Un post ou affiche gratuit pour tester mon style.' : 'Stratégie complète avec calendrier éditorial, posts, stories et bannières publicitaires.' })
+    29→  3529→                              else setQuizResult({ service: 'Formation Design', icon: GraduationCap, reason: 'La formation Design Graphique (Découverte gratuite puis Premium) est parfaite pour apprendre à créer vos propres visuels.' })
+    30→  3530→                              setQuizStep(3)
+    31→  3531→                            }} className="w-full text-left p-3 rounded-xl border border-border hover:border-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/20 text-sm transition-all hover:translate-x-1">
+    32→  3532→                              {opt.label}
+    33→  3533→                            </button>
+    34→  3534→                          ))}
+    35→  3535→                        </div>
+    36→  3536→                      )}
+    37→  3537→                    </motion.div>
+    38→  3538→                  </AnimatePresence>
+    39→  3539→                ) : quizResult && (
+    40→  3540→                  <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center space-y-4">
+    41→  3541→                    <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-white mx-auto shadow-lg">
+    42→  3542→                      <quizResult.icon className="h-8 w-8" />
+    43→  3543→                    </div>
+    44→  3544→                    <h4 className="text-xl font-extrabold">{quizResult.service}</h4>
+    45→  3545→                    <p className="text-sm text-muted-foreground leading-relaxed">{quizResult.reason}</p>
+    46→  3546→                    <div className="flex flex-col gap-2 pt-2">
+    47→  3547→                      <a
+    48→  3548→                        href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! J'ai fait le quiz sur votre site et le résultat m'a recommandé : ${quizResult.service}. Je souhaite en savoir plus !`)}`}
+    49→  3549→                        target="_blank" rel="noopener noreferrer"
+    50→  3550→                        onClick={() => { setQuizOpen(false); setQuizStep(0); setQuizAnswers([]); setQuizResult(null) }}
+    51→  3551→                      >
+    52→  3552→                        <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold shadow-lg shadow-emerald-500/20">
+    53→  3553→                          <MessageCircle className="h-4 w-4 mr-2" /> En discuter sur WhatsApp
+    54→  3554→                        </Button>
+    55→  3555→                      </a>
+    56→  3556→                      <button onClick={() => { setQuizStep(0); setQuizAnswers([]); setQuizResult(null) }} className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+    57→  3557→                        Refaire le quiz
+    58→  3558→                      </button>
+    59→  3559→                    </div>
+    60→  3560→                  </motion.div>
+    61→  3561→                )}
+    62→  3562→              </div>
+    63→  3563→            </motion.div>
+    64→  3564→          </motion.div>
+    65→  3565→        )}
+    66→  3566→      </AnimatePresence>
+    67→  3567→
+    68→  3568→      {/* ═══ QUIZ TRIGGER FLOATING BUTTON ═══ */}
+    69→  3569→      <motion.button
+    70→  3570→        initial={{ opacity: 0, scale: 0 }}
+    71→  3571→        animate={{ opacity: 1, scale: 1 }}
+    72→  3572→        transition={{ delay: 3, type: 'spring' }}
+    73→  3573→        onClick={() => setQuizOpen(true)}
+    74→  3574→        className="fixed bottom-[68px] lg:bottom-6 left-1/2 -translate-x-1/2 z-[55] flex items-center gap-2 bg-gradient-to-r from-violet-600 to-purple-600 text-white pl-4 pr-5 py-3 rounded-full shadow-lg shadow-violet-500/30 hover:shadow-xl hover:shadow-violet-500/40 transition-all duration-300 hover:scale-105 group"
+    75→  3575→      >
+    76→  3576→        <Brain className="h-5 w-5" />
+    77→  3577→        <span className="text-sm font-semibold whitespace-nowrap">Quel service vous convient ?</span>
+    78→  3578→        <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-medium bg-white/20 px-2 py-0.5 rounded-full">Quiz gratuit</span>
+    79→  3579→      </motion.button>
+    80→  3580→
+    81→  3581→      {/* ═══ SIDE NAVIGATION DOTS (desktop) ═══ */}
+    82→  3582→      <div className="fixed right-4 top-1/2 -translate-y-1/2 z-30 hidden xl:flex flex-col gap-2.5">
+    83→  3583→        {[
+    84→  3584→          { id: 'accueil', label: 'Accueil' },
+    85→  3585→          { id: 'services', label: 'Services' },
+    86→  3586→          { id: 'formations', label: 'Formations' },
+    87→  3587→          { id: 'coachs', label: 'Coachs' },
+    88→  3588→          { id: 'boutique', label: 'Boutique' },
+    89→  3589→          { id: 'portfolio', label: 'Portfolio' },
+    90→  3590→          { id: 'contact', label: 'Contact' },
+    91→  3591→        ].map((item) => (
+    92→  3592→          <a
+    93→  3593→            key={item.id}
+    94→  3594→            href={`#${item.id}`}
+    95→  3595→            className="group flex items-center gap-2.5 justify-end"
+    96→  3596→          >
+    97→  3597→            <span className="text-[10px] font-medium text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+    98→  3598→              {item.label}
+    99→  3599→            </span>
+   100→  3600→            <span className={`h-2.5 rounded-full transition-all duration-300 ${
+   101→  3601→              activeDotSection === item.id
+   102→  3602→                ? 'w-2.5 bg-amber-500 shadow-md shadow-amber-500/30'
+   103→  3603→                : 'w-2 bg-muted-foreground/30 group-hover:bg-amber-500/50'
+   104→  3604→            }`} />
+   105→  3605→          </a>
+   106→  3606→        ))}
+   107→  3607→      </div>
+   108→  3608→
+   109→  3609→      </main>
+   110→  3610→
+   111→  3611→      {/* ═══ MOYENS DE PAIEMENT ═══ */}
+   112→  3612→      <section className="py-8 border-t bg-muted/20">
+   113→  3613→        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+   114→  3614→          <div className="flex flex-col items-center justify-center gap-3">
+   115→  3615→            <p className="text-sm font-semibold text-muted-foreground">Paiement sécurisé via</p>
+   116→  3616→            <div className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20 border border-emerald-200 dark:border-emerald-800 shadow-sm">
+   117→  3617→              <div className="h-3 w-3 rounded-full bg-emerald-500" />
+   118→  3618→              <span className="text-sm font-bold text-emerald-700 dark:text-emerald-400">CinetPay</span>
+   119→  3619→              <span className="text-[10px] text-muted-foreground">— Orange Money, MTN MoMo, Carte bancaire</span>
+   120→  3620→            </div>
+   121→  3621→          </div>
+   122→  3622→          <p className="text-center text-[11px] text-muted-foreground mt-3">Paiement 100% sécurisé — Confirmation automatique et livraison instantanée</p>
+   123→  3623→        </div>
+   124→  3624→      </section>
+   125→  3625→
+   126→  3626→      {/* ═══ 20. FOOTER ═══ */}
+   127→  3627→      <Footer />
+   128→  3628→
+   129→  3629→      {/* ═══ STICKY MOBILE CTA ═══ */}
+   130→  3630→      <AnimatePresence>
+   131→  3631→        {showStickyCta && (
+   132→  3632→          <motion.div
+   133→  3633→            initial={{ y: 100 }}
+   134→  3634→            animate={{ y: 0 }}
+   135→  3635→            exit={{ y: 100 }}
+   136→  3636→            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+   137→  3637→            className="fixed bottom-14 left-0 right-0 z-[49] lg:hidden p-3 bg-gradient-to-t from-background via-background/95 to-transparent"
+   138→  3638→          >
+   139→  3639→            <a href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20souhaite%20discuter%20d%27un%20projet." target="_blank" rel="noopener noreferrer">
+   140→  3640→              <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold h-11 text-sm shadow-lg shadow-emerald-500/30">
+   141→  3641→                <MessageCircle className="h-4 w-4 mr-2" /> Discuter de mon projet — Gratuit
+   142→  3642→              </Button>
+   143→  3643→            </a>
+   144→  3644→          </motion.div>
+   145→  3645→        )}
+   146→  3646→      </AnimatePresence>
+   147→  3647→
+   148→  3648→      {/* ═══ 21. BOTTOM MOBILE NAV ═══ */}
+   149→  3649→      <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-background/95 backdrop-blur-xl border-t border-border shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+   150→  3650→        <div className="flex items-center justify-around h-14 px-2">
+   151→  3651→          <a href="#accueil" className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-amber-500 transition-colors py-1 px-2">
+   152→  3652→            <Sparkles className="h-[18px] w-[18px]" />
+   153→  3653→            <span className="text-[9px] font-medium">Accueil</span>
+   154→  3654→          </a>
+   155→  3655→          <a href="#services" className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-amber-500 transition-colors py-1 px-2">
+   156→  3656→            <Layers className="h-[18px] w-[18px]" />
+   157→  3657→            <span className="text-[9px] font-medium">Services</span>
+   158→  3658→          </a>
+   159→  3659→          <a href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20souhaite%20discuter%20d%27un%20projet." target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-0.5 -mt-6">
+   160→  3660→            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 text-white shadow-lg shadow-emerald-500/30">
+   161→  3661→              <MessageCircle className="h-6 w-6" />
+   162→  3662→            </div>
+   163→  3663→            <span className="text-[9px] font-semibold text-emerald-600">WhatsApp</span>
+   164→  3664→          </a>
+   165→  3665→          <a href="#boutique" className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-amber-500 transition-colors py-1 px-2">
+   166→  3666→            <BookOpen className="h-[18px] w-[18px]" />
+   167→  3667→            <span className="text-[9px] font-medium">Boutique</span>
+   168→  3668→          </a>
+   169→  3669→          <a href="#contact" className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-amber-500 transition-colors py-1 px-2">
+   170→  3670→            <Send className="h-[18px] w-[18px]" />
+   171→  3671→            <span className="text-[9px] font-medium">Contact</span>
+   172→  3672→          </a>
+   173→  3673→        </div>
+   174→  3674→      </div>
+   175→  3675→
+   176→  3676→      {/* ═══ BACK TO TOP DESKTOP ═══ */}
+   177→  3677→      <AnimatePresence>
+   178→  3678→        {showBackToTop && (
+   179→  3679→          <motion.button
+   180→  3680→            initial={{ opacity: 0, scale: 0.5, y: 20 }}
+   181→  3681→            animate={{ opacity: 1, scale: 1, y: 0 }}
+   182→  3682→            exit={{ opacity: 0, scale: 0.5, y: 20 }}
+   183→  3683→            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+   184→  3684→            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+   185→  3685→            className="fixed bottom-6 right-20 z-40 hidden lg:flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 text-white shadow-lg shadow-amber-500/30 hover:shadow-xl hover:shadow-amber-500/40 transition-all duration-300 hover:scale-110"
+   186→  3686→            aria-label="Retour en haut"
+   187→  3687→          >
+   188→  3688→            <ChevronUp className="h-5 w-5" />
+   189→  3689→          </motion.button>
+   190→  3690→        )}
+   191→  3691→      </AnimatePresence>
+   192→  3692→
+   193→  3693→      {/* ═══ SHARE BUTTON ═══ */}
+   194→  3694→      <motion.button
+   195→  3695→        initial={{ opacity: 0, scale: 0 }}
+   196→  3696→        animate={{ opacity: 1, scale: 1 }}
+   197→  3697→        exit={{ opacity: 0, scale: 0 }}
+   198→  3698→        transition={{ type: 'spring', stiffness: 300, damping: 25, delay: 0.1 }}
+   199→  3699→        onClick={async () => {
+   200→  3700→          if (navigator.share) {
+   201→  3701→            try {
+   202→  3702→              await navigator.share({ title: 'Studio Créatif — Sacko', text: 'Découvre Studio Créatif ! Design, sites web, formations à Bamako.', url: window.location.href })
+   203→  3703→            } catch {}
+   204→  3704→          } else {
+   205→  3705→            await navigator.clipboard.writeText(window.location.href)
+   206→  3706→            setShareToast(true)
+   207→  3707→            setTimeout(() => setShareToast(false), 2000)
+   208→  3708→          }
+   209→  3709→        }}
+   210→  3710→        className="fixed bottom-6 right-6 z-40 hidden lg:flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/30 hover:shadow-xl hover:scale-110 transition-all"
+   211→  3711→        aria-label="Partager le site"
+   212→  3712→      >
+   213→  3713→        <Share2 className="h-5 w-5" />
+   214→  3714→      </motion.button>
+   215→  3715→
+   216→  3716→      {/* Share toast */}
+   217→  3717→      <AnimatePresence>
+   218→  3718→        {shareToast && (
+   219→  3719→          <motion.div
+   220→  3720→            initial={{ opacity: 0, y: 10 }}
+   221→  3721→            animate={{ opacity: 1, y: 0 }}
+   222→  3722→            exit={{ opacity: 0, y: 10 }}
+   223→  3723→            className="fixed bottom-20 right-6 z-40 hidden lg:block bg-foreground text-background text-xs font-medium px-3 py-2 rounded-lg shadow-lg"
+   224→  3724→          >
+   225→  3725→            Lien copié !
+   226→  3726→          </motion.div>
+   227→  3727→        )}
+   228→  3728→      </AnimatePresence>
+   229→  3729→
+   230→  3730→      {/* Back to top button - mobile only (above bottom nav) */}
+   231→  3731→      <AnimatePresence>
+   232→  3732→        {showBackToTop && (
+   233→  3733→          <motion.button
+   234→  3734→            initial={{ opacity: 0, scale: 0.5 }}
+   235→  3735→            animate={{ opacity: 1, scale: 1 }}
+   236→  3736→            exit={{ opacity: 0, scale: 0.5 }}
+   237→  3737→            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+   238→  3738→            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+   239→  3739→            className="fixed bottom-[68px] left-4 z-[60] flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 text-white shadow-lg shadow-amber-500/30 lg:hidden"
+   240→  3740→            aria-label="Retour en haut"
+   241→  3741→          >
+   242→  3742→            <ChevronUp className="h-4 w-4" />
+   243→  3743→          </motion.button>
+   244→  3744→        )}
+   245→  3745→      </AnimatePresence>
+   246→  3746→
+   247→  3747→      {/* ═══ FLOATING CART BUTTON ═══ */}
+   248→  3748→      <AnimatePresence>
+   249→  3749→        {cart.length > 0 && (
+   250→  3750→          <motion.button
+   251→  3751→            initial={{ opacity: 0, scale: 0 }}
+   252→  3752→            animate={{ opacity: 1, scale: 1 }}
+   253→  3753→            exit={{ opacity: 0, scale: 0 }}
+   254→  3754→            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+   255→  3755→            onClick={() => setShowCart(!showCart)}
+   256→  3756→            className="fixed bottom-[68px] right-4 z-[60] lg:bottom-6 lg:right-24 lg:z-[41] flex h-12 w-12 items-center justify-center rounded-full bg-amber-500 text-white shadow-lg shadow-amber-500/30 hover:bg-amber-600 hover:shadow-xl transition-all"
+   257→  3757→            aria-label="Voir le panier"
+   258→  3758→          >
+   259→  3759→            <ShoppingCart className="h-5 w-5" />
+   260→  3760→            <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white border-2 border-background">{cart.length}</span>
+   261→  3761→          </motion.button>
+   262→  3762→        )}
+   263→  3763→      </AnimatePresence>
+   264→  3764→
+   265→  3765→      {/* ═══ CART PANEL ═══ */}
+   266→  3766→      <AnimatePresence>
+   267→  3767→        {showCart && cart.length > 0 && (
+   268→  3768→          <motion.div
+   269→  3769→            initial={{ opacity: 0, x: 300 }}
+   270→  3770→            animate={{ opacity: 1, x: 0 }}
+   271→  3771→            exit={{ opacity: 0, x: 300 }}
+   272→  3772→            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+   273→  3773→            className="fixed top-0 right-0 bottom-0 z-[110] w-80 max-w-[85vw] bg-background border-l shadow-2xl flex flex-col"
+   274→  3774→          >
+   275→  3775→            <div className="flex items-center justify-between p-4 border-b">
+   276→  3776→              <h3 className="font-bold text-base flex items-center gap-2">
+   277→  3777→                <ShoppingCart className="h-5 w-5 text-amber-500" />
+   278→  3778→                Mon Panier
+   279→  3779→                <span className="text-sm font-normal text-muted-foreground">({cart.length})</span>
+   280→  3780→              </h3>
+   281→  3781→              <button onClick={() => setShowCart(false)} className="h-8 w-8 rounded-full hover:bg-muted flex items-center justify-center"><X className="h-4 w-4" /></button>
+   282→  3782→            </div>
+   283→  3783→            <div className="flex-1 overflow-y-auto p-4 space-y-2">
+   284→  3784→              {cart.map((title) => {
+   285→  3785→                const book = books.find(b => b.title === title)
+   286→  3786→                return (
+   287→  3787→                  <div key={title} className="flex items-center gap-3 p-2.5 rounded-xl bg-muted/50 border border-border">
+   288→  3788→                    {book && <img src={book.cover} alt="" className="h-12 w-9 object-cover rounded-md shadow-sm" />}
+   289→  3789→                    <div className="flex-1 min-w-0">
+   290→  3790→                      <p className="text-xs font-semibold leading-tight line-clamp-2">{title}</p>
+   291→  3791→                      <p className="text-[10px] text-amber-600 font-bold mt-0.5">1 000 FCFA</p>
+   292→  3792→                    </div>
+   293→  3793→                    <button onClick={() => toggleCart(title)} className="h-7 w-7 rounded-full hover:bg-red-100 dark:hover:bg-red-900/30 flex items-center justify-center text-muted-foreground hover:text-red-500 transition-colors flex-shrink-0">
+   294→  3794→                      <X className="h-3.5 w-3.5" />
+   295→  3795→                    </button>
+   296→  3796→                  </div>
+   297→  3797→                )
+   298→  3798→              })}
+   299→  3799→            </div>
+   300→  3800→            <div className="p-4 border-t space-y-3">
+   301→  3801→              <div className="flex items-center justify-between">
+   302→  3802→                <span className="text-sm font-semibold">Total</span>
+   303→  3803→                <span className="text-xl font-extrabold text-amber-600">{cart.length * 1000} FCFA</span>
+   304→  3804→              </div>
+   305→  3805→              {cart.length >= 3 && (
+   306→  3806→                <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg p-2.5 text-center">
+   307→  3807→                  <p className="text-[11px] text-amber-700 dark:text-amber-400 font-semibold">Pack {cart.length} livres — {Math.min(cart.length * 1000, 7000)} FCFA</p>
+   308→  3808→                  <p className="text-[10px] text-amber-600/70 mt-0.5">Le pack complet 12 livres = 7 000 FCFA</p>
+   309→  3809→                </div>
+   310→  3810→              )}
+   311→  3811→              <div className="flex gap-2">
+   312→  3812→                <a
+   313→  3813→                  href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je veux commander ${cart.length} livre(s) :\n\n${cart.map(t => `- ${t} (1 000 FCFA)`).join('\n')}\n\nTotal : ${cart.length * 1000} FCFA. Comment procéder pour le paiement ?`)}`}
+   314→  3814→                  target="_blank"
+   315→  3815→                  rel="noopener noreferrer"
+   316→  3816→                  onClick={() => setShowCart(false)}
+   317→  3817→                  className="flex-1"
+   318→  3818→                >
+   319→  3819→                  <Button variant="outline" className="w-full border-emerald-300 text-emerald-700 hover:bg-emerald-50 font-semibold h-11 text-sm">
+   320→  3820→                    <MessageCircle className="h-4 w-4 mr-2" /> WhatsApp
+   321→  3821→                  </Button>
+   322→  3822→                </a>
+   323→  3823→                <Button
+   324→  3824→                  onClick={() => openCheckout()}
+   325→  3825→                  className="flex-1 bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 hover:from-amber-600 hover:via-orange-600 hover:to-red-600 text-white font-bold shadow-lg shadow-amber-500/20 h-11 text-sm"
+   326→  3826→                >
+   327→  3827→                  <Lock className="h-4 w-4 mr-2" /> Payer maintenant
+   328→  3828→                </Button>
+   329→  3829→              </div>
+   330→  3830→            </div>
+   331→  3831→          </motion.div>
+   332→  3832→        )}
+   333→  3833→      </AnimatePresence>
+   334→  3834→
+   335→  3835→      {/* ═══ CHECKOUT / PAYMENT MODAL ═══ */}
+   336→  3836→      <AnimatePresence>
+   337→  3837→        {showCheckout && (
+   338→  3838→          <motion.div
+   339→  3839→            initial={{ opacity: 0 }}
+   340→  3840→            animate={{ opacity: 1 }}
+   341→  3841→            exit={{ opacity: 0 }}
+   342→  3842→            className="fixed inset-0 z-[200] flex items-center justify-center p-4"
+   343→  3843→          >
+   344→  3844→            {/* Backdrop */}
+   345→  3845→            <motion.div
+   346→  3846→              initial={{ opacity: 0 }}
+   347→  3847→              animate={{ opacity: 1 }}
+   348→  3848→              exit={{ opacity: 0 }}
+   349→  3849→              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+   350→  3850→              onClick={() => { if (!paymentProcessing) setShowCheckout(false) }}
+   351→  3851→            />
+   352→  3852→
+   353→  3853→            {/* Modal */}
+   354→  3854→            <motion.div
+   355→  3855→              initial={{ opacity: 0, scale: 0.9, y: 30 }}
+   356→  3856→              animate={{ opacity: 1, scale: 1, y: 0 }}
+   357→  3857→              exit={{ opacity: 0, scale: 0.9, y: 30 }}
+   358→  3858→              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+   359→  3859→              className="relative z-10 w-full max-w-md bg-background rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
+   360→  3860→            >
+   361→  3861→              {/* Header */}
+   362→  3862→              <div className="relative bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 p-4 text-white flex-shrink-0">
+   363→  3863→                <button
+   364→  3864→                  onClick={() => { if (!paymentProcessing) setShowCheckout(false) }}
+   365→  3865→                  className="absolute top-3 right-3 h-8 w-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors"
+   366→  3866→                >
+   367→  3867→                  <X className="h-4 w-4" />
+   368→  3868→                </button>
+   369→  3869→                <div className="flex items-center gap-2">
+   370→  3870→                  <Lock className="h-5 w-5" />
+   371→  3871→                  <h3 className="font-bold text-lg">Paiement Sécurisé</h3>
+   372→  3872→                </div>
+   373→  3873→                <div className="flex items-center gap-1.5 mt-1">
+   374→  3874→                  <ShieldCheck className="h-3 w-3 text-white/80" />
+   375→  3875→                  <p className="text-[11px] text-white/80">Paiement automatique via CinetPay — Orange Money, MTN MoMo, Carte bancaire</p>
+   376→  3876→                </div>
+   377→  3877→                {/* Progress bar */}
+   378→  3878→                <div className="flex gap-1.5 mt-3">
+   379→  3879→                  {[0, 1, 2, 3].map((s) => (
+   380→  3880→                    <div key={s} className={`h-1 flex-1 rounded-full transition-all duration-500 ${s <= checkoutStep ? 'bg-white' : 'bg-white/30'}`} />
+   381→  3881→                  ))}
+   382→  3882→                </div>
+   383→  3883→                <div className="flex justify-between mt-1">
+   384→  3884→                  <span className="text-[9px] text-white/60">Récapitulatif</span>
+   385→  3885→                  <span className="text-[9px] text-white/60">Vos infos</span>
+   386→  3886→                  <span className="text-[9px] text-white/60">Paiement</span>
+   387→  3887→                  <span className="text-[9px] text-white/60">Confirmation</span>
+   388→  3888→                </div>
+   389→  3889→              </div>
+   390→  3890→
+   391→  3891→              {/* Content */}
+   392→  3892→              <div className="flex-1 overflow-y-auto p-5">
+   393→  3893→                {/* ─── STEP 0: Order Recap ─── */}
+   394→  3894→                {checkoutStep === 0 && (
+   395→  3895→                  <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-4">
+   396→  3896→                    <div className="text-center">
+   397→  3897→                      <div className="h-14 w-14 mx-auto rounded-2xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-3">
+   398→  3898→                        <ShoppingCart className="h-7 w-7 text-amber-500" />
+   399→  3899→                      </div>
+   400→  3900→                      <h4 className="font-bold text-base">Votre Commande</h4>
+   401→  3901→                      <p className="text-xs text-muted-foreground mt-0.5">Vérifiez votre sélection avant de payer</p>
+   402→  3902→                    </div>
+   403→  3903→
+   404→  3904→                    <div className="space-y-2 max-h-48 overflow-y-auto">
+   405→  3905→                      {(checkoutItem ? [checkoutItem.title] : cart).map((title, i) => {
+   406→  3906→                        const book = books.find(b => b.title === title)
+   407→  3907→                        return (
+   408→  3908→                          <div key={i} className="flex items-center gap-3 p-2.5 rounded-xl bg-muted/50 border border-border">
+   409→  3909→                            {book ? (
+   410→  3910→                              <img src={book.cover} alt="" className="h-11 w-8 object-cover rounded-md shadow-sm" />
+   411→  3911→                            ) : (
+   412→  3912→                              <div className="h-11 w-8 rounded-md bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center flex-shrink-0">
+   413→  3913→                                <BookOpen className="h-4 w-4 text-amber-500" />
+   414→  3914→                              </div>
+   415→  3915→                            )}
+   416→  3916→                            <div className="flex-1 min-w-0">
+   417→  3917→                              <p className="text-xs font-semibold leading-tight line-clamp-2">{title}</p>
+   418→  3918→                              <p className="text-[10px] text-amber-600 font-bold mt-0.5">1 000 FCFA</p>
+   419→  3919→                            </div>
+   420→  3920→                          </div>
+   421→  3921→                        )
+   422→  3922→                      })}
+   423→  3923→                    </div>
+   424→  3924→
+   425→  3925→                    <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4">
+   426→  3926→                      <div className="flex items-center justify-between mb-1">
+   427→  3927→                        <span className="text-sm font-semibold">Sous-total</span>
+   428→  3928→                        <span className="text-sm font-medium">{(checkoutItem ? 1 : cart.length)} article(s)</span>
+   429→  3929→                      </div>
+   430→  3930→                      <div className="flex items-center justify-between">
+   431→  3931→                        <span className="text-base font-bold">Total à payer</span>
+   432→  3932→                        <span className="text-2xl font-extrabold text-amber-600">{getCartTotal().toLocaleString('fr-FR')} <span className="text-sm">FCFA</span></span>
+   433→  3933→                      </div>
+   434→  3934→                    </div>
+   435→  3935→
+   436→  3936→                    <Button onClick={() => setCheckoutStep(1)} className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold h-12 text-sm">
+   437→  3937→                      Continuer <ArrowRight className="h-4 w-4 ml-2" />
+   438→  3938→                    </Button>
+   439→  3939→                  </motion.div>
+   440→  3940→                )}
+   441→  3941→
+   442→  3942→                {/* ─── STEP 1: Customer Info ─── */}
+   443→  3943→                {checkoutStep === 1 && (
+   444→  3944→                  <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-4">
+   445→  3945→                    <div className="text-center">
+   446→  3946→                      <div className="h-14 w-14 mx-auto rounded-2xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-3">
+   447→  3947→                        <UserCheck className="h-7 w-7 text-blue-500" />
+   448→  3948→                      </div>
+   449→  3949→                      <h4 className="font-bold text-base">Vos Informations</h4>
+   450→  3950→                      <p className="text-xs text-muted-foreground mt-0.5">Renseignez vos coordonnées pour la livraison</p>
+   451→  3951→                    </div>
+   452→  3952→
+   453→  3953→                    <div className="space-y-3">
+   454→  3954→                      <div>
+   455→  3955→                        <Label className="text-xs font-semibold mb-1.5 block">Nom complet *</Label>
+   456→  3956→                        <Input
+   457→  3957→                          placeholder="Ex: Amadou Diallo"
+   458→  3958→                          value={checkoutInfo.name}
+   459→  3959→                          onChange={(e) => setCheckoutInfo({ ...checkoutInfo, name: e.target.value })}
+   460→  3960→                          className="h-11 rounded-xl text-sm"
+   461→  3961→                        />
+   462→  3962→                      </div>
+   463→  3963→                      <div>
+   464→  3964→                        <Label className="text-xs font-semibold mb-1.5 block">Numéro de téléphone *</Label>
+   465→  3965→                        <div className="relative">
+   466→  3966→                          <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+   467→  3967→                          <Input
+   468→  3968→                            placeholder="Ex: 70 12 34 56 / 07 XX XX XX"
+   469→  3969→                            value={checkoutInfo.phone}
+   470→  3970→                            onChange={(e) => setCheckoutInfo({ ...checkoutInfo, phone: e.target.value })}
+   471→  3971→                            className="pl-10 h-11 rounded-xl text-sm"
+   472→  3972→                            type="tel"
+   473→  3973→                          />
+   474→  3974→                        </div>
+   475→  3975→                        <p className="text-[10px] text-muted-foreground mt-1">Le même numéro que votre compte mobile money</p>
+   476→  3976→                      </div>
+   477→  3977→                      <div>
+   478→  3978→                        <Label className="text-xs font-semibold mb-1.5 block">Email (optionnel)</Label>
+   479→  3979→                        <div className="relative">
+   480→  3980→                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+   481→  3981→                          <Input
+   482→  3982→                            placeholder="votre@email.com"
+   483→  3983→                            value={checkoutInfo.email}
+   484→  3984→                            onChange={(e) => setCheckoutInfo({ ...checkoutInfo, email: e.target.value })}
+   485→  3985→                            className="pl-10 h-11 rounded-xl text-sm"
+   486→  3986→                            type="email"
+   487→  3987→                          />
+   488→  3988→                        </div>
+   489→  3989→                      </div>
+   490→  3990→                    </div>
+   491→  3991→
+   492→  3992→                    <div className="flex gap-2">
+   493→  3993→                      <Button variant="outline" onClick={() => setCheckoutStep(0)} className="flex-1 h-11 font-semibold text-sm">
+   494→  3994→                        <ArrowDown className="h-4 w-4 mr-2 rotate-180" /> Retour
+   495→  3995→                      </Button>
+   496→  3996→                      <Button
+   497→  3997→                        onClick={() => { if (checkoutInfo.name.trim() && checkoutInfo.phone.trim()) setCheckoutStep(2); else toast({ title: 'Champs requis', description: 'Veuillez remplir votre nom et numéro de téléphone.' }) }}
+   498→  3998→                        className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold h-11 text-sm"
+   499→  3999→                      >
+   500→  4000→                        Continuer <ArrowRight className="h-4 w-4 ml-2" />
+   501→
+   502→[showing lines 3501-4000 of 4335; use offset=4001 with limit to continue reading]

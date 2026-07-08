@@ -137,7 +137,7 @@ export default function DashboardPage() {
             </div>
             <div>
               <h1 className="font-extrabold text-lg">Dashboard Paiements</h1>
-              <p className="text-xs text-gray-500">CinetPay — Studio Créatif</p>
+              <p className="text-xs text-gray-500">Studio Créatif — Commandes WhatsApp</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -232,7 +232,7 @@ export default function DashboardPage() {
         </div>
 
         <p className="text-center text-xs text-gray-300 pb-4">
-          Dashboard Studio Créatif — Paiements CinetPay — Actualisation automatique toutes les 30s
+          Dashboard Studio Créatif — Commandes WhatsApp — Actualisation automatique toutes les 30s
         </p>
       </div>
     </div>

@@ -1,0 +1,502 @@
+     1→  3001→            </motion.div>
+     2→  3002→          </div>
+     3→  3003→        </section>
+     4→  3004→
+     5→  3005→        {/* ═══ RÉSULTATS CLIENTS ═══ */}
+     6→  3006→        <section className="py-16 sm:py-20 relative overflow-hidden">
+     7→  3007→          <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 dark:from-emerald-950/20 dark:via-teal-950/10 dark:to-cyan-950/20" />
+     8→  3008→          <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+     9→  3009→            <motion.div
+    10→  3010→              initial={{ opacity: 0, y: 30 }}
+    11→  3011→              whileInView={{ opacity: 1, y: 0 }}
+    12→  3012→              viewport={{ once: true, margin: '-50px' }}
+    13→  3013→              transition={{ duration: 0.6 }}
+    14→  3014→            >
+    15→  3015→              <div className="text-center mb-12">
+    16→  3016→                <Badge variant="secondary" className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200">
+    17→  3017→                  <TrendingUp className="h-3 w-3 mr-1" /> Résultats
+    18→  3018→                </Badge>
+    19→  3019→                <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Ils ont <span className="text-emerald-600 dark:text-emerald-400">transformé leur business</span></h2>
+    20→  3020→                <p className="mt-3 text-muted-foreground max-w-xl mx-auto leading-relaxed">
+    21→  3021→                  Des résultats concrets, mesurables. Voici ce que nos clients ont accompli après avoir travaillé avec Studio Créatif.
+    22→  3022→                </p>
+    23→  3023→              </div>
+    24→  3024→
+    25→  3025→              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+    26→  3026→                {[
+    27→  3027→                  { client: 'Boutique Le Baobab', metric: '+40%', desc: "d'augmentation du chiffre d'affaires en 1 mois grâce au nouveau logo et aux visuels réseaux sociaux", icon: TrendingUp, color: 'from-emerald-500 to-teal-500' },
+    28→  3028→                  { client: 'MaliTech Solutions', metric: '+200', desc: 'visiteurs/jour sur le nouveau site web en seulement 2 semaines après le lancement', icon: Users, color: 'from-blue-500 to-indigo-500' },
+    29→  3029→                  { client: 'Restaurant Djoliba', metric: '3x', desc: "plus de commandes en ligne après la refonte de l'identité visuelle complète et des affiches promotionnelles", icon: Award, color: 'from-amber-500 to-orange-500' },
+    30→  3030→                  { client: 'Salon Awa Beauty', metric: '15K+', desc: 'vues sur la vidéo promotionnelle TikTok en 48h, générant 20+ nouvelles clientes', icon: Eye, color: 'from-purple-500 to-violet-500' },
+    31→  3031→                ].map((result, i) => (
+    32→  3032→                  <motion.div
+    33→  3033→                    key={result.client}
+    34→  3034→                    initial={{ opacity: 0, y: 20 }}
+    35→  3035→                    whileInView={{ opacity: 1, y: 0 }}
+    36→  3036→                    viewport={{ once: true }}
+    37→  3037→                    transition={{ duration: 0.4, delay: i * 0.1 }}
+    38→  3038→                    className="group relative bg-background rounded-2xl border border-border p-5 sm:p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-emerald-200 dark:hover:border-emerald-800"
+    39→  3039→                  >
+    40→  3040→                    <div className={`inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${result.color} text-white shadow-lg mb-4 group-hover:scale-110 transition-transform duration-300`}>
+    41→  3041→                      <result.icon className="h-6 w-6" />
+    42→  3042→                    </div>
+    43→  3043→                    <div className="text-3xl font-extrabold bg-gradient-to-r bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 mb-1">{result.metric}</div>
+    44→  3044→                    <h3 className="text-sm font-bold mb-2">{result.client}</h3>
+    45→  3045→                    <p className="text-xs text-muted-foreground leading-relaxed">{result.desc}</p>
+    46→  3046→                  </motion.div>
+    47→  3047→                ))}
+    48→  3048→              </div>
+    49→  3049→
+    50→  3050→              <div className="mt-8 text-center">
+    51→  3051→                <p className="text-sm text-muted-foreground">
+    52→  3052→                  Envie de résultats similaires ?{' '}
+    53→  3053→                  <a href="https://wa.me/22397787244?text=Bonjour%20!%20J%27ai%20vu%20vos%20r%C3%A9sultats%20clients%20et%20je%20veux%20la%20m%C3%Aamme%20chose%20pour%20mon%20business." target="_blank" rel="noopener noreferrer" className="text-emerald-600 font-semibold hover:underline">
+    54→  3054→                    Discutons de votre projet
+    55→  3055→                  </a>
+    56→  3056→                </p>
+    57→  3057→              </div>
+    58→  3058→            </motion.div>
+    59→  3059→          </div>
+    60→  3060→        </section>
+    61→  3061→
+    62→  3062→        {/* Wave divider */}
+    63→  3063→        <div className="relative h-16 -mt-1 overflow-hidden">
+    64→  3064→          <svg className="absolute bottom-0 w-full" viewBox="0 0 1440 64" fill="none" preserveAspectRatio="none">
+    65→  3065→            <path d="M0 64L48 58C96 52 192 40 288 34C384 28 480 28 576 32C672 36 768 44 864 46C960 48 1056 44 1152 38C1248 32 1344 24 1392 20L1440 16V64H0Z" className="fill-amber-500" />
+    66→  3066→          </svg>
+    67→  3067→        </div>
+    68→  3068→
+    69→  3069→        {/* ═══ 18. CTA FINAL ═══ */}
+    70→  3070→        <section className="py-16 sm:py-20 bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 relative overflow-hidden">
+    71→  3071→          <div className="absolute inset-0">
+    72→  3072→            <div className="absolute top-0 left-1/4 h-64 w-64 bg-white/10 rounded-full blur-3xl" />
+    73→  3073→            <div className="absolute bottom-0 right-1/4 h-64 w-64 bg-white/10 rounded-full blur-3xl" />
+    74→  3074→          </div>
+    75→  3075→          <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
+    76→  3076→            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
+    77→  3077→              Prêt à faire passer votre communication <span className="bg-gradient-to-r from-white via-yellow-200 to-white bg-clip-text text-transparent animate-gradient-text">au niveau supérieur</span> ?
+    78→  3078→            </h2>
+    79→  3079→            <p className="mt-4 text-lg text-white/90 max-w-2xl mx-auto leading-relaxed">
+    80→  3080→              N&apos;attendez plus pour donner à votre entreprise l&apos;image qu&apos;elle mérite. Contactez-moi dès aujourd&apos;hui pour discuter de votre projet et obtenir un devis gratuit.
+    81→  3081→            </p>
+    82→  3082→            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+    83→  3083→              <a href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20suis%20pr%C3%AAt%20%C3%A0%20lancer%20mon%20projet%20de%20communication." target="_blank" rel="noopener noreferrer">
+    84→  3084→                <Button size="lg" className="bg-white text-amber-600 hover:bg-white/90 font-bold shadow-xl text-base px-8">
+    85→  3085→                  <MessageCircle className="h-5 w-5 mr-2" /> Commander via WhatsApp
+    86→  3086→                </Button>
+    87→  3087→              </a>
+    88→  3088→              <a href="https://wa.me/22397787244?text=Bonjour%20!%20J%27aimerais%20discuter%20de%20mon%20projet%20avec%20vous." target="_blank" rel="noopener noreferrer">
+    89→  3089→                <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 font-semibold text-base px-8">
+    90→  3090→                  M&apos;envoyer un message <Send className="ml-2 h-4 w-4" />
+    91→  3091→                </Button>
+    92→  3092→              </a>
+    93→  3093→            </div>
+    94→  3094→            <div className="mt-8 flex flex-col items-center gap-4">
+    95→  3095→              <div className="flex items-center gap-5 text-white/80 text-xs font-medium">
+    96→  3096→                <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4" /> Livraison rapide</span>
+    97→  3097→                <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4" /> Satisfaction garantie</span>
+    98→  3098→              </div>
+    99→  3099→              <div className="flex items-center gap-3 text-white/70 text-xs">
+   100→  3100→                <span className="px-4 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-400/30 font-bold">Paiement CinetPay Sécurisé</span>
+   101→  3101→              </div>
+   102→  3102→            </div>
+   103→  3103→          </div>
+   104→  3104→        </section>
+   105→  3105→
+   106→  3106→        {/* ═══ 19. CONTACT ═══ */}
+   107→  3107→        <section id="contact" className="py-16 sm:py-20 bg-muted/30">
+   108→  3108→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+   109→  3109→            <motion.div
+   110→  3110→              initial={{ opacity: 0, y: 30 }}
+   111→  3111→              whileInView={{ opacity: 1, y: 0 }}
+   112→  3112→              viewport={{ once: true, margin: '-50px' }}
+   113→  3113→              transition={{ duration: 0.6 }}
+   114→  3114→            >
+   115→  3115→            <div className="grid lg:grid-cols-2 gap-12">
+   116→  3116→              <div>
+   117→  3117→                <Badge variant="secondary" className="mb-3">
+   118→  3118→                  <Send className="h-3 w-3 mr-1" /> Contact
+   119→  3119→                </Badge>
+   120→  3120→                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Contactez-Moi</h2>
+   121→  3121→                <p className="mt-3 text-muted-foreground leading-relaxed max-w-md">
+   122→  3122→                  Vous avez un projet, une question ou besoin d&apos;un service ? N&apos;hésitez pas à me contacter. Je réponds rapidement.
+   123→  3123→                </p>
+   124→  3124→                <div className="mt-8 space-y-6">
+   125→  3125→                  <div className="flex items-center gap-4">
+   126→  3126→                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30">
+   127→  3127→                      <Mail className="h-5 w-5 text-amber-600" />
+   128→  3128→                    </div>
+   129→  3129→                    <div>
+   130→  3130→                      <p className="text-sm font-medium">Email</p>
+   131→  3131→                      <p className="text-sm text-muted-foreground">contact@createurboutique.com</p>
+   132→  3132→                    </div>
+   133→  3133→                  </div>
+   134→  3134→                  <div className="flex items-center gap-4">
+   135→  3135→                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30">
+   136→  3136→                      <Phone className="h-5 w-5 text-amber-600" />
+   137→  3137→                    </div>
+   138→  3138→                    <div>
+   139→  3139→                      <p className="text-sm font-medium">Téléphone</p>
+   140→  3140→                      <p className="text-sm text-muted-foreground">+223 97 78 72 44</p>
+   141→  3141→                    </div>
+   142→  3142→                  </div>
+   143→  3143→                  <div className="flex items-center gap-4">
+   144→  3144→                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30">
+   145→  3145→                      <MapPin className="h-5 w-5 text-amber-600" />
+   146→  3146→                    </div>
+   147→  3147→                    <div>
+   148→  3148→                      <p className="text-sm font-medium">Localisation</p>
+   149→  3149→                      <p className="text-sm text-muted-foreground">Bamako, Mali</p>
+   150→  3150→                    </div>
+   151→  3151→                  </div>
+   152→  3152→                </div>
+   153→  3153→                <div className="mt-8 flex gap-3">
+   154→  3154→                  <a href="https://www.instagram.com/sk_designer_luxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors" aria-label="Instagram">
+   155→  3155→                    <Instagram className="h-5 w-5 text-amber-600" />
+   156→  3156→                  </a>
+   157→  3157→                  <a href="https://www.facebook.com/skdesignerluxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors" aria-label="Facebook">
+   158→  3158→                    <Facebook className="h-5 w-5 text-amber-600" />
+   159→  3159→                  </a>
+   160→  3160→                  <a href="https://www.tiktok.com/@sk_designer_luxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors" aria-label="TikTok">
+   161→  3161→                    <svg className="h-5 w-5 text-amber-600" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.87a8.16 8.16 0 0 0 4.77 1.52V6.94a4.85 4.85 0 0 1-1.01-.25z" /></svg>
+   162→  3162→                  </a>
+   163→  3163→                </div>
+   164→  3164→              </div>
+   165→  3165→
+   166→  3166→              <form onSubmit={handleSubmitContact} className="space-y-4 rounded-2xl border bg-card p-6 sm:p-8 shadow-sm">
+   167→  3167→                <div className="grid sm:grid-cols-2 gap-4">
+   168→  3168→                  <div className="space-y-2">
+   169→  3169→                    <Label htmlFor="name">Nom *</Label>
+   170→  3170→                    <Input id="name" placeholder="Votre nom" value={contactData.name} onChange={(e) => setContactData({ ...contactData, name: e.target.value })} />
+   171→  3171→                  </div>
+   172→  3172→                  <div className="space-y-2">
+   173→  3173→                    <Label htmlFor="email">Email *</Label>
+   174→  3174→                    <Input id="email" type="email" placeholder="votre@email.com" value={contactData.email} onChange={(e) => setContactData({ ...contactData, email: e.target.value })} />
+   175→  3175→                  </div>
+   176→  3176→                </div>
+   177→  3177→                <div className="space-y-2">
+   178→  3178→                  <Label htmlFor="subject">Sujet</Label>
+   179→  3179→                  <Input id="subject" placeholder="Quel service vous intéresse ?" value={contactData.subject} onChange={(e) => setContactData({ ...contactData, subject: e.target.value })} />
+   180→  3180→                </div>
+   181→  3181→                <div className="space-y-2">
+   182→  3182→                  <Label htmlFor="message">Message *</Label>
+   183→  3183→                  <Textarea id="message" placeholder="Décrivez votre projet ou votre demande..." rows={5} value={contactData.message} onChange={(e) => setContactData({ ...contactData, message: e.target.value })} />
+   184→  3184→                </div>
+   185→  3185→                <Button
+   186→  3186→                  type="submit"
+   187→  3187→                  className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold shadow-lg shadow-amber-500/20"
+   188→  3188→                >
+   189→  3189→                  <span className="flex items-center gap-2">
+   190→  3190→                    <MessageCircle className="h-4 w-4" /> Envoyer via WhatsApp
+   191→  3191→                  </span>
+   192→  3192→                </Button>
+   193→  3193→              </form>
+   194→  3194→            </div>
+   195→  3195→            </motion.div>
+   196→  3196→          </div>
+   197→  3197→        </section>
+   198→  3198→      {/* ═══ COACH DETAIL MODAL ═══ */}
+   199→  3199→      <AnimatePresence>
+   200→  3200→        {selectedCoach && (
+   201→  3201→          <motion.div
+   202→  3202→            initial={{ opacity: 0 }}
+   203→  3203→            animate={{ opacity: 1 }}
+   204→  3204→            exit={{ opacity: 0 }}
+   205→  3205→            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+   206→  3206→            onClick={() => setSelectedCoach(null)}
+   207→  3207→          >
+   208→  3208→            <motion.div
+   209→  3209→              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+   210→  3210→              animate={{ scale: 1, opacity: 1, y: 0 }}
+   211→  3211→              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+   212→  3212→              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+   213→  3213→              className="relative bg-background rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden"
+   214→  3214→              onClick={(e) => e.stopPropagation()}
+   215→  3215→            >
+   216→  3216→              <div className={`bg-gradient-to-r ${selectedCoach.gradient} p-6 text-white relative`}>
+   217→  3217→                <button onClick={() => setSelectedCoach(null)} className="absolute top-3 right-3 h-8 w-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors">
+   218→  3218→                  <X className="h-4 w-4" />
+   219→  3219→                </button>
+   220→  3220→                <div className="flex items-center gap-4">
+   221→  3221→                  <div className="h-20 w-20 rounded-full bg-white/20 flex items-center justify-center text-3xl font-extrabold ring-4 ring-white/30">
+   222→  3222→                    {selectedCoach.initial}
+   223→  3223→                  </div>
+   224→  3224→                  <div>
+   225→  3225→                    <h3 className="text-xl font-extrabold">{selectedCoach.name}</h3>
+   226→  3226→                    <p className="text-white/80 text-sm mt-0.5">{selectedCoach.role}</p>
+   227→  3227→                    <div className="flex gap-4 mt-2">
+   228→  3228→                      {selectedCoach.stats.map((s) => (
+   229→  3229→                        <div key={s.label}>
+   230→  3230→                          <span className="text-lg font-extrabold">{s.value}</span>
+   231→  3231→                          <span className="text-[10px] text-white/60 ml-1">{s.label}</span>
+   232→  3232→                        </div>
+   233→  3233→                      ))}
+   234→  3234→                    </div>
+   235→  3235→                  </div>
+   236→  3236→                </div>
+   237→  3237→              </div>
+   238→  3238→              <div className="p-6 space-y-4">
+   239→  3239→                <div>
+   240→  3240→                  <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-2">Compétences</p>
+   241→  3241→                  <div className="flex flex-wrap gap-2">
+   242→  3242→                    {selectedCoach.speciality.split(', ').map((skill) => (
+   243→  3243→                      <span key={skill} className="px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-950/20 text-amber-700 dark:text-amber-400 text-xs font-semibold border border-amber-200 dark:border-amber-800">
+   244→  3244→                        {skill}
+   245→  3245→                      </span>
+   246→  3246→                    ))}
+   247→  3247→                  </div>
+   248→  3248→                </div>
+   249→  3249→                <div>
+   250→  3250→                  <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-2">Biographie</p>
+   251→  3251→                  <p className="text-sm text-foreground/80 leading-relaxed">{selectedCoach.bio}</p>
+   252→  3252→                </div>
+   253→  3253→                <div>
+   254→  3254→                  <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-2">Formations dispensées</p>
+   255→  3255→                  <div className="space-y-2">
+   256→  3256→                    {selectedCoach.name === 'Sacko' && (
+   257→  3257→                      <>
+   258→  3258→                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>Design Graphique (Canva, Photoshop, Illustrator)</span></div>
+   259→  3259→                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>Branding & Identité Visuelle</span></div>
+   260→  3260→                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>Montage Vidéo (CapCut, Premiere Pro)</span></div>
+   261→  3261→                      </>
+   262→  3262→                    )}
+   263→  3263→                    {selectedCoach.name === 'Camara Leh' && (
+   264→  3264→                      <>
+   265→  3265→                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>Création Web (HTML, CSS, JavaScript)</span></div>
+   266→  3266→                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>Frameworks modernes (React, Next.js)</span></div>
+   267→  3267→                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>WordPress & Solutions e-commerce</span></div>
+   268→  3268→                      </>
+   269→  3269→                    )}
+   270→  3270→                    {selectedCoach.name === 'Kante' && (
+   271→  3271→                      <>
+   272→  3272→                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>Marketing Digital & Stratégie</span></div>
+   273→  3273→                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>Publicité Facebook & Instagram Ads</span></div>
+   274→  3274→                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>TikTok & YouTube Growth</span></div>
+   275→  3275→                      </>
+   276→  3276→                    )}
+   277→  3277→                  </div>
+   278→  3278→                </div>
+   279→  3279→                <a
+   280→  3280→                  href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je souhaite être encadré(e) par ${selectedCoach.name} pour une formation. Pouvez-vous me donner plus de détails ?`)}`}
+   281→  3281→                  target="_blank" rel="noopener noreferrer"
+   282→  3282→                  onClick={() => setSelectedCoach(null)}
+   283→  3283→                >
+   284→  3284→                  <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold shadow-lg shadow-emerald-500/20 mt-2">
+   285→  3285→                    <MessageCircle className="h-4 w-4 mr-2" /> Contacter {selectedCoach.name} via WhatsApp
+   286→  3286→                  </Button>
+   287→  3287→                </a>
+   288→  3288→              </div>
+   289→  3289→            </motion.div>
+   290→  3290→          </motion.div>
+   291→  3291→        )}
+   292→  3292→      </AnimatePresence>
+   293→  3293→
+   294→  3294→      {/* ═══ COOKIE CONSENT BANNER ═══ */}
+   295→  3295→      <AnimatePresence>
+   296→  3296→        {showCookieConsent && (
+   297→  3297→          <motion.div
+   298→  3298→            initial={{ y: 100, opacity: 0 }}
+   299→  3299→            animate={{ y: 0, opacity: 1 }}
+   300→  3300→            exit={{ y: 100, opacity: 0 }}
+   301→  3301→            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+   302→  3302→            className="fixed bottom-16 lg:bottom-6 left-4 right-4 lg:left-auto lg:right-6 lg:w-96 z-[80] bg-background/95 backdrop-blur-xl rounded-2xl border shadow-2xl p-5"
+   303→  3303→          >
+   304→  3304→            <div className="flex items-start gap-3">
+   305→  3305→              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30 flex-shrink-0">
+   306→  3306→                <Cookie className="h-5 w-5 text-amber-600" />
+   307→  3307→              </div>
+   308→  3308→              <div className="flex-1">
+   309→  3309→                <h3 className="text-sm font-bold mb-1">Nous respectons votre vie privée</h3>
+   310→  3310→                <p className="text-xs text-muted-foreground leading-relaxed mb-3">
+   311→  3311→                  Nous utilisons des cookies pour améliorer votre expérience, analyser le trafic et afficher des contenus personnalisés. En continuant, vous acceptez nos cookies.
+   312→  3312→                </p>
+   313→  3313→                <div className="flex gap-2">
+   314→  3314→                  <Button
+   315→  3315→                    onClick={() => setShowCookieConsent(false)}
+   316→  3316→                    size="sm"
+   317→  3317→                    className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold text-xs h-9"
+   318→  3318→                  >
+   319→  3319→                    Accepter
+   320→  3320→                  </Button>
+   321→  3321→                  <Button
+   322→  3322→                    onClick={() => setShowCookieConsent(false)}
+   323→  3323→                    variant="outline"
+   324→  3324→                    size="sm"
+   325→  3325→                    className="text-xs h-9"
+   326→  3326→                  >
+   327→  3327→                    Refuser
+   328→  3328→                  </Button>
+   329→  3329→                </div>
+   330→  3330→              </div>
+   331→  3331→            </div>
+   332→  3332→          </motion.div>
+   333→  3333→        )}
+   334→  3334→      </AnimatePresence>
+   335→  3335→
+   336→  3336→      {/* ═══ WELCOME POPUP ═══ */}
+   337→  3337→      <AnimatePresence>
+   338→  3338→        {welcomeVisible && (
+   339→  3339→          <motion.div
+   340→  3340→            initial={{ opacity: 0 }}
+   341→  3341→            animate={{ opacity: 1 }}
+   342→  3342→            exit={{ opacity: 0 }}
+   343→  3343→            className="fixed inset-0 z-[90] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+   344→  3344→            onClick={() => { setWelcomeVisible(false); setShowWelcome(false) }}
+   345→  3345→          >
+   346→  3346→            <motion.div
+   347→  3347→              initial={{ scale: 0.8, opacity: 0, y: 30 }}
+   348→  3348→              animate={{ scale: 1, opacity: 1, y: 0 }}
+   349→  3349→              exit={{ scale: 0.8, opacity: 0, y: 30 }}
+   350→  3350→              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+   351→  3351→              className="relative bg-background rounded-2xl shadow-2xl max-w-sm w-full overflow-hidden"
+   352→  3352→              onClick={(e) => e.stopPropagation()}
+   353→  3353→            >
+   354→  3354→              <button onClick={() => { setWelcomeVisible(false); setShowWelcome(false) }} className="absolute top-3 right-3 z-10 h-8 w-8 rounded-full bg-muted hover:bg-muted/80 flex items-center justify-center">
+   355→  3355→                <X className="h-4 w-4" />
+   356→  3356→              </button>
+   357→  3357→              <div className="bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 p-6 text-center text-white">
+   358→  3358→                <div className="text-4xl mb-2">👋</div>
+   359→  3359→                <h3 className="text-xl font-extrabold">Bienvenue sur Studio Créatif !</h3>
+   360→  3360→                <p className="text-white/80 text-sm mt-1">Offre exclusive pour les nouveaux visiteurs</p>
+   361→  3361→              </div>
+   362→  3362→              <div className="p-6 space-y-4">
+   363→  3363→                <div className="space-y-2">
+   364→  3364→                  <div className="flex items-center gap-3 p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800">
+   365→  3365→                    <Gift className="h-5 w-5 text-emerald-500 flex-shrink-0" />
+   366→  3366→                    <div>
+   367→  3367→                      <p className="text-sm font-bold text-emerald-700 dark:text-emerald-400">Logo GRATUIT</p>
+   368→  3368→                      <p className="text-[11px] text-muted-foreground">Votre premier logo offert, sans engagement</p>
+   369→  3369→                    </div>
+   370→  3370→                  </div>
+   371→  3371→                  <div className="flex items-center gap-3 p-3 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800">
+   372→  3372→                    <Zap className="h-5 w-5 text-amber-500 flex-shrink-0" />
+   373→  3373→                    <div>
+   374→  3374→                      <p className="text-sm font-bold text-amber-700 dark:text-amber-400">Livraison en 48h</p>
+   375→  3375→                      <p className="text-[11px] text-muted-foreground">Résultat rapide et professionnel</p>
+   376→  3376→                    </div>
+   377→  3377→                  </div>
+   378→  3378→                </div>
+   379→  3379→                <a
+   380→  3380→                  href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20suis%20nouveau%20sur%20votre%20site%20et%20je%20souhaite%20profiter%20de%20l'offre%20bienvenue%20(logo%20gratuit)."
+   381→  3381→                  target="_blank" rel="noopener noreferrer"
+   382→  3382→                  onClick={() => { setWelcomeVisible(false); setShowWelcome(false) }}
+   383→  3383→                >
+   384→  3384→                  <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold shadow-lg shadow-emerald-500/20">
+   385→  3385→                    <MessageCircle className="h-4 w-4 mr-2" /> Profiter de l'offre
+   386→  3386→                  </Button>
+   387→  3387→                </a>
+   388→  3388→                <button onClick={() => { setWelcomeVisible(false); setShowWelcome(false) }} className="block text-xs text-muted-foreground hover:text-foreground transition-colors mx-auto">
+   389→  3389→                  Peut-être plus tard
+   390→  3390→                </button>
+   391→  3391→              </div>
+   392→  3392→            </motion.div>
+   393→  3393→          </motion.div>
+   394→  3394→        )}
+   395→  3395→      </AnimatePresence>
+   396→  3396→
+   397→  3397→      {/* ═══ PORTFOLIO LIGHTBOX ═══ */}
+   398→  3398→      <AnimatePresence>
+   399→  3399→        {lightboxImg && (
+   400→  3400→          <motion.div
+   401→  3401→            initial={{ opacity: 0 }}
+   402→  3402→            animate={{ opacity: 1 }}
+   403→  3403→            exit={{ opacity: 0 }}
+   404→  3404→            className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-8 bg-black/90 backdrop-blur-sm"
+   405→  3405→            onClick={() => setLightboxImg(null)}
+   406→  3406→          >
+   407→  3407→            <motion.div
+   408→  3408→              initial={{ scale: 0.9, opacity: 0 }}
+   409→  3409→              animate={{ scale: 1, opacity: 1 }}
+   410→  3410→              exit={{ scale: 0.9, opacity: 0 }}
+   411→  3411→              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+   412→  3412→              className="relative max-w-5xl w-full max-h-[90vh] overflow-hidden rounded-2xl shadow-2xl"
+   413→  3413→              onClick={(e) => e.stopPropagation()}
+   414→  3414→            >
+   415→  3415→              <img src={lightboxImg.src} alt={lightboxImg.title} className="w-full h-auto max-h-[75vh] object-contain bg-black" />
+   416→  3416→              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-6">
+   417→  3417→                <h3 className="text-white font-bold text-lg">{lightboxImg.title}</h3>
+   418→  3418→                <p className="text-white/70 text-sm mt-1">{lightboxImg.desc}</p>
+   419→  3419→              </div>
+   420→  3420→              <button
+   421→  3421→                onClick={() => setLightboxImg(null)}
+   422→  3422→                className="absolute top-4 right-4 h-10 w-10 flex items-center justify-center rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors backdrop-blur-sm"
+   423→  3423→              >
+   424→  3424→                <X className="h-5 w-5" />
+   425→  3425→              </button>
+   426→  3426→            </motion.div>
+   427→  3427→          </motion.div>
+   428→  3428→        )}
+   429→  3429→      </AnimatePresence>
+   430→  3430→
+   431→  3431→      {/* ═══ SERVICE QUIZ MODAL ═══ */}
+   432→  3432→      <AnimatePresence>
+   433→  3433→        {quizOpen && (
+   434→  3434→          <motion.div
+   435→  3435→            initial={{ opacity: 0 }}
+   436→  3436→            animate={{ opacity: 1 }}
+   437→  3437→            exit={{ opacity: 0 }}
+   438→  3438→            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+   439→  3439→            onClick={() => { setQuizOpen(false); setQuizStep(0); setQuizAnswers([]); setQuizResult(null) }}
+   440→  3440→          >
+   441→  3441→            <motion.div
+   442→  3442→              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+   443→  3443→              animate={{ scale: 1, opacity: 1, y: 0 }}
+   444→  3444→              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+   445→  3445→              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+   446→  3446→              className="relative bg-background rounded-2xl shadow-2xl max-w-md w-full overflow-hidden"
+   447→  3447→              onClick={(e) => e.stopPropagation()}
+   448→  3448→            >
+   449→  3449→              <button onClick={() => { setQuizOpen(false); setQuizStep(0); setQuizAnswers([]); setQuizResult(null) }} className="absolute top-3 right-3 z-10 h-8 w-8 rounded-full bg-muted hover:bg-muted/80 flex items-center justify-center">
+   450→  3450→                <X className="h-4 w-4" />
+   451→  3451→              </button>
+   452→  3452→              <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-6 text-white text-center">
+   453→  3453→                <Brain className="h-8 w-8 mx-auto mb-2" />
+   454→  3454→                {!quizResult ? (
+   455→  3455→                  <>
+   456→  3456→                    <h3 className="text-lg font-extrabold">Quel service vous convient ?</h3>
+   457→  3457→                    <p className="text-white/80 text-sm mt-1">Répondez à 3 questions rapides</p>
+   458→  3458→                    {/* Progress bar */}
+   459→  3459→                    <div className="mt-4 flex gap-1.5 justify-center">
+   460→  3460→                      {[0, 1, 2].map((s) => (
+   461→  3461→                        <div key={s} className={`h-1.5 rounded-full transition-all duration-300 ${s <= quizStep ? 'w-8 bg-white' : 'w-4 bg-white/40'}`} />
+   462→  3462→                      ))}
+   463→  3463→                    </div>
+   464→  3464→                  </>
+   465→  3465→                ) : (
+   466→  3466→                  <h3 className="text-lg font-extrabold">Résultat</h3>
+   467→  3467→                )}
+   468→  3468→              </div>
+   469→  3469→              <div className="p-6">
+   470→  3470→                {!quizResult ? (
+   471→  3471→                  <AnimatePresence mode="wait">
+   472→  3472→                    <motion.div
+   473→  3473→                      key={quizStep}
+   474→  3474→                      initial={{ opacity: 0, x: 30 }}
+   475→  3475→                      animate={{ opacity: 1, x: 0 }}
+   476→  3476→                      exit={{ opacity: 0, x: -30 }}
+   477→  3477→                      transition={{ duration: 0.3 }}
+   478→  3478→                    >
+   479→  3479→                      {quizStep === 0 && (
+   480→  3480→                        <div className="space-y-3">
+   481→  3481→                          <p className="text-sm font-semibold">Quel est votre objectif principal ?</p>
+   482→  3482→                          {[
+   483→  3483→                            { label: 'Créer une identité visuelle (logo, charte)', val: 'identite' },
+   484→  3484→                            { label: 'Avoir un site internet professionnel', val: 'site' },
+   485→  3485→                            { label: 'Produire du contenu vidéo', val: 'video' },
+   486→  3486→                            { label: 'Attirer des clients sur les réseaux', val: 'reseaux' },
+   487→  3487→                            { label: 'Apprendre le design digital', val: 'formation' },
+   488→  3488→                          ].map((opt) => (
+   489→  3489→                            <button key={opt.val} onClick={() => { setQuizAnswers([opt.val]); setQuizStep(1) }} className="w-full text-left p-3 rounded-xl border border-border hover:border-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/20 text-sm transition-all hover:translate-x-1">
+   490→  3490→                              {opt.label}
+   491→  3491→                            </button>
+   492→  3492→                          ))}
+   493→  3493→                        </div>
+   494→  3494→                      )}
+   495→  3495→                      {quizStep === 1 && (
+   496→  3496→                        <div className="space-y-3">
+   497→  3497→                          <p className="text-sm font-semibold">Quel est votre budget ?</p>
+   498→  3498→                          {[
+   499→  3499→                            { label: 'Budget limité — je veux tester gratuitement', val: 'gratuit' },
+   500→  3500→                            { label: '5 000 – 20 000 FCFA', val: 'petit' },
+   501→
+   502→[showing lines 3001-3500 of 4335; use offset=3501 with limit to continue reading]
