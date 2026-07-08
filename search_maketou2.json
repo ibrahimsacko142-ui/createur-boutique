@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developer.orange.com/apis/om-webpay",
+    "name": "Orange Money Web Payment / M Payment (1.0) API – Overview",
+    "snippet": "Orange Money enables major market players to accept online payments. It was designed for Web merchants, but other types of services can also now benefit.",
+    "host_name": "developer.orange.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://malipo.mw/documentation",
+    "name": "Malipo Documentation | Payment Solutions API & Integration Guides",
+    "snippet": "Explore the official Malipo documentation for detailed guides on integrating secure payment solutions, APIs, and more for businesses in Malawi.",
+    "host_name": "malipo.mw",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.mobilemoneyapi.io",
+    "name": "Mobile Money API Developer Portal: Home",
+    "snippet": "A full set of developer documentation and guides for getting started with the Mobile Money API Specification. api_fundamentals. API fundamentals.",
+    "host_name": "developer.mobilemoneyapi.io",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.ottu.com/developers/payments/checkout-api",
+    "name": "Checkout API - Ottu Documentation",
+    "snippet": "Ottu provides a comprehensive collection of APIs that offer a seamless and efficient way to test payments and enable merchants to accept and process ...",
+    "host_name": "docs.ottu.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developers.trolley.com/api",
+    "name": "Apis | Trolley Developer Documentation",
+    "snippet": "Trolley API documentation - Manage your global recipients, their payouts, tax forms and verifications with our REST API and SDKs.",
+    "host_name": "developers.trolley.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.clickpesa.com/payment-api/mobile-money-payment-api/mobile-money-payment-api-overview",
+    "name": "Mobile Money Payment API - ClickPesa Documentation",
+    "snippet": "The Mobile Money Payment API enables you to collect payments directly from customers' mobile money wallets using USSD-PUSH requests.",
+    "host_name": "docs.clickpesa.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.dusupay.com/funds-collection/mobile-money-collection",
+    "name": "Mobile Money Collection - DusuPay API Documentation",
+    "snippet": "The API allows the merchant to either use the hosted payment page (recommended) or build their own user experience based on the API workflow.",
+    "host_name": "developer.dusupay.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.gsma.com/mobilefordevelopment/mobile-money/mobile-money-api",
+    "name": "GSMA Mobile Money API | Mobile for Development",
+    "snippet": "The GSMA has provided developers with a Developer Portal including all the documentation and tools required to assist with developing a Mobile Money API ...",
+    "host_name": "www.gsma.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.authorize.net/api/reference/index.html",
+    "name": "API Reference - Authorize.net Developer Center",
+    "snippet": "Payment Transactions. The createTransactionRequest function enables you to submit a wide variety of transaction requests, depending on how you structure it.",
+    "host_name": "developer.authorize.net",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://chimoney.io/intro-learning-and-tips/mobile-money-api",
+    "name": "Mobile money api | Documentation - Chimoney",
+    "snippet": "mobile money api documentation. Code examples, SDKs, integration guides. 5-minute setup for developers.",
+    "host_name": "chimoney.io",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

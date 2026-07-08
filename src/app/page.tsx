@@ -555,7 +555,6 @@ export default function Home() {
   const [showWaWidget, setShowWaWidget] = useState(false)
   const [testimIndex, setTestimIndex] = useState(0)
   const [testimPaused, setTestimPaused] = useState(false)
-  const [socialProof, setSocialProof] = useState<{ name: string; action: string; time: number } | null>(null)
   const [shareToast, setShareToast] = useState(false)
   const [activeDotSection, setActiveDotSection] = useState('accueil')
 
@@ -576,9 +575,6 @@ export default function Home() {
 
   // Coach detail modal
   const [selectedCoach, setSelectedCoach] = useState<typeof coaches[0] | null>(null)
-
-  // Live visitors (simulated)
-  const [liveVisitors, setLiveVisitors] = useState(12)
 
   // Promo countdown: 7 days from now
   const [promoEnd] = useState(() => {
@@ -604,35 +600,13 @@ export default function Home() {
     return () => clearInterval(interval)
   }, [testimPaused])
 
-  // Social proof notifications
-  useEffect(() => {
-    const proofs = [
-      { name: 'Moussa K.', action: 'a commandé le livre WordPress pour les Nuls', time: 2000 },
-      { name: 'Awa D.', action: 'a réservé la formation Design Graphique', time: 35000 },
-      { name: 'Ibrahim T.', action: 'a commandé le Pack Complet 12 livres', time: 70000 },
-      { name: 'Fatoumata S.', action: 'a demandé un logo professionnel', time: 110000 },
-      { name: 'Oumar B.', action: 'a commandé le livre E-marketing', time: 150000 },
-      { name: 'Djénéba C.', action: 'a réservé la formation Montage Vidéo', time: 195000 },
-    ]
-    proofs.forEach(p => {
-      setTimeout(() => {
-        setSocialProof(p)
-        setTimeout(() => setSocialProof(null), 4000)
-      }, p.time)
-    })
+  // Confetti trigger
+  const triggerConfetti = useCallback(() => {
+    setConfettiActive(true)
+    setTimeout(() => setConfettiActive(false), 4000)
   }, [])
 
-  // Live visitors simulation
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setLiveVisitors(prev => {
-        const change = Math.random() > 0.5 ? 1 : -1
-        const next = Math.max(8, Math.min(28, prev + change))
-        return next
-      })
-    }, 8000)
-    return () => clearInterval(interval)
-  }, [])
+
 
 
 
@@ -747,10 +721,7 @@ export default function Home() {
                       Découvrir les services
                     </Button>
                   </a>
-                  <span className="hidden sm:flex items-center gap-1.5 text-[11px] text-white/90 font-medium bg-white/15 px-2.5 py-1 rounded-full">
-                    <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" /><span className="relative inline-flex rounded-full h-2 w-2 bg-red-400" /></span>
-                    {liveVisitors} personne{liveVisitors > 1 ? 's' : ''} en ligne
-                  </span>
+
                   <button onClick={() => setShowBanner(false)} className="text-white/80 hover:text-white transition-colors" aria-label="Fermer">
                     <X className="h-4 w-4" />
                   </button>
@@ -1420,12 +1391,15 @@ export default function Home() {
                           <MessageCircle className="h-3.5 w-3.5 mr-1.5" /> WhatsApp
                         </Button>
                       </a>
-                      <Button
-                        onClick={() => openCheckout({ type: 'service', title: `Offre Premium : ${section.cat}`, price: 15000 })}
-                        className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-10 shadow-md shadow-amber-500/20"
+                      <a
+                        href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je veux l'Offre Premium : ${section.cat} — 15 000 FCFA. Comment payer ?`)}`}
+                        target="_blank" rel="noopener noreferrer"
+                        className="flex-1"
                       >
-                        <Lock className="h-3.5 w-3.5 mr-1.5" /> Payer
-                      </Button>
+                        <Button className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-10 shadow-md shadow-amber-500/20">
+                          <Lock className="h-3.5 w-3.5 mr-1.5" /> Payer
+                        </Button>
+                      </a>
                       </div>
                     </div>
                     </div>
@@ -1500,13 +1474,15 @@ export default function Home() {
                           <MessageCircle className="h-3.5 w-3.5 mr-1.5" /> WhatsApp
                         </Button>
                       </a>
-                      <Button
-                        size="sm"
-                        onClick={() => openCheckout({ type: 'service', title: `${s.name} (${s.sub})`, price: parseInt(s.price.replace(/\s/g, '')) })}
-                        className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-9"
+                      <a
+                        href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je veux commander : ${s.name} (${s.sub}) — ${s.price} FCFA.`)}`}
+                        target="_blank" rel="noopener noreferrer"
+                        className="flex-1"
                       >
-                        <Lock className="h-3.5 w-3.5 mr-1.5" /> Payer {s.price} F
-                      </Button>
+                        <Button size="sm" className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-9">
+                          <Lock className="h-3.5 w-3.5 mr-1.5" /> Payer {s.price} F
+                        </Button>
+                      </a>
                       </div>
                     </div>
                   </CardContent>
@@ -1540,9 +1516,11 @@ export default function Home() {
                           <MessageCircle className="h-5 w-5 mr-2" /> WhatsApp
                         </Button>
                       </a>
-                      <Button size="lg" onClick={() => openCheckout({ type: 'service', title: 'Pack Lancement Carrière (CV + Lettre + LinkedIn + Guide)', price: 3500 })} className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-xl shadow-amber-500/25 px-6 whitespace-nowrap">
-                        <Lock className="h-5 w-5 mr-2" /> Payer 3 500 F
-                      </Button>
+                      <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20veux%20le%20Pack%20Lancement%20Carri%C3%A8re%20%C3%A0%203%20500%20FCFA." target="_blank" rel="noopener noreferrer">
+                        <Button size="lg" className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-xl shadow-amber-500/25 px-6 whitespace-nowrap">
+                          <Lock className="h-5 w-5 mr-2" /> Payer 3 500 F
+                        </Button>
+                      </a>
                     </div>
                     <span className="text-[10px] text-slate-500">Économie de 1 300 FCFA</span>
                   </div>
@@ -1766,12 +1744,15 @@ export default function Home() {
                           <MessageCircle className="h-3.5 w-3.5 mr-1.5" /> WhatsApp
                         </Button>
                       </a>
-                      <Button
-                        onClick={() => openCheckout({ type: 'service', title: `Formation Premium : ${form.title}`, price: parseInt(form.premium.price.replace(/\s/g, '')) })}
-                        className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-10 shadow-lg shadow-amber-500/20"
+                      <a
+                        href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je veux la formation Premium ${form.title} (${form.premium.price} FCFA). Comment payer ?`)}`}
+                        target="_blank" rel="noopener noreferrer"
+                        className="flex-1"
                       >
-                        <Lock className="h-3.5 w-3.5 mr-1.5" /> Payer {form.premium.price} F
-                      </Button>
+                        <Button className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-10 shadow-lg shadow-amber-500/20">
+                          <Lock className="h-3.5 w-3.5 mr-1.5" /> Payer {form.premium.price} F
+                        </Button>
+                      </a>
                       </div>
                     </div>
                   </div>
@@ -3732,74 +3713,7 @@ export default function Home() {
         )}
       </div>
 
-      {/* ═══ SOCIAL PROOF NOTIFICATION ═══ */}
-      <AnimatePresence>
-        {socialProof && (
-          <motion.div
-            initial={{ opacity: 0, y: 50, x: 50 }}
-            animate={{ opacity: 1, y: 0, x: 0 }}
-            exit={{ opacity: 0, y: 20, x: 50 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-            className="fixed bottom-[68px] lg:bottom-6 left-4 z-[70] max-w-xs"
-          >
-            <div className="bg-background/95 backdrop-blur-xl border rounded-xl shadow-2xl p-3.5 flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex-shrink-0">
-                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-bold">{socialProof.name}</p>
-                <p className="text-[11px] text-muted-foreground leading-tight">{socialProof.action}</p>
-              </div>
-              <button onClick={() => setSocialProof(null)} className="text-muted-foreground hover:text-foreground flex-shrink-0">
-                <X className="h-3.5 w-3.5" />
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
-      {/* ═══ COOKIE CONSENT ═══ */}
-      <AnimatePresence>
-        {showCookieConsent && (
-          <motion.div
-            initial={{ y: 100 }}
-            animate={{ y: 0 }}
-            exit={{ y: 100 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="fixed bottom-[68px] lg:bottom-0 left-0 right-0 z-[80] p-4"
-          >
-            <div className="mx-auto max-w-2xl bg-background/95 backdrop-blur-xl border rounded-2xl shadow-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30 flex-shrink-0">
-                <Cookie className="h-5 w-5 text-amber-500" />
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-semibold">Cookies & Confidentialité</p>
-                <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
-                  Ce site utilise des cookies pour améliorer votre expérience et mémoriser votre panier. En continuant, vous acceptez notre{' '}
-                  <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20consulter%20vos%20mentions%20l%C3%A9gales." target="_blank" rel="noopener noreferrer" className="text-amber-600 hover:underline font-medium">politique de confidentialité</a>.
-                </p>
-              </div>
-              <div className="flex gap-2 flex-shrink-0 w-full sm:w-auto">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setShowCookieConsent(false)}
-                  className="text-xs flex-1 sm:flex-none"
-                >
-                  Refuser
-                </Button>
-                <Button
-                  size="sm"
-                  onClick={() => setShowCookieConsent(false)}
-                  className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold text-xs flex-1 sm:flex-none"
-                >
-                  Accepter
-                </Button>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {/* ═══ CONFETTI EFFECT ═══ */}
       {confettiActive && (
