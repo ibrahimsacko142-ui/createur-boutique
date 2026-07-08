@@ -1,0 +1,602 @@
+  3200→                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>WordPress & Solutions e-commerce</span></div>
+  3201→                      </>
+  3202→                    )}
+  3203→                    {selectedCoach.name === 'Kante' && (
+  3204→                      <>
+  3205→                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>Marketing Digital & Stratégie</span></div>
+  3206→                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>Publicité Facebook & Instagram Ads</span></div>
+  3207→                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>TikTok & YouTube Growth</span></div>
+  3208→                      </>
+  3209→                    )}
+  3210→                  </div>
+  3211→                </div>
+  3212→                <a
+  3213→                  href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je souhaite être encadré(e) par ${selectedCoach.name} pour une formation. Pouvez-vous me donner plus de détails ?`)}`}
+  3214→                  target="_blank" rel="noopener noreferrer"
+  3215→                  onClick={() => setSelectedCoach(null)}
+  3216→                >
+  3217→                  <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold shadow-lg shadow-emerald-500/20 mt-2">
+  3218→                    <MessageCircle className="h-4 w-4 mr-2" /> Contacter {selectedCoach.name} via WhatsApp
+  3219→                  </Button>
+  3220→                </a>
+  3221→              </div>
+  3222→            </motion.div>
+  3223→          </motion.div>
+  3224→        )}
+  3225→      </AnimatePresence>
+  3226→
+  3227→      {/* ═══ COOKIE CONSENT BANNER ═══ */}
+  3228→      <AnimatePresence>
+  3229→        {showCookieConsent && (
+  3230→          <motion.div
+  3231→            initial={{ y: 100, opacity: 0 }}
+  3232→            animate={{ y: 0, opacity: 1 }}
+  3233→            exit={{ y: 100, opacity: 0 }}
+  3234→            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+  3235→            className="fixed bottom-16 lg:bottom-6 left-4 right-4 lg:left-auto lg:right-6 lg:w-96 z-[80] bg-background/95 backdrop-blur-xl rounded-2xl border shadow-2xl p-5"
+  3236→          >
+  3237→            <div className="flex items-start gap-3">
+  3238→              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30 flex-shrink-0">
+  3239→                <Cookie className="h-5 w-5 text-amber-600" />
+  3240→              </div>
+  3241→              <div className="flex-1">
+  3242→                <h3 className="text-sm font-bold mb-1">Nous respectons votre vie privée</h3>
+  3243→                <p className="text-xs text-muted-foreground leading-relaxed mb-3">
+  3244→                  Nous utilisons des cookies pour améliorer votre expérience, analyser le trafic et afficher des contenus personnalisés. En continuant, vous acceptez nos cookies.
+  3245→                </p>
+  3246→                <div className="flex gap-2">
+  3247→                  <Button
+  3248→                    onClick={() => setShowCookieConsent(false)}
+  3249→                    size="sm"
+  3250→                    className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold text-xs h-9"
+  3251→                  >
+  3252→                    Accepter
+  3253→                  </Button>
+  3254→                  <Button
+  3255→                    onClick={() => setShowCookieConsent(false)}
+  3256→                    variant="outline"
+  3257→                    size="sm"
+  3258→                    className="text-xs h-9"
+  3259→                  >
+  3260→                    Refuser
+  3261→                  </Button>
+  3262→                </div>
+  3263→              </div>
+  3264→            </div>
+  3265→          </motion.div>
+  3266→        )}
+  3267→      </AnimatePresence>
+  3268→
+  3269→      {/* ═══ WELCOME POPUP ═══ */}
+  3270→      <AnimatePresence>
+  3271→        {welcomeVisible && (
+  3272→          <motion.div
+  3273→            initial={{ opacity: 0 }}
+  3274→            animate={{ opacity: 1 }}
+  3275→            exit={{ opacity: 0 }}
+  3276→            className="fixed inset-0 z-[90] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+  3277→            onClick={() => { setWelcomeVisible(false); setShowWelcome(false) }}
+  3278→          >
+  3279→            <motion.div
+  3280→              initial={{ scale: 0.8, opacity: 0, y: 30 }}
+  3281→              animate={{ scale: 1, opacity: 1, y: 0 }}
+  3282→              exit={{ scale: 0.8, opacity: 0, y: 30 }}
+  3283→              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+  3284→              className="relative bg-background rounded-2xl shadow-2xl max-w-sm w-full overflow-hidden"
+  3285→              onClick={(e) => e.stopPropagation()}
+  3286→            >
+  3287→              <button onClick={() => { setWelcomeVisible(false); setShowWelcome(false) }} className="absolute top-3 right-3 z-10 h-8 w-8 rounded-full bg-muted hover:bg-muted/80 flex items-center justify-center">
+  3288→                <X className="h-4 w-4" />
+  3289→              </button>
+  3290→              <div className="bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 p-6 text-center text-white">
+  3291→                <div className="text-4xl mb-2">👋</div>
+  3292→                <h3 className="text-xl font-extrabold">Bienvenue sur Studio Créatif !</h3>
+  3293→                <p className="text-white/80 text-sm mt-1">Offre exclusive pour les nouveaux visiteurs</p>
+  3294→              </div>
+  3295→              <div className="p-6 space-y-4">
+  3296→                <div className="space-y-2">
+  3297→                  <div className="flex items-center gap-3 p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800">
+  3298→                    <Gift className="h-5 w-5 text-emerald-500 flex-shrink-0" />
+  3299→                    <div>
+  3300→                      <p className="text-sm font-bold text-emerald-700 dark:text-emerald-400">Logo GRATUIT</p>
+  3301→                      <p className="text-[11px] text-muted-foreground">Votre premier logo offert, sans engagement</p>
+  3302→                    </div>
+  3303→                  </div>
+  3304→                  <div className="flex items-center gap-3 p-3 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800">
+  3305→                    <Zap className="h-5 w-5 text-amber-500 flex-shrink-0" />
+  3306→                    <div>
+  3307→                      <p className="text-sm font-bold text-amber-700 dark:text-amber-400">Livraison en 48h</p>
+  3308→                      <p className="text-[11px] text-muted-foreground">Résultat rapide et professionnel</p>
+  3309→                    </div>
+  3310→                  </div>
+  3311→                </div>
+  3312→                <a
+  3313→                  href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20suis%20nouveau%20sur%20votre%20site%20et%20je%20souhaite%20profiter%20de%20l'offre%20bienvenue%20(logo%20gratuit)."
+  3314→                  target="_blank" rel="noopener noreferrer"
+  3315→                  onClick={() => { setWelcomeVisible(false); setShowWelcome(false) }}
+  3316→                >
+  3317→                  <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold shadow-lg shadow-emerald-500/20">
+  3318→                    <MessageCircle className="h-4 w-4 mr-2" /> Profiter de l'offre
+  3319→                  </Button>
+  3320→                </a>
+  3321→                <button onClick={() => { setWelcomeVisible(false); setShowWelcome(false) }} className="block text-xs text-muted-foreground hover:text-foreground transition-colors mx-auto">
+  3322→                  Peut-être plus tard
+  3323→                </button>
+  3324→              </div>
+  3325→            </motion.div>
+  3326→          </motion.div>
+  3327→        )}
+  3328→      </AnimatePresence>
+  3329→
+  3330→      {/* ═══ PORTFOLIO LIGHTBOX ═══ */}
+  3331→      <AnimatePresence>
+  3332→        {lightboxImg && (
+  3333→          <motion.div
+  3334→            initial={{ opacity: 0 }}
+  3335→            animate={{ opacity: 1 }}
+  3336→            exit={{ opacity: 0 }}
+  3337→            className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-8 bg-black/90 backdrop-blur-sm"
+  3338→            onClick={() => setLightboxImg(null)}
+  3339→          >
+  3340→            <motion.div
+  3341→              initial={{ scale: 0.9, opacity: 0 }}
+  3342→              animate={{ scale: 1, opacity: 1 }}
+  3343→              exit={{ scale: 0.9, opacity: 0 }}
+  3344→              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+  3345→              className="relative max-w-5xl w-full max-h-[90vh] overflow-hidden rounded-2xl shadow-2xl"
+  3346→              onClick={(e) => e.stopPropagation()}
+  3347→            >
+  3348→              <img src={lightboxImg.src} alt={lightboxImg.title} className="w-full h-auto max-h-[75vh] object-contain bg-black" />
+  3349→              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-6">
+  3350→                <h3 className="text-white font-bold text-lg">{lightboxImg.title}</h3>
+  3351→                <p className="text-white/70 text-sm mt-1">{lightboxImg.desc}</p>
+  3352→              </div>
+  3353→              <button
+  3354→                onClick={() => setLightboxImg(null)}
+  3355→                className="absolute top-4 right-4 h-10 w-10 flex items-center justify-center rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors backdrop-blur-sm"
+  3356→              >
+  3357→                <X className="h-5 w-5" />
+  3358→              </button>
+  3359→            </motion.div>
+  3360→          </motion.div>
+  3361→        )}
+  3362→      </AnimatePresence>
+  3363→
+  3364→      {/* ═══ SERVICE QUIZ MODAL ═══ */}
+  3365→      <AnimatePresence>
+  3366→        {quizOpen && (
+  3367→          <motion.div
+  3368→            initial={{ opacity: 0 }}
+  3369→            animate={{ opacity: 1 }}
+  3370→            exit={{ opacity: 0 }}
+  3371→            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+  3372→            onClick={() => { setQuizOpen(false); setQuizStep(0); setQuizAnswers([]); setQuizResult(null) }}
+  3373→          >
+  3374→            <motion.div
+  3375→              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+  3376→              animate={{ scale: 1, opacity: 1, y: 0 }}
+  3377→              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+  3378→              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+  3379→              className="relative bg-background rounded-2xl shadow-2xl max-w-md w-full overflow-hidden"
+  3380→              onClick={(e) => e.stopPropagation()}
+  3381→            >
+  3382→              <button onClick={() => { setQuizOpen(false); setQuizStep(0); setQuizAnswers([]); setQuizResult(null) }} className="absolute top-3 right-3 z-10 h-8 w-8 rounded-full bg-muted hover:bg-muted/80 flex items-center justify-center">
+  3383→                <X className="h-4 w-4" />
+  3384→              </button>
+  3385→              <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-6 text-white text-center">
+  3386→                <Brain className="h-8 w-8 mx-auto mb-2" />
+  3387→                {!quizResult ? (
+  3388→                  <>
+  3389→                    <h3 className="text-lg font-extrabold">Quel service vous convient ?</h3>
+  3390→                    <p className="text-white/80 text-sm mt-1">Répondez à 3 questions rapides</p>
+  3391→                    {/* Progress bar */}
+  3392→                    <div className="mt-4 flex gap-1.5 justify-center">
+  3393→                      {[0, 1, 2].map((s) => (
+  3394→                        <div key={s} className={`h-1.5 rounded-full transition-all duration-300 ${s <= quizStep ? 'w-8 bg-white' : 'w-4 bg-white/40'}`} />
+  3395→                      ))}
+  3396→                    </div>
+  3397→                  </>
+  3398→                ) : (
+  3399→                  <h3 className="text-lg font-extrabold">Résultat</h3>
+  3400→                )}
+  3401→              </div>
+  3402→              <div className="p-6">
+  3403→                {!quizResult ? (
+  3404→                  <AnimatePresence mode="wait">
+  3405→                    <motion.div
+  3406→                      key={quizStep}
+  3407→                      initial={{ opacity: 0, x: 30 }}
+  3408→                      animate={{ opacity: 1, x: 0 }}
+  3409→                      exit={{ opacity: 0, x: -30 }}
+  3410→                      transition={{ duration: 0.3 }}
+  3411→                    >
+  3412→                      {quizStep === 0 && (
+  3413→                        <div className="space-y-3">
+  3414→                          <p className="text-sm font-semibold">Quel est votre objectif principal ?</p>
+  3415→                          {[
+  3416→                            { label: 'Créer une identité visuelle (logo, charte)', val: 'identite' },
+  3417→                            { label: 'Avoir un site internet professionnel', val: 'site' },
+  3418→                            { label: 'Produire du contenu vidéo', val: 'video' },
+  3419→                            { label: 'Attirer des clients sur les réseaux', val: 'reseaux' },
+  3420→                            { label: 'Apprendre le design digital', val: 'formation' },
+  3421→                          ].map((opt) => (
+  3422→                            <button key={opt.val} onClick={() => { setQuizAnswers([opt.val]); setQuizStep(1) }} className="w-full text-left p-3 rounded-xl border border-border hover:border-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/20 text-sm transition-all hover:translate-x-1">
+  3423→                              {opt.label}
+  3424→                            </button>
+  3425→                          ))}
+  3426→                        </div>
+  3427→                      )}
+  3428→                      {quizStep === 1 && (
+  3429→                        <div className="space-y-3">
+  3430→                          <p className="text-sm font-semibold">Quel est votre budget ?</p>
+  3431→                          {[
+  3432→                            { label: 'Budget limité — je veux tester gratuitement', val: 'gratuit' },
+  3433→                            { label: '5 000 – 20 000 FCFA', val: 'petit' },
+  3434→                            { label: '20 000 – 50 000 FCFA', val: 'moyen' },
+  3435→                            { label: 'Plus de 50 000 FCFA', val: 'grand' },
+  3436→                          ].map((opt) => (
+  3437→                            <button key={opt.val} onClick={() => { setQuizAnswers(prev => [...prev, opt.val]); setQuizStep(2) }} className="w-full text-left p-3 rounded-xl border border-border hover:border-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/20 text-sm transition-all hover:translate-x-1">
+  3438→                              {opt.label}
+  3439→                            </button>
+  3440→                          ))}
+  3441→                        </div>
+  3442→                      )}
+  3443→                      {quizStep === 2 && (
+  3444→                        <div className="space-y-3">
+  3445→                          <p className="text-sm font-semibold">Quand souhaitez-vous commencer ?</p>
+  3446→                          {[
+  3447→                            { label: 'Immédiatement — c\'est urgent', val: 'urgent' },
+  3448→                            { label: 'Cette semaine', val: 'semaine' },
+  3449→                            { label: 'Dans les 2 prochaines semaines', val: '2semaines' },
+  3450→                            { label: 'Je me renseigne pour l\'instant', val: 'renseigne' },
+  3451→                          ].map((opt) => (
+  3452→                            <button key={opt.val} onClick={() => {
+  3453→                              const answers = [...quizAnswers, opt.val]
+  3454→                              setQuizAnswers(answers)
+  3455→                              // Determine result
+  3456→                              const goal = answers[0]
+  3457→                              const budget = answers[1]
+  3458→                              if (goal === 'identite') setQuizResult({ service: 'Design Graphique', icon: Palette, reason: budget === 'gratuit' ? 'Testez l\'Offre Découverte gratuite pour un logo simple, puis passez au Premium pour une identité complète.' : 'L\'Offre Premium Design vous donne un logo vectorisé, une charte graphique complète et tous les fichiers sources.' })
+  3459→                              else if (goal === 'site') setQuizResult({ service: 'Création Web', icon: Globe, reason: budget === 'gratuit' ? 'Commencez avec une landing page gratuite, puis évoluez vers un site multi-pages complet.' : 'Un site professionnel multi-pages avec formulaire, SEO, et hébergement inclus est l\'idéal pour vous.' })
+  3460→                              else if (goal === 'video') setQuizResult({ service: 'Montage Vidéo', icon: MonitorPlay, reason: budget === 'gratuit' ? 'Essayez le montage découverte gratuit pour un aperçu rapide.' : 'Le montage Premium inclut effets, sous-titres, musique et export optimisé pour tous les réseaux.' })
+  3461→                              else if (goal === 'reseaux') setQuizResult({ service: 'Marketing Digital', icon: Megaphone, reason: budget === 'gratuit' ? 'Un post ou affiche gratuit pour tester mon style.' : 'Stratégie complète avec calendrier éditorial, posts, stories et bannières publicitaires.' })
+  3462→                              else setQuizResult({ service: 'Formation Design', icon: GraduationCap, reason: 'La formation Design Graphique (Découverte gratuite puis Premium) est parfaite pour apprendre à créer vos propres visuels.' })
+  3463→                              setQuizStep(3)
+  3464→                            }} className="w-full text-left p-3 rounded-xl border border-border hover:border-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/20 text-sm transition-all hover:translate-x-1">
+  3465→                              {opt.label}
+  3466→                            </button>
+  3467→                          ))}
+  3468→                        </div>
+  3469→                      )}
+  3470→                    </motion.div>
+  3471→                  </AnimatePresence>
+  3472→                ) : quizResult && (
+  3473→                  <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center space-y-4">
+  3474→                    <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-white mx-auto shadow-lg">
+  3475→                      <quizResult.icon className="h-8 w-8" />
+  3476→                    </div>
+  3477→                    <h4 className="text-xl font-extrabold">{quizResult.service}</h4>
+  3478→                    <p className="text-sm text-muted-foreground leading-relaxed">{quizResult.reason}</p>
+  3479→                    <div className="flex flex-col gap-2 pt-2">
+  3480→                      <a
+  3481→                        href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! J'ai fait le quiz sur votre site et le résultat m'a recommandé : ${quizResult.service}. Je souhaite en savoir plus !`)}`}
+  3482→                        target="_blank" rel="noopener noreferrer"
+  3483→                        onClick={() => { setQuizOpen(false); setQuizStep(0); setQuizAnswers([]); setQuizResult(null) }}
+  3484→                      >
+  3485→                        <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold shadow-lg shadow-emerald-500/20">
+  3486→                          <MessageCircle className="h-4 w-4 mr-2" /> En discuter sur WhatsApp
+  3487→                        </Button>
+  3488→                      </a>
+  3489→                      <button onClick={() => { setQuizStep(0); setQuizAnswers([]); setQuizResult(null) }} className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+  3490→                        Refaire le quiz
+  3491→                      </button>
+  3492→                    </div>
+  3493→                  </motion.div>
+  3494→                )}
+  3495→              </div>
+  3496→            </motion.div>
+  3497→          </motion.div>
+  3498→        )}
+  3499→      </AnimatePresence>
+  3500→
+  3501→      {/* ═══ QUIZ TRIGGER FLOATING BUTTON ═══ */}
+  3502→      <motion.button
+  3503→        initial={{ opacity: 0, scale: 0 }}
+  3504→        animate={{ opacity: 1, scale: 1 }}
+  3505→        transition={{ delay: 3, type: 'spring' }}
+  3506→        onClick={() => setQuizOpen(true)}
+  3507→        className="fixed bottom-[68px] lg:bottom-6 left-1/2 -translate-x-1/2 z-[55] flex items-center gap-2 bg-gradient-to-r from-violet-600 to-purple-600 text-white pl-4 pr-5 py-3 rounded-full shadow-lg shadow-violet-500/30 hover:shadow-xl hover:shadow-violet-500/40 transition-all duration-300 hover:scale-105 group"
+  3508→      >
+  3509→        <Brain className="h-5 w-5" />
+  3510→        <span className="text-sm font-semibold whitespace-nowrap">Quel service vous convient ?</span>
+  3511→        <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-medium bg-white/20 px-2 py-0.5 rounded-full">Quiz gratuit</span>
+  3512→      </motion.button>
+  3513→
+  3514→      {/* ═══ SIDE NAVIGATION DOTS (desktop) ═══ */}
+  3515→      <div className="fixed right-4 top-1/2 -translate-y-1/2 z-30 hidden xl:flex flex-col gap-2.5">
+  3516→        {[
+  3517→          { id: 'accueil', label: 'Accueil' },
+  3518→          { id: 'services', label: 'Services' },
+  3519→          { id: 'formations', label: 'Formations' },
+  3520→          { id: 'coachs', label: 'Coachs' },
+  3521→          { id: 'boutique', label: 'Boutique' },
+  3522→          { id: 'portfolio', label: 'Portfolio' },
+  3523→          { id: 'contact', label: 'Contact' },
+  3524→        ].map((item) => (
+  3525→          <a
+  3526→            key={item.id}
+  3527→            href={`#${item.id}`}
+  3528→            className="group flex items-center gap-2.5 justify-end"
+  3529→          >
+  3530→            <span className="text-[10px] font-medium text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+  3531→              {item.label}
+  3532→            </span>
+  3533→            <span className={`h-2.5 rounded-full transition-all duration-300 ${
+  3534→              activeDotSection === item.id
+  3535→                ? 'w-2.5 bg-amber-500 shadow-md shadow-amber-500/30'
+  3536→                : 'w-2 bg-muted-foreground/30 group-hover:bg-amber-500/50'
+  3537→            }`} />
+  3538→          </a>
+  3539→        ))}
+  3540→      </div>
+  3541→
+  3542→      </main>
+  3543→
+  3544→      {/* ═══ MOYENS DE PAIEMENT ═══ */}
+  3545→      <section className="py-8 border-t bg-muted/20">
+  3546→        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+  3547→          <div className="flex flex-col items-center justify-center gap-3">
+  3548→            <p className="text-sm font-semibold text-muted-foreground">Commande & Paiement via</p>
+  3549→            <div className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20 border border-emerald-200 dark:border-emerald-800 shadow-sm">
+  3550→              <div className="h-3 w-3 rounded-full bg-emerald-500" />
+  3551→              <span className="text-sm font-bold text-emerald-700 dark:text-emerald-400">WhatsApp</span>
+  3552→              <span className="text-[10px] text-muted-foreground">— Orange Money, MTN MoMo</span>
+  3553→            </div>
+  3554→          </div>
+  3555→          <p className="text-center text-[11px] text-muted-foreground mt-3">Commande simple — Confirmation via WhatsApp — Paiement par Orange Money ou MTN MoMo</p>
+  3556→        </div>
+  3557→      </section>
+  3558→
+  3559→      {/* ═══ 20. FOOTER ═══ */}
+  3560→      <Footer />
+  3561→
+  3562→      {/* ═══ STICKY MOBILE CTA ═══ */}
+  3563→      <AnimatePresence>
+  3564→        {showStickyCta && (
+  3565→          <motion.div
+  3566→            initial={{ y: 100 }}
+  3567→            animate={{ y: 0 }}
+  3568→            exit={{ y: 100 }}
+  3569→            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+  3570→            className="fixed bottom-14 left-0 right-0 z-[49] lg:hidden p-3 bg-gradient-to-t from-background via-background/95 to-transparent"
+  3571→          >
+  3572→            <a href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20souhaite%20discuter%20d%27un%20projet." target="_blank" rel="noopener noreferrer">
+  3573→              <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold h-11 text-sm shadow-lg shadow-emerald-500/30">
+  3574→                <MessageCircle className="h-4 w-4 mr-2" /> Discuter de mon projet — Gratuit
+  3575→              </Button>
+  3576→            </a>
+  3577→          </motion.div>
+  3578→        )}
+  3579→      </AnimatePresence>
+  3580→
+  3581→      {/* ═══ 21. BOTTOM MOBILE NAV ═══ */}
+  3582→      <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-background/95 backdrop-blur-xl border-t border-border shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+  3583→        <div className="flex items-center justify-around h-14 px-2">
+  3584→          <a href="#accueil" className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-amber-500 transition-colors py-1 px-2">
+  3585→            <Sparkles className="h-[18px] w-[18px]" />
+  3586→            <span className="text-[9px] font-medium">Accueil</span>
+  3587→          </a>
+  3588→          <a href="#services" className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-amber-500 transition-colors py-1 px-2">
+  3589→            <Layers className="h-[18px] w-[18px]" />
+  3590→            <span className="text-[9px] font-medium">Services</span>
+  3591→          </a>
+  3592→          <a href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20souhaite%20discuter%20d%27un%20projet." target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-0.5 -mt-6">
+  3593→            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 text-white shadow-lg shadow-emerald-500/30">
+  3594→              <MessageCircle className="h-6 w-6" />
+  3595→            </div>
+  3596→            <span className="text-[9px] font-semibold text-emerald-600">WhatsApp</span>
+  3597→          </a>
+  3598→          <a href="#boutique" className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-amber-500 transition-colors py-1 px-2">
+  3599→            <BookOpen className="h-[18px] w-[18px]" />
+  3600→            <span className="text-[9px] font-medium">Boutique</span>
+  3601→          </a>
+  3602→          <a href="#contact" className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-amber-500 transition-colors py-1 px-2">
+  3603→            <Send className="h-[18px] w-[18px]" />
+  3604→            <span className="text-[9px] font-medium">Contact</span>
+  3605→          </a>
+  3606→        </div>
+  3607→      </div>
+  3608→
+  3609→      {/* ═══ BACK TO TOP DESKTOP ═══ */}
+  3610→      <AnimatePresence>
+  3611→        {showBackToTop && (
+  3612→          <motion.button
+  3613→            initial={{ opacity: 0, scale: 0.5, y: 20 }}
+  3614→            animate={{ opacity: 1, scale: 1, y: 0 }}
+  3615→            exit={{ opacity: 0, scale: 0.5, y: 20 }}
+  3616→            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+  3617→            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+  3618→            className="fixed bottom-6 right-20 z-40 hidden lg:flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 text-white shadow-lg shadow-amber-500/30 hover:shadow-xl hover:shadow-amber-500/40 transition-all duration-300 hover:scale-110"
+  3619→            aria-label="Retour en haut"
+  3620→          >
+  3621→            <ChevronUp className="h-5 w-5" />
+  3622→          </motion.button>
+  3623→        )}
+  3624→      </AnimatePresence>
+  3625→
+  3626→      {/* ═══ SHARE BUTTON ═══ */}
+  3627→      <motion.button
+  3628→        initial={{ opacity: 0, scale: 0 }}
+  3629→        animate={{ opacity: 1, scale: 1 }}
+  3630→        exit={{ opacity: 0, scale: 0 }}
+  3631→        transition={{ type: 'spring', stiffness: 300, damping: 25, delay: 0.1 }}
+  3632→        onClick={async () => {
+  3633→          if (navigator.share) {
+  3634→            try {
+  3635→              await navigator.share({ title: 'Studio Créatif — Sacko', text: 'Découvre Studio Créatif ! Design, sites web, formations à Bamako.', url: window.location.href })
+  3636→            } catch {}
+  3637→          } else {
+  3638→            await navigator.clipboard.writeText(window.location.href)
+  3639→            setShareToast(true)
+  3640→            setTimeout(() => setShareToast(false), 2000)
+  3641→          }
+  3642→        }}
+  3643→        className="fixed bottom-6 right-6 z-40 hidden lg:flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/30 hover:shadow-xl hover:scale-110 transition-all"
+  3644→        aria-label="Partager le site"
+  3645→      >
+  3646→        <Share2 className="h-5 w-5" />
+  3647→      </motion.button>
+  3648→
+  3649→      {/* Share toast */}
+  3650→      <AnimatePresence>
+  3651→        {shareToast && (
+  3652→          <motion.div
+  3653→            initial={{ opacity: 0, y: 10 }}
+  3654→            animate={{ opacity: 1, y: 0 }}
+  3655→            exit={{ opacity: 0, y: 10 }}
+  3656→            className="fixed bottom-20 right-6 z-40 hidden lg:block bg-foreground text-background text-xs font-medium px-3 py-2 rounded-lg shadow-lg"
+  3657→          >
+  3658→            Lien copié !
+  3659→          </motion.div>
+  3660→        )}
+  3661→      </AnimatePresence>
+  3662→
+  3663→      {/* Back to top button - mobile only (above bottom nav) */}
+  3664→      <AnimatePresence>
+  3665→        {showBackToTop && (
+  3666→          <motion.button
+  3667→            initial={{ opacity: 0, scale: 0.5 }}
+  3668→            animate={{ opacity: 1, scale: 1 }}
+  3669→            exit={{ opacity: 0, scale: 0.5 }}
+  3670→            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+  3671→            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+  3672→            className="fixed bottom-[68px] left-4 z-[60] flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 text-white shadow-lg shadow-amber-500/30 lg:hidden"
+  3673→            aria-label="Retour en haut"
+  3674→          >
+  3675→            <ChevronUp className="h-4 w-4" />
+  3676→          </motion.button>
+  3677→        )}
+  3678→      </AnimatePresence>
+  3679→
+  3680→      {/* ═══ FLOATING CART BUTTON ═══ */}
+  3681→      <AnimatePresence>
+  3682→        {cart.length > 0 && (
+  3683→          <motion.button
+  3684→            initial={{ opacity: 0, scale: 0 }}
+  3685→            animate={{ opacity: 1, scale: 1 }}
+  3686→            exit={{ opacity: 0, scale: 0 }}
+  3687→            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+  3688→            onClick={() => setShowCart(!showCart)}
+  3689→            className="fixed bottom-[68px] right-4 z-[60] lg:bottom-6 lg:right-24 lg:z-[41] flex h-12 w-12 items-center justify-center rounded-full bg-amber-500 text-white shadow-lg shadow-amber-500/30 hover:bg-amber-600 hover:shadow-xl transition-all"
+  3690→            aria-label="Voir le panier"
+  3691→          >
+  3692→            <ShoppingCart className="h-5 w-5" />
+  3693→            <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white border-2 border-background">{cart.length}</span>
+  3694→          </motion.button>
+  3695→        )}
+  3696→      </AnimatePresence>
+  3697→
+  3698→      {/* ═══ CART PANEL ═══ */}
+  3699→      <AnimatePresence>
+  3700→        {showCart && cart.length > 0 && (
+  3701→          <motion.div
+  3702→            initial={{ opacity: 0, x: 300 }}
+  3703→            animate={{ opacity: 1, x: 0 }}
+  3704→            exit={{ opacity: 0, x: 300 }}
+  3705→            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+  3706→            className="fixed top-0 right-0 bottom-0 z-[110] w-80 max-w-[85vw] bg-background border-l shadow-2xl flex flex-col"
+  3707→          >
+  3708→            <div className="flex items-center justify-between p-4 border-b">
+  3709→              <h3 className="font-bold text-base flex items-center gap-2">
+  3710→                <ShoppingCart className="h-5 w-5 text-amber-500" />
+  3711→                Mon Panier
+  3712→                <span className="text-sm font-normal text-muted-foreground">({cart.length})</span>
+  3713→              </h3>
+  3714→              <button onClick={() => setShowCart(false)} className="h-8 w-8 rounded-full hover:bg-muted flex items-center justify-center"><X className="h-4 w-4" /></button>
+  3715→            </div>
+  3716→            <div className="flex-1 overflow-y-auto p-4 space-y-2">
+  3717→              {cart.map((title) => {
+  3718→                const book = books.find(b => b.title === title)
+  3719→                return (
+  3720→                  <div key={title} className="flex items-center gap-3 p-2.5 rounded-xl bg-muted/50 border border-border">
+  3721→                    {book && <img src={book.cover} alt="" className="h-12 w-9 object-cover rounded-md shadow-sm" />}
+  3722→                    <div className="flex-1 min-w-0">
+  3723→                      <p className="text-xs font-semibold leading-tight line-clamp-2">{title}</p>
+  3724→                      <p className="text-[10px] text-amber-600 font-bold mt-0.5">1 000 FCFA</p>
+  3725→                    </div>
+  3726→                    <button onClick={() => toggleCart(title)} className="h-7 w-7 rounded-full hover:bg-red-100 dark:hover:bg-red-900/30 flex items-center justify-center text-muted-foreground hover:text-red-500 transition-colors flex-shrink-0">
+  3727→                      <X className="h-3.5 w-3.5" />
+  3728→                    </button>
+  3729→                  </div>
+  3730→                )
+  3731→              })}
+  3732→            </div>
+  3733→            <div className="p-4 border-t space-y-3">
+  3734→              <div className="flex items-center justify-between">
+  3735→                <span className="text-sm font-semibold">Total</span>
+  3736→                <span className="text-xl font-extrabold text-amber-600">{cart.length * 1000} FCFA</span>
+  3737→              </div>
+  3738→              {cart.length >= 3 && (
+  3739→                <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg p-2.5 text-center">
+  3740→                  <p className="text-[11px] text-amber-700 dark:text-amber-400 font-semibold">Pack {cart.length} livres — {Math.min(cart.length * 1000, 7000)} FCFA</p>
+  3741→                  <p className="text-[10px] text-amber-600/70 mt-0.5">Le pack complet 12 livres = 7 000 FCFA</p>
+  3742→                </div>
+  3743→              )}
+  3744→              <div className="flex gap-2">
+  3745→                <a
+  3746→                  href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je veux commander ${cart.length} livre(s) :\n\n${cart.map(t => `- ${t} (1 000 FCFA)`).join('\n')}\n\nTotal : ${cart.length * 1000} FCFA. Comment procéder pour le paiement ?`)}`}
+  3747→                  target="_blank"
+  3748→                  rel="noopener noreferrer"
+  3749→                  onClick={() => setShowCart(false)}
+  3750→                  className="flex-1"
+  3751→                >
+  3752→                  <Button className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-bold shadow-lg shadow-emerald-500/20 h-11 text-sm">
+  3753→                    <MessageCircle className="h-4 w-4 mr-2" /> Commander via WhatsApp
+  3754→                  </Button>
+  3755→                </a>
+  3756→              </div>
+  3757→            </div>
+  3758→          </motion.div>
+  3759→        )}
+  3760→      </AnimatePresence>
+  3761→
+  3762→      {/* ═══ WHATSAPP EXPANDABLE WIDGET ═══ */}
+  3763→      <div className="fixed bottom-6 right-6 z-40 hidden lg:block">
+  3764→        <AnimatePresence>
+  3765→          {showWaWidget && (
+  3766→            <motion.div
+  3767→              initial={{ opacity: 0, y: 10, scale: 0.9 }}
+  3768→              animate={{ opacity: 1, y: 0, scale: 1 }}
+  3769→              exit={{ opacity: 0, y: 10, scale: 0.9 }}
+  3770→              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+  3771→              className="absolute bottom-16 right-0 w-72 bg-background rounded-2xl shadow-2xl border overflow-hidden"
+  3772→            >
+  3773→              {/* Widget header */}
+  3774→              <div className="bg-[#075e54] p-4 flex items-center gap-3">
+  3775→                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white font-bold text-sm shadow-md">S</div>
+  3776→                <div className="flex-1">
+  3777→                  <p className="text-white font-bold text-sm">Sacko — Studio Créatif</p>
+  3778→                  <div className="flex items-center gap-1.5">
+  3779→                    <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" /><span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" /></span>
+  3780→                    <p className="text-white/70 text-[11px]">En ligne — répond en ~5 min</p>
+  3781→                  </div>
+  3782→                </div>
+  3783→                <button onClick={() => setShowWaWidget(false)} className="text-white/70 hover:text-white"><X className="h-4 w-4" /></button>
+  3784→              </div>
+  3785→              {/* Chat preview */}
+  3786→              <div className="p-4 bg-[#ece5dd] dark:bg-[#1a2730]">
+  3787→                <div className="bg-white dark:bg-[#233039] rounded-xl rounded-tl-sm p-3 shadow-sm max-w-[85%]">
+  3788→                  <p className="text-sm text-gray-800 dark:text-gray-200 leading-relaxed">Bonjour ! 👋 Comment puis-je vous aider aujourd'hui ?</p>
+  3789→                  <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-1 text-right">Maintenant</p>
+  3790→                </div>
+  3791→              </div>
+  3792→              {/* CTA */}
+  3793→              <div className="p-3 bg-background">
+  3794→                <a
+  3795→                  href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20souhaite%20discuter%20d%27un%20projet."
+  3796→                  target="_blank"
+  3797→                  rel="noopener noreferrer"
+  3798→                  onClick={() => setShowWaWidget(false)}
+  3799→                >
+
+[showing lines 3200-3799 of 3849; use offset=3800 with limit to continue reading]

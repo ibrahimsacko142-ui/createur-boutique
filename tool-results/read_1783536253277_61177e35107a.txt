@@ -1,0 +1,602 @@
+  2600→                        const data = await res.json()
+  2601→                        if (data.success) {
+  2602→                          setTrackResult(data.order)
+  2603→                        } else {
+  2604→                          toast({ title: 'Non trouvé', description: 'Aucune commande avec ce numéro.', variant: 'destructive' })
+  2605→                        }
+  2606→                      } catch {
+  2607→                        toast({ title: 'Erreur', description: 'Impossible de vérifier. Réessayez.', variant: 'destructive' })
+  2608→                      }
+  2609→                      setTrackLoading(false)
+  2610→                    }}
+  2611→                    disabled={trackLoading}
+  2612→                    variant="outline"
+  2613→                    className="h-11 px-6 font-semibold flex-shrink-0"
+  2614→                  >
+  2615→                    {trackLoading ? '...' : 'Vérifier'}
+  2616→                  </Button>
+  2617→                </div>
+  2618→                {lastOrderId && (
+  2619→                  <p className="text-xs text-emerald-600 font-medium mt-3">
+  2620→                    Votre dernière commande : <span className="font-mono font-bold">{lastOrderId}</span>
+  2621→                    <button onClick={() => { setTrackId(lastOrderId) }} className="ml-1 underline hover:no-underline">vérifier</button>
+  2622→                  </p>
+  2623→                )}
+  2624→                {trackResult && (
+  2625→                  <motion.div
+  2626→                    initial={{ opacity: 0, y: 10 }}
+  2627→                    animate={{ opacity: 1, y: 0 }}
+  2628→                    className="mt-5 p-4 rounded-xl border bg-muted/30"
+  2629→                  >
+  2630→                    <div className="flex items-center justify-between mb-3">
+  2631→                      <span className="font-mono text-sm font-bold">{trackResult.id}</span>
+  2632→                      <span className={`text-xs font-bold px-3 py-1 rounded-full ${
+  2633→                        trackResult.status === 'livree' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' :
+  2634→                        trackResult.status === 'en_cours' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' :
+  2635→                        trackResult.status === 'annulee' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' :
+  2636→                        'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+  2637→                      }`}>{trackResult.statusLabel}</span>
+  2638→                    </div>
+  2639→                    <p className="text-sm font-medium">{trackResult.service}</p>
+  2640→                    <div className="flex items-center justify-between mt-3 text-[11px] text-muted-foreground">
+  2641→                      <span>Créée : {new Date(trackResult.createdAt).toLocaleDateString('fr-FR')}</span>
+  2642→                      <span>Mise à jour : {new Date(trackResult.updatedAt).toLocaleDateString('fr-FR')}</span>
+  2643→                    </div>
+  2644→                  </motion.div>
+  2645→                )}
+  2646→              </div>
+  2647→            </Card>
+  2648→          </div>
+  2649→        </section>
+  2650→
+  2651→        {/* ═══ 16. À PROPOS ═══ */}
+  2652→        <section id="apropos" className="py-16 sm:py-20 bg-gradient-to-b from-muted/30 to-background relative overflow-hidden">
+  2653→          <div className="absolute top-10 left-10 h-64 w-64 bg-amber-200/20 dark:bg-amber-900/10 rounded-full blur-3xl" />
+  2654→          <div className="absolute bottom-10 right-10 h-64 w-64 bg-orange-200/15 dark:bg-orange-900/10 rounded-full blur-3xl" />
+  2655→          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  2656→            <motion.div
+  2657→              initial={{ opacity: 0, y: 30 }}
+  2658→              whileInView={{ opacity: 1, y: 0 }}
+  2659→              viewport={{ once: true, margin: '-50px' }}
+  2660→              transition={{ duration: 0.6 }}
+  2661→            >
+  2662→            <div className="max-w-3xl mx-auto space-y-6">
+  2663→                <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+  2664→                  <Heart className="h-3 w-3 mr-1" /> Qui suis-je
+  2665→                </Badge>
+  2666→                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-center">À Propos de Sacko</h2>
+  2667→                <div className="space-y-4 text-muted-foreground leading-relaxed text-center">
+  2668→                  <p>
+  2669→                    Salut ! Je suis <strong className="text-foreground">Sacko</strong>, un jeune créateur digital de Bamako. J&apos;ai commencé le design tout seul, en autodidacte, parce que je voyais des entrepreneurs autour de moi qui avaient besoin de visuels pro mais qui n&apos;avaient pas les moyens de payer des agences chères.
+  2670→                  </p>
+  2671→                  <p>
+  2672→                    Au début, c&apos;était juste un passe-temps. Je créais des logos pour mes amis, des affiches pour les boutiques du quartier. Puis les gens ont commencé à me recommander, et petit à petit, Studio Créatif est né. Aujourd&apos;hui, j&apos;accompagne des entreprises et des porteurs de projets à Bamako et partout au Mali avec des services de <strong className="text-foreground">design graphique, création de sites web, montage vidéo et formations digitales</strong>.
+  2673→                  </p>
+  2674→                  <p>
+  2675→                    Ce qui me motive, c&apos;est de voir un client recevoir son logo ou son site pour la première fois et dire &quot;C&apos;est exactement ce que je voulais !&quot;. Chaque projet est différent, chaque client a une histoire, et mon but c&apos;est de transformer cette histoire en une identité visuelle qui marque les esprits.
+  2676→                  </p>
+  2677→                </div>
+  2678→
+  2679→                {/* Skills cards */}
+  2680→                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-8">
+  2681→                  {[
+  2682→                    { emoji: '🎨', name: 'Design', tools: 'Canva, Photoshop, Illustrator' },
+  2683→                    { emoji: '💻', name: 'Sites Web', tools: 'HTML, CSS, Next.js' },
+  2684→                    { emoji: '🎬', name: 'Vidéo', tools: 'CapCut, Premiere Pro, DaVinci' },
+  2685→                    { emoji: '📱', name: 'Réseaux', tools: 'Instagram, TikTok, Facebook' },
+  2686→                  ].map((skill) => (
+  2687→                    <div key={skill.name} className="text-center p-4 rounded-xl bg-muted/50 border hover:border-amber-200 dark:hover:border-amber-800 transition-colors">
+  2688→                      <div className="text-2xl mb-2">{skill.emoji}</div>
+  2689→                      <p className="text-sm font-bold">{skill.name}</p>
+  2690→                      <p className="text-[10px] text-muted-foreground mt-1">{skill.tools}</p>
+  2691→                    </div>
+  2692→                  ))}
+  2693→                </div>
+  2694→
+  2695→                {/* Personal touch */}
+  2696→                <div className="mt-6 p-5 rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/10 border border-amber-200/50 dark:border-amber-800/30">
+  2697→                  <div className="flex items-start gap-3">
+  2698→                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-orange-500 text-white font-bold text-sm flex-shrink-0 mt-0.5">S</div>
+  2699→                    <div>
+  2700→                      <p className="text-sm leading-relaxed">
+  2701→                        <strong className="text-foreground">Ma promesse :</strong> pas de blabla, pas de faux résultats. Je montre ce que je sais faire, je livre dans les délais, et si le résultat ne vous plaît pas, je recommence. C&apos;est aussi simple que ça.
+  2702→                      </p>
+  2703→                      <p className="text-xs text-muted-foreground mt-2">— Sacko, Bamako 🇲🇱</p>
+  2704→                    </div>
+  2705→                  </div>
+  2706→                </div>
+  2707→
+  2708→                <div className="mt-6 flex flex-wrap gap-3 justify-center">
+  2709→                  <a href="#services">
+  2710→                    <Button className="bg-amber-500 hover:bg-amber-600 text-white font-semibold">
+  2711→                      Découvrir mes services <ArrowRight className="ml-2 h-4 w-4" />
+  2712→                    </Button>
+  2713→                  </a>
+  2714→                  <a href="https://chat.whatsapp.com/Khpz5MVeokK9X9X5i3INX2" target="_blank" rel="noopener noreferrer">
+  2715→                    <Button variant="outline" className="font-semibold">
+  2716→                      <MessageCircle className="mr-2 h-4 w-4 text-emerald-500" /> Rejoindre le groupe formation
+  2717→                    </Button>
+  2718→                  </a>
+  2719→                </div>
+  2720→              </div>
+  2721→            </motion.div>
+  2722→          </div>
+  2723→        </section>
+  2724→
+  2725→        {/* ═══ 17. FAQ ═══ */}
+  2726→        <section id="faq" className="py-16 sm:py-20 bg-gradient-to-b from-emerald-50/40 to-background dark:from-emerald-950/10">
+  2727→          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+  2728→            <div className="text-center mb-12">
+  2729→              <Badge variant="secondary" className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200">
+  2730→                <MessageCircle className="h-3 w-3 mr-1" /> FAQ
+  2731→              </Badge>
+  2732→              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Questions Fréquentes</h2>
+  2733→              <p className="mt-3 text-muted-foreground max-w-xl mx-auto">
+  2734→                Les réponses aux questions les plus posées. Si vous ne trouvez pas votre réponse, contactez-moi directement sur WhatsApp.
+  2735→              </p>
+  2736→            </div>
+  2737→            {/* FAQ Search */}
+  2738→            <div className="relative max-w-md mx-auto mb-6">
+  2739→              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+  2740→              <Input
+  2741→                placeholder="Rechercher dans la FAQ..."
+  2742→                value={faqSearch}
+  2743→                onChange={(e) => setFaqSearch(e.target.value)}
+  2744→                className="pl-10 h-10 bg-background border-border rounded-xl text-sm"
+  2745→              />
+  2746→              {faqSearch && (
+  2747→                <button onClick={() => setFaqSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+  2748→                  <X className="h-4 w-4" />
+  2749→                </button>
+  2750→              )}
+  2751→            </div>
+  2752→            <div className="space-y-3">
+  2753→              {(() => {
+  2754→                const faqs = [
+  2755→                  { q: "L'Offre Découverte est-elle vraiment 100% gratuite ?", a: "Oui, totalement. C'est ma manière de vous prouver la qualité de mon travail avant que vous ne décidiez de passer à une offre Premium payante. Aucun engagement requis, aucun frais caché." },
+  2756→                  { q: "Quels sont les délais de livraison ?", a: "Les services \"Carrière Pro\" (CV, Lettres) sont livrés en moins de 24h. Pour les logos simples, comptez 48h, et pour un site web complet, entre 3 et 7 jours selon la complexité. Chaque projet a un suivi personnalisé." },
+  2757→                  { q: "Puis-je demander des modifications si le résultat ne me plaît pas ?", a: "Absolument. Votre satisfaction est ma priorité. Pour l'Offre Découverte, une révision est incluse. Pour les offres Premium, les révisions sont illimitées jusqu'à ce que le résultat vous corresponde parfaitement. Je ne livre que lorsque vous êtes 100% satisfait." },
+  2758→                  { q: "Pourquoi limitez-vous les commandes à 5 par jour ?", a: "Parce que je travaille seul et je veux que chaque client ait un vrai suivi. Mieux vaut faire 5 projets bien que 20 mal. Si je suis plein un jour, on planifie le lendemain, c'est tout." },
+  2759→                  { q: "Comment se passe le paiement ?", a: "On discute sur WhatsApp, je vous donne un prix clair, et vous payez directement via Orange Money ou Moov Money. Pas de processus compliqué, pas de frais cachés. Dès que c'est confirmé, je commence le travail." },
+  2760→                  { q: "Les formations sont-elles en ligne ou en présentiel ?", a: "Les formations sont 100% en ligne via WhatsApp et supports vidéo. Vous apprenez à votre rythme, avec un suivi personnalisé et un groupe WhatsApp pour poser vos questions." },
+  2761→                ]
+  2762→                const filtered = faqs.filter((f) => !faqSearch || f.q.toLowerCase().includes(faqSearch.toLowerCase()) || f.a.toLowerCase().includes(faqSearch.toLowerCase()))
+  2763→                return filtered.length === 0 ? (
+  2764→                  <div className="text-center py-8">
+  2765→                    <Search className="h-8 w-8 text-muted-foreground/30 mx-auto mb-2" />
+  2766→                    <p className="text-sm text-muted-foreground">Aucune question ne correspond à votre recherche.</p>
+  2767→                  </div>
+  2768→                ) : filtered.map((faq, i) => {
+  2769→                  const isOpen = faqOpen === `faq-${i}`
+  2770→                  return (
+  2771→                    <Card key={i} className="border-0 shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
+  2772→                      <button
+  2773→                        onClick={() => setFaqOpen(isOpen ? null : `faq-${i}`)}
+  2774→                        aria-expanded={isOpen}
+  2775→                        className="w-full flex items-center justify-between p-5 text-left"
+  2776→                      >
+  2777→                        <h3 className="font-semibold text-sm pr-4">{faq.q}</h3>
+  2778→                        <motion.div
+  2779→                          animate={{ rotate: isOpen ? 180 : 0 }}
+  2780→                          transition={{ duration: 0.2 }}
+  2781→                          className="flex-shrink-0"
+  2782→                        >
+  2783→                          <ChevronUp className="h-4 w-4 text-muted-foreground" />
+  2784→                        </motion.div>
+  2785→                      </button>
+  2786→                      <AnimatePresence initial={false}>
+  2787→                        {isOpen && (
+  2788→                          <motion.div
+  2789→                            initial={{ height: 0, opacity: 0 }}
+  2790→                            animate={{ height: 'auto', opacity: 1 }}
+  2791→                            exit={{ height: 0, opacity: 0 }}
+  2792→                            transition={{ duration: 0.25, ease: 'easeInOut' }}
+  2793→                            className="overflow-hidden"
+  2794→                          >
+  2795→                            <p className="text-sm text-muted-foreground leading-relaxed px-5 pb-5">{faq.a}</p>
+  2796→                          </motion.div>
+  2797→                        )}
+  2798→                      </AnimatePresence>
+  2799→                    </Card>
+  2800→                  )
+  2801→                })
+  2802→              })()}
+  2803→            </div>
+  2804→            <div className="mt-8 text-center">
+  2805→              <p className="text-sm text-muted-foreground">
+  2806→                Vous avez d&apos;autres questions ?{' '}
+  2807→                <a href="#contact" className="text-amber-600 font-medium hover:underline">Contactez-moi</a> ou écrivez-moi directement sur{' '}
+  2808→                <a href="https://wa.me/22397787244" target="_blank" rel="noopener noreferrer" className="text-emerald-600 font-medium hover:underline">WhatsApp</a>.
+  2809→              </p>
+  2810→            </div>
+  2811→          </div>
+  2812→        </section>
+  2813→
+  2814→        {/* ═══ LEAD MAGNET — Cadeau Exclusif ═══ */}
+  2815→        <section className="py-16 sm:py-20">
+  2816→          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+  2817→            <Card className="border-0 shadow-xl overflow-hidden">
+  2818→              <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white p-8 sm:p-10 relative overflow-hidden">
+  2819→                <div className="absolute top-0 right-0 w-40 h-40 bg-amber-500/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+  2820→                <div className="absolute bottom-0 left-0 w-32 h-32 bg-emerald-500/10 rounded-full translate-y-1/2 -translate-x-1/2" />
+  2821→                <div className="relative z-10 text-center mb-8">
+  2822→                  <div className="inline-flex items-center gap-2 bg-amber-500/20 rounded-full px-4 py-1.5 text-amber-300 text-xs font-semibold mb-4 border border-amber-500/20">
+  2823→                    <Gift className="h-3.5 w-3.5" /> Cadeau Exclusif pour les Entrepreneurs
+  2824→                  </div>
+  2825→                  <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-3">
+  2826→                    10 Templates Canva <span className="text-amber-400">Gratuits</span>
+  2827→                  </h2>
+  2828→                  <p className="text-slate-300 leading-relaxed max-w-md mx-auto text-sm">
+  2829→                    <strong className="text-white">Boostez la visibilité de votre business dès aujourd&apos;hui.</strong> Rejoignez ma liste de contacts et recevez instantanément un <strong className="text-white">pack de 10 templates Canva exclusifs</strong> conçus pour les boutiques et créateurs de Bamako.
+  2830→                  </p>
+  2831→                </div>
+  2832→                <div className="relative z-10 flex flex-col sm:flex-row gap-3">
+  2833→                  <Input
+  2834→                    placeholder="Votre prénom"
+  2835→                    value={leadMagnet.name}
+  2836→                    onChange={(e) => setLeadMagnet(prev => ({ ...prev, name: e.target.value }))}
+  2837→                    className="h-11 bg-white/10 border-white/20 text-white placeholder:text-slate-500 focus:border-amber-500/50"
+  2838→                  />
+  2839→                  <Input
+  2840→                    placeholder="Votre numéro WhatsApp ou email"
+  2841→                    value={leadMagnet.contact}
+  2842→                    onChange={(e) => setLeadMagnet(prev => ({ ...prev, contact: e.target.value }))}
+  2843→                    className="h-11 bg-white/10 border-white/20 text-white placeholder:text-slate-500 focus:border-amber-500/50"
+  2844→                  />
+  2845→                  <Button
+  2846→                    onClick={() => {
+  2847→                      if (!leadMagnet.name || !leadMagnet.contact) {
+  2848→                        toast({ title: 'Champs requis', description: 'Prénom et contact sont obligatoires.', variant: 'destructive' })
+  2849→                        return
+  2850→                      }
+  2851→                      triggerConfetti()
+  2852→                      const msg = encodeURIComponent(
+  2853→                        `Bonjour Sacko ! Je souhaite recevoir le pack de 10 templates Canva gratuit.\n\nPrénom : ${leadMagnet.name}\nContact : ${leadMagnet.contact}\n\nMerci !`
+  2854→                      )
+  2855→                      window.open(`https://wa.me/22397787244?text=${msg}`, '_blank')
+  2856→                      toast({ title: 'Demande envoyée !', description: 'Vous recevrez votre pack de templates très rapidement.' })
+  2857→                      setLeadMagnet({ name: '', contact: '' })
+  2858→                    }}
+  2859→                    className="h-11 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-sm shadow-lg shadow-amber-500/25 whitespace-nowrap px-6"
+  2860→                  >
+  2861→                    <Gift className="h-4 w-4 mr-1.5" /> Recevoir mon pack
+  2862→                  </Button>
+  2863→                </div>
+  2864→                <p className="relative z-10 text-center text-[11px] text-slate-500 mt-4">
+  2865→                  Aucun spam. Uniquement des ressources et opportunités pour votre business.
+  2866→                </p>
+  2867→              </div>
+  2868→            </Card>
+  2869→          </div>
+  2870→        </section>
+  2871→
+  2872→        {/* ═══ GARANTIES ═══ */}
+  2873→        <section className="py-16 sm:py-20 bg-gradient-to-b from-muted/20 to-background">
+  2874→          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+  2875→            <div className="text-center mb-12">
+  2876→              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+  2877→                <ShieldCheck className="h-3 w-3 mr-1" /> Garanties
+  2878→              </Badge>
+  2879→              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Mes 4 Garanties pour Vous</h2>
+  2880→              <p className="mt-3 text-muted-foreground max-w-xl mx-auto leading-relaxed">
+  2881→                Chaque projet est protégé. Voici les engagements que je prends avec chaque client, sans exception.
+  2882→              </p>
+  2883→            </div>
+  2884→
+  2885→            <motion.div
+  2886→              initial={{ opacity: 0, y: 30 }}
+  2887→              whileInView={{ opacity: 1, y: 0 }}
+  2888→              viewport={{ once: true, margin: '-50px' }}
+  2889→              transition={{ duration: 0.6 }}
+  2890→            >
+  2891→            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+  2892→              {[
+  2893→                {
+  2894→                  icon: ThumbsUp,
+  2895→                  title: 'Satisfaction ou Révision',
+  2896→                  desc: "Votre projet n'est pas terminé tant que vous n'êtes pas 100% satisfait. Révisions incluses.",
+  2897→                  color: 'from-emerald-400 to-teal-500',
+  2898→                  bg: 'bg-emerald-50 dark:bg-emerald-950/20',
+  2899→                },
+  2900→                {
+  2901→                  icon: Timer,
+  2902→                  title: 'Livraison dans les Délais',
+  2903→                  desc: "CV et lettres en 24h, logos en 48h, sites web en 3-7 jours. Promesse tenue.",
+  2904→                  color: 'from-amber-400 to-orange-500',
+  2905→                  bg: 'bg-amber-50 dark:bg-amber-950/20',
+  2906→                },
+  2907→                {
+  2908→                  icon: Lock,
+  2909→                  title: 'Confidentialité Totale',
+  2910→                  desc: 'Vos données, vos idées, vos fichiers restent strictement privés. Aucune partage tiers.',
+  2911→                  color: 'from-blue-400 to-indigo-500',
+  2912→                  bg: 'bg-blue-50 dark:bg-blue-950/20',
+  2913→                },
+  2914→                {
+  2915→                  icon: MessageCircle,
+  2916→                  title: 'Support WhatsApp 7j/7',
+  2917→                  desc: "Un message, une réponse. Je suis disponible pour vous accompagner même après la livraison.",
+  2918→                  color: 'from-purple-400 to-violet-500',
+  2919→                  bg: 'bg-purple-50 dark:bg-purple-950/20',
+  2920→                },
+  2921→              ].map((g) => (
+  2922→                <Card key={g.title} className={`border-0 shadow-md overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${g.bg}`}>
+  2923→                  <div className={`h-1 bg-gradient-to-r ${g.color}`} />
+  2924→                  <CardContent className="p-5 text-center">
+  2925→                    <div className={`inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${g.color} text-white shadow-lg mb-4`}>
+  2926→                      <g.icon className="h-6 w-6" />
+  2927→                    </div>
+  2928→                    <h3 className="text-sm font-extrabold mb-2">{g.title}</h3>
+  2929→                    <p className="text-xs text-muted-foreground leading-relaxed">{g.desc}</p>
+  2930→                  </CardContent>
+  2931→                </Card>
+  2932→              ))}
+  2933→            </div>
+  2934→            </motion.div>
+  2935→          </div>
+  2936→        </section>
+  2937→
+  2938→        {/* ═══ RÉSULTATS CLIENTS ═══ */}
+  2939→        <section className="py-16 sm:py-20 relative overflow-hidden">
+  2940→          <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 dark:from-emerald-950/20 dark:via-teal-950/10 dark:to-cyan-950/20" />
+  2941→          <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+  2942→            <motion.div
+  2943→              initial={{ opacity: 0, y: 30 }}
+  2944→              whileInView={{ opacity: 1, y: 0 }}
+  2945→              viewport={{ once: true, margin: '-50px' }}
+  2946→              transition={{ duration: 0.6 }}
+  2947→            >
+  2948→              <div className="text-center mb-12">
+  2949→                <Badge variant="secondary" className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200">
+  2950→                  <TrendingUp className="h-3 w-3 mr-1" /> Résultats
+  2951→                </Badge>
+  2952→                <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Ils ont <span className="text-emerald-600 dark:text-emerald-400">transformé leur business</span></h2>
+  2953→                <p className="mt-3 text-muted-foreground max-w-xl mx-auto leading-relaxed">
+  2954→                  Des résultats concrets, mesurables. Voici ce que nos clients ont accompli après avoir travaillé avec Studio Créatif.
+  2955→                </p>
+  2956→              </div>
+  2957→
+  2958→              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+  2959→                {[
+  2960→                  { client: 'Boutique Le Baobab', metric: '+40%', desc: "d'augmentation du chiffre d'affaires en 1 mois grâce au nouveau logo et aux visuels réseaux sociaux", icon: TrendingUp, color: 'from-emerald-500 to-teal-500' },
+  2961→                  { client: 'MaliTech Solutions', metric: '+200', desc: 'visiteurs/jour sur le nouveau site web en seulement 2 semaines après le lancement', icon: Users, color: 'from-blue-500 to-indigo-500' },
+  2962→                  { client: 'Restaurant Djoliba', metric: '3x', desc: "plus de commandes en ligne après la refonte de l'identité visuelle complète et des affiches promotionnelles", icon: Award, color: 'from-amber-500 to-orange-500' },
+  2963→                  { client: 'Salon Awa Beauty', metric: '15K+', desc: 'vues sur la vidéo promotionnelle TikTok en 48h, générant 20+ nouvelles clientes', icon: Eye, color: 'from-purple-500 to-violet-500' },
+  2964→                ].map((result, i) => (
+  2965→                  <motion.div
+  2966→                    key={result.client}
+  2967→                    initial={{ opacity: 0, y: 20 }}
+  2968→                    whileInView={{ opacity: 1, y: 0 }}
+  2969→                    viewport={{ once: true }}
+  2970→                    transition={{ duration: 0.4, delay: i * 0.1 }}
+  2971→                    className="group relative bg-background rounded-2xl border border-border p-5 sm:p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-emerald-200 dark:hover:border-emerald-800"
+  2972→                  >
+  2973→                    <div className={`inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${result.color} text-white shadow-lg mb-4 group-hover:scale-110 transition-transform duration-300`}>
+  2974→                      <result.icon className="h-6 w-6" />
+  2975→                    </div>
+  2976→                    <div className="text-3xl font-extrabold bg-gradient-to-r bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 mb-1">{result.metric}</div>
+  2977→                    <h3 className="text-sm font-bold mb-2">{result.client}</h3>
+  2978→                    <p className="text-xs text-muted-foreground leading-relaxed">{result.desc}</p>
+  2979→                  </motion.div>
+  2980→                ))}
+  2981→              </div>
+  2982→
+  2983→              <div className="mt-8 text-center">
+  2984→                <p className="text-sm text-muted-foreground">
+  2985→                  Envie de résultats similaires ?{' '}
+  2986→                  <a href="https://wa.me/22397787244?text=Bonjour%20!%20J%27ai%20vu%20vos%20r%C3%A9sultats%20clients%20et%20je%20veux%20la%20m%C3%Aamme%20chose%20pour%20mon%20business." target="_blank" rel="noopener noreferrer" className="text-emerald-600 font-semibold hover:underline">
+  2987→                    Discutons de votre projet
+  2988→                  </a>
+  2989→                </p>
+  2990→              </div>
+  2991→            </motion.div>
+  2992→          </div>
+  2993→        </section>
+  2994→
+  2995→        {/* Wave divider */}
+  2996→        <div className="relative h-16 -mt-1 overflow-hidden">
+  2997→          <svg className="absolute bottom-0 w-full" viewBox="0 0 1440 64" fill="none" preserveAspectRatio="none">
+  2998→            <path d="M0 64L48 58C96 52 192 40 288 34C384 28 480 28 576 32C672 36 768 44 864 46C960 48 1056 44 1152 38C1248 32 1344 24 1392 20L1440 16V64H0Z" className="fill-amber-500" />
+  2999→          </svg>
+  3000→        </div>
+  3001→
+  3002→        {/* ═══ 18. CTA FINAL ═══ */}
+  3003→        <section className="py-16 sm:py-20 bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 relative overflow-hidden">
+  3004→          <div className="absolute inset-0">
+  3005→            <div className="absolute top-0 left-1/4 h-64 w-64 bg-white/10 rounded-full blur-3xl" />
+  3006→            <div className="absolute bottom-0 right-1/4 h-64 w-64 bg-white/10 rounded-full blur-3xl" />
+  3007→          </div>
+  3008→          <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
+  3009→            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
+  3010→              Prêt à faire passer votre communication <span className="bg-gradient-to-r from-white via-yellow-200 to-white bg-clip-text text-transparent animate-gradient-text">au niveau supérieur</span> ?
+  3011→            </h2>
+  3012→            <p className="mt-4 text-lg text-white/90 max-w-2xl mx-auto leading-relaxed">
+  3013→              N&apos;attendez plus pour donner à votre entreprise l&apos;image qu&apos;elle mérite. Contactez-moi dès aujourd&apos;hui pour discuter de votre projet et obtenir un devis gratuit.
+  3014→            </p>
+  3015→            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+  3016→              <a href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20suis%20pr%C3%AAt%20%C3%A0%20lancer%20mon%20projet%20de%20communication." target="_blank" rel="noopener noreferrer">
+  3017→                <Button size="lg" className="bg-white text-amber-600 hover:bg-white/90 font-bold shadow-xl text-base px-8">
+  3018→                  <MessageCircle className="h-5 w-5 mr-2" /> Commander via WhatsApp
+  3019→                </Button>
+  3020→              </a>
+  3021→              <a href="https://wa.me/22397787244?text=Bonjour%20!%20J%27aimerais%20discuter%20de%20mon%20projet%20avec%20vous." target="_blank" rel="noopener noreferrer">
+  3022→                <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 font-semibold text-base px-8">
+  3023→                  M&apos;envoyer un message <Send className="ml-2 h-4 w-4" />
+  3024→                </Button>
+  3025→              </a>
+  3026→            </div>
+  3027→            <div className="mt-8 flex flex-col items-center gap-4">
+  3028→              <div className="flex items-center gap-5 text-white/80 text-xs font-medium">
+  3029→                <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4" /> Livraison rapide</span>
+  3030→                <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4" /> Satisfaction garantie</span>
+  3031→              </div>
+  3032→              <div className="flex items-center gap-3 text-white/70 text-xs">
+  3033→                <span className="px-4 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-400/30 font-bold">Commande via WhatsApp</span>
+  3034→              </div>
+  3035→            </div>
+  3036→          </div>
+  3037→        </section>
+  3038→
+  3039→        {/* ═══ 19. CONTACT ═══ */}
+  3040→        <section id="contact" className="py-16 sm:py-20 bg-gradient-to-b from-blue-50/40 to-background dark:from-blue-950/10">
+  3041→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  3042→            <motion.div
+  3043→              initial={{ opacity: 0, y: 30 }}
+  3044→              whileInView={{ opacity: 1, y: 0 }}
+  3045→              viewport={{ once: true, margin: '-50px' }}
+  3046→              transition={{ duration: 0.6 }}
+  3047→            >
+  3048→            <div className="grid lg:grid-cols-2 gap-12">
+  3049→              <div>
+  3050→                <Badge variant="secondary" className="mb-3 bg-blue-100 text-blue-700 border-blue-200">
+  3051→                  <Send className="h-3 w-3 mr-1" /> Contact
+  3052→                </Badge>
+  3053→                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Contactez-Moi</h2>
+  3054→                <p className="mt-3 text-muted-foreground leading-relaxed max-w-md">
+  3055→                  Vous avez un projet, une question ou besoin d&apos;un service ? N&apos;hésitez pas à me contacter. Je réponds rapidement.
+  3056→                </p>
+  3057→                <div className="mt-8 space-y-6">
+  3058→                  <div className="flex items-center gap-4">
+  3059→                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30">
+  3060→                      <Mail className="h-5 w-5 text-amber-600" />
+  3061→                    </div>
+  3062→                    <div>
+  3063→                      <p className="text-sm font-medium">Email</p>
+  3064→                      <p className="text-sm text-muted-foreground">contact@createurboutique.com</p>
+  3065→                    </div>
+  3066→                  </div>
+  3067→                  <div className="flex items-center gap-4">
+  3068→                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30">
+  3069→                      <Phone className="h-5 w-5 text-amber-600" />
+  3070→                    </div>
+  3071→                    <div>
+  3072→                      <p className="text-sm font-medium">Téléphone</p>
+  3073→                      <p className="text-sm text-muted-foreground">+223 97 78 72 44</p>
+  3074→                    </div>
+  3075→                  </div>
+  3076→                  <div className="flex items-center gap-4">
+  3077→                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30">
+  3078→                      <MapPin className="h-5 w-5 text-amber-600" />
+  3079→                    </div>
+  3080→                    <div>
+  3081→                      <p className="text-sm font-medium">Localisation</p>
+  3082→                      <p className="text-sm text-muted-foreground">Bamako, Mali</p>
+  3083→                    </div>
+  3084→                  </div>
+  3085→                </div>
+  3086→                <div className="mt-8 flex gap-3">
+  3087→                  <a href="https://www.instagram.com/sk_designer_luxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors" aria-label="Instagram">
+  3088→                    <Instagram className="h-5 w-5 text-amber-600" />
+  3089→                  </a>
+  3090→                  <a href="https://www.facebook.com/skdesignerluxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors" aria-label="Facebook">
+  3091→                    <Facebook className="h-5 w-5 text-amber-600" />
+  3092→                  </a>
+  3093→                  <a href="https://www.tiktok.com/@sk_designer_luxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors" aria-label="TikTok">
+  3094→                    <svg className="h-5 w-5 text-amber-600" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.87a8.16 8.16 0 0 0 4.77 1.52V6.94a4.85 4.85 0 0 1-1.01-.25z" /></svg>
+  3095→                  </a>
+  3096→                </div>
+  3097→              </div>
+  3098→
+  3099→              <form onSubmit={handleSubmitContact} className="space-y-4 rounded-2xl border bg-card p-6 sm:p-8 shadow-sm">
+  3100→                <div className="grid sm:grid-cols-2 gap-4">
+  3101→                  <div className="space-y-2">
+  3102→                    <Label htmlFor="name">Nom *</Label>
+  3103→                    <Input id="name" placeholder="Votre nom" value={contactData.name} onChange={(e) => setContactData({ ...contactData, name: e.target.value })} />
+  3104→                  </div>
+  3105→                  <div className="space-y-2">
+  3106→                    <Label htmlFor="email">Email *</Label>
+  3107→                    <Input id="email" type="email" placeholder="votre@email.com" value={contactData.email} onChange={(e) => setContactData({ ...contactData, email: e.target.value })} />
+  3108→                  </div>
+  3109→                </div>
+  3110→                <div className="space-y-2">
+  3111→                  <Label htmlFor="subject">Sujet</Label>
+  3112→                  <Input id="subject" placeholder="Quel service vous intéresse ?" value={contactData.subject} onChange={(e) => setContactData({ ...contactData, subject: e.target.value })} />
+  3113→                </div>
+  3114→                <div className="space-y-2">
+  3115→                  <Label htmlFor="message">Message *</Label>
+  3116→                  <Textarea id="message" placeholder="Décrivez votre projet ou votre demande..." rows={5} value={contactData.message} onChange={(e) => setContactData({ ...contactData, message: e.target.value })} />
+  3117→                </div>
+  3118→                <Button
+  3119→                  type="submit"
+  3120→                  className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold shadow-lg shadow-amber-500/20"
+  3121→                >
+  3122→                  <span className="flex items-center gap-2">
+  3123→                    <MessageCircle className="h-4 w-4" /> Envoyer via WhatsApp
+  3124→                  </span>
+  3125→                </Button>
+  3126→              </form>
+  3127→            </div>
+  3128→            </motion.div>
+  3129→          </div>
+  3130→        </section>
+  3131→      {/* ═══ COACH DETAIL MODAL ═══ */}
+  3132→      <AnimatePresence>
+  3133→        {selectedCoach && (
+  3134→          <motion.div
+  3135→            initial={{ opacity: 0 }}
+  3136→            animate={{ opacity: 1 }}
+  3137→            exit={{ opacity: 0 }}
+  3138→            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+  3139→            onClick={() => setSelectedCoach(null)}
+  3140→          >
+  3141→            <motion.div
+  3142→              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+  3143→              animate={{ scale: 1, opacity: 1, y: 0 }}
+  3144→              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+  3145→              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+  3146→              className="relative bg-background rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden"
+  3147→              onClick={(e) => e.stopPropagation()}
+  3148→            >
+  3149→              <div className={`bg-gradient-to-r ${selectedCoach.gradient} p-6 text-white relative`}>
+  3150→                <button onClick={() => setSelectedCoach(null)} className="absolute top-3 right-3 h-8 w-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors">
+  3151→                  <X className="h-4 w-4" />
+  3152→                </button>
+  3153→                <div className="flex items-center gap-4">
+  3154→                  <div className="h-20 w-20 rounded-full bg-white/20 flex items-center justify-center text-3xl font-extrabold ring-4 ring-white/30">
+  3155→                    {selectedCoach.initial}
+  3156→                  </div>
+  3157→                  <div>
+  3158→                    <h3 className="text-xl font-extrabold">{selectedCoach.name}</h3>
+  3159→                    <p className="text-white/80 text-sm mt-0.5">{selectedCoach.role}</p>
+  3160→                    <div className="flex gap-4 mt-2">
+  3161→                      {selectedCoach.stats.map((s) => (
+  3162→                        <div key={s.label}>
+  3163→                          <span className="text-lg font-extrabold">{s.value}</span>
+  3164→                          <span className="text-[10px] text-white/60 ml-1">{s.label}</span>
+  3165→                        </div>
+  3166→                      ))}
+  3167→                    </div>
+  3168→                  </div>
+  3169→                </div>
+  3170→              </div>
+  3171→              <div className="p-6 space-y-4">
+  3172→                <div>
+  3173→                  <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-2">Compétences</p>
+  3174→                  <div className="flex flex-wrap gap-2">
+  3175→                    {selectedCoach.speciality.split(', ').map((skill) => (
+  3176→                      <span key={skill} className="px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-950/20 text-amber-700 dark:text-amber-400 text-xs font-semibold border border-amber-200 dark:border-amber-800">
+  3177→                        {skill}
+  3178→                      </span>
+  3179→                    ))}
+  3180→                  </div>
+  3181→                </div>
+  3182→                <div>
+  3183→                  <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-2">Biographie</p>
+  3184→                  <p className="text-sm text-foreground/80 leading-relaxed">{selectedCoach.bio}</p>
+  3185→                </div>
+  3186→                <div>
+  3187→                  <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-2">Formations dispensées</p>
+  3188→                  <div className="space-y-2">
+  3189→                    {selectedCoach.name === 'Sacko' && (
+  3190→                      <>
+  3191→                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>Design Graphique (Canva, Photoshop, Illustrator)</span></div>
+  3192→                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>Branding & Identité Visuelle</span></div>
+  3193→                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>Montage Vidéo (CapCut, Premiere Pro)</span></div>
+  3194→                      </>
+  3195→                    )}
+  3196→                    {selectedCoach.name === 'Camara Leh' && (
+  3197→                      <>
+  3198→                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>Création Web (HTML, CSS, JavaScript)</span></div>
+  3199→                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>Frameworks modernes (React, Next.js)</span></div>
+
+[showing lines 2600-3199 of 3849; use offset=3200 with limit to continue reading]

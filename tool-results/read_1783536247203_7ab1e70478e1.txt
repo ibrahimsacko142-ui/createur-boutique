@@ -1,0 +1,502 @@
+  1000→                    <span className="text-amber-300 dark:text-amber-700">•</span>
+  1001→                  </span>
+  1002→                ))}
+  1003→              </div>
+  1004→            ))}
+  1005→          </div>
+  1006→        </div>
+  1007→
+  1008→        {/* ═══ 5.5 COMMENT ÇA MARCHE ═══ */}
+  1009→        <section className="py-16 sm:py-20 bg-gradient-to-b from-background to-muted/20">
+  1010→          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+  1011→            <div className="text-center mb-12">
+  1012→              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+  1013→                <Zap className="h-3 w-3 mr-1" /> Processus
+  1014→              </Badge>
+  1015→              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Comment ça marche ?</h2>
+  1016→              <p className="mt-3 text-muted-foreground max-w-xl mx-auto leading-relaxed">
+  1017→                4 étapes simples pour concrétiser votre projet. De votre première idée à la livraison finale, je vous accompagne à chaque étape.
+  1018→              </p>
+  1019→            </div>
+  1020→
+  1021→            <div className="relative">
+  1022→              {/* Ligne de connexion verticale (desktop) / horizontale (mobile) */}
+  1023→              <div className="hidden sm:block absolute top-16 left-[calc(12.5%+20px)] right-[calc(12.5%+20px)] h-0.5 bg-gradient-to-r from-amber-300 via-orange-400 to-red-400 opacity-40" />
+  1024→
+  1025→              <div className="grid sm:grid-cols-4 gap-6 sm:gap-4">
+  1026→                {[
+  1027→                  {
+  1028→                    step: '01',
+  1029→                    icon: MessageCircle,
+  1030→                    title: 'Contactez-moi',
+  1031→                    desc: "Envoyez-moi un message sur WhatsApp ou remplissez le formulaire. Décrivez votre projet en quelques mots.",
+  1032→                    color: 'from-amber-400 to-amber-500',
+  1033→                    bg: 'bg-amber-50 dark:bg-amber-950/20',
+  1034→                    border: 'border-amber-200 dark:border-amber-800',
+  1035→                  },
+  1036→                  {
+  1037→                    step: '02',
+  1038→                    icon: Search,
+  1039→                    title: 'Brief & Devis',
+  1040→                    desc: "Je vous pose les bonnes questions pour comprendre vos besoins. Vous recevez une proposition claire avec délai et prix.",
+  1041→                    color: 'from-orange-400 to-orange-500',
+  1042→                    bg: 'bg-orange-50 dark:bg-orange-950/20',
+  1043→                    border: 'border-orange-200 dark:border-orange-800',
+  1044→                  },
+  1045→                  {
+  1046→                    step: '03',
+  1047→                    icon: PenTool,
+  1048→                    title: 'Création',
+  1049→                    desc: "Je conçois votre projet avec soin. Vous recevez des aperçus et pouvez demander des ajustements.",
+  1050→                    color: 'from-red-400 to-red-500',
+  1051→                    bg: 'bg-red-50 dark:bg-red-950/20',
+  1052→                    border: 'border-red-200 dark:border-red-800',
+  1053→                  },
+  1054→                  {
+  1055→                    step: '04',
+  1056→                    icon: Rocket,
+  1057→                    title: 'Livraison',
+  1058→                    desc: "Fichiers sources livrés en haute qualité. Suivi après livraison pour s'assurer que tout est parfait.",
+  1059→                    color: 'from-emerald-400 to-emerald-500',
+  1060→                    bg: 'bg-emerald-50 dark:bg-emerald-950/20',
+  1061→                    border: 'border-emerald-200 dark:border-emerald-800',
+  1062→                  },
+  1063→                ].map((s, i) => (
+  1064→                  <div key={s.step} className={`relative text-center p-5 rounded-2xl border ${s.border} ${s.bg} transition-all duration-300 hover:-translate-y-1 hover:shadow-lg`}>
+  1065→                    <div className={`inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${s.color} text-white shadow-lg mb-3`}>
+  1066→                      <s.icon className="h-5 w-5" />
+  1067→                    </div>
+  1068→                    <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Étape {s.step}</div>
+  1069→                    <h3 className="text-sm font-extrabold mb-2">{s.title}</h3>
+  1070→                    <p className="text-xs text-muted-foreground leading-relaxed">{s.desc}</p>
+  1071→                    {i < 3 && (
+  1072→                      <ArrowDown className="h-5 w-5 text-amber-400 mx-auto mt-3 sm:hidden" />
+  1073→                    )}
+  1074→                  </div>
+  1075→                ))}
+  1076→              </div>
+  1077→            </div>
+  1078→          </div>
+  1079→        </section>
+  1080→
+  1081→        {/* ═══ OUTILS MAÎTRISÉS ═══ */}
+  1082→        <div className="py-8 bg-muted/30 border-y overflow-hidden">
+  1083→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-6">
+  1084→            <p className="text-center text-xs font-bold uppercase tracking-widest text-muted-foreground">
+  1085→              <Wrench className="h-3.5 w-3.5 inline mr-1.5" /> Outils & Technologies que nous maîtrisons
+  1086→            </p>
+  1087→          </div>
+  1088→          <div className="flex animate-marquee whitespace-nowrap">
+  1089→            {[...Array(2)].map((_, setIdx) => (
+  1090→              <div key={setIdx} className="flex items-center gap-10 mx-5">
+  1091→                {[
+  1092→                  { name: 'Canva Pro', emoji: '🎨' },
+  1093→                  { name: 'CapCut Pro', emoji: '🎬' },
+  1094→                  { name: 'PicsArt Pro', emoji: '📸' },
+  1095→                  { name: 'Photoshop', emoji: '🖌️' },
+  1096→                  { name: 'Illustrator', emoji: '✏️' },
+  1097→                  { name: 'Premiere Pro', emoji: '🎞️' },
+  1098→                  { name: 'DaVinci Resolve', emoji: '🪄' },
+  1099→                  { name: 'Figma', emoji: '🎯' },
+  1100→                  { name: 'HTML/CSS', emoji: '🌐' },
+  1101→                  { name: 'JavaScript', emoji: '⚡' },
+  1102→                  { name: 'React/Next.js', emoji: '⚛️' },
+  1103→                  { name: 'WordPress', emoji: '📝' },
+  1104→                  { name: 'Meta Business', emoji: '📊' },
+  1105→                  { name: 'TikTok Ads', emoji: '🎵' },
+  1106→                ].map((tool, i) => (
+  1107→                  <span key={`${setIdx}-${i}`} className="inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors flex-shrink-0">
+  1108→                    <span className="text-xl">{tool.emoji}</span>
+  1109→                    <span>{tool.name}</span>
+  1110→                  </span>
+  1111→                ))}
+  1112→              </div>
+  1113→            ))}
+  1114→          </div>
+  1115→        </div>
+  1116→
+  1117→        {/* ═══ POURQUOI NOUS CHOISIR ═══ */}
+  1118→        <section className="py-16 sm:py-20">
+  1119→          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+  1120→            <motion.div
+  1121→              initial={{ opacity: 0, y: 30 }}
+  1122→              whileInView={{ opacity: 1, y: 0 }}
+  1123→              viewport={{ once: true, margin: '-50px' }}
+  1124→              transition={{ duration: 0.6 }}
+  1125→            >
+  1126→              <div className="text-center mb-12">
+  1127→                <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+  1128→                  <Sparkles className="h-3 w-3 mr-1" /> Avantages
+  1129→                </Badge>
+  1130→                <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Pourquoi <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">nous choisir</span> ?</h2>
+  1131→                <p className="mt-3 text-muted-foreground max-w-xl mx-auto leading-relaxed">
+  1132→                  Ce qui nous distingue des autres freelances et agences à Bamako.
+  1133→                </p>
+  1134→              </div>
+  1135→
+  1136→              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  1137→                {[
+  1138→                  { icon: Zap, title: 'Réactivité Extraordinaire', desc: "Réponse en moins de 30 minutes sur WhatsApp. Pas de formulaire sans suivi, pas d'attente de 48h. Je suis disponible 7j/7.", color: 'from-amber-400 to-orange-500' },
+  1139→                  { icon: Target, title: '100% Personnalisé', desc: "Aucun template pré-fait. Chaque projet est conçu de zéro selon votre identité, vos couleurs et votre vision. Votre marque est unique.", color: 'from-emerald-400 to-teal-500' },
+  1140→                  { icon: ThumbsUp, title: 'Satisfaction Garantie', desc: 'Révisions illimitées sur les offres Premium. Je ne livre que lorsque vous êtes 100% satisfait du résultat final.', color: 'from-blue-400 to-indigo-500' },
+  1141→                  { icon: Lock, title: 'Paiement via WhatsApp', desc: 'Commandez et payez directement via WhatsApp avec Orange Money, MTN MoMo ou autre. Simple, rapide et sécurisé. Confirmation instantanée pour Sacko.', color: 'from-purple-400 to-violet-500' },
+  1142→                  { icon: Users, title: '3 Experts Unis', desc: 'Sacko pour le design, Camara Leh pour le web, Kante pour le marketing. Trois coachs complémentaires pour couvrir tous vos besoins.', color: 'from-cyan-400 to-blue-500' },
+  1143→                  { icon: Heart, title: 'Passion Africaine', desc: 'Nous comprenons le marché malien et africain. Nos créations sont pensées pour plaire à votre clientele locale et vous démarquer.', color: 'from-rose-400 to-pink-500' },
+  1144→                ].map((item, i) => (
+  1145→                  <motion.div
+  1146→                    key={item.title}
+  1147→                    initial={{ opacity: 0, y: 20 }}
+  1148→                    whileInView={{ opacity: 1, y: 0 }}
+  1149→                    viewport={{ once: true }}
+  1150→                    transition={{ duration: 0.4, delay: i * 0.08 }}
+  1151→                    className="group p-6 rounded-2xl border border-border hover:border-amber-200 dark:hover:border-amber-800 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+  1152→                  >
+  1153→                    <div className={`inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${item.color} text-white shadow-lg mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
+  1154→                      <item.icon className="h-6 w-6" />
+  1155→                    </div>
+  1156→                    <h3 className="text-base font-extrabold mb-2">{item.title}</h3>
+  1157→                    <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
+  1158→                  </motion.div>
+  1159→                ))}
+  1160→              </div>
+  1161→            </motion.div>
+  1162→          </div>
+  1163→        </section>
+  1164→
+  1165→        {/* ═══ COMPARISON TABLE ═══ */}
+  1166→        <section className="py-16 sm:py-20 bg-gradient-to-b from-background to-muted/20">
+  1167→          <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+  1168→            <div className="text-center mb-10">
+  1169→              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+  1170→                <Sparkles className="h-3 w-3 mr-1" /> Comparaison
+  1171→              </Badge>
+  1172→              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Découverte vs Premium</h2>
+  1173→              <p className="mt-3 text-muted-foreground max-w-xl mx-auto">
+  1174→                Un aperçu clair de ce que chaque formule inclut. Testez gratuitement, puis passez au niveau supérieur.
+  1175→              </p>
+  1176→            </div>
+  1177→            <div className="overflow-x-auto">
+  1178→              <table className="w-full border-collapse">
+  1179→                <thead>
+  1180→                  <tr className="border-b-2 border-border">
+  1181→                    <th className="text-left p-4 text-sm font-bold">Fonctionnalité</th>
+  1182→                    <th className="p-4 text-sm font-bold text-center">
+  1183→                      <span className="inline-flex items-center gap-1.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 px-3 py-1.5 rounded-full text-xs font-bold">
+  1184→                        <CheckCircle2 className="h-3.5 w-3.5" /> Découverte
+  1185→                      </span>
+  1186→                    </th>
+  1187→                    <th className="p-4 text-sm font-bold text-center">
+  1188→                      <span className="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-md shadow-amber-500/20">
+  1189→                        <Star className="h-3.5 w-3.5 fill-current" /> Premium
+  1190→                      </span>
+  1191→                    </th>
+  1192→                  </tr>
+  1193→                </thead>
+  1194→                <tbody>
+  1195→                  {[
+  1196→                    { feature: 'Prix', decouverte: 'Gratuit', premium: 'Sur devis' },
+  1197→                    { feature: 'Nombre de révisions', decouverte: '1 révision', premium: 'Illimité' },
+  1198→                    { feature: 'Fichiers sources', decouverte: false, premium: true },
+  1199→                    { feature: 'Charte graphique', decouverte: false, premium: true },
+  1200→                    { feature: 'Support personnalisé', decouverte: 'Groupe WhatsApp', premium: 'Individuel' },
+  1201→                    { feature: 'Certificat', decouverte: false, premium: true },
+  1202→                    { feature: 'Suivi post-livraison', decouverte: false, premium: true },
+  1203→                    { feature: 'Bonus (Canva Pro, etc.)', decouverte: false, premium: true },
+  1204→                    { feature: 'Délai de livraison', decouverte: 'Standard', premium: 'Prioritaire' },
+  1205→                  ].map((row, i) => (
+  1206→                    <tr key={i} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
+  1207→                      <td className="p-4 text-sm font-medium">{row.feature}</td>
+  1208→                      <td className="p-4 text-center">
+  1209→                        {typeof row.decouverte === 'boolean' ? (
+  1210→                          row.decouverte ? <CheckCircle2 className="h-5 w-5 text-emerald-500 mx-auto" /> : <span className="text-muted-foreground text-xs">—</span>
+  1211→                        ) : (
+  1212→                          <span className="text-sm text-emerald-600 dark:text-emerald-400 font-semibold">{row.decouverte}</span>
+  1213→                        )}
+  1214→                      </td>
+  1215→                      <td className="p-4 text-center bg-amber-50/50 dark:bg-amber-950/10">
+  1216→                        {typeof row.premium === 'boolean' ? (
+  1217→                          row.premium ? <CheckCircle2 className="h-5 w-5 text-amber-500 mx-auto" /> : <span className="text-muted-foreground text-xs">—</span>
+  1218→                        ) : (
+  1219→                          <span className="text-sm text-amber-600 dark:text-amber-400 font-bold">{row.premium}</span>
+  1220→                        )}
+  1221→                      </td>
+  1222→                    </tr>
+  1223→                  ))}
+  1224→                </tbody>
+  1225→              </table>
+  1226→            </div>
+  1227→          </div>
+  1228→        </section>
+  1229→
+  1230→        {/* ═══ ESTIMATEUR DE PRIX ═══ */}
+  1231→        <section className="py-16 sm:py-20">
+  1232→          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+  1233→            <div className="text-center mb-10">
+  1234→              <Badge variant="secondary" className="mb-3 bg-violet-100 text-violet-700 border-violet-200">
+  1235→                <Calculator className="h-3 w-3 mr-1" /> Estimateur
+  1236→              </Badge>
+  1237→              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Estimez votre <span className="bg-gradient-to-r from-violet-500 to-purple-500 bg-clip-text text-transparent">budget</span></h2>
+  1238→              <p className="mt-3 text-muted-foreground max-w-lg mx-auto">
+  1239→                Sélectionnez les services qui vous intéressent et obtenez une estimation instantanée.
+  1240→              </p>
+  1241→            </div>
+  1242→            <Card className="border-2 border-violet-200 dark:border-violet-800 overflow-hidden">
+  1243→              <CardContent className="p-6 space-y-4">
+  1244→                <div className="grid sm:grid-cols-2 gap-3">
+  1245→                  {[
+  1246→                    { id: 'logo', label: 'Logo Professionnel', icon: Palette, priceRange: [0, 15000] },
+  1247→                    { id: 'site', label: 'Site Web', icon: Globe, priceRange: [0, 50000] },
+  1248→                    { id: 'video', label: 'Montage Vidéo', icon: MonitorPlay, priceRange: [0, 20000] },
+  1249→                    { id: 'marketing', label: 'Marketing Digital', icon: Megaphone, priceRange: [0, 25000] },
+  1250→                    { id: 'cv', label: 'Pack Carrière Pro', icon: FileCheck, priceRange: [700, 3500] },
+  1251→                    { id: 'formation', label: 'Formation Premium', icon: GraduationCap, priceRange: [15000, 25000] },
+  1252→                  ].map((s) => {
+  1253→                    const selected = estimatorServices.includes(s.id)
+  1254→                    return (
+  1255→                      <button
+  1256→                        key={s.id}
+  1257→                        onClick={() => setEstimatorServices(prev => selected ? prev.filter(x => x !== s.id) : [...prev, s.id])}
+  1258→                        className={`flex items-center gap-3 p-4 rounded-xl border-2 transition-all duration-200 text-left ${
+  1259→                          selected
+  1260→                            ? 'border-violet-500 bg-violet-50 dark:bg-violet-950/20 shadow-md shadow-violet-500/10'
+  1261→                            : 'border-border hover:border-violet-300 dark:hover:border-violet-700 hover:bg-muted/50'
+  1262→                        }`}
+  1263→                      >
+  1264→                        <div className={`flex h-10 w-10 items-center justify-center rounded-lg flex-shrink-0 transition-colors ${
+  1265→                          selected ? 'bg-violet-500 text-white' : 'bg-muted text-muted-foreground'
+  1266→                        }`}>
+  1267→                          <s.icon className="h-5 w-5" />
+  1268→                        </div>
+  1269→                        <div className="flex-1 min-w-0">
+  1270→                          <p className="text-sm font-semibold">{s.label}</p>
+  1271→                          <p className="text-[11px] text-muted-foreground">{s.priceRange[0] === 0 ? 'Gratuit –' : ''} {s.priceRange[1].toLocaleString('fr-FR')} FCFA</p>
+  1272→                        </div>
+  1273→                        <div className={`h-5 w-5 rounded-full border-2 flex items-center justify-center transition-all flex-shrink-0 ${
+  1274→                          selected ? 'border-violet-500 bg-violet-500' : 'border-muted-foreground/30'
+  1275→                        }`}>
+  1276→                          {selected && <CheckCircle2 className="h-3.5 w-3.5 text-white" />}
+  1277→                        </div>
+  1278→                      </button>
+  1279→                    )
+  1280→                  })}
+  1281→                </div>
+  1282→                {estimatorServices.length > 0 && (
+  1283→                  <motion.div
+  1284→                    initial={{ opacity: 0, y: 10 }}
+  1285→                    animate={{ opacity: 1, y: 0 }}
+  1286→                    className="bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-950/20 dark:to-purple-950/20 rounded-xl p-5 border border-violet-200 dark:border-violet-800"
+  1287→                  >
+  1288→                    <div className="flex items-center justify-between mb-3">
+  1289→                      <span className="text-sm font-bold">{estimatorServices.length} service{estimatorServices.length > 1 ? 's' : ''} sélectionné{estimatorServices.length > 1 ? 's' : ''}</span>
+  1290→                      <span className="text-xs text-muted-foreground">Estimation</span>
+  1291→                    </div>
+  1292→                    <div className="flex items-baseline gap-2 mb-4">
+  1293→                      <span className="text-3xl font-extrabold text-violet-600 dark:text-violet-400">
+  1294→                        {(() => {
+  1295→                          const services = [
+  1296→                            { id: 'logo', priceRange: [0, 15000] },
+  1297→                            { id: 'site', priceRange: [0, 50000] },
+  1298→                            { id: 'video', priceRange: [0, 20000] },
+  1299→                            { id: 'marketing', priceRange: [0, 25000] },
+  1300→                            { id: 'cv', priceRange: [700, 3500] },
+  1301→                            { id: 'formation', priceRange: [15000, 25000] },
+  1302→                          ]
+  1303→                          const min = estimatorServices.reduce((sum, id) => sum + (services.find(s => s.id === id)?.priceRange[0] || 0), 0)
+  1304→                          const max = estimatorServices.reduce((sum, id) => sum + (services.find(s => s.id === id)?.priceRange[1] || 0), 0)
+  1305→                          return min === 0 ? `0 – ${max.toLocaleString('fr-FR')}` : `${min.toLocaleString('fr-FR')} – ${max.toLocaleString('fr-FR')}`
+  1306→                        })()}
+  1307→                      </span>
+  1308→                      <span className="text-sm text-muted-foreground font-medium">FCFA</span>
+  1309→                    </div>
+  1310→                    <a
+  1311→                      href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! J'ai utilisé votre estimateur et je suis intéressé(e) par : ${estimatorServices.join(', ')}. Pouvez-vous me faire un devis précis ?`)}`}
+  1312→                      target="_blank" rel="noopener noreferrer"
+  1313→                    >
+  1314→                      <Button className="w-full bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600 text-white font-bold shadow-lg shadow-violet-500/20">
+  1315→                        <MessageCircle className="h-4 w-4 mr-2" /> Obtenir un devis précis sur WhatsApp
+  1316→                      </Button>
+  1317→                    </a>
+  1318→                  </motion.div>
+  1319→                )}
+  1320→              </CardContent>
+  1321→            </Card>
+  1322→          </div>
+  1323→        </section>
+  1324→
+  1325→        {/* ═══ 6. SERVICES & TARIFS ═══ */}
+  1326→        <section id="services" className="py-20 sm:py-24">
+  1327→          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+  1328→            <div className="text-center mb-12">
+  1329→              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+  1330→                <Sparkles className="h-3 w-3 mr-1" /> Tarifs
+  1331→              </Badge>
+  1332→              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Mes Services</h2>
+  1333→              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+  1334→                Chaque service existe en deux formules : testez gratuitement avec l&apos;Offre Découverte, puis passez au Premium pour un résultat professionnel complet.
+  1335→              </p>
+  1336→              <div className="flex items-center justify-center gap-6 mt-5 text-xs">
+  1337→                <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-emerald-500" /> Découverte = Gratuit</span>
+  1338→                <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-amber-500" /> Premium = Sur devis via WhatsApp</span>
+  1339→              </div>
+  1340→            </div>
+  1341→
+  1342→            <div className="space-y-8">
+  1343→              {[
+  1344→                {
+  1345→                  cat: 'Design Graphique', icon: Palette, color: 'from-pink-500 to-rose-500', borderColor: 'border-pink-200 dark:border-pink-800',
+  1346→                  decouverte: { title: 'Offre Découverte — Gratuit', desc: "Un logo simple pour démarrer. Texte stylisé + icône basique, 2 propositions au choix, 1 révision incluse. Idéal pour tester mon style avant de vous engager." },
+  1347→                  premium: { title: 'Offre Premium', desc: "Logo professionnel vectorisé, décliné en couleur et noir/blanc, charte graphique complète (couleurs, typographies), fichiers sources livrés (AI, PSD, PNG haute résolution), révisions illimitées jusqu'à satisfaction." },
+  1348→                },
+  1349→                {
+  1350→                  cat: 'Développement Web', icon: Globe, color: 'from-blue-500 to-indigo-500', borderColor: 'border-blue-200 dark:border-blue-800',
+  1351→                  decouverte: { title: 'Offre Découverte — Gratuite', desc: 'Une landing page 1 page, responsive (mobile/ordinateur), pour présenter votre activité en ligne rapidement.' },
+  1352→                  premium: { title: 'Offre Premium', desc: 'Site multi-pages sur mesure, formulaire de contact fonctionnel, déploiement et hébergement inclus, nom de domaine personnalisé, maintenance mensuelle disponible en option.' },
+  1353→                },
+  1354→                {
+  1355→                  cat: 'Montage Vidéo', icon: MonitorPlay, color: 'from-purple-500 to-violet-500', borderColor: 'border-purple-200 dark:border-purple-800',
+  1356→                  decouverte: { title: 'Offre Découverte — Gratuite', desc: "Montage court (moins d'une minute), coupe simple sans effets avancés. Parfait pour un aperçu rapide." },
+  1357→                  premium: { title: 'Offre Premium', desc: 'Montage complet avec effets visuels, sous-titres, musique libre de droits, export optimisé pour réseaux sociaux ou YouTube.' },
+  1358→                },
+  1359→                {
+  1360→                  cat: 'Formation', icon: GraduationCap, color: 'from-emerald-500 to-teal-500', borderColor: 'border-emerald-200 dark:border-emerald-800',
+  1361→                  decouverte: { title: 'Offre Découverte — Gratuite', desc: "Session d'initiation de 30 minutes pour découvrir mes outils et méthodes." },
+  1362→                  premium: { title: 'Offre Premium', desc: 'Parcours de formation complet avec suivi personnalisé, support après formation, et certificat de participation.' },
+  1363→                },
+  1364→                {
+  1365→                  cat: 'Marketing Digital', icon: Megaphone, color: 'from-cyan-500 to-blue-500', borderColor: 'border-cyan-200 dark:border-cyan-800',
+  1366→                  decouverte: { title: 'Offre Découverte — Gratuite', desc: "Une affiche ou post réseau social simple pour promouvoir votre activité. Format prêt à publier, 1 révision incluse." },
+  1367→                  premium: { title: 'Offre Premium', desc: "Stratégie complète : affiches, posts, stories, bannières publicitaires pour Facebook/Instagram/TikTok. Charte visuelle réseaux sociaux, calendrier éditorial de 7 jours." },
+  1368→                },
+  1369→              ].map((section) => (
+  1370→                <Card key={section.cat} className={`border ${section.borderColor} overflow-hidden transition-all duration-500 hover:shadow-2xl hover:-translate-y-1.5 hover:scale-[1.01]`}>
+  1371→                  <div className={`h-1.5 bg-gradient-to-r ${section.color}`} />
+  1372→                  <CardContent className="p-5 sm:p-7">
+  1373→                    <div className="flex items-center gap-3 mb-5">
+  1374→                      <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${section.color} text-white shadow-lg`}>
+  1375→                        <section.icon className="h-5 w-5" />
+  1376→                      </div>
+  1377→                      <h3 className="text-lg font-extrabold">{section.cat}</h3>
+  1378→                    </div>
+  1379→                    <div className="flex items-center justify-between mb-4">
+  1380→                      <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+  1381→                        <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" /><span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" /></span>
+  1382→                        Disponible
+  1383→                      </div>
+  1384→                      <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/20 px-2 py-0.5 rounded-full border border-amber-200 dark:border-amber-800">
+  1385→                        {availabilitySlots[section.cat] || 2}/5 places
+  1386→                      </span>
+  1387→                    </div>
+  1388→                    <div className="grid sm:grid-cols-2 gap-4">
+  1389→                      <div className="rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-950/20 p-4 sm:p-5">
+  1390→                        <div className="flex items-center gap-2 mb-2">
+  1391→                          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-white text-xs font-bold">✓</span>
+  1392→                          <h4 className="text-sm font-bold text-emerald-700 dark:text-emerald-400">{section.decouverte.title}</h4>
+  1393→                        </div>
+  1394→                        <p className="text-xs text-muted-foreground leading-relaxed mb-4">{section.decouverte.desc}</p>
+  1395→                        <a
+  1396→                          href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je veux l'Offre Découverte : ${section.cat}. C'est gratuit, je veux tester !`)}`}
+  1397→                          target="_blank" rel="noopener noreferrer"
+  1398→                        >
+  1399→                          <Button variant="outline" className="w-full border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 font-semibold text-xs h-10">
+  1400→                            <Gift className="h-3.5 w-3.5 mr-1.5" /> Essayer gratuitement
+  1401→                          </Button>
+  1402→                        </a>
+  1403→                      </div>
+  1404→                      <div className="rounded-xl border border-amber-200 dark:border-amber-800 bg-amber-50/50 dark:bg-amber-950/20 p-4 sm:p-5">
+  1405→                        <div className="flex items-center gap-2 mb-2">
+  1406→                          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-amber-500 to-orange-500 text-white text-xs font-bold">★</span>
+  1407→                          <h4 className="text-sm font-bold text-amber-700 dark:text-amber-400">{section.premium.title}</h4>
+  1408→                        </div>
+  1409→                        <p className="text-xs text-muted-foreground leading-relaxed mb-4">{section.premium.desc}</p>
+  1410→                        <div className="flex gap-2">
+  1411→                        <a
+  1412→                        href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je suis intéressé(e) par l'Offre Premium : ${section.cat}. Pouvez-vous me donner un devis ?`)}`}
+  1413→                        target="_blank" rel="noopener noreferrer"
+  1414→                        className="flex-1"
+  1415→                      >
+  1416→                        <Button variant="outline" className="w-full border-emerald-300 text-emerald-700 hover:bg-emerald-50 font-bold text-xs h-10">
+  1417→                          <MessageCircle className="h-3.5 w-3.5 mr-1.5" /> WhatsApp
+  1418→                        </Button>
+  1419→                      </a>
+  1420→                      <a
+  1421→                        href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je veux l'Offre Premium : ${section.cat} — 15 000 FCFA. Comment payer ?`)}`}
+  1422→                        target="_blank" rel="noopener noreferrer"
+  1423→                        className="flex-1"
+  1424→                      >
+  1425→                        <Button className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-10 shadow-md shadow-amber-500/20">
+  1426→                          <Lock className="h-3.5 w-3.5 mr-1.5" /> Payer
+  1427→                        </Button>
+  1428→                      </a>
+  1429→                      </div>
+  1430→                    </div>
+  1431→                    </div>
+  1432→                  </CardContent>
+  1433→                </Card>
+  1434→              ))}
+  1435→
+  1436→              {/* Bonus Luxe */}
+  1437→              <Card className="border-0 shadow-lg overflow-hidden">
+  1438→                <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white p-5 sm:p-7">
+  1439→                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+  1440→                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm shadow-lg flex-shrink-0">
+  1441→                      <Gift className="h-5 w-5 text-white" />
+  1442→                    </div>
+  1443→                    <div className="flex-1">
+  1444→                      <div className="flex items-center gap-2 mb-1">
+  1445→                        <h3 className="font-bold text-base">Bonus : Accès Premium Offert</h3>
+  1446→                        <Badge className="bg-white/20 text-white border-0 text-[10px]">NOUVEAU</Badge>
+  1447→                      </div>
+  1448→                      <p className="text-sm text-white/90 leading-relaxed">Chaque formation inclut un <strong>accès gratuit</strong> à Canva Pro, CapCut Pro ou PicsArt Pro. C&apos;est mon cadeau pour vous accompagner dans la pratique.</p>
+  1449→                    </div>
+  1450→                  </div>
+  1451→                </div>
+  1452→              </Card>
+  1453→            </div>
+  1454→          </div>
+  1455→        </section>
+  1456→
+  1457→        {/* ═══ 7. CARRIÈRE PRO ═══ */}
+  1458→        <section id="carriere-pro" className="py-16 sm:py-20 relative overflow-hidden">
+  1459→          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-900 to-background" />
+  1460→          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(59,130,246,0.08),transparent_50%),radial-gradient(circle_at_70%_70%,rgba(245,158,11,0.06),transparent_50%)]" />
+  1461→          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-white">
+  1462→            <div className="text-center mb-12">
+  1463→              <Badge className="mb-3 bg-blue-500/20 text-blue-300 border-blue-500/30 hover:bg-blue-500/30">
+  1464→                <GraduationCap className="h-3 w-3 mr-1" /> Carrière Pro
+  1465→              </Badge>
+  1466→              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Offre à la <span className="text-blue-400">Carte</span></h2>
+  1467→              <p className="mt-3 text-slate-400 max-w-xl mx-auto">
+  1468→                5 services clés pour booster votre employabilité. Chaque prestation est livrée sous 24h.
+  1469→              </p>
+  1470→            </div>
+  1471→
+  1472→            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
+  1473→              {[
+  1474→                { icon: PenTool, name: 'Plume Pro', sub: 'Lettre de motivation', price: '800', hook: 'La lettre qui donne envie de lire votre CV.', color: 'from-blue-500 to-cyan-500' },
+  1475→                { icon: FileCheck, name: 'Relooking CV', sub: 'Refonte de CV', price: '700', hook: 'Votre parcours, une nouvelle vitrine.', color: 'from-emerald-500 to-teal-500' },
+  1476→                { icon: Building2, name: 'Impact LinkedIn', sub: 'Profil LinkedIn', price: '2 000', hook: 'Le profil que les recruteurs remarquent en premier.', color: 'from-indigo-500 to-purple-500' },
+  1477→                { icon: Target, name: 'Objectif Entretien', sub: 'Préparation entretien', price: '500', hook: "Les questions pièges de votre secteur, décortiquées.", color: 'from-amber-500 to-orange-500' },
+  1478→                { icon: BadgeCheck, name: 'Réseautage Pro', sub: 'Carte de visite', price: '1 500', hook: 'Un premier contact, une impression durable.', color: 'from-rose-500 to-pink-500' },
+  1479→              ].map((s) => (
+  1480→                <Card key={s.name} className="h-full backdrop-blur-xl bg-white/[0.04] border border-white/[0.08] hover:border-blue-400/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-500/5 group">
+  1481→                  <CardContent className="p-6 relative">
+  1482→                    <div className={`absolute inset-0 rounded-xl bg-gradient-to-br ${s.color} opacity-0 group-hover:opacity-[0.04] transition-opacity duration-500`} />
+  1483→                    <div className="relative">
+  1484→                      <div className="flex items-start justify-between mb-4">
+  1485→                        <div className={`flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br ${s.color} text-white shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+  1486→                          <s.icon className="h-5 w-5" />
+  1487→                        </div>
+  1488→                        <span className="text-xl font-extrabold text-white">{s.price} <span className="text-xs font-normal text-slate-400">FCFA</span></span>
+  1489→                      </div>
+  1490→                      <h3 className="text-lg font-bold text-white">{s.name}</h3>
+  1491→                      <p className="text-xs text-slate-500 mb-2">{s.sub}</p>
+  1492→                      <p className="text-sm text-slate-300 leading-relaxed mb-4">{s.hook}</p>
+  1493→                      <div className="flex gap-2">
+  1494→                      <a
+  1495→                        href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je souhaite commander : ${s.name} (${s.sub}) — ${s.price} FCFA.`)}`}
+  1496→                        target="_blank" rel="noopener noreferrer"
+  1497→                        className="flex-1"
+  1498→                      >
+  1499→                        <Button variant="outline" size="sm" className="w-full border-emerald-400/30 text-emerald-400 hover:bg-emerald-500/10 font-semibold text-xs h-9">
+
+[showing lines 1000-1499 of 3849; use offset=1500 with limit to continue reading]

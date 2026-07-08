@@ -1,0 +1,502 @@
+   500→    keypoints: ['Choisir un nom de domaine et un hébergeur', 'Installation et configuration de WordPress', 'Personnalisation avec thèmes et widgets', 'Extensions indispensables (SEO, sécurité, contact)', 'Gestion du Tableau de bord et maintenance'],
+   501→  },
+   502→  {
+   503→    title: 'Programmer avec JavaScript en s\'amusant',
+   504→    author: 'Chris Minnick & Eva Holland',
+   505→    desc: '15 projets fun pour apprendre le JavaScript : jeux, pages web, animation de robot.',
+   506→    cover: '/livres/javascript-amusant.jpg',
+   507→    category: 'Programmation',
+   508→    excerpt: 'Apprenez le JavaScript en vous amusant ! Ce livre propose 15 projets conçus pour les débutants dès 11 ans. Créez des jeux, construisez des pages web interactives et animez un robot. Chaque projet introduit de nouveaux concepts de programmation de manière progressive et ludique.',
+   509→    keypoints: ['15 projets pratiques et ludiques', 'Créer des jeux en JavaScript', 'Construire des pages web interactives', 'Animer des éléments graphiques et robots', 'Accessible dès 11 ans — aucun prérequis'],
+   510→  },
+   511→  {
+   512→    title: 'Stratégie Marketing & Création Publicitaire',
+   513→    author: 'Henri Joannis & Virginie de Barnier',
+   514→    desc: 'De la stratégie marketing à la création publicitaire : magazines, TV, affiches, internet.',
+   515→    cover: '/livres/strategie-marketing-pub.jpg',
+   516→    category: 'Marketing & Business',
+   517→    excerpt: 'L\'ouvrage de référence en stratégie publicitaire couvrant tous les médias : magazines, TV/radio, affiches et internet. Apprenez à construire une stratégie marketing solide, définir un positionnement, créer des messages percutants et choisir les bons canaux de diffusion pour toucher votre cible.',
+   518→    keypoints: ['Élaboration d\'une stratégie marketing', 'Positionnement et segmentation', 'Création publicitaire multi-médias', 'TV, radio, affiches, magazines, internet', 'Mesure d\'efficacité et retour sur investissement'],
+   519→  },
+   520→]
+   521→
+   522→/* ═══════════════════════════════════════════════
+   523→   MAIN PAGE
+   524→   ═══════════════════════════════════════════════ */
+   525→export default function Home() {
+   526→  const [contactData, setContactData] = useState({ name: '', email: '', subject: '', message: '' })
+   527→  const [showBanner, setShowBanner] = useState(true)
+   528→  const [showBackToTop, setShowBackToTop] = useState(false)
+   529→  const [scrollProgress, setScrollProgress] = useState(0)
+   530→  const [showStickyCta, setShowStickyCta] = useState(false)
+   531→  const [portfolioFilter, setPortfolioFilter] = useState('Tous')
+   532→  const [quickOrder, setQuickOrder] = useState({ service: '', name: '', phone: '', description: '' })
+   533→  const [faqOpen, setFaqOpen] = useState<string | null>(null)
+   534→  const [leadMagnet, setLeadMagnet] = useState({ name: '', contact: '' })
+   535→  const [selectedBook, setSelectedBook] = useState<Book | null>(null)
+   536→  const [bookFilter, setBookFilter] = useState('Tous')
+   537→  const { toast } = useToast()
+   538→
+   539→  // New features
+   540→  const typedText = useTypingText([
+   541→    'démarquez-vous.',
+   542→    'propulsez votre marque.',
+   543→    'attirez vos clients.',
+   544→    'gagnez en visibilité.',
+   545→    'concrétisez vos idées.',
+   546→  ])
+   547→  const [cart, setCart] = useLocalStorage<string[]>('sc-cart', [])
+   548→  const [showCart, setShowCart] = useState(false)
+   549→  const [showCookieConsent, setShowCookieConsent] = useLocalStorage('sc-cookies', true)
+   550→  const [showWelcome, setShowWelcome] = useLocalStorage('sc-welcome', true)
+   551→  const [welcomeVisible, setWelcomeVisible] = useState(false)
+   552→  const [estimatorServices, setEstimatorServices] = useState<string[]>([])
+   553→  const [confettiActive, setConfettiActive] = useState(false)
+   554→  const [availabilitySlots, setAvailabilitySlots] = useState<Record<string, number>>({})
+   555→  const [showWaWidget, setShowWaWidget] = useState(false)
+   556→  const [testimIndex, setTestimIndex] = useState(0)
+   557→  const [testimPaused, setTestimPaused] = useState(false)
+   558→  const [shareToast, setShareToast] = useState(false)
+   559→  const [lastOrderId, setLastOrderId] = useState('')
+   560→  const [trackId, setTrackId] = useState('')
+   561→  const [trackResult, setTrackResult] = useState<{ id: string; service: string; status: string; statusLabel: string; createdAt: string; updatedAt: string } | null>(null)
+   562→  const [trackLoading, setTrackLoading] = useState(false)
+   563→  const [activeDotSection, setActiveDotSection] = useState('accueil')
+   564→
+   565→  // Portfolio lightbox
+   566→  const [lightboxImg, setLightboxImg] = useState<{ src: string; title: string; desc: string } | null>(null)
+   567→
+   568→  // Book search
+   569→  const [bookSearch, setBookSearch] = useState('')
+   570→
+   571→  // FAQ search
+   572→  const [faqSearch, setFaqSearch] = useState('')
+   573→
+   574→  // Service quiz
+   575→  const [quizOpen, setQuizOpen] = useState(false)
+   576→  const [quizStep, setQuizStep] = useState(0)
+   577→  const [quizAnswers, setQuizAnswers] = useState<string[]>([])
+   578→  const [quizResult, setQuizResult] = useState<{ service: string; icon: typeof Palette; reason: string } | null>(null)
+   579→
+   580→  // Coach detail modal
+   581→  const [selectedCoach, setSelectedCoach] = useState<typeof coaches[0] | null>(null)
+   582→
+   583→  // Promo countdown: end of current month
+   584→  const [promoEnd] = useState(() => {
+   585→    const now = new Date()
+   586→    return new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 0)
+   587→  })
+   588→  const countdown = useCountdown(promoEnd)
+   589→
+   590→  const toggleCart = useCallback((title: string) => {
+   591→    setCart(prev => prev.includes(title) ? prev.filter(t => t !== title) : [...prev, title])
+   592→  }, [setCart])
+   593→
+   594→  const isInCart = useCallback((title: string) => cart.includes(title), [cart])
+   595→
+   596→  // Auto-scroll testimonials
+   597→  useEffect(() => {
+   598→    if (testimPaused) return
+   599→    const interval = setInterval(() => {
+   600→      setTestimIndex(prev => (prev + 1) % 4)
+   601→    }, 5000)
+   602→    return () => clearInterval(interval)
+   603→  }, [testimPaused])
+   604→
+   605→  // Confetti trigger
+   606→  const triggerConfetti = useCallback(() => {
+   607→    setConfettiActive(true)
+   608→    setTimeout(() => setConfettiActive(false), 4000)
+   609→  }, [])
+   610→
+   611→
+   612→
+   613→
+   614→
+   615→
+   616→  useEffect(() => {
+   617→    const handleScroll = () => {
+   618→      setShowBackToTop(window.scrollY > 600)
+   619→      const totalHeight = document.body.scrollHeight - window.innerHeight
+   620→      setScrollProgress(totalHeight > 0 ? (window.scrollY / totalHeight) * 100 : 0)
+   621→      setShowStickyCta(window.scrollY > 500)
+   622→    }
+   623→    window.addEventListener('scroll', handleScroll, { passive: true })
+   624→    return () => window.removeEventListener('scroll', handleScroll)
+   625→  }, [])
+   626→
+   627→  // Welcome popup for first-time visitors
+   628→  useEffect(() => {
+   629→    if (showWelcome) {
+   630→      const timer = setTimeout(() => setWelcomeVisible(true), 15000) // show after 15s instead of 6s
+   631→      return () => clearTimeout(timer)
+   632→    }
+   633→  }, [showWelcome])
+   634→
+   635→  // Availability slots for service cards
+   636→  useEffect(() => {
+   637→    const slots: Record<string, number> = {}
+   638→    const cats = ['Design Graphique', 'Développement Web', 'Montage Vidéo', 'Formation', 'Marketing Digital']
+   639→    cats.forEach((cat, i) => { slots[cat] = [2, 1, 3, 2, 1][i] })
+   640→    setAvailabilitySlots(slots)
+   641→  }, [])
+   642→
+   643→  // Escape key handler for all modals
+   644→  useEffect(() => {
+   645→    const handleEsc = (e: KeyboardEvent) => {
+   646→      if (e.key === 'Escape') {
+   647→        setLightboxImg(null)
+   648→        setSelectedBook(null)
+   649→        setQuizOpen(false); setQuizStep(0); setQuizAnswers([]); setQuizResult(null)
+   650→        setShowCart(false)
+   651→        setSelectedCoach(null)
+   652→      }
+   653→    }
+   654→    window.addEventListener('keydown', handleEsc)
+   655→    return () => window.removeEventListener('keydown', handleEsc)
+   656→  }, [])
+   657→
+   658→  // Intersection observer for side nav dots
+   659→  useEffect(() => {
+   660→    const sectionIds = ['accueil', 'services', 'formations', 'coachs', 'boutique', 'portfolio', 'contact']
+   661→    const observers: IntersectionObserver[] = []
+   662→    sectionIds.forEach(id => {
+   663→      const el = document.getElementById(id)
+   664→      if (!el) return
+   665→      const observer = new IntersectionObserver(
+   666→        (entries) => {
+   667→          entries.forEach(entry => {
+   668→            if (entry.isIntersecting) setActiveDotSection(id)
+   669→          })
+   670→        },
+   671→        { rootMargin: '-20% 0px -60% 0px', threshold: 0 }
+   672→      )
+   673→      observer.observe(el)
+   674→      observers.push(observer)
+   675→    })
+   676→    return () => observers.forEach(o => o.disconnect())
+   677→  }, [])
+   678→
+   679→
+   680→
+   681→
+   682→
+   683→  const handleSubmitContact = (e: React.FormEvent) => {
+   684→    e.preventDefault()
+   685→    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+   686→    if (!contactData.name || !contactData.email || !contactData.message) {
+   687→      toast({ title: 'Champs requis', description: 'Veuillez remplir tous les champs obligatoires.', variant: 'destructive' })
+   688→      return
+   689→    }
+   690→    if (!emailRegex.test(contactData.email)) {
+   691→      toast({ title: 'Email invalide', description: 'Veuillez entrer une adresse email valide.', variant: 'destructive' })
+   692→      return
+   693→    }
+   694→    const msg = encodeURIComponent(`Bonjour ! Je suis ${contactData.name} (${contactData.email}).\n\nSujet : ${contactData.subject || 'Général'}\n\n${contactData.message}`)
+   695→    window.open(`https://wa.me/22397787244?text=${msg}`, '_blank')
+   696→    toast({ title: 'Redirection vers WhatsApp', description: 'Votre message sera envoyé via WhatsApp pour une réponse rapide.' })
+   697→    setContactData({ name: '', email: '', subject: '', message: '' })
+   698→  }
+   699→
+   700→  return (
+   701→    <div className="min-h-screen flex flex-col bg-background pb-20 lg:pb-0 scroll-smooth">
+   702→      <Header />
+   703→
+   704→      <main className="flex-1">
+   705→
+   706→        {/* ═══ 1. BANNIÈRE PROMO ═══ */}
+   707→        <AnimatePresence>
+   708→          {showBanner && (
+   709→            <motion.div
+   710→              initial={{ height: 0, opacity: 0 }}
+   711→              animate={{ height: 'auto', opacity: 1 }}
+   712→              exit={{ height: 0, opacity: 0 }}
+   713→              className="overflow-hidden bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white"
+   714→            >
+   715→              <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-4">
+   716→                <p className="text-xs sm:text-sm font-medium text-center sm:text-left flex-1">
+   717→                  <Sparkles className="h-3.5 w-3.5 inline mr-1" />
+   718→                  Offre spéciale : Première commande à prix réduit — Design, sites web, montage vidéo et plus encore !
+   719→                </p>
+   720→                <div className="flex items-center gap-2 flex-shrink-0">
+   721→                  <a href="#services">
+   722→                    <Button size="sm" variant="secondary" className="h-7 text-xs bg-white text-amber-600 hover:bg-white/90 font-semibold px-3">
+   723→                      Voir les services
+   724→                    </Button>
+   725→                  </a>
+   726→
+   727→                  <button onClick={() => setShowBanner(false)} className="text-white/80 hover:text-white transition-colors" aria-label="Fermer">
+   728→                    <X className="h-4 w-4" />
+   729→                  </button>
+   730→                </div>
+   731→              </div>
+   732→            </motion.div>
+   733→          )}
+   734→        </AnimatePresence>
+   735→
+   736→        {/* ═══ 2. HERO ═══ */}
+   737→        <section id="accueil" className="relative overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-white dark:from-amber-950/20 dark:via-orange-950/10 dark:to-background">
+   738→          {/* Animated gradient orbs */}
+   739→          <div className="absolute top-0 -right-40 h-[500px] w-[500px] rounded-full bg-amber-200/40 dark:bg-amber-800/10 blur-3xl animate-pulse" />
+   740→          <div className="absolute -bottom-20 -left-40 h-[400px] w-[400px] rounded-full bg-orange-200/30 dark:bg-orange-800/10 blur-3xl" style={{ animationDelay: '1s', animationDuration: '4s' }} />
+   741→          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[300px] w-[300px] rounded-full bg-red-100/30 dark:bg-red-900/10 blur-3xl" style={{ animationDelay: '2s', animationDuration: '5s' }} />
+   742→          {/* Subtle grid pattern */}
+   743→          <div className="absolute inset-0 bg-[linear-gradient(rgba(245,158,11,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(245,158,11,0.03)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,black,transparent)]" />
+   744→
+   745→          {/* Floating shapes */}
+   746→          <div className="absolute top-20 right-20 w-16 h-16 rounded-xl bg-amber-300/20 dark:bg-amber-600/10 animate-float-slow hidden lg:block" />
+   747→          <div className="absolute bottom-32 right-40 w-10 h-10 rounded-full bg-orange-300/25 dark:bg-orange-600/10 animate-float-medium hidden lg:block" />
+   748→          <div className="absolute top-40 left-20 w-8 h-8 rounded-lg bg-red-300/20 dark:bg-red-600/10 rotate-45 animate-float-fast hidden lg:block" />
+   749→
+   750→          <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
+   751→            <div className="grid lg:grid-cols-2 gap-12 items-center">
+   752→              <div>
+   753→                <motion.div
+   754→                  initial={{ opacity: 0, y: 10 }}
+   755→                  animate={{ opacity: 1, y: 0 }}
+   756→                  transition={{ duration: 0.5 }}
+   757→                >
+   758→                <Badge variant="secondary" className="mb-4 px-3 py-1 text-xs font-medium bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800 shadow-sm">
+   759→                  <Sparkles className="h-3 w-3 mr-1" /> Studio Créatif Indépendant
+   760→                </Badge>
+   761→
+   762→                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
+   763→                  Donnez vie à vos projets digitaux et{' '}
+   764→                  <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 bg-clip-text text-transparent animate-gradient-text">
+   765→                    {typedText}<span className="animate-pulse">|</span>
+   766→                  </span>
+   767→                </h1>
+   768→
+   769→                <p className="mt-6 text-lg text-muted-foreground leading-relaxed max-w-lg">
+   770→                  Création de logos, sites web et visuels sur-mesure pour propulser les entrepreneurs et créateurs de Bamako et d&apos;ailleurs. Chaque projet est une opportunité de transformer votre vision en une réalité qui attire et fidélise.
+   771→                </p>
+   772→                </motion.div>
+   773→
+   774→                <motion.div
+   775→                  initial={{ opacity: 0, y: 10 }}
+   776→                  animate={{ opacity: 1, y: 0 }}
+   777→                  transition={{ duration: 0.5, delay: 0.2 }}
+   778→                  className="mt-8 flex flex-wrap gap-3"
+   779→                >
+   780→                  <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20discuter%20de%20mon%20projet." target="_blank" rel="noopener noreferrer">
+   781→                    <Button size="lg" className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 hover:from-amber-600 hover:via-orange-600 hover:to-red-600 text-white font-semibold shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 transition-all duration-200 hover:scale-105 active:scale-95">
+   782→                      <Rocket className="mr-2 h-4 w-4" /> Lancer mon projet
+   783→                    </Button>
+   784→                  </a>
+   785→                  <a href="#boutique">
+   786→                    <Button size="lg" variant="outline" className="font-semibold hover:bg-accent transition-transform duration-200 hover:scale-105 active:scale-95">
+   787→                      <BookOpen className="mr-2 h-4 w-4" /> Voir la Boutique
+   788→                    </Button>
+   789→                  </a>
+   790→                </motion.div>
+   791→
+   792→                <motion.div
+   793→                  initial={{ opacity: 0, y: 10 }}
+   794→                  animate={{ opacity: 1, y: 0 }}
+   795→                  transition={{ duration: 0.5, delay: 0.3 }}
+   796→                  className="mt-10 flex flex-wrap gap-3"
+   797→                >
+   798→                  {['Design Graphique', 'Sites Web', 'Montage Vidéo', 'Marketing Digital'].map((tag) => (
+   799→                    <span key={tag} className="inline-flex items-center gap-1.5 rounded-full bg-white/80 dark:bg-white/5 border px-3.5 py-1.5 text-xs font-medium text-amber-700 dark:text-amber-400 border-amber-200/80 dark:border-amber-800 shadow-sm backdrop-blur-sm hover:-translate-y-0.5 transition-transform cursor-default">
+   800→                      <CheckCircle2 className="h-3 w-3 text-emerald-500" /> {tag}
+   801→                    </span>
+   802→                  ))}
+   803→                </motion.div>
+   804→
+   805→                <motion.div
+   806→                  initial={{ opacity: 0, y: 10 }}
+   807→                  animate={{ opacity: 1, y: 0 }}
+   808→                  transition={{ duration: 0.5, delay: 0.4 }}
+   809→                  className="mt-8 flex items-center gap-4"
+   810→                >
+   811→                  <div className="flex -space-x-2">
+   812→                    {['from-amber-400 to-orange-500', 'from-emerald-400 to-teal-500', 'from-purple-400 to-pink-500', 'from-blue-400 to-cyan-500'].map((g, i) => (
+   813→                      <div key={i} className={`h-8 w-8 rounded-full border-2 border-white dark:border-slate-900 bg-gradient-to-br ${g}`} />
+   814→                    ))}
+   815→                  </div>
+   816→                  <div>
+   817→                    <p className="text-xs font-bold">Clients satisfaits à Bamako</p>
+   818→                    <p className="text-[10px] text-muted-foreground">Recommandé bouche à oreille</p>
+   819→                  </div>
+   820→                </motion.div>
+   821→              </div>
+   822→
+   823→              {/* Hero Visual - Services Preview Card */}
+   824→              <motion.div
+   825→                initial={{ opacity: 0, x: 30 }}
+   826→                animate={{ opacity: 1, x: 0 }}
+   827→                transition={{ duration: 0.6, delay: 0.2 }}
+   828→                className="hidden lg:block"
+   829→              >
+   830→                <div className="relative">
+   831→                  <div className="absolute -inset-4 bg-gradient-to-r from-amber-400/20 via-orange-400/20 to-red-400/20 rounded-3xl blur-2xl" />
+   832→                  <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/20 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6 sm:p-8">
+   833→                    {/* Mini dashboard preview */}
+   834→                    <div className="flex items-center gap-2 mb-5">
+   835→                      <div className="h-3 w-3 rounded-full bg-red-400" />
+   836→                      <div className="h-3 w-3 rounded-full bg-amber-400" />
+   837→                      <div className="h-3 w-3 rounded-full bg-emerald-400" />
+   838→                      <span className="text-[10px] text-slate-500 ml-2 font-mono">studio-creatif.ml</span>
+   839→                    </div>
+   840→                    <div className="space-y-3">
+   841→                      {[
+   842→                        { icon: '🎨', label: 'Logo Pro', desc: 'Identité visuelle', color: 'from-pink-500 to-rose-500', status: 'Livré' },
+   843→                        { icon: '🌐', label: 'Site E-commerce', desc: 'Boutique en ligne', color: 'from-blue-500 to-indigo-500', status: 'En cours' },
+   844→                        { icon: '🎬', label: 'Pub TikTok', desc: 'Montage + effets', color: 'from-emerald-500 to-teal-500', status: 'Livré' },
+   845→                        { icon: '📱', label: 'Posts Instagram', desc: 'Pack 10 visuels', color: 'from-purple-500 to-violet-500', status: 'Livré' },
+   846→                      ].map((item, i) => (
+   847→                        <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5">
+   848→                          <div className={`flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${item.color} text-lg shadow-lg`}>{item.icon}</div>
+   849→                          <div className="flex-1 min-w-0">
+   850→                            <p className="text-xs font-bold text-white">{item.label}</p>
+   851→                            <p className="text-[10px] text-slate-400">{item.desc}</p>
+   852→                          </div>
+   853→                          <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${item.status === 'Livré' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}`}>{item.status}</span>
+   854→                        </div>
+   855→                      ))}
+   856→                    </div>
+   857→                    <div className="mt-5 pt-4 border-t border-white/10 flex items-center justify-between">
+   858→                      <div className="flex items-center gap-2">
+   859→                        <div className="h-8 w-8 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white text-xs font-bold">S</div>
+   860→                        <div>
+   861→                          <p className="text-[11px] font-bold text-white">Sacko</p>
+   862→                          <p className="text-[9px] text-slate-500">Design & Digital</p>
+   863→                        </div>
+   864→                      </div>
+   865→                      <span className="text-[10px] text-emerald-400 font-semibold flex items-center gap-1">
+   866→                        <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" /><span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" /></span>
+   867→                        En ligne
+   868→                      </span>
+   869→                    </div>
+   870→                  </div>
+   871→                  <div className="absolute -bottom-6 -left-6 bg-white/90 dark:bg-card/90 backdrop-blur-xl rounded-xl shadow-xl p-3 border hover:scale-105 transition-transform cursor-default">
+   872→                    <div className="flex items-center gap-3">
+   873→                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
+   874→                        <Award className="h-5 w-5 text-amber-500" />
+   875→                      </div>
+   876→                      <div>
+   877→                        <p className="text-xs font-bold">50+ Marques</p>
+   878→                        <p className="text-[10px] text-muted-foreground">Propulsées</p>
+   879→                      </div>
+   880→                    </div>
+   881→                  </div>
+   882→                  <div className="absolute -top-4 -right-4 bg-white/90 dark:bg-card/90 backdrop-blur-xl rounded-xl shadow-xl p-3 border hover:scale-105 transition-transform cursor-default">
+   883→                    <div className="flex items-center gap-2">
+   884→                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30">
+   885→                        <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+   886→                      </div>
+   887→                      <div>
+   888→                        <p className="text-xs font-bold">100% Sur-mesure</p>
+   889→                        <p className="text-[10px] text-muted-foreground">Chaque pixel pensé pour vous</p>
+   890→                      </div>
+   891→                    </div>
+   892→                  </div>
+   893→                </div>
+   894→              </motion.div>
+   895→            </div>
+   896→          </div>
+   897→        </section>
+   898→
+   899→        {/* Wave divider */}
+   900→        <div className="relative h-12 -mt-1 overflow-hidden">
+   901→          <svg className="absolute bottom-0 w-full" viewBox="0 0 1440 48" fill="none" preserveAspectRatio="none">
+   902→            <path d="M0 48L60 42C120 36 240 24 360 20C480 16 600 20 720 26C840 32 960 40 1080 40C1200 40 1320 32 1380 28L1440 24V48H1380C1320 48 1200 48 1080 48C960 48 840 48 720 48C600 48 480 48 360 48C240 48 120 48 60 48H0Z" className="fill-background" />
+   903→          </svg>
+   904→        </div>
+   905→
+   906→        {/* ═══ 3. QUICK SERVICE ACCESS BAR ═══ */}
+   907→        <section className="py-6 border-b bg-background">
+   908→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+   909→            <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+   910→              {[
+   911→                { label: 'Logo', icon: Palette },
+   912→                { label: 'Site Web', icon: Globe },
+   913→                { label: 'Vidéo', icon: MonitorPlay },
+   914→                { label: 'Affiche', icon: PenTool },
+   915→                { label: 'Formation', icon: GraduationCap },
+   916→                { label: 'Canva Pro', icon: Layers },
+   917→                { label: 'CapCut Pro', icon: Scissors },
+   918→              ].map((s) => (
+   919→                <a key={s.label} href="#services" className="flex-shrink-0 flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl bg-muted/50 hover:bg-gradient-to-br hover:from-amber-50 hover:to-orange-50 dark:hover:from-amber-950/20 dark:hover:to-orange-950/20 hover:-translate-y-0.5 hover:shadow-md hover:shadow-amber-500/10 hover:border-amber-200 dark:hover:border-amber-800 border border-transparent transition-all duration-300 group">
+   920→                  <s.icon className="h-5 w-5 text-amber-500 group-hover:scale-110 transition-transform" />
+   921→                  <span className="text-xs font-medium">{s.label}</span>
+   922→                </a>
+   923→              ))}
+   924→            </div>
+   925→          </div>
+   926→        </section>
+   927→
+   928→        {/* ═══ 4. STATISTIQUES ═══ */}
+   929→        <section className="py-12 sm:py-16 bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 relative overflow-hidden">
+   930→          <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+   931→            <div className="text-center mb-10">
+   932→              <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">Ce que je fais, en chiffres</h2>
+   933→              <p className="mt-2 text-white/80 text-sm">Transparent, impactant, à taille humaine</p>
+   934→            </div>
+   935→            <div className="grid grid-cols-3 gap-6 sm:gap-12">
+   936→              <AnimatedStat end={50} suffix="+">
+   937→                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mx-auto mb-3">
+   938→                  <Award className="h-6 w-6 text-white" />
+   939→                </div>
+   940→                <p className="text-sm font-semibold text-white/90">Marques propulsées</p>
+   941→                <p className="text-xs text-white/60 mt-1 leading-relaxed hidden sm:block">Logos, affiches et identités créées avec soin</p>
+   942→              </AnimatedStat>
+   943→              <div className="text-center">
+   944→                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mx-auto mb-3">
+   945→                  <Palette className="h-6 w-6 text-white" />
+   946→                </div>
+   947→                <div className="text-3xl sm:text-4xl font-extrabold text-white mb-1">100%</div>
+   948→                <p className="text-sm font-semibold text-white/90">Sur-mesure</p>
+   949→                <p className="text-xs text-white/60 mt-1 leading-relaxed hidden sm:block">Aucun template pré-fait, chaque pixel est pensé pour vous</p>
+   950→              </div>
+   951→              <AnimatedStat end={100} suffix="%">
+   952→                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mx-auto mb-3">
+   953→                  <ThumbsUp className="h-6 w-6 text-white" />
+   954→                </div>
+   955→                <p className="text-sm font-semibold text-white/90">Satisfaction client</p>
+   956→                <p className="text-xs text-white/60 mt-1 leading-relaxed hidden sm:block">Une collaboration basée sur l'écoute et le résultat</p>
+   957→              </AnimatedStat>
+   958→            </div>
+   959→          </div>
+   960→        </section>
+   961→
+   962→        {/* ═══ 5. BARRE DE CONFIANCE ═══ */}
+   963→        <section className="py-6 border-b bg-background">
+   964→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+   965→            <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10">
+   966→              {[
+   967→                { icon: ShieldCheck, label: 'Qualité Garantie' },
+   968→                { icon: Zap, label: 'Livraison Rapide' },
+   969→                { icon: CheckCircle2, label: 'Satisfaction Garantie' },
+   970→                { icon: Gift, label: '100% Gratuit' },
+   971→                { icon: MessageCircle, label: 'Support WhatsApp' },
+   972→              ].map((item) => (
+   973→                <div key={item.label} className="flex items-center gap-2 text-muted-foreground">
+   974→                  <item.icon className="h-4 w-4 text-amber-500" />
+   975→                  <span className="text-xs font-medium whitespace-nowrap">{item.label}</span>
+   976→                </div>
+   977→              ))}
+   978→            </div>
+   979→          </div>
+   980→        </section>
+   981→
+   982→        {/* ═══ TRUST TICKER ═══ */}
+   983→        <div className="py-4 bg-amber-50 dark:bg-amber-950/10 border-y border-amber-200/50 dark:border-amber-800/30 overflow-hidden">
+   984→          <div className="flex animate-marquee whitespace-nowrap">
+   985→            {[...Array(2)].map((_, setIdx) => (
+   986→              <div key={setIdx} className="flex items-center gap-8 mx-4">
+   987→                {[
+   988→                  { icon: '⭐', text: '50+ Marques créées' },
+   989→                  { icon: '🎨', text: '100% Sur-mesure' },
+   990→                  { icon: '⚡', text: 'Livraison en 24-48h' },
+   991→                  { icon: '💰', text: 'Offre Découverte Gratuite' },
+   992→                  { icon: '📱', text: 'Support WhatsApp 7j/7' },
+   993→                  { icon: '🔒', text: 'Paiement Sécurisé' },
+   994→                  { icon: '🏆', text: '5/5 Satisfaction Client' },
+   995→                  { icon: '🇲🇱', text: 'Expert Bamako, Mali' },
+   996→                ].map((item, i) => (
+   997→                  <span key={`${setIdx}-${i}`} className="inline-flex items-center gap-2 text-sm font-medium text-amber-700 dark:text-amber-400 flex-shrink-0">
+   998→                    <span>{item.icon}</span>
+   999→                    <span>{item.text}</span>
+
+[showing lines 500-999 of 3849; use offset=1000 with limit to continue reading]
