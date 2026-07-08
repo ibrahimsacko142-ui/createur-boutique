@@ -666,11 +666,9 @@ export default function Home() {
 
     const total = checkoutItem ? checkoutItem.price : (cart.length >= 12 ? 7000 : cart.length * 1000)
     const items = checkoutItem ? [checkoutItem.title] : cart
-    const isDigitalProduct = !checkoutItem || checkoutItem.type === 'book' || checkoutItem.type === 'cart'
-      || checkoutItem.title.includes('Pack') || checkoutItem.title.includes('Formation')
 
-    // ─── Produits digitaux → Taliopay ───
-    if (TALIOPAY_URL && isDigitalProduct) {
+    // ─── Tout → Taliopay (paiement automatique) ───
+    if (TALIOPAY_URL) {
       // Enregistrer la commande localement
       try {
         await fetch('/api/payments', {
@@ -701,7 +699,7 @@ export default function Home() {
       return
     }
 
-    // ─── Services personnalisés → WhatsApp ───
+    // ─── Fallback WhatsApp (si Taliopay non configuré) ───
     try {
       const res = await fetch('/api/payment/create', {
         method: 'POST',
