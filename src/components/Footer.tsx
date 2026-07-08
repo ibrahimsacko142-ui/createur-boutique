@@ -40,7 +40,7 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Votre studio créatif de confiance à Bamako. Design graphique, sites web, montage vidéo, formations et solutions numériques sur-mesure. Expertise, Créativité, Excellence.
+              Votre studio créatif de confiance à Bamako. Design, sites web, montage vidéo, formations. Simple, rapide, honnête.
             </p>
             <div className="flex gap-2.5 pt-1">
               <a href="https://www.instagram.com/sk_designer_luxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted hover:bg-amber-100 dark:hover:bg-amber-900/30 hover:text-amber-500 transition-all group" aria-label="Instagram">
@@ -91,6 +91,11 @@ export default function Footer() {
                   </a>
                 </li>
               ))}
+              <li key="groupe-wa">
+                <a href="https://chat.whatsapp.com/Khpz5MVeokK9X9X5i3INX2" target="_blank" rel="noopener noreferrer" className="text-sm text-emerald-600 font-medium hover:text-emerald-500 transition-colors">
+                  Groupe Formation WhatsApp
+                </a>
+              </li>
             </ul>
           </div>
 

@@ -556,6 +556,10 @@ export default function Home() {
   const [testimIndex, setTestimIndex] = useState(0)
   const [testimPaused, setTestimPaused] = useState(false)
   const [shareToast, setShareToast] = useState(false)
+  const [lastOrderId, setLastOrderId] = useState('')
+  const [trackId, setTrackId] = useState('')
+  const [trackResult, setTrackResult] = useState<{ id: string; service: string; status: string; statusLabel: string; createdAt: string; updatedAt: string } | null>(null)
+  const [trackLoading, setTrackLoading] = useState(false)
   const [activeDotSection, setActiveDotSection] = useState('accueil')
 
   // Portfolio lightbox
@@ -810,17 +814,13 @@ export default function Home() {
                     ))}
                   </div>
                   <div>
-                    <p className="text-xs font-bold">50+ Marques propulsées</p>
-                    <div className="flex gap-0.5">
-                      {[1, 2, 3, 4, 5].map((s) => (
-                        <Star key={s} className="h-3 w-3 fill-amber-400 text-amber-400" />
-                      ))}
-                    </div>
+                    <p className="text-xs font-bold">Clients satisfaits à Bamako</p>
+                    <p className="text-[10px] text-muted-foreground">Recommandé bouche à oreille</p>
                   </div>
                 </motion.div>
               </div>
 
-              {/* Hero Visual */}
+              {/* Hero Visual - Services Preview Card */}
               <motion.div
                 initial={{ opacity: 0, x: 30 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -829,15 +829,43 @@ export default function Home() {
               >
                 <div className="relative">
                   <div className="absolute -inset-4 bg-gradient-to-r from-amber-400/20 via-orange-400/20 to-red-400/20 rounded-3xl blur-2xl" />
-                  <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/20">
-                    <img src="/demo-photo.png" alt="Studio Créatif - Sacko" className="w-full h-[420px] object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                    <div className="absolute bottom-0 left-0 right-0 p-6">
-                      <div className="flex gap-2 flex-wrap">
-                        {['Design Graphique', 'Sites Web', 'Montage Vidéo', 'Formations'].map((t) => (
-                          <span key={t} className="px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-white text-xs font-medium border border-white/10">{t}</span>
-                        ))}
+                  <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/20 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6 sm:p-8">
+                    {/* Mini dashboard preview */}
+                    <div className="flex items-center gap-2 mb-5">
+                      <div className="h-3 w-3 rounded-full bg-red-400" />
+                      <div className="h-3 w-3 rounded-full bg-amber-400" />
+                      <div className="h-3 w-3 rounded-full bg-emerald-400" />
+                      <span className="text-[10px] text-slate-500 ml-2 font-mono">studio-creatif.ml</span>
+                    </div>
+                    <div className="space-y-3">
+                      {[
+                        { icon: '🎨', label: 'Logo Pro', desc: 'Identité visuelle', color: 'from-pink-500 to-rose-500', status: 'Livré' },
+                        { icon: '🌐', label: 'Site E-commerce', desc: 'Boutique en ligne', color: 'from-blue-500 to-indigo-500', status: 'En cours' },
+                        { icon: '🎬', label: 'Pub TikTok', desc: 'Montage + effets', color: 'from-emerald-500 to-teal-500', status: 'Livré' },
+                        { icon: '📱', label: 'Posts Instagram', desc: 'Pack 10 visuels', color: 'from-purple-500 to-violet-500', status: 'Livré' },
+                      ].map((item, i) => (
+                        <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5">
+                          <div className={`flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${item.color} text-lg shadow-lg`}>{item.icon}</div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-bold text-white">{item.label}</p>
+                            <p className="text-[10px] text-slate-400">{item.desc}</p>
+                          </div>
+                          <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${item.status === 'Livré' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}`}>{item.status}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="mt-5 pt-4 border-t border-white/10 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="h-8 w-8 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white text-xs font-bold">S</div>
+                        <div>
+                          <p className="text-[11px] font-bold text-white">Sacko</p>
+                          <p className="text-[9px] text-slate-500">Design & Digital</p>
+                        </div>
                       </div>
+                      <span className="text-[10px] text-emerald-400 font-semibold flex items-center gap-1">
+                        <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" /><span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" /></span>
+                        En ligne
+                      </span>
                     </div>
                   </div>
                   <div className="absolute -bottom-6 -left-6 bg-white/90 dark:bg-card/90 backdrop-blur-xl rounded-xl shadow-xl p-3 border hover:scale-105 transition-transform cursor-default">
@@ -1633,14 +1661,25 @@ export default function Home() {
               <Badge className="mb-3 bg-amber-500/20 text-amber-300 border-amber-500/30 hover:bg-amber-500/30">
                 <GraduationCap className="h-3 w-3 mr-1" /> Formations
               </Badge>
-              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">4 Programmes pour <span className="text-amber-400">maîtriser le digital</span></h2>
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Formations pour <span className="text-amber-400">maîtriser le digital</span></h2>
               <p className="mt-4 text-slate-300 max-w-2xl mx-auto leading-relaxed">
-                Chaque programme est conçu pour vous rendre <strong className="text-white">opérationnel rapidement</strong>. Commencez gratuitement avec l&apos;Offre Découverte, puis passez au Premium pour un accompagnement complet avec certificat.
+                J&apos;ai créé ces formations pour partager ce que je sais, de manière simple et pratique. Commencez gratuitement, puis passez au Premium si vous voulez aller plus loin avec un suivi personnalisé.
               </p>
-              <div className="flex items-center justify-center gap-6 mt-5 text-xs">
-                <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-emerald-500" /> Découverte = Gratuit</span>
-                <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-amber-500" /> Premium = Prix fixe clair</span>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 mt-5">
+                <div className="flex items-center gap-6 text-xs">
+                  <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-emerald-500" /> Découverte = Gratuit</span>
+                  <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-amber-500" /> Premium = Prix fixe clair</span>
+                </div>
               </div>
+              {/* Groupe WhatsApp */}
+              <a
+                href="https://chat.whatsapp.com/Khpz5MVeokK9X9X5i3INX2"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 mt-5 bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 rounded-full px-5 py-2 text-emerald-400 text-xs font-semibold transition-colors"
+              >
+                <Users className="h-3.5 w-3.5" /> Rejoindre le groupe WhatsApp des formations — échangez avec les autres apprenants
+              </a>
             </div>
 
             {/* 4 Featured formation cards */}
@@ -2412,13 +2451,13 @@ export default function Home() {
                   <div className="text-center">
                     <Zap className="h-8 w-8 mx-auto mb-2" />
                     <h2 className="text-2xl sm:text-3xl font-extrabold">Démarrez Votre Projet</h2>
-                    <p className="mt-2 text-white/80 text-sm">Remplissez ce formulaire — je vous recontacte <strong>personnellement</strong> sur WhatsApp avec une proposition adaptée.</p>
+                    <p className="mt-2 text-white/80 text-sm">Dites-moi ce dont vous avez besoin — je vous réponds vite avec une proposition claire et honnête.</p>
                     <div className="mt-4 inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm rounded-full px-4 py-1.5 text-white text-xs font-semibold border border-white/20">
                       <span className="relative flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-red-400" />
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
                       </span>
-                      5 projets maximum par jour — qualité avant quantité
+                      Disponible maintenant — réponse sous 30 min
                     </div>
                   </div>
                 </div>
@@ -2480,11 +2519,41 @@ export default function Home() {
                   </div>
                 </div>
                 <Button
-                  onClick={() => {
+                  onClick={async () => {
                     if (!quickOrder.service || !quickOrder.name || !quickOrder.phone) {
                       toast({ title: 'Champs requis', description: 'Service, nom et téléphone sont obligatoires.', variant: 'destructive' })
                       return
                     }
+                    // Extract amount from service string if present
+                    const amountMatch = quickOrder.service.match(/(\d[\d\s]*)\s*FCFA/i)
+                    const amount = amountMatch ? amountMatch[1].replace(/\s/g, '') + ' FCFA' : ''
+
+                    // Save order to API
+                    try {
+                      const res = await fetch('/api/orders', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                          service: quickOrder.service,
+                          secteur: quickOrder.description || '',
+                          name: quickOrder.name,
+                          phone: quickOrder.phone,
+                          amount,
+                        }),
+                      })
+                      const data = await res.json()
+                      if (data.success && data.orderId) {
+                        toast({
+                          title: 'Commande enregistrée !',
+                          description: `Votre numéro : ${data.orderId}. Gardez-le pour suivre votre commande.`,
+                          duration: 8000,
+                        })
+                        setLastOrderId(data.orderId)
+                      }
+                    } catch {
+                      // API failed, still proceed to WhatsApp
+                    }
+
                     triggerConfetti()
                     const msg = encodeURIComponent(
                       `Bonjour Sacko ! Je souhaite un service.\n\n` +
@@ -2495,7 +2564,6 @@ export default function Home() {
                       `Je suis prêt(e) à discuter de mon projet. Merci !`
                     )
                     window.open(`https://wa.me/22397787244?text=${msg}`, '_blank')
-                    toast({ title: 'Demande envoyée !', description: 'Je vous recontacte personnellement sous 30 minutes.' })
                   }}
                   className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold h-12 text-sm shadow-lg shadow-emerald-500/20"
                 >
@@ -2505,6 +2573,77 @@ export default function Home() {
                   Vos données restent <strong>privées</strong>. Je vous recontacte uniquement pour votre projet.
                 </p>
               </CardContent>
+            </Card>
+
+            {/* Order Tracking */}
+            <Card className="border-0 shadow-lg overflow-hidden mt-6">
+              <div className="p-6 sm:p-8">
+                <div className="flex items-center gap-2 mb-4">
+                  <Search className="h-5 w-5 text-amber-500" />
+                  <h3 className="font-bold text-base">Suivre votre commande</h3>
+                </div>
+                <p className="text-sm text-muted-foreground mb-4">Entrez votre numéro de commande pour vérifier l&apos;avancement.</p>
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="Ex: SC-M123ABC"
+                    value={trackId}
+                    onChange={(e) => setTrackId(e.target.value.toUpperCase())}
+                    className="h-11 font-mono text-sm"
+                  />
+                  <Button
+                    onClick={async () => {
+                      if (!trackId) return
+                      setTrackLoading(true)
+                      setTrackResult(null)
+                      try {
+                        const res = await fetch(`/api/orders?id=${encodeURIComponent(trackId)}`)
+                        const data = await res.json()
+                        if (data.success) {
+                          setTrackResult(data.order)
+                        } else {
+                          toast({ title: 'Non trouvé', description: 'Aucune commande avec ce numéro.', variant: 'destructive' })
+                        }
+                      } catch {
+                        toast({ title: 'Erreur', description: 'Impossible de vérifier. Réessayez.', variant: 'destructive' })
+                      }
+                      setTrackLoading(false)
+                    }}
+                    disabled={trackLoading}
+                    variant="outline"
+                    className="h-11 px-6 font-semibold flex-shrink-0"
+                  >
+                    {trackLoading ? '...' : 'Vérifier'}
+                  </Button>
+                </div>
+                {lastOrderId && (
+                  <p className="text-xs text-emerald-600 font-medium mt-3">
+                    Votre dernière commande : <span className="font-mono font-bold">{lastOrderId}</span>
+                    <button onClick={() => { setTrackId(lastOrderId) }} className="ml-1 underline hover:no-underline">vérifier</button>
+                  </p>
+                )}
+                {trackResult && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mt-5 p-4 rounded-xl border bg-muted/30"
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="font-mono text-sm font-bold">{trackResult.id}</span>
+                      <span className={`text-xs font-bold px-3 py-1 rounded-full ${
+                        trackResult.status === 'livree' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' :
+                        trackResult.status === 'en_cours' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' :
+                        trackResult.status === 'annulee' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' :
+                        'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+                      }`}>{trackResult.statusLabel}</span>
+                    </div>
+                    <p className="text-sm font-medium">{trackResult.service}</p>
+                    <div className="flex items-center justify-between mt-3 text-[11px] text-muted-foreground">
+                      <span>Créée : {new Date(trackResult.createdAt).toLocaleDateString('fr-FR')}</span>
+                      <span>Mise à jour : {new Date(trackResult.updatedAt).toLocaleDateString('fr-FR')}</span>
+                    </div>
+                  </motion.div>
+                )}
+              </div>
             </Card>
           </div>
         </section>
@@ -2520,92 +2659,65 @@ export default function Home() {
               viewport={{ once: true, margin: '-50px' }}
               transition={{ duration: 0.6 }}
             >
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
-              <div className="space-y-5">
-                {/* Photo de Sacko */}
-                <div className="relative">
-                  <div className="relative rounded-2xl overflow-hidden shadow-2xl border">
-                    <img src="/demo-photo.png" alt="Sacko - Studio Créatif" className="w-full h-72 sm:h-80 object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-amber-900/80 via-amber-900/20 to-transparent" />
-                    <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm mb-2">
-                        <Palette className="h-6 w-6" />
-                      </div>
-                      <h3 className="text-xl font-bold">Sacko</h3>
-                      <p className="mt-0.5 text-white/80 text-sm">Studio Créatif &bull; Bamako, Mali</p>
-                    </div>
-                  </div>
-                  <div className="absolute -bottom-4 -right-4 bg-white dark:bg-card rounded-xl p-4 shadow-xl border hidden sm:block">
-                    <div className="flex items-center gap-2.5">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
-                        <Zap className="h-4 w-4 text-amber-600" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-bold">50+ Projets livrés</p>
-                        <p className="text-[10px] text-muted-foreground">À Bamako et au-delà</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                {/* Vidéo de présentation */}
-                <div className="relative rounded-2xl overflow-hidden shadow-xl border">
-                  <video
-                    controls
-                    preload="metadata"
-                    poster="/demo-photo.png"
-                    className="w-full h-48 sm:h-56 object-cover bg-black"
-                  >
-                    <source src="/demo-video.mp4" type="video/mp4" />
-                    Votre navigateur ne supporte pas la lecture vidéo.
-                  </video>
-                  <div className="absolute top-3 left-3">
-                    <Badge className="bg-amber-500/90 text-white border-0 text-[10px] font-semibold backdrop-blur-sm">
-                      <MonitorPlay className="h-3 w-3 mr-1" /> Vidéo de présentation
-                    </Badge>
-                  </div>
-                </div>
-              </div>
-
-              <div>
+            <div className="max-w-3xl mx-auto space-y-6">
                 <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
                   <Heart className="h-3 w-3 mr-1" /> Qui suis-je
                 </Badge>
-                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">À Propos de Sacko</h2>
-                <div className="mt-6 space-y-4 text-muted-foreground leading-relaxed">
+                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-center">À Propos de Sacko</h2>
+                <div className="space-y-4 text-muted-foreground leading-relaxed text-center">
                   <p>
-                    Bienvenue ! Je suis <strong className="text-foreground">Sacko</strong>, créateur digital passionné basé à Bamako. Mon objectif est d&apos;accompagner les entreprises et les porteurs de projets dans la construction d&apos;une <strong className="text-foreground">image de marque forte, professionnelle et mémorable</strong>. De la première idée à la conception finale, je transforme votre vision en une réalité visuelle qui attire et fidélise vos clients.
+                    Salut ! Je suis <strong className="text-foreground">Sacko</strong>, un jeune créateur digital de Bamako. J&apos;ai commencé le design tout seul, en autodidacte, parce que je voyais des entrepreneurs autour de moi qui avaient besoin de visuels pro mais qui n&apos;avaient pas les moyens de payer des agences chères.
                   </p>
                   <p>
-                    Je maîtrise les outils les plus demandés du marché — <strong className="text-foreground">CapCut Pro, Canva Pro, PicsArt Pro</strong> — et je les mets au service de chaque projet pour garantir des résultats à la hauteur de vos ambitions. Que ce soit un logo percutant, un site web qui convertit, ou une identité visuelle complète, chaque création est pensée pour vous démarquer de la concurrence.
+                    Au début, c&apos;était juste un passe-temps. Je créais des logos pour mes amis, des affiches pour les boutiques du quartier. Puis les gens ont commencé à me recommander, et petit à petit, Studio Créatif est né. Aujourd&apos;hui, j&apos;accompagne des entreprises et des porteurs de projets à Bamako et partout au Mali avec des services de <strong className="text-foreground">design graphique, création de sites web, montage vidéo et formations digitales</strong>.
                   </p>
                   <p>
-                    Ma mission : <strong className="text-foreground">aider les entrepreneurs et créateurs du Mali et d&apos;Afrique</strong> à prendre le contrôle de leur image numérique. Je crois fermement que chaque business, même le plus modeste, mérite une identité visuelle qui inspire confiance et attire des clients.
+                    Ce qui me motive, c&apos;est de voir un client recevoir son logo ou son site pour la première fois et dire &quot;C&apos;est exactement ce que je voulais !&quot;. Chaque projet est différent, chaque client a une histoire, et mon but c&apos;est de transformer cette histoire en une identité visuelle qui marque les esprits.
                   </p>
                 </div>
-                <div className="mt-6 grid grid-cols-3 gap-3">
+
+                {/* Skills cards */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-8">
                   {[
-                    { number: '50+', label: 'Marques créées' },
-                    { number: '100%', label: 'Sur-mesure' },
-                    { number: '5/5', label: 'Satisfaction' },
-                  ].map((stat) => (
-                    <div key={stat.label} className="text-center p-3 rounded-lg bg-muted/50 border">
-                      <div className="text-lg font-bold text-amber-600">{stat.number}</div>
-                      <div className="text-[10px] text-muted-foreground">{stat.label}</div>
+                    { emoji: '🎨', name: 'Design', tools: 'Canva, Photoshop, Illustrator' },
+                    { emoji: '💻', name: 'Sites Web', tools: 'HTML, CSS, Next.js' },
+                    { emoji: '🎬', name: 'Vidéo', tools: 'CapCut, Premiere Pro, DaVinci' },
+                    { emoji: '📱', name: 'Réseaux', tools: 'Instagram, TikTok, Facebook' },
+                  ].map((skill) => (
+                    <div key={skill.name} className="text-center p-4 rounded-xl bg-muted/50 border hover:border-amber-200 dark:hover:border-amber-800 transition-colors">
+                      <div className="text-2xl mb-2">{skill.emoji}</div>
+                      <p className="text-sm font-bold">{skill.name}</p>
+                      <p className="text-[10px] text-muted-foreground mt-1">{skill.tools}</p>
                     </div>
                   ))}
                 </div>
-                <div className="mt-8 flex flex-wrap gap-3">
+
+                {/* Personal touch */}
+                <div className="mt-6 p-5 rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/10 border border-amber-200/50 dark:border-amber-800/30">
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-orange-500 text-white font-bold text-sm flex-shrink-0 mt-0.5">S</div>
+                    <div>
+                      <p className="text-sm leading-relaxed">
+                        <strong className="text-foreground">Ma promesse :</strong> pas de blabla, pas de faux résultats. Je montre ce que je sais faire, je livre dans les délais, et si le résultat ne vous plaît pas, je recommence. C&apos;est aussi simple que ça.
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-2">— Sacko, Bamako 🇲🇱</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex flex-wrap gap-3 justify-center">
                   <a href="#services">
                     <Button className="bg-amber-500 hover:bg-amber-600 text-white font-semibold">
                       Découvrir mes services <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </a>
-                  <a href="#contact">
-                    <Button variant="outline" className="font-semibold">Me contacter</Button>
+                  <a href="https://chat.whatsapp.com/Khpz5MVeokK9X9X5i3INX2" target="_blank" rel="noopener noreferrer">
+                    <Button variant="outline" className="font-semibold">
+                      <MessageCircle className="mr-2 h-4 w-4 text-emerald-500" /> Rejoindre le groupe formation
+                    </Button>
                   </a>
                 </div>
               </div>
-            </div>
             </motion.div>
           </div>
         </section>
@@ -2643,8 +2755,8 @@ export default function Home() {
                   { q: "L'Offre Découverte est-elle vraiment 100% gratuite ?", a: "Oui, totalement. C'est ma manière de vous prouver la qualité de mon travail avant que vous ne décidiez de passer à une offre Premium payante. Aucun engagement requis, aucun frais caché." },
                   { q: "Quels sont les délais de livraison ?", a: "Les services \"Carrière Pro\" (CV, Lettres) sont livrés en moins de 24h. Pour les logos simples, comptez 48h, et pour un site web complet, entre 3 et 7 jours selon la complexité. Chaque projet a un suivi personnalisé." },
                   { q: "Puis-je demander des modifications si le résultat ne me plaît pas ?", a: "Absolument. Votre satisfaction est ma priorité. Pour l'Offre Découverte, une révision est incluse. Pour les offres Premium, les révisions sont illimitées jusqu'à ce que le résultat vous corresponde parfaitement. Je ne livre que lorsque vous êtes 100% satisfait." },
-                  { q: "Pourquoi limitez-vous les commandes à 5 par jour ?", a: "Je privilégie la qualité à la quantité. Travailler avec un nombre limité de clients me permet de dédier toute mon attention et mon expertise à chaque pixel de votre projet. Le résultat : des créations qui convertissent." },
-                  { q: "Comment se passe le paiement ?", a: "Après avoir rempli le formulaire de commande, vous êtes redirigé vers WhatsApp avec un récapitulatif complet. Sacko reçoit votre commande instantanément et vous guide pour le paiement via Orange Money, MTN MoMo ou tout autre moyen. C'est simple, rapide et direct." },
+                  { q: "Pourquoi limitez-vous les commandes à 5 par jour ?", a: "Parce que je travaille seul et je veux que chaque client ait un vrai suivi. Mieux vaut faire 5 projets bien que 20 mal. Si je suis plein un jour, on planifie le lendemain, c'est tout." },
+                  { q: "Comment se passe le paiement ?", a: "On discute sur WhatsApp, je vous donne un prix clair, et vous payez directement via Orange Money ou Moov Money. Pas de processus compliqué, pas de frais cachés. Dès que c'est confirmé, je commence le travail." },
                   { q: "Les formations sont-elles en ligne ou en présentiel ?", a: "Les formations sont 100% en ligne via WhatsApp et supports vidéo. Vous apprenez à votre rythme, avec un suivi personnalisé et un groupe WhatsApp pour poser vos questions." },
                 ]
                 const filtered = faqs.filter((f) => !faqSearch || f.q.toLowerCase().includes(faqSearch.toLowerCase()) || f.a.toLowerCase().includes(faqSearch.toLowerCase()))
