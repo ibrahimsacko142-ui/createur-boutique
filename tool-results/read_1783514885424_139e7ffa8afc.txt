@@ -1,0 +1,602 @@
+  2901→            </h2>
+  2902→            <p className="mt-4 text-lg text-white/90 max-w-2xl mx-auto leading-relaxed">
+  2903→              N&apos;attendez plus pour donner à votre entreprise l&apos;image qu&apos;elle mérite. Contactez-moi dès aujourd&apos;hui pour discuter de votre projet et obtenir un devis gratuit.
+  2904→            </p>
+  2905→            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+  2906→              <a href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20suis%20pr%C3%AAt%20%C3%A0%20lancer%20mon%20projet%20de%20communication." target="_blank" rel="noopener noreferrer">
+  2907→                <Button size="lg" className="bg-white text-amber-600 hover:bg-white/90 font-bold shadow-xl text-base px-8">
+  2908→                  <MessageCircle className="h-5 w-5 mr-2" /> Commander via WhatsApp
+  2909→                </Button>
+  2910→              </a>
+  2911→              <a href="https://wa.me/22397787244?text=Bonjour%20!%20J%27aimerais%20discuter%20de%20mon%20projet%20avec%20vous." target="_blank" rel="noopener noreferrer">
+  2912→                <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 font-semibold text-base px-8">
+  2913→                  M&apos;envoyer un message <Send className="ml-2 h-4 w-4" />
+  2914→                </Button>
+  2915→              </a>
+  2916→            </div>
+  2917→            <div className="mt-8 flex flex-col items-center gap-4">
+  2918→              <div className="flex items-center gap-5 text-white/80 text-xs font-medium">
+  2919→                <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4" /> Livraison rapide</span>
+  2920→                <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4" /> Satisfaction garantie</span>
+  2921→              </div>
+  2922→              <div className="flex items-center gap-3 text-white/70 text-xs">
+  2923→                <span className="px-4 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-400/30 font-bold">Commande via WhatsApp</span>
+  2924→              </div>
+  2925→            </div>
+  2926→          </div>
+  2927→        </section>
+  2928→
+  2929→        {/* ═══ 19. CONTACT ═══ */}
+  2930→        <section id="contact" className="py-16 sm:py-20 bg-muted/30">
+  2931→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  2932→            <motion.div
+  2933→              initial={{ opacity: 0, y: 30 }}
+  2934→              whileInView={{ opacity: 1, y: 0 }}
+  2935→              viewport={{ once: true, margin: '-50px' }}
+  2936→              transition={{ duration: 0.6 }}
+  2937→            >
+  2938→            <div className="grid lg:grid-cols-2 gap-12">
+  2939→              <div>
+  2940→                <Badge variant="secondary" className="mb-3">
+  2941→                  <Send className="h-3 w-3 mr-1" /> Contact
+  2942→                </Badge>
+  2943→                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Contactez-Moi</h2>
+  2944→                <p className="mt-3 text-muted-foreground leading-relaxed max-w-md">
+  2945→                  Vous avez un projet, une question ou besoin d&apos;un service ? N&apos;hésitez pas à me contacter. Je réponds rapidement.
+  2946→                </p>
+  2947→                <div className="mt-8 space-y-6">
+  2948→                  <div className="flex items-center gap-4">
+  2949→                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30">
+  2950→                      <Mail className="h-5 w-5 text-amber-600" />
+  2951→                    </div>
+  2952→                    <div>
+  2953→                      <p className="text-sm font-medium">Email</p>
+  2954→                      <p className="text-sm text-muted-foreground">contact@createurboutique.com</p>
+  2955→                    </div>
+  2956→                  </div>
+  2957→                  <div className="flex items-center gap-4">
+  2958→                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30">
+  2959→                      <Phone className="h-5 w-5 text-amber-600" />
+  2960→                    </div>
+  2961→                    <div>
+  2962→                      <p className="text-sm font-medium">Téléphone</p>
+  2963→                      <p className="text-sm text-muted-foreground">+223 97 78 72 44</p>
+  2964→                    </div>
+  2965→                  </div>
+  2966→                  <div className="flex items-center gap-4">
+  2967→                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30">
+  2968→                      <MapPin className="h-5 w-5 text-amber-600" />
+  2969→                    </div>
+  2970→                    <div>
+  2971→                      <p className="text-sm font-medium">Localisation</p>
+  2972→                      <p className="text-sm text-muted-foreground">Bamako, Mali</p>
+  2973→                    </div>
+  2974→                  </div>
+  2975→                </div>
+  2976→                <div className="mt-8 flex gap-3">
+  2977→                  <a href="https://www.instagram.com/sk_designer_luxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors" aria-label="Instagram">
+  2978→                    <Instagram className="h-5 w-5 text-amber-600" />
+  2979→                  </a>
+  2980→                  <a href="https://www.facebook.com/skdesignerluxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors" aria-label="Facebook">
+  2981→                    <Facebook className="h-5 w-5 text-amber-600" />
+  2982→                  </a>
+  2983→                  <a href="https://www.tiktok.com/@sk_designer_luxe" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors" aria-label="TikTok">
+  2984→                    <svg className="h-5 w-5 text-amber-600" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.87a8.16 8.16 0 0 0 4.77 1.52V6.94a4.85 4.85 0 0 1-1.01-.25z" /></svg>
+  2985→                  </a>
+  2986→                </div>
+  2987→              </div>
+  2988→
+  2989→              <form onSubmit={handleSubmitContact} className="space-y-4 rounded-2xl border bg-card p-6 sm:p-8 shadow-sm">
+  2990→                <div className="grid sm:grid-cols-2 gap-4">
+  2991→                  <div className="space-y-2">
+  2992→                    <Label htmlFor="name">Nom *</Label>
+  2993→                    <Input id="name" placeholder="Votre nom" value={contactData.name} onChange={(e) => setContactData({ ...contactData, name: e.target.value })} />
+  2994→                  </div>
+  2995→                  <div className="space-y-2">
+  2996→                    <Label htmlFor="email">Email *</Label>
+  2997→                    <Input id="email" type="email" placeholder="votre@email.com" value={contactData.email} onChange={(e) => setContactData({ ...contactData, email: e.target.value })} />
+  2998→                  </div>
+  2999→                </div>
+  3000→                <div className="space-y-2">
+  3001→                  <Label htmlFor="subject">Sujet</Label>
+  3002→                  <Input id="subject" placeholder="Quel service vous intéresse ?" value={contactData.subject} onChange={(e) => setContactData({ ...contactData, subject: e.target.value })} />
+  3003→                </div>
+  3004→                <div className="space-y-2">
+  3005→                  <Label htmlFor="message">Message *</Label>
+  3006→                  <Textarea id="message" placeholder="Décrivez votre projet ou votre demande..." rows={5} value={contactData.message} onChange={(e) => setContactData({ ...contactData, message: e.target.value })} />
+  3007→                </div>
+  3008→                <Button
+  3009→                  type="submit"
+  3010→                  className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold shadow-lg shadow-amber-500/20"
+  3011→                >
+  3012→                  <span className="flex items-center gap-2">
+  3013→                    <MessageCircle className="h-4 w-4" /> Envoyer via WhatsApp
+  3014→                  </span>
+  3015→                </Button>
+  3016→              </form>
+  3017→            </div>
+  3018→            </motion.div>
+  3019→          </div>
+  3020→        </section>
+  3021→      {/* ═══ COACH DETAIL MODAL ═══ */}
+  3022→      <AnimatePresence>
+  3023→        {selectedCoach && (
+  3024→          <motion.div
+  3025→            initial={{ opacity: 0 }}
+  3026→            animate={{ opacity: 1 }}
+  3027→            exit={{ opacity: 0 }}
+  3028→            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+  3029→            onClick={() => setSelectedCoach(null)}
+  3030→          >
+  3031→            <motion.div
+  3032→              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+  3033→              animate={{ scale: 1, opacity: 1, y: 0 }}
+  3034→              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+  3035→              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+  3036→              className="relative bg-background rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden"
+  3037→              onClick={(e) => e.stopPropagation()}
+  3038→            >
+  3039→              <div className={`bg-gradient-to-r ${selectedCoach.gradient} p-6 text-white relative`}>
+  3040→                <button onClick={() => setSelectedCoach(null)} className="absolute top-3 right-3 h-8 w-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors">
+  3041→                  <X className="h-4 w-4" />
+  3042→                </button>
+  3043→                <div className="flex items-center gap-4">
+  3044→                  <div className="h-20 w-20 rounded-full bg-white/20 flex items-center justify-center text-3xl font-extrabold ring-4 ring-white/30">
+  3045→                    {selectedCoach.initial}
+  3046→                  </div>
+  3047→                  <div>
+  3048→                    <h3 className="text-xl font-extrabold">{selectedCoach.name}</h3>
+  3049→                    <p className="text-white/80 text-sm mt-0.5">{selectedCoach.role}</p>
+  3050→                    <div className="flex gap-4 mt-2">
+  3051→                      {selectedCoach.stats.map((s) => (
+  3052→                        <div key={s.label}>
+  3053→                          <span className="text-lg font-extrabold">{s.value}</span>
+  3054→                          <span className="text-[10px] text-white/60 ml-1">{s.label}</span>
+  3055→                        </div>
+  3056→                      ))}
+  3057→                    </div>
+  3058→                  </div>
+  3059→                </div>
+  3060→              </div>
+  3061→              <div className="p-6 space-y-4">
+  3062→                <div>
+  3063→                  <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-2">Compétences</p>
+  3064→                  <div className="flex flex-wrap gap-2">
+  3065→                    {selectedCoach.speciality.split(', ').map((skill) => (
+  3066→                      <span key={skill} className="px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-950/20 text-amber-700 dark:text-amber-400 text-xs font-semibold border border-amber-200 dark:border-amber-800">
+  3067→                        {skill}
+  3068→                      </span>
+  3069→                    ))}
+  3070→                  </div>
+  3071→                </div>
+  3072→                <div>
+  3073→                  <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-2">Biographie</p>
+  3074→                  <p className="text-sm text-foreground/80 leading-relaxed">{selectedCoach.bio}</p>
+  3075→                </div>
+  3076→                <div>
+  3077→                  <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-2">Formations dispensées</p>
+  3078→                  <div className="space-y-2">
+  3079→                    {selectedCoach.name === 'Sacko' && (
+  3080→                      <>
+  3081→                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>Design Graphique (Canva, Photoshop, Illustrator)</span></div>
+  3082→                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>Branding & Identité Visuelle</span></div>
+  3083→                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>Montage Vidéo (CapCut, Premiere Pro)</span></div>
+  3084→                      </>
+  3085→                    )}
+  3086→                    {selectedCoach.name === 'Camara Leh' && (
+  3087→                      <>
+  3088→                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>Création Web (HTML, CSS, JavaScript)</span></div>
+  3089→                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>Frameworks modernes (React, Next.js)</span></div>
+  3090→                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>WordPress & Solutions e-commerce</span></div>
+  3091→                      </>
+  3092→                    )}
+  3093→                    {selectedCoach.name === 'Kante' && (
+  3094→                      <>
+  3095→                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>Marketing Digital & Stratégie</span></div>
+  3096→                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>Publicité Facebook & Instagram Ads</span></div>
+  3097→                        <div className="flex items-center gap-2 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" /><span>TikTok & YouTube Growth</span></div>
+  3098→                      </>
+  3099→                    )}
+  3100→                  </div>
+  3101→                </div>
+  3102→                <a
+  3103→                  href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je souhaite être encadré(e) par ${selectedCoach.name} pour une formation. Pouvez-vous me donner plus de détails ?`)}`}
+  3104→                  target="_blank" rel="noopener noreferrer"
+  3105→                  onClick={() => setSelectedCoach(null)}
+  3106→                >
+  3107→                  <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold shadow-lg shadow-emerald-500/20 mt-2">
+  3108→                    <MessageCircle className="h-4 w-4 mr-2" /> Contacter {selectedCoach.name} via WhatsApp
+  3109→                  </Button>
+  3110→                </a>
+  3111→              </div>
+  3112→            </motion.div>
+  3113→          </motion.div>
+  3114→        )}
+  3115→      </AnimatePresence>
+  3116→
+  3117→      {/* ═══ COOKIE CONSENT BANNER ═══ */}
+  3118→      <AnimatePresence>
+  3119→        {showCookieConsent && (
+  3120→          <motion.div
+  3121→            initial={{ y: 100, opacity: 0 }}
+  3122→            animate={{ y: 0, opacity: 1 }}
+  3123→            exit={{ y: 100, opacity: 0 }}
+  3124→            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+  3125→            className="fixed bottom-16 lg:bottom-6 left-4 right-4 lg:left-auto lg:right-6 lg:w-96 z-[80] bg-background/95 backdrop-blur-xl rounded-2xl border shadow-2xl p-5"
+  3126→          >
+  3127→            <div className="flex items-start gap-3">
+  3128→              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30 flex-shrink-0">
+  3129→                <Cookie className="h-5 w-5 text-amber-600" />
+  3130→              </div>
+  3131→              <div className="flex-1">
+  3132→                <h3 className="text-sm font-bold mb-1">Nous respectons votre vie privée</h3>
+  3133→                <p className="text-xs text-muted-foreground leading-relaxed mb-3">
+  3134→                  Nous utilisons des cookies pour améliorer votre expérience, analyser le trafic et afficher des contenus personnalisés. En continuant, vous acceptez nos cookies.
+  3135→                </p>
+  3136→                <div className="flex gap-2">
+  3137→                  <Button
+  3138→                    onClick={() => setShowCookieConsent(false)}
+  3139→                    size="sm"
+  3140→                    className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold text-xs h-9"
+  3141→                  >
+  3142→                    Accepter
+  3143→                  </Button>
+  3144→                  <Button
+  3145→                    onClick={() => setShowCookieConsent(false)}
+  3146→                    variant="outline"
+  3147→                    size="sm"
+  3148→                    className="text-xs h-9"
+  3149→                  >
+  3150→                    Refuser
+  3151→                  </Button>
+  3152→                </div>
+  3153→              </div>
+  3154→            </div>
+  3155→          </motion.div>
+  3156→        )}
+  3157→      </AnimatePresence>
+  3158→
+  3159→      {/* ═══ WELCOME POPUP ═══ */}
+  3160→      <AnimatePresence>
+  3161→        {welcomeVisible && (
+  3162→          <motion.div
+  3163→            initial={{ opacity: 0 }}
+  3164→            animate={{ opacity: 1 }}
+  3165→            exit={{ opacity: 0 }}
+  3166→            className="fixed inset-0 z-[90] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+  3167→            onClick={() => { setWelcomeVisible(false); setShowWelcome(false) }}
+  3168→          >
+  3169→            <motion.div
+  3170→              initial={{ scale: 0.8, opacity: 0, y: 30 }}
+  3171→              animate={{ scale: 1, opacity: 1, y: 0 }}
+  3172→              exit={{ scale: 0.8, opacity: 0, y: 30 }}
+  3173→              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+  3174→              className="relative bg-background rounded-2xl shadow-2xl max-w-sm w-full overflow-hidden"
+  3175→              onClick={(e) => e.stopPropagation()}
+  3176→            >
+  3177→              <button onClick={() => { setWelcomeVisible(false); setShowWelcome(false) }} className="absolute top-3 right-3 z-10 h-8 w-8 rounded-full bg-muted hover:bg-muted/80 flex items-center justify-center">
+  3178→                <X className="h-4 w-4" />
+  3179→              </button>
+  3180→              <div className="bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 p-6 text-center text-white">
+  3181→                <div className="text-4xl mb-2">👋</div>
+  3182→                <h3 className="text-xl font-extrabold">Bienvenue sur Studio Créatif !</h3>
+  3183→                <p className="text-white/80 text-sm mt-1">Offre exclusive pour les nouveaux visiteurs</p>
+  3184→              </div>
+  3185→              <div className="p-6 space-y-4">
+  3186→                <div className="space-y-2">
+  3187→                  <div className="flex items-center gap-3 p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800">
+  3188→                    <Gift className="h-5 w-5 text-emerald-500 flex-shrink-0" />
+  3189→                    <div>
+  3190→                      <p className="text-sm font-bold text-emerald-700 dark:text-emerald-400">Logo GRATUIT</p>
+  3191→                      <p className="text-[11px] text-muted-foreground">Votre premier logo offert, sans engagement</p>
+  3192→                    </div>
+  3193→                  </div>
+  3194→                  <div className="flex items-center gap-3 p-3 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800">
+  3195→                    <Zap className="h-5 w-5 text-amber-500 flex-shrink-0" />
+  3196→                    <div>
+  3197→                      <p className="text-sm font-bold text-amber-700 dark:text-amber-400">Livraison en 48h</p>
+  3198→                      <p className="text-[11px] text-muted-foreground">Résultat rapide et professionnel</p>
+  3199→                    </div>
+  3200→                  </div>
+  3201→                </div>
+  3202→                <a
+  3203→                  href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20suis%20nouveau%20sur%20votre%20site%20et%20je%20souhaite%20profiter%20de%20l'offre%20bienvenue%20(logo%20gratuit)."
+  3204→                  target="_blank" rel="noopener noreferrer"
+  3205→                  onClick={() => { setWelcomeVisible(false); setShowWelcome(false) }}
+  3206→                >
+  3207→                  <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold shadow-lg shadow-emerald-500/20">
+  3208→                    <MessageCircle className="h-4 w-4 mr-2" /> Profiter de l'offre
+  3209→                  </Button>
+  3210→                </a>
+  3211→                <button onClick={() => { setWelcomeVisible(false); setShowWelcome(false) }} className="block text-xs text-muted-foreground hover:text-foreground transition-colors mx-auto">
+  3212→                  Peut-être plus tard
+  3213→                </button>
+  3214→              </div>
+  3215→            </motion.div>
+  3216→          </motion.div>
+  3217→        )}
+  3218→      </AnimatePresence>
+  3219→
+  3220→      {/* ═══ PORTFOLIO LIGHTBOX ═══ */}
+  3221→      <AnimatePresence>
+  3222→        {lightboxImg && (
+  3223→          <motion.div
+  3224→            initial={{ opacity: 0 }}
+  3225→            animate={{ opacity: 1 }}
+  3226→            exit={{ opacity: 0 }}
+  3227→            className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-8 bg-black/90 backdrop-blur-sm"
+  3228→            onClick={() => setLightboxImg(null)}
+  3229→          >
+  3230→            <motion.div
+  3231→              initial={{ scale: 0.9, opacity: 0 }}
+  3232→              animate={{ scale: 1, opacity: 1 }}
+  3233→              exit={{ scale: 0.9, opacity: 0 }}
+  3234→              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+  3235→              className="relative max-w-5xl w-full max-h-[90vh] overflow-hidden rounded-2xl shadow-2xl"
+  3236→              onClick={(e) => e.stopPropagation()}
+  3237→            >
+  3238→              <img src={lightboxImg.src} alt={lightboxImg.title} className="w-full h-auto max-h-[75vh] object-contain bg-black" />
+  3239→              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-6">
+  3240→                <h3 className="text-white font-bold text-lg">{lightboxImg.title}</h3>
+  3241→                <p className="text-white/70 text-sm mt-1">{lightboxImg.desc}</p>
+  3242→              </div>
+  3243→              <button
+  3244→                onClick={() => setLightboxImg(null)}
+  3245→                className="absolute top-4 right-4 h-10 w-10 flex items-center justify-center rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors backdrop-blur-sm"
+  3246→              >
+  3247→                <X className="h-5 w-5" />
+  3248→              </button>
+  3249→            </motion.div>
+  3250→          </motion.div>
+  3251→        )}
+  3252→      </AnimatePresence>
+  3253→
+  3254→      {/* ═══ SERVICE QUIZ MODAL ═══ */}
+  3255→      <AnimatePresence>
+  3256→        {quizOpen && (
+  3257→          <motion.div
+  3258→            initial={{ opacity: 0 }}
+  3259→            animate={{ opacity: 1 }}
+  3260→            exit={{ opacity: 0 }}
+  3261→            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+  3262→            onClick={() => { setQuizOpen(false); setQuizStep(0); setQuizAnswers([]); setQuizResult(null) }}
+  3263→          >
+  3264→            <motion.div
+  3265→              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+  3266→              animate={{ scale: 1, opacity: 1, y: 0 }}
+  3267→              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+  3268→              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+  3269→              className="relative bg-background rounded-2xl shadow-2xl max-w-md w-full overflow-hidden"
+  3270→              onClick={(e) => e.stopPropagation()}
+  3271→            >
+  3272→              <button onClick={() => { setQuizOpen(false); setQuizStep(0); setQuizAnswers([]); setQuizResult(null) }} className="absolute top-3 right-3 z-10 h-8 w-8 rounded-full bg-muted hover:bg-muted/80 flex items-center justify-center">
+  3273→                <X className="h-4 w-4" />
+  3274→              </button>
+  3275→              <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-6 text-white text-center">
+  3276→                <Brain className="h-8 w-8 mx-auto mb-2" />
+  3277→                {!quizResult ? (
+  3278→                  <>
+  3279→                    <h3 className="text-lg font-extrabold">Quel service vous convient ?</h3>
+  3280→                    <p className="text-white/80 text-sm mt-1">Répondez à 3 questions rapides</p>
+  3281→                    {/* Progress bar */}
+  3282→                    <div className="mt-4 flex gap-1.5 justify-center">
+  3283→                      {[0, 1, 2].map((s) => (
+  3284→                        <div key={s} className={`h-1.5 rounded-full transition-all duration-300 ${s <= quizStep ? 'w-8 bg-white' : 'w-4 bg-white/40'}`} />
+  3285→                      ))}
+  3286→                    </div>
+  3287→                  </>
+  3288→                ) : (
+  3289→                  <h3 className="text-lg font-extrabold">Résultat</h3>
+  3290→                )}
+  3291→              </div>
+  3292→              <div className="p-6">
+  3293→                {!quizResult ? (
+  3294→                  <AnimatePresence mode="wait">
+  3295→                    <motion.div
+  3296→                      key={quizStep}
+  3297→                      initial={{ opacity: 0, x: 30 }}
+  3298→                      animate={{ opacity: 1, x: 0 }}
+  3299→                      exit={{ opacity: 0, x: -30 }}
+  3300→                      transition={{ duration: 0.3 }}
+  3301→                    >
+  3302→                      {quizStep === 0 && (
+  3303→                        <div className="space-y-3">
+  3304→                          <p className="text-sm font-semibold">Quel est votre objectif principal ?</p>
+  3305→                          {[
+  3306→                            { label: 'Créer une identité visuelle (logo, charte)', val: 'identite' },
+  3307→                            { label: 'Avoir un site internet professionnel', val: 'site' },
+  3308→                            { label: 'Produire du contenu vidéo', val: 'video' },
+  3309→                            { label: 'Attirer des clients sur les réseaux', val: 'reseaux' },
+  3310→                            { label: 'Apprendre le design digital', val: 'formation' },
+  3311→                          ].map((opt) => (
+  3312→                            <button key={opt.val} onClick={() => { setQuizAnswers([opt.val]); setQuizStep(1) }} className="w-full text-left p-3 rounded-xl border border-border hover:border-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/20 text-sm transition-all hover:translate-x-1">
+  3313→                              {opt.label}
+  3314→                            </button>
+  3315→                          ))}
+  3316→                        </div>
+  3317→                      )}
+  3318→                      {quizStep === 1 && (
+  3319→                        <div className="space-y-3">
+  3320→                          <p className="text-sm font-semibold">Quel est votre budget ?</p>
+  3321→                          {[
+  3322→                            { label: 'Budget limité — je veux tester gratuitement', val: 'gratuit' },
+  3323→                            { label: '5 000 – 20 000 FCFA', val: 'petit' },
+  3324→                            { label: '20 000 – 50 000 FCFA', val: 'moyen' },
+  3325→                            { label: 'Plus de 50 000 FCFA', val: 'grand' },
+  3326→                          ].map((opt) => (
+  3327→                            <button key={opt.val} onClick={() => { setQuizAnswers(prev => [...prev, opt.val]); setQuizStep(2) }} className="w-full text-left p-3 rounded-xl border border-border hover:border-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/20 text-sm transition-all hover:translate-x-1">
+  3328→                              {opt.label}
+  3329→                            </button>
+  3330→                          ))}
+  3331→                        </div>
+  3332→                      )}
+  3333→                      {quizStep === 2 && (
+  3334→                        <div className="space-y-3">
+  3335→                          <p className="text-sm font-semibold">Quand souhaitez-vous commencer ?</p>
+  3336→                          {[
+  3337→                            { label: 'Immédiatement — c\'est urgent', val: 'urgent' },
+  3338→                            { label: 'Cette semaine', val: 'semaine' },
+  3339→                            { label: 'Dans les 2 prochaines semaines', val: '2semaines' },
+  3340→                            { label: 'Je me renseigne pour l\'instant', val: 'renseigne' },
+  3341→                          ].map((opt) => (
+  3342→                            <button key={opt.val} onClick={() => {
+  3343→                              const answers = [...quizAnswers, opt.val]
+  3344→                              setQuizAnswers(answers)
+  3345→                              // Determine result
+  3346→                              const goal = answers[0]
+  3347→                              const budget = answers[1]
+  3348→                              if (goal === 'identite') setQuizResult({ service: 'Design Graphique', icon: Palette, reason: budget === 'gratuit' ? 'Testez l\'Offre Découverte gratuite pour un logo simple, puis passez au Premium pour une identité complète.' : 'L\'Offre Premium Design vous donne un logo vectorisé, une charte graphique complète et tous les fichiers sources.' })
+  3349→                              else if (goal === 'site') setQuizResult({ service: 'Création Web', icon: Globe, reason: budget === 'gratuit' ? 'Commencez avec une landing page gratuite, puis évoluez vers un site multi-pages complet.' : 'Un site professionnel multi-pages avec formulaire, SEO, et hébergement inclus est l\'idéal pour vous.' })
+  3350→                              else if (goal === 'video') setQuizResult({ service: 'Montage Vidéo', icon: MonitorPlay, reason: budget === 'gratuit' ? 'Essayez le montage découverte gratuit pour un aperçu rapide.' : 'Le montage Premium inclut effets, sous-titres, musique et export optimisé pour tous les réseaux.' })
+  3351→                              else if (goal === 'reseaux') setQuizResult({ service: 'Marketing Digital', icon: Megaphone, reason: budget === 'gratuit' ? 'Un post ou affiche gratuit pour tester mon style.' : 'Stratégie complète avec calendrier éditorial, posts, stories et bannières publicitaires.' })
+  3352→                              else setQuizResult({ service: 'Formation Design', icon: GraduationCap, reason: 'La formation Design Graphique (Découverte gratuite puis Premium) est parfaite pour apprendre à créer vos propres visuels.' })
+  3353→                              setQuizStep(3)
+  3354→                            }} className="w-full text-left p-3 rounded-xl border border-border hover:border-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/20 text-sm transition-all hover:translate-x-1">
+  3355→                              {opt.label}
+  3356→                            </button>
+  3357→                          ))}
+  3358→                        </div>
+  3359→                      )}
+  3360→                    </motion.div>
+  3361→                  </AnimatePresence>
+  3362→                ) : quizResult && (
+  3363→                  <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center space-y-4">
+  3364→                    <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-white mx-auto shadow-lg">
+  3365→                      <quizResult.icon className="h-8 w-8" />
+  3366→                    </div>
+  3367→                    <h4 className="text-xl font-extrabold">{quizResult.service}</h4>
+  3368→                    <p className="text-sm text-muted-foreground leading-relaxed">{quizResult.reason}</p>
+  3369→                    <div className="flex flex-col gap-2 pt-2">
+  3370→                      <a
+  3371→                        href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! J'ai fait le quiz sur votre site et le résultat m'a recommandé : ${quizResult.service}. Je souhaite en savoir plus !`)}`}
+  3372→                        target="_blank" rel="noopener noreferrer"
+  3373→                        onClick={() => { setQuizOpen(false); setQuizStep(0); setQuizAnswers([]); setQuizResult(null) }}
+  3374→                      >
+  3375→                        <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold shadow-lg shadow-emerald-500/20">
+  3376→                          <MessageCircle className="h-4 w-4 mr-2" /> En discuter sur WhatsApp
+  3377→                        </Button>
+  3378→                      </a>
+  3379→                      <button onClick={() => { setQuizStep(0); setQuizAnswers([]); setQuizResult(null) }} className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+  3380→                        Refaire le quiz
+  3381→                      </button>
+  3382→                    </div>
+  3383→                  </motion.div>
+  3384→                )}
+  3385→              </div>
+  3386→            </motion.div>
+  3387→          </motion.div>
+  3388→        )}
+  3389→      </AnimatePresence>
+  3390→
+  3391→      {/* ═══ QUIZ TRIGGER FLOATING BUTTON ═══ */}
+  3392→      <motion.button
+  3393→        initial={{ opacity: 0, scale: 0 }}
+  3394→        animate={{ opacity: 1, scale: 1 }}
+  3395→        transition={{ delay: 3, type: 'spring' }}
+  3396→        onClick={() => setQuizOpen(true)}
+  3397→        className="fixed bottom-[68px] lg:bottom-6 left-1/2 -translate-x-1/2 z-[55] flex items-center gap-2 bg-gradient-to-r from-violet-600 to-purple-600 text-white pl-4 pr-5 py-3 rounded-full shadow-lg shadow-violet-500/30 hover:shadow-xl hover:shadow-violet-500/40 transition-all duration-300 hover:scale-105 group"
+  3398→      >
+  3399→        <Brain className="h-5 w-5" />
+  3400→        <span className="text-sm font-semibold whitespace-nowrap">Quel service vous convient ?</span>
+  3401→        <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-medium bg-white/20 px-2 py-0.5 rounded-full">Quiz gratuit</span>
+  3402→      </motion.button>
+  3403→
+  3404→      {/* ═══ SIDE NAVIGATION DOTS (desktop) ═══ */}
+  3405→      <div className="fixed right-4 top-1/2 -translate-y-1/2 z-30 hidden xl:flex flex-col gap-2.5">
+  3406→        {[
+  3407→          { id: 'accueil', label: 'Accueil' },
+  3408→          { id: 'services', label: 'Services' },
+  3409→          { id: 'formations', label: 'Formations' },
+  3410→          { id: 'coachs', label: 'Coachs' },
+  3411→          { id: 'boutique', label: 'Boutique' },
+  3412→          { id: 'portfolio', label: 'Portfolio' },
+  3413→          { id: 'contact', label: 'Contact' },
+  3414→        ].map((item) => (
+  3415→          <a
+  3416→            key={item.id}
+  3417→            href={`#${item.id}`}
+  3418→            className="group flex items-center gap-2.5 justify-end"
+  3419→          >
+  3420→            <span className="text-[10px] font-medium text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+  3421→              {item.label}
+  3422→            </span>
+  3423→            <span className={`h-2.5 rounded-full transition-all duration-300 ${
+  3424→              activeDotSection === item.id
+  3425→                ? 'w-2.5 bg-amber-500 shadow-md shadow-amber-500/30'
+  3426→                : 'w-2 bg-muted-foreground/30 group-hover:bg-amber-500/50'
+  3427→            }`} />
+  3428→          </a>
+  3429→        ))}
+  3430→      </div>
+  3431→
+  3432→      </main>
+  3433→
+  3434→      {/* ═══ MOYENS DE PAIEMENT ═══ */}
+  3435→      <section className="py-8 border-t bg-muted/20">
+  3436→        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+  3437→          <div className="flex flex-col items-center justify-center gap-3">
+  3438→            <p className="text-sm font-semibold text-muted-foreground">Commande & Paiement via</p>
+  3439→            <div className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20 border border-emerald-200 dark:border-emerald-800 shadow-sm">
+  3440→              <div className="h-3 w-3 rounded-full bg-emerald-500" />
+  3441→              <span className="text-sm font-bold text-emerald-700 dark:text-emerald-400">WhatsApp</span>
+  3442→              <span className="text-[10px] text-muted-foreground">— Orange Money, MTN MoMo</span>
+  3443→            </div>
+  3444→          </div>
+  3445→          <p className="text-center text-[11px] text-muted-foreground mt-3">Commande simple — Confirmation via WhatsApp — Paiement par Orange Money ou MTN MoMo</p>
+  3446→        </div>
+  3447→      </section>
+  3448→
+  3449→      {/* ═══ 20. FOOTER ═══ */}
+  3450→      <Footer />
+  3451→
+  3452→      {/* ═══ STICKY MOBILE CTA ═══ */}
+  3453→      <AnimatePresence>
+  3454→        {showStickyCta && (
+  3455→          <motion.div
+  3456→            initial={{ y: 100 }}
+  3457→            animate={{ y: 0 }}
+  3458→            exit={{ y: 100 }}
+  3459→            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+  3460→            className="fixed bottom-14 left-0 right-0 z-[49] lg:hidden p-3 bg-gradient-to-t from-background via-background/95 to-transparent"
+  3461→          >
+  3462→            <a href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20souhaite%20discuter%20d%27un%20projet." target="_blank" rel="noopener noreferrer">
+  3463→              <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold h-11 text-sm shadow-lg shadow-emerald-500/30">
+  3464→                <MessageCircle className="h-4 w-4 mr-2" /> Discuter de mon projet — Gratuit
+  3465→              </Button>
+  3466→            </a>
+  3467→          </motion.div>
+  3468→        )}
+  3469→      </AnimatePresence>
+  3470→
+  3471→      {/* ═══ 21. BOTTOM MOBILE NAV ═══ */}
+  3472→      <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-background/95 backdrop-blur-xl border-t border-border shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+  3473→        <div className="flex items-center justify-around h-14 px-2">
+  3474→          <a href="#accueil" className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-amber-500 transition-colors py-1 px-2">
+  3475→            <Sparkles className="h-[18px] w-[18px]" />
+  3476→            <span className="text-[9px] font-medium">Accueil</span>
+  3477→          </a>
+  3478→          <a href="#services" className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-amber-500 transition-colors py-1 px-2">
+  3479→            <Layers className="h-[18px] w-[18px]" />
+  3480→            <span className="text-[9px] font-medium">Services</span>
+  3481→          </a>
+  3482→          <a href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20souhaite%20discuter%20d%27un%20projet." target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-0.5 -mt-6">
+  3483→            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 text-white shadow-lg shadow-emerald-500/30">
+  3484→              <MessageCircle className="h-6 w-6" />
+  3485→            </div>
+  3486→            <span className="text-[9px] font-semibold text-emerald-600">WhatsApp</span>
+  3487→          </a>
+  3488→          <a href="#boutique" className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-amber-500 transition-colors py-1 px-2">
+  3489→            <BookOpen className="h-[18px] w-[18px]" />
+  3490→            <span className="text-[9px] font-medium">Boutique</span>
+  3491→          </a>
+  3492→          <a href="#contact" className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-amber-500 transition-colors py-1 px-2">
+  3493→            <Send className="h-[18px] w-[18px]" />
+  3494→            <span className="text-[9px] font-medium">Contact</span>
+  3495→          </a>
+  3496→        </div>
+  3497→      </div>
+  3498→
+  3499→      {/* ═══ BACK TO TOP DESKTOP ═══ */}
+  3500→      <AnimatePresence>
+
+[showing lines 2901-3500 of 3739; use offset=3501 with limit to continue reading]

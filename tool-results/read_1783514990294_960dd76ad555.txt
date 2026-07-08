@@ -1,0 +1,502 @@
+  1900→                  value={bookSearch}
+  1901→                  onChange={(e) => setBookSearch(e.target.value)}
+  1902→                  className="pl-10 h-11 bg-background border-border rounded-xl text-sm"
+  1903→                />
+  1904→                {bookSearch && (
+  1905→                  <button onClick={() => setBookSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+  1906→                    <X className="h-4 w-4" />
+  1907→                  </button>
+  1908→                )}
+  1909→              </div>
+  1910→              {/* Category filter pills */}
+  1911→            <div className="flex flex-wrap items-center justify-center gap-2">
+  1912→              {bookCategories.map((cat) => (
+  1913→                <button
+  1914→                  key={cat}
+  1915→                  onClick={() => setBookFilter(cat)}
+  1916→                  className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${
+  1917→                    bookFilter === cat
+  1918→                      ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md shadow-amber-500/20'
+  1919→                      : 'bg-muted text-muted-foreground hover:bg-amber-50 hover:text-amber-700 dark:hover:bg-amber-950/30 dark:hover:text-amber-400 border border-transparent hover:border-amber-200 dark:hover:border-amber-800'
+  1920→                  }`}
+  1921→                >
+  1922→                  {cat}
+  1923→                </button>
+  1924→              ))}
+  1925→            </div>
+  1926→            </div>
+  1927→
+  1928→            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5">
+  1929→              {books.filter((b) => (bookFilter === 'Tous' || b.category === bookFilter) && (!bookSearch || b.title.toLowerCase().includes(bookSearch.toLowerCase()) || b.author.toLowerCase().includes(bookSearch.toLowerCase()) || b.desc.toLowerCase().includes(bookSearch.toLowerCase()) || b.category.toLowerCase().includes(bookSearch.toLowerCase()))).length === 0 && (
+  1930→                <div className="col-span-full text-center py-12">
+  1931→                  <Search className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
+  1932→                  <p className="text-sm text-muted-foreground">Aucun livre ne correspond à votre recherche.</p>
+  1933→                  <button onClick={() => { setBookSearch(''); setBookFilter('Tous') }} className="text-amber-600 text-xs font-semibold mt-2 hover:underline">Réinitialiser les filtres</button>
+  1934→                </div>
+  1935→              )}
+  1936→              {books.filter((b) => (bookFilter === 'Tous' || b.category === bookFilter) && (!bookSearch || b.title.toLowerCase().includes(bookSearch.toLowerCase()) || b.author.toLowerCase().includes(bookSearch.toLowerCase()) || b.desc.toLowerCase().includes(bookSearch.toLowerCase()) || b.category.toLowerCase().includes(bookSearch.toLowerCase()))).map((book, i) => (
+  1937→                <motion.div
+  1938→                  key={book.title + i}
+  1939→                  initial={{ opacity: 0, y: 20 }}
+  1940→                  whileInView={{ opacity: 1, y: 0 }}
+  1941→                  viewport={{ once: true, margin: '-30px' }}
+  1942→                  transition={{ duration: 0.4, delay: (i % 5) * 0.08 }}
+  1943→                  className="group flex flex-col"
+  1944→                >
+  1945→                  {/* Book cover with real image */}
+  1946→                  <div
+  1947→                    className="relative aspect-[3/4] rounded-xl overflow-hidden shadow-lg group-hover:shadow-2xl group-hover:-translate-y-2 transition-all duration-300 cursor-pointer bg-muted"
+  1948→                    onClick={() => setSelectedBook(book)}
+  1949→                  >
+  1950→                    <img
+  1951→                      src={book.cover}
+  1952→                      alt={book.title}
+  1953→                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+  1954→                      loading="lazy"
+  1955→                    />
+  1956→                    {/* Price tag */}
+  1957→                    <div className="absolute top-2 right-2 bg-white/95 backdrop-blur-sm text-amber-700 text-[10px] font-extrabold px-2.5 py-1 rounded-lg shadow-md">
+  1958→                      1 000 F
+  1959→                    </div>
+  1960→                    {/* Cart/Favorite button */}
+  1961→                    <button
+  1962→                      onClick={(e) => { e.stopPropagation(); toggleCart(book.title); toast({ title: isInCart(book.title) ? 'Retiré du panier' : 'Ajouté au panier !', description: isInCart(book.title) ? '' : `${book.title} est dans votre panier.` }) }}
+  1963→                      className={`absolute top-2 left-2 z-10 flex h-8 w-8 items-center justify-center rounded-full shadow-md transition-all duration-200 ${isInCart(book.title) ? 'bg-emerald-500 text-white' : 'bg-white/90 text-muted-foreground hover:text-red-500 backdrop-blur-sm'}`}
+  1964→                      aria-label={isInCart(book.title) ? 'Retirer du panier' : 'Ajouter au panier'}
+  1965→                    >
+  1966→                      <ShoppingCart className="h-4 w-4" />
+  1967→                    </button>
+  1968→                    {/* Hover overlay */}
+  1969→                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
+  1970→                      <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 backdrop-blur-sm text-foreground text-[11px] font-bold px-3 py-1.5 rounded-full shadow-lg">
+  1971→                        Voir les détails
+  1972→                      </div>
+  1973→                    </div>
+  1974→                    {/* Bottom gradient for title */}
+  1975→                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-3 pt-8">
+  1976→                      <h3 className="text-[11px] sm:text-xs font-extrabold text-white leading-tight line-clamp-2">{book.title}</h3>
+  1977→                      <p className="text-[9px] text-white/70 mt-0.5">{book.author}</p>
+  1978→                    </div>
+  1979→                  </div>
+  1980→                  {/* Order buttons */}
+  1981→                  <div className="mt-2.5 flex gap-1.5">
+  1982→                    <a
+  1983→                      href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je veux commander le livre : ${book.title} par ${book.author} (1 000 FCFA). Comment procéder ?`)}`}
+  1984→                      target="_blank"
+  1985→                      rel="noopener noreferrer"
+  1986→                      onClick={(e) => e.stopPropagation()}
+  1987→                      className="flex-1"
+  1988→                    >
+  1989→                      <Button
+  1990→                        className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white text-[11px] font-bold h-9 shadow-sm"
+  1991→                      >
+  1992→                        <MessageCircle className="h-3 w-3 mr-1" /> Commander
+  1993→                      </Button>
+  1994→                    </a>
+  1995→                  </div>
+  1996→                </motion.div>
+  1997→              ))}
+  1998→            </div>
+  1999→
+  2000→            {/* ═══ LIVRES RECOMMANDÉS ═══ */}
+  2001→            <div className="mt-10">
+  2002→              <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+  2003→                <Flame className="h-5 w-5 text-orange-500" />
+  2004→                Populaires en ce moment
+  2005→              </h3>
+  2006→              <div className="flex gap-4 overflow-x-auto pb-3 scrollbar-hide">
+  2007→                {[
+  2008→                  books.find(b => b.title === 'Écrire des livres avec ChatGPT'),
+  2009→                  books.find(b => b.title === 'E-marketing & E-commerce'),
+  2010→                  books.find(b => b.title === 'WordPress pour les Nuls'),
+  2011→                  books.find(b => b.title === 'Programmer en Langage C'),
+  2012→                ].filter(Boolean).map((book) => book && (
+  2013→                  <div
+  2014→                    key={book!.title}
+  2015→                    className="flex-shrink-0 w-36 cursor-pointer group"
+  2016→                    onClick={() => setSelectedBook(book!)}
+  2017→                  >
+  2018→                    <div className="relative aspect-[3/4] rounded-xl overflow-hidden shadow-md group-hover:shadow-xl group-hover:-translate-y-1 transition-all duration-300 bg-muted">
+  2019→                      <img src={book!.cover} alt={book!.title} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+  2020→                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-2 pt-6">
+  2021→                        <p className="text-[10px] font-bold text-white line-clamp-2 leading-tight">{book!.title}</p>
+  2022→                      </div>
+  2023→                      <div className="absolute top-1.5 right-1.5 bg-amber-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-md">
+  2024→                        TOP
+  2025→                      </div>
+  2026→                    </div>
+  2027→                  </div>
+  2028→                ))}
+  2029→              </div>
+  2030→            </div>
+  2031→
+  2032→            {/* Book Detail Modal */}
+  2033→            <AnimatePresence>
+  2034→              {selectedBook && (
+  2035→                <motion.div
+  2036→                  initial={{ opacity: 0 }}
+  2037→                  animate={{ opacity: 1 }}
+  2038→                  exit={{ opacity: 0 }}
+  2039→                  className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+  2040→                  onClick={() => setSelectedBook(null)}
+  2041→                >
+  2042→                  <motion.div
+  2043→                    initial={{ scale: 0.9, opacity: 0, y: 20 }}
+  2044→                    animate={{ scale: 1, opacity: 1, y: 0 }}
+  2045→                    exit={{ scale: 0.9, opacity: 0, y: 20 }}
+  2046→                    transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+  2047→                    className="relative bg-background rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden"
+  2048→                    onClick={(e) => e.stopPropagation()}
+  2049→                  >
+  2050→                    <button
+  2051→                      onClick={() => setSelectedBook(null)}
+  2052→                      className="absolute top-3 right-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/40 text-white hover:bg-black/60 transition-colors backdrop-blur-sm"
+  2053→                    >
+  2054→                      <X className="h-4 w-4" />
+  2055→                    </button>
+  2056→                    <div className="flex flex-col sm:flex-row">
+  2057→                      <div className="sm:w-48 flex-shrink-0">
+  2058→                        <img src={selectedBook.cover} alt={selectedBook.title} className="w-full h-64 sm:h-full object-cover" />
+  2059→                      </div>
+  2060→                      <div className="p-5 sm:p-6 flex flex-col flex-1 max-h-[70vh] overflow-y-auto">
+  2061→                        <div className="flex items-center gap-2 mb-2 flex-wrap">
+  2062→                          <Badge variant="secondary" className="bg-amber-100 text-amber-700 border-amber-200 text-[10px]">
+  2063→                            <BookOpen className="h-2.5 w-2.5 mr-1" /> 1 000 FCFA
+  2064→                          </Badge>
+  2065→                          <Badge variant="outline" className="text-[10px] text-muted-foreground">
+  2066→                            {selectedBook.category}
+  2067→                          </Badge>
+  2068→                        </div>
+  2069→                        <h3 className="text-lg font-extrabold leading-tight">{selectedBook.title}</h3>
+  2070→                        <p className="text-sm text-muted-foreground mt-1">par <span className="font-semibold text-foreground">{selectedBook.author}</span></p>
+  2071→
+  2072→                        {/* Extrait */}
+  2073→                        <div className="mt-4 p-3 rounded-xl bg-muted/50 border border-border">
+  2074→                          <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">Extrait</p>
+  2075→                          <p className="text-sm text-foreground/80 leading-relaxed">{selectedBook.excerpt}</p>
+  2076→                        </div>
+  2077→
+  2078→                        {/* Points clés */}
+  2079→                        <div className="mt-4 space-y-1.5">
+  2080→                          <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Ce que vous allez apprendre</p>
+  2081→                          {selectedBook.keypoints.map((point) => (
+  2082→                            <div key={point} className="flex items-start gap-2 text-xs text-foreground/80">
+  2083→                              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 mt-0.5 flex-shrink-0" />
+  2084→                              <span>{point}</span>
+  2085→                            </div>
+  2086→                          ))}
+  2087→                        </div>
+  2088→
+  2089→                        {/* Livraison info */}
+  2090→                        <div className="mt-4 pt-3 border-t border-border space-y-1.5">
+  2091→                          <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
+  2092→                            <Zap className="h-3 w-3 text-amber-500" />
+  2093→                            <span>Livraison instantanée via WhatsApp</span>
+  2094→                          </div>
+  2095→                          <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
+  2096→                            <FileCheck className="h-3 w-3 text-amber-500" />
+  2097→                            <span>Format PDF — lisible sur téléphone et PC</span>
+  2098→                          </div>
+  2099→                        </div>
+  2100→
+  2101→                        <a
+  2102→                          href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je veux commander le livre : ${selectedBook.title} par ${selectedBook.author} (1 000 FCFA). Comment procéder ?`)}`}
+  2103→                          target="_blank" rel="noopener noreferrer"
+  2104→                          onClick={() => setSelectedBook(null)}
+  2105→                          className="block mt-4"
+  2106→                        >
+  2107→                          <Button className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-bold shadow-lg shadow-emerald-500/20 h-12">
+  2108→                            <MessageCircle className="h-4 w-4 mr-2" /> Commander via WhatsApp — 1 000 FCFA
+  2109→                          </Button>
+  2110→                        </a>
+  2111→                      </div>
+  2112→                    </div>
+  2113→                  </motion.div>
+  2114→                </motion.div>
+  2115→              )}
+  2116→            </AnimatePresence>
+  2117→
+  2118→            {/* ═══ COUNTDOWN PROMO ═══ */}
+  2119→            <motion.div
+  2120→              initial={{ opacity: 0, y: 20 }}
+  2121→              whileInView={{ opacity: 1, y: 0 }}
+  2122→              viewport={{ once: true }}
+  2123→              className="mt-10"
+  2124→            >
+  2125→              <Card className="border-2 border-red-300 dark:border-red-800 overflow-hidden">
+  2126→                <div className="bg-gradient-to-r from-red-500 via-orange-500 to-amber-500 p-4 sm:p-5 text-white text-center">
+  2127→                  <div className="flex items-center justify-center gap-2 mb-2">
+  2128→                    <Flame className="h-5 w-5" />
+  2129→                    <span className="text-sm sm:text-base font-extrabold uppercase tracking-wider">Offre Spéciale — Fin dans</span>
+  2130→                    <Flame className="h-5 w-5" />
+  2131→                  </div>
+  2132→                  <div className="flex items-center justify-center gap-2 sm:gap-3 mt-3">
+  2133→                    {[
+  2134→                      { val: countdown.days, label: 'Jours' },
+  2135→                      { val: countdown.hours, label: 'Heures' },
+  2136→                      { val: countdown.minutes, label: 'Min' },
+  2137→                      { val: countdown.seconds, label: 'Sec' },
+  2138→                    ].map((unit, i) => (
+  2139→                      <div key={unit.label} className="flex items-center gap-2 sm:gap-3">
+  2140→                        <div className="bg-white/20 backdrop-blur-sm rounded-lg px-3 py-2 sm:px-4 sm:py-3 min-w-[56px] sm:min-w-[64px] border border-white/20">
+  2141→                          <div className="text-2xl sm:text-3xl font-extrabold tabular-nums leading-none">{String(unit.val).padStart(2, '0')}</div>
+  2142→                          <div className="text-[9px] sm:text-[10px] font-medium text-white/80 mt-1 uppercase tracking-wider">{unit.label}</div>
+  2143→                        </div>
+  2144→                        {i < 3 && <span className="text-xl sm:text-2xl font-bold text-white/60 animate-pulse">:</span>}
+  2145→                      </div>
+  2146→                    ))}
+  2147→                  </div>
+  2148→                </div>
+  2149→              </Card>
+  2150→            </motion.div>
+  2151→
+  2152→            {/* Pack promo */}
+  2153→            <motion.div
+  2154→              initial={{ opacity: 0, y: 20 }}
+  2155→              whileInView={{ opacity: 1, y: 0 }}
+  2156→              viewport={{ once: true }}
+  2157→              className="mt-6"
+  2158→            >
+  2159→              <Card className="border-2 border-amber-300 dark:border-amber-700 overflow-hidden">
+  2160→                <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 p-5 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+  2161→                  <div className="flex items-center gap-4">
+  2162→                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-lg flex-shrink-0">
+  2163→                      <FolderDown className="h-6 w-6" />
+  2164→                    </div>
+  2165→                    <div>
+  2166→                      <h3 className="font-extrabold text-base">Pack Complet — Tous les 12 livres</h3>
+  2167→                      <p className="text-sm text-muted-foreground mt-0.5">Économisez 5 000 FCFA en prenant le pack complet</p>
+  2168→                    </div>
+  2169→                  </div>
+  2170→                  <div className="flex items-center gap-3 flex-shrink-0">
+  2171→                    <div className="text-right">
+  2172→                      <span className="text-xs text-muted-foreground line-through">12 000 FCFA</span>
+  2173→                      <div className="text-2xl font-extrabold text-amber-600">7 000 <span className="text-sm font-normal">FCFA</span></div>
+  2174→                    </div>
+  2175→                    <div className="flex gap-2">
+  2176→                    <a href={`https://wa.me/22397787244?text=${encodeURIComponent('Bonjour Sacko ! Je veux commander le Pack Complet de 12 livres (7 000 FCFA au lieu de 12 000). Comment procéder ?')}`} target="_blank" rel="noopener noreferrer" className="block">
+  2177→                      <Button className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-bold shadow-lg shadow-emerald-500/20 whitespace-nowrap">
+  2178→                        <MessageCircle className="h-4 w-4 mr-1.5" /> Commander le Pack — 7 000 F
+  2179→                      </Button>
+  2180→                    </a>
+  2181→                  </div>
+  2182→                  </div>
+  2183→                </div>
+  2184→              </Card>
+  2185→            </motion.div>
+  2186→          </div>
+  2187→        </section>
+  2188→
+  2189→        {/* ═══ 12. PORTFOLIO ═══ */}
+  2190→        <section id="portfolio" className="py-16 sm:py-20">
+  2191→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  2192→            <div className="text-center mb-12">
+  2193→              <Badge variant="secondary" className="mb-3 bg-purple-100 text-purple-700 border-purple-200">
+  2194→                <Eye className="h-3 w-3 mr-1" /> Portfolio
+  2195→              </Badge>
+  2196→              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Mes Réalisations</h2>
+  2197→              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
+  2198→                Découvrez une sélection de mes meilleurs travaux. Chaque projet est unique et réalisé avec passion pour mes clients.
+  2199→              </p>
+  2200→            </div>
+  2201→
+  2202→            {/* Filter tabs */}
+  2203→            <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
+  2204→              {['Tous', 'Logo', 'Affiche', 'Site Web', 'Vidéo', 'Identité'].map((cat) => (
+  2205→                <button
+  2206→                  key={cat}
+  2207→                  onClick={() => setPortfolioFilter(cat)}
+  2208→                  className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${portfolioFilter === cat ? 'bg-amber-500 text-white shadow-md shadow-amber-500/25' : 'bg-muted text-muted-foreground hover:bg-accent'}`}
+  2209→                >
+  2210→                  {cat}
+  2211→                </button>
+  2212→              ))}
+  2213→            </div>
+  2214→
+  2215→            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+  2216→              {[
+  2217→                { title: 'Logo Restaurant Le Baobab', category: 'Logo', image: 'https://sfile.chatglm.cn/images-ppt/3e8dbebc34bb.jpg', desc: 'Identité visuelle complète pour un restaurant traditionnel malien' },
+  2218→                { title: 'Affiche Festival Bamako', category: 'Affiche', image: 'https://sfile.chatglm.cn/images-ppt/0c5c9b1b948b.jpg', desc: 'Affiche événementielle pour un festival culturel à Bamako' },
+  2219→                { title: 'Site Web MaliTech Solutions', category: 'Site Web', image: 'https://sfile.chatglm.cn/images-ppt/1b5dd4b88cdf.png', desc: 'Site vitrine professionnel pour une entreprise tech malienne' },
+  2220→                { title: 'Logo Afro Fashion Store', category: 'Logo', image: 'https://sfile.chatglm.cn/images-ppt/57c1b49a60ba.jpg', desc: 'Logo moderne pour une boutique de mode africaine' },
+  2221→                { title: 'Montage Promo Produit', category: 'Vidéo', image: 'https://sfile.chatglm.cn/images-ppt/190eb04b2085.jpg', desc: 'Montage vidéo promotionnel pour un lancement de produit' },
+  2222→                { title: 'Identité ESIA Business', category: 'Identité', image: 'https://sfile.chatglm.cn/images-ppt/7bfadf1e1582.jpg', desc: 'Charte graphique complète pour une école de business' },
+  2223→              ].filter((item) => portfolioFilter === 'Tous' || item.category === portfolioFilter).map((item) => (
+  2224→                <Card key={item.title} className="overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 h-full group cursor-pointer hover:-translate-y-0.5"
+  2225→                  onClick={() => setLightboxImg({ src: item.image, title: item.title, desc: item.desc })}>
+  2226→                  <div className="relative h-48 sm:h-56 overflow-hidden">
+  2227→                    <img src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+  2228→                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+  2229→                    <div className="absolute bottom-0 left-0 right-0 p-4 z-10">
+  2230→                      <h3 className="font-bold text-sm sm:text-base text-white">{item.title}</h3>
+  2231→                      <p className="text-white/70 text-xs mt-1 line-clamp-2">{item.desc}</p>
+  2232→                    </div>
+  2233→                    <div className="absolute top-3 left-3">
+  2234→                      <Badge className="bg-amber-500/90 text-white border-0 text-[10px] font-semibold backdrop-blur-sm">{item.category}</Badge>
+  2235→                    </div>
+  2236→                    <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity bg-white/20 backdrop-blur-sm rounded-full p-2">
+  2237→                      <Search className="h-4 w-4 text-white" />
+  2238→                    </div>
+  2239→                  </div>
+  2240→                </Card>
+  2241→              ))}
+  2242→            </div>
+  2243→
+  2244→            {/* Avant / Après — integrated into Portfolio */}
+  2245→            <div className="mt-14">
+  2246→              <h3 className="text-xl font-bold text-center mb-2">Avant / Après</h3>
+  2247→              <p className="text-sm text-muted-foreground text-center mb-8 max-w-xl mx-auto">Glissez le curseur pour comparer mes transformations. Chaque projet est unique et pensé pour maximiser l&apos;impact visuel.</p>
+  2248→              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  2249→                {[
+  2250→                  { title: 'Refonte Logo Boutique', before: 'https://sfile.chatglm.cn/images-ppt/f972157605f2.jpg', after: 'https://sfile.chatglm.cn/images-ppt/082b6f181c95.jpg', desc: 'Logo basique transformé en identité premium' },
+  2251→                  { title: 'Affiche Événement', before: 'https://sfile.chatglm.cn/images-ppt/d2c6b53ee01b.jpg', after: 'https://sfile.chatglm.cn/images-ppt/d247ebeec9b2.jpg', desc: 'Affiche simple devenue visuel professionnel' },
+  2252→                  { title: 'Identité Complète', before: 'https://sfile.chatglm.cn/images-ppt/6c9261ec8848.jpg', after: 'https://sfile.chatglm.cn/images-ppt/0c5c9b1b948b.jpg', desc: "De l'amateur au professionnalisme total" },
+  2253→                ].map((item, i) => (
+  2254→                  <Card key={i} className="overflow-hidden border-0 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+  2255→                    <CardContent className="p-4 space-y-3">
+  2256→                      <BeforeAfterSlider before={item.before} after={item.after} title={item.title} />
+  2257→                      <h4 className="font-bold text-sm">{item.title}</h4>
+  2258→                      <p className="text-xs text-muted-foreground">{item.desc}</p>
+  2259→                    </CardContent>
+  2260→                  </Card>
+  2261→                ))}
+  2262→              </div>
+  2263→            </div>
+  2264→
+  2265→            <div className="mt-8 text-center">
+  2266→              <p className="text-sm text-muted-foreground">
+  2267→                Envie d&apos;un projet similaire ?{' '}
+  2268→                <a href="https://wa.me/22397787244?text=Bonjour%20!%20J%27ai%20vu%20vos%20réalisations%20et%20je%20souhaite%20un%20projet%20similaire." target="_blank" rel="noopener noreferrer" className="text-amber-600 font-semibold hover:underline">
+  2269→                  Me contacter
+  2270→                </a>{' '}et discutons de votre projet !
+  2271→              </p>
+  2272→            </div>
+  2273→          </div>
+  2274→        </section>
+  2275→
+  2276→        {/* ═══ 12. TÉMOIGNAGES (Style WhatsApp Auto-Carousel) ═══ */}
+  2277→        <section id="temoignages" className="py-20 sm:py-24 bg-gradient-to-b from-muted/20 to-background relative overflow-hidden">
+  2278→          <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+  2279→            <div className="text-center mb-14">
+  2280→              <Badge variant="secondary" className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200">
+  2281→                <MessageCircle className="h-3 w-3 mr-1" /> Témoignages
+  2282→              </Badge>
+  2283→              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Ils m&apos;ont fait confiance</h2>
+  2284→              <p className="mt-4 text-muted-foreground max-w-xl mx-auto leading-relaxed">
+  2285→                Des <strong className="text-foreground">messages réels</strong> de mes clients. Pas de faux avis — que du concret, livré sur WhatsApp.
+  2286→              </p>
+  2287→            </div>
+  2288→
+  2289→            {/* Phone mockup with auto-scrolling testimonials */}
+  2290→            <div className="max-w-md mx-auto" onMouseEnter={() => setTestimPaused(true)} onMouseLeave={() => setTestimPaused(false)}>
+  2291→              {/* WhatsApp phone frame */}
+  2292→              <div className="bg-[#075e54] rounded-t-3xl p-4 flex items-center gap-3">
+  2293→                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white font-bold text-sm">S</div>
+  2294→                <div className="flex-1">
+  2295→                  <p className="text-white font-bold text-sm">Sacko — Studio Créatif</p>
+  2296→                  <p className="text-white/60 text-[11px]">En ligne</p>
+  2297→                </div>
+  2298→                <div className="flex gap-2">
+  2299→                  <button onClick={() => setTestimPaused(!testimPaused)} className="h-8 w-8 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors" aria-label={testimPaused ? 'Lecture' : 'Pause'}>
+  2300→                    {testimPaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
+  2301→                  </button>
+  2302→                </div>
+  2303→              </div>
+  2304→              <div className="bg-[#ece5dd] dark:bg-[#1a2730] rounded-b-3xl p-4 min-h-[280px] flex flex-col justify-center">
+  2305→                <AnimatePresence mode="wait">
+  2306→                  <motion.div
+  2307→                    key={testimIndex}
+  2308→                    initial={{ opacity: 0, y: 20, scale: 0.95 }}
+  2309→                    animate={{ opacity: 1, y: 0, scale: 1 }}
+  2310→                    exit={{ opacity: 0, y: -20, scale: 0.95 }}
+  2311→                    transition={{ duration: 0.5, ease: 'easeInOut' }}
+  2312→                    className="flex justify-end"
+  2313→                  >
+  2314→                    <div className="max-w-[85%]">
+  2315→                      <div className="bg-[#005c4b] rounded-xl rounded-tr-sm px-4 py-3 shadow-sm">
+  2316→                        <p className="text-white text-sm leading-relaxed whitespace-pre-wrap">
+  2317→                          {[
+  2318→                            { name: 'Amadou Diallo', time: '14:32', text: "Sacko, le logo est parfait ! 🙏 Je l'ai déjà mis sur ma boutique. Mes clients demandent qui a fait ça. Merci fréro, je te recommande à tous mes amis entrepreneurs.", status: 'Lu à 14:35' },
+  2319→                            { name: 'Fatoumata Traoré', time: '09:15', text: "La formation en design m'a ouvert les yeux. En 2 semaines j'ai déjà créé 3 logos pour des gens de mon quartier et je gagne 15 000 FCFA. C'est fou 🎉", status: 'Lu à 09:20' },
+  2320→                            { name: 'Ibrahim Keita', time: '18:47', text: "Mon site est en ligne depuis 3 jours et j'ai déjà eu 12 clients qui m'ont trouvé sur Google. Avant personne ne me connaissait en dehors de Hamdallaye. Service exceptionnel.", status: 'Lu à 18:50' },
+  2321→                            { name: 'Oumar Sidibé', time: '11:03', text: "Les visuels pour mes affiches de boutique sont incroyables. Mon chiffre d'affaires a augmenté de 40% ce mois-ci. Quand est-ce qu'on refait une commande ? 😊", status: 'Lu à 11:08' },
+  2322→                          ][testimIndex].text}
+  2323→                        </p>
+  2324→                        <div className="flex items-center justify-end gap-1.5 mt-1.5">
+  2325→                          <span className="text-white/50 text-[10px]">{[
+  2326→                            { name: 'Amadou Diallo', time: '14:32' },
+  2327→                            { name: 'Fatoumata Traoré', time: '09:15' },
+  2328→                            { name: 'Ibrahim Keita', time: '18:47' },
+  2329→                            { name: 'Oumar Sidibé', time: '11:03' },
+  2330→                          ][testimIndex].time}</span>
+  2331→                          <svg className="h-4 w-4 text-[#53bdeb]" viewBox="0 0 16 11" fill="currentColor"><path d="M11.071.653a.457.457 0 0 0-.304-.102.493.493 0 0 0-.381.178l-6.19 7.636-2.011-2.085a.463.463 0 0 0-.336-.143.457.457 0 0 0-.336.143.476.476 0 0 0 0 .672l2.359 2.443a.457.457 0 0 0 .336.143c.137 0 .268-.061.381-.178l6.527-8.039a.507.507 0 0 0-.045-.668z"/><path d="M14.071.653a.457.457 0 0 0-.304-.102.493.493 0 0 0-.381.178l-6.19 7.636-1.019-1.056.457-.56a.507.507 0 0 0-.045-.668.457.457 0 0 0-.685 0l-.681.837-.07.012a.463.463 0 0 0-.336.143.476.476 0 0 0 0 .672l2.359 2.443a.457.457 0 0 0 .336.143c.137 0 .268-.061.381-.178l6.527-8.039a.507.507 0 0 0-.045-.668z" opacity=".4"/></svg>
+  2332→                        </div>
+  2333→                      </div>
+  2334→                      <p className="text-[11px] text-muted-foreground mt-1.5 text-right">
+  2335→                        — <strong>{[
+  2336→                          { name: 'Amadou Diallo' },
+  2337→                          { name: 'Fatoumata Traoré' },
+  2338→                          { name: 'Ibrahim Keita' },
+  2339→                          { name: 'Oumar Sidibé' },
+  2340→                        ][testimIndex].name}</strong>, client vérifié
+  2341→                      </p>
+  2342→                    </div>
+  2343→                  </motion.div>
+  2344→                </AnimatePresence>
+  2345→                {/* Dots navigation */}
+  2346→                <div className="flex items-center justify-center gap-2 mt-6">
+  2347→                  {[0, 1, 2, 3].map((i) => (
+  2348→                    <button
+  2349→                      key={i}
+  2350→                      onClick={() => setTestimIndex(i)}
+  2351→                      className={`h-2 rounded-full transition-all duration-300 ${i === testimIndex ? 'w-6 bg-amber-500' : 'w-2 bg-amber-500/30 hover:bg-amber-500/50'}`}
+  2352→                      aria-label={`Témoignage ${i + 1}`}
+  2353→                    />
+  2354→                  ))}
+  2355→                </div>
+  2356→              </div>
+  2357→            </div>
+  2358→
+  2359→            {/* Trust note */}
+  2360→            <div className="mt-8 text-center">
+  2361→              <p className="text-xs text-muted-foreground">
+  2362→                Chaque message est <strong className="text-foreground">réel</strong>, reçu directement sur mon WhatsApp.
+  2363→                Envie d&apos;être le prochain ?{' '}
+  2364→                <a href="#commande-rapide" className="text-amber-600 font-semibold hover:underline">Commandez maintenant</a>.
+  2365→              </p>
+  2366→            </div>
+  2367→          </div>
+  2368→        </section>
+  2369→
+  2370→            {/* Testimonial cards grid */}
+  2371→            <div className="mt-10 grid sm:grid-cols-2 gap-4">
+  2372→              {[
+  2373→                { name: 'Aminata Coulibaly', text: "La formation Marketing Digital a changé ma façon de voir les réseaux sociaux. En 1 mois, j'ai géré 3 comptes et je gagne maintenant 50 000 FCFA par mois. Merci Kante pour l'accompagnement !", rating: 5 },
+  2374→                { name: 'Moussa Traoré', text: "Mon site web créé par Camara Leh est incroyable. Il est rapide, beau et mes clients le trouvent facilement sur Google. Un vrai game changer pour mon entreprise.", rating: 5 },
+  2375→                { name: 'Djénéba Diarra', text: "Sacko a refait toute mon identité visuelle : logo, cartes de visite, affiches. Mes clients me disent que je looks professionnel maintenant. Service au top !", rating: 5 },
+  2376→                { name: 'Ibrahim Kanté', text: "J'ai suivi la formation Création Web et en 3 semaines j'ai pu créer mon propre site e-commerce. Je vends mes produits en ligne maintenant. Formation pratique et efficace.", rating: 5 },
+  2377→              ].map((t, i) => (
+  2378→                <motion.div
+  2379→                  key={t.name}
+  2380→                  initial={{ opacity: 0, y: 20 }}
+  2381→                  whileInView={{ opacity: 1, y: 0 }}
+  2382→                  viewport={{ once: true }}
+  2383→                  transition={{ duration: 0.4, delay: i * 0.1 }}
+  2384→                  className="p-5 rounded-xl bg-muted/50 border border-border hover:border-amber-200 dark:hover:border-amber-800 transition-all hover:shadow-md"
+  2385→                >
+  2386→                  <div className="flex items-center gap-0.5 mb-2">
+  2387→                    {[...Array(t.rating)].map((_, s) => (
+  2388→                      <Star key={s} className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+  2389→                    ))}
+  2390→                  </div>
+  2391→                  <p className="text-sm text-foreground/80 leading-relaxed mb-3">"{t.text}"</p>
+  2392→                  <div className="flex items-center gap-2">
+  2393→                    <div className="h-8 w-8 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white text-xs font-bold">
+  2394→                      {t.name.split(' ').map(n => n[0]).join('')}
+  2395→                    </div>
+  2396→                    <div>
+  2397→                      <p className="text-xs font-bold">{t.name}</p>
+  2398→                      <p className="text-[10px] text-muted-foreground">Client vérifié</p>
+  2399→                    </div>
+
+[showing lines 1900-2399 of 3739; use offset=2400 with limit to continue reading]

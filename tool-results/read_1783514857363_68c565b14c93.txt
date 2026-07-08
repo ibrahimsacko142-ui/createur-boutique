@@ -1,0 +1,602 @@
+   501→  },
+   502→  {
+   503→    title: 'Programmer avec JavaScript en s\'amusant',
+   504→    author: 'Chris Minnick & Eva Holland',
+   505→    desc: '15 projets fun pour apprendre le JavaScript : jeux, pages web, animation de robot.',
+   506→    cover: '/livres/javascript-amusant.jpg',
+   507→    category: 'Programmation',
+   508→    excerpt: 'Apprenez le JavaScript en vous amusant ! Ce livre propose 15 projets conçus pour les débutants dès 11 ans. Créez des jeux, construisez des pages web interactives et animez un robot. Chaque projet introduit de nouveaux concepts de programmation de manière progressive et ludique.',
+   509→    keypoints: ['15 projets pratiques et ludiques', 'Créer des jeux en JavaScript', 'Construire des pages web interactives', 'Animer des éléments graphiques et robots', 'Accessible dès 11 ans — aucun prérequis'],
+   510→  },
+   511→  {
+   512→    title: 'Stratégie Marketing & Création Publicitaire',
+   513→    author: 'Henri Joannis & Virginie de Barnier',
+   514→    desc: 'De la stratégie marketing à la création publicitaire : magazines, TV, affiches, internet.',
+   515→    cover: '/livres/strategie-marketing-pub.jpg',
+   516→    category: 'Marketing & Business',
+   517→    excerpt: 'L\'ouvrage de référence en stratégie publicitaire couvrant tous les médias : magazines, TV/radio, affiches et internet. Apprenez à construire une stratégie marketing solide, définir un positionnement, créer des messages percutants et choisir les bons canaux de diffusion pour toucher votre cible.',
+   518→    keypoints: ['Élaboration d\'une stratégie marketing', 'Positionnement et segmentation', 'Création publicitaire multi-médias', 'TV, radio, affiches, magazines, internet', 'Mesure d\'efficacité et retour sur investissement'],
+   519→  },
+   520→]
+   521→
+   522→/* ═══════════════════════════════════════════════
+   523→   MAIN PAGE
+   524→   ═══════════════════════════════════════════════ */
+   525→export default function Home() {
+   526→  const [contactData, setContactData] = useState({ name: '', email: '', subject: '', message: '' })
+   527→  const [showBanner, setShowBanner] = useState(true)
+   528→  const [showBackToTop, setShowBackToTop] = useState(false)
+   529→  const [scrollProgress, setScrollProgress] = useState(0)
+   530→  const [showStickyCta, setShowStickyCta] = useState(false)
+   531→  const [portfolioFilter, setPortfolioFilter] = useState('Tous')
+   532→  const [quickOrder, setQuickOrder] = useState({ service: '', name: '', phone: '', description: '' })
+   533→  const [faqOpen, setFaqOpen] = useState<string | null>(null)
+   534→  const [leadMagnet, setLeadMagnet] = useState({ name: '', contact: '' })
+   535→  const [selectedBook, setSelectedBook] = useState<Book | null>(null)
+   536→  const [bookFilter, setBookFilter] = useState('Tous')
+   537→  const { toast } = useToast()
+   538→
+   539→  // New features
+   540→  const typedText = useTypingText([
+   541→    'démarquez-vous.',
+   542→    'propulsez votre marque.',
+   543→    'attirez vos clients.',
+   544→    'gagnez en visibilité.',
+   545→    'concrétisez vos idées.',
+   546→  ])
+   547→  const [cart, setCart] = useLocalStorage<string[]>('sc-cart', [])
+   548→  const [showCart, setShowCart] = useState(false)
+   549→  const [showCookieConsent, setShowCookieConsent] = useLocalStorage('sc-cookies', true)
+   550→  const [showWelcome, setShowWelcome] = useLocalStorage('sc-welcome', true)
+   551→  const [welcomeVisible, setWelcomeVisible] = useState(false)
+   552→  const [estimatorServices, setEstimatorServices] = useState<string[]>([])
+   553→  const [confettiActive, setConfettiActive] = useState(false)
+   554→  const [availabilitySlots, setAvailabilitySlots] = useState<Record<string, number>>({})
+   555→  const [showWaWidget, setShowWaWidget] = useState(false)
+   556→  const [testimIndex, setTestimIndex] = useState(0)
+   557→  const [testimPaused, setTestimPaused] = useState(false)
+   558→  const [shareToast, setShareToast] = useState(false)
+   559→  const [activeDotSection, setActiveDotSection] = useState('accueil')
+   560→
+   561→  // Portfolio lightbox
+   562→  const [lightboxImg, setLightboxImg] = useState<{ src: string; title: string; desc: string } | null>(null)
+   563→
+   564→  // Book search
+   565→  const [bookSearch, setBookSearch] = useState('')
+   566→
+   567→  // FAQ search
+   568→  const [faqSearch, setFaqSearch] = useState('')
+   569→
+   570→  // Service quiz
+   571→  const [quizOpen, setQuizOpen] = useState(false)
+   572→  const [quizStep, setQuizStep] = useState(0)
+   573→  const [quizAnswers, setQuizAnswers] = useState<string[]>([])
+   574→  const [quizResult, setQuizResult] = useState<{ service: string; icon: typeof Palette; reason: string } | null>(null)
+   575→
+   576→  // Coach detail modal
+   577→  const [selectedCoach, setSelectedCoach] = useState<typeof coaches[0] | null>(null)
+   578→
+   579→  // Promo countdown: 7 days from now
+   580→  const [promoEnd] = useState(() => {
+   581→    const d = new Date()
+   582→    d.setDate(d.getDate() + 7)
+   583→    d.setHours(23, 59, 59, 0)
+   584→    return d
+   585→  })
+   586→  const countdown = useCountdown(promoEnd)
+   587→
+   588→  const toggleCart = useCallback((title: string) => {
+   589→    setCart(prev => prev.includes(title) ? prev.filter(t => t !== title) : [...prev, title])
+   590→  }, [setCart])
+   591→
+   592→  const isInCart = useCallback((title: string) => cart.includes(title), [cart])
+   593→
+   594→  // Auto-scroll testimonials
+   595→  useEffect(() => {
+   596→    if (testimPaused) return
+   597→    const interval = setInterval(() => {
+   598→      setTestimIndex(prev => (prev + 1) % 4)
+   599→    }, 5000)
+   600→    return () => clearInterval(interval)
+   601→  }, [testimPaused])
+   602→
+   603→  // Confetti trigger
+   604→  const triggerConfetti = useCallback(() => {
+   605→    setConfettiActive(true)
+   606→    setTimeout(() => setConfettiActive(false), 4000)
+   607→  }, [])
+   608→
+   609→
+   610→
+   611→
+   612→
+   613→
+   614→  useEffect(() => {
+   615→    const handleScroll = () => {
+   616→      setShowBackToTop(window.scrollY > 600)
+   617→      const totalHeight = document.body.scrollHeight - window.innerHeight
+   618→      setScrollProgress(totalHeight > 0 ? (window.scrollY / totalHeight) * 100 : 0)
+   619→      setShowStickyCta(window.scrollY > 500)
+   620→    }
+   621→    window.addEventListener('scroll', handleScroll, { passive: true })
+   622→    return () => window.removeEventListener('scroll', handleScroll)
+   623→  }, [])
+   624→
+   625→  // Welcome popup for first-time visitors
+   626→  useEffect(() => {
+   627→    if (showWelcome) {
+   628→      const timer = setTimeout(() => setWelcomeVisible(true), 6000)
+   629→      return () => clearTimeout(timer)
+   630→    }
+   631→  }, [showWelcome])
+   632→
+   633→  // Availability slots for service cards
+   634→  useEffect(() => {
+   635→    const slots: Record<string, number> = {}
+   636→    const cats = ['Design Graphique', 'Développement Web', 'Montage Vidéo', 'Formation', 'Marketing Digital']
+   637→    cats.forEach((cat, i) => { slots[cat] = [2, 1, 3, 2, 1][i] })
+   638→    setAvailabilitySlots(slots)
+   639→  }, [])
+   640→
+   641→  // Escape key handler for all modals
+   642→  useEffect(() => {
+   643→    const handleEsc = (e: KeyboardEvent) => {
+   644→      if (e.key === 'Escape') {
+   645→        setLightboxImg(null)
+   646→        setSelectedBook(null)
+   647→        setQuizOpen(false); setQuizStep(0); setQuizAnswers([]); setQuizResult(null)
+   648→        setShowCart(false)
+   649→        setSelectedCoach(null)
+   650→      }
+   651→    }
+   652→    window.addEventListener('keydown', handleEsc)
+   653→    return () => window.removeEventListener('keydown', handleEsc)
+   654→  }, [])
+   655→
+   656→  // Intersection observer for side nav dots
+   657→  useEffect(() => {
+   658→    const sectionIds = ['accueil', 'services', 'formations', 'coachs', 'boutique', 'portfolio', 'contact']
+   659→    const observers: IntersectionObserver[] = []
+   660→    sectionIds.forEach(id => {
+   661→      const el = document.getElementById(id)
+   662→      if (!el) return
+   663→      const observer = new IntersectionObserver(
+   664→        (entries) => {
+   665→          entries.forEach(entry => {
+   666→            if (entry.isIntersecting) setActiveDotSection(id)
+   667→          })
+   668→        },
+   669→        { rootMargin: '-20% 0px -60% 0px', threshold: 0 }
+   670→      )
+   671→      observer.observe(el)
+   672→      observers.push(observer)
+   673→    })
+   674→    return () => observers.forEach(o => o.disconnect())
+   675→  }, [])
+   676→
+   677→
+   678→
+   679→
+   680→
+   681→  const handleSubmitContact = (e: React.FormEvent) => {
+   682→    e.preventDefault()
+   683→    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+   684→    if (!contactData.name || !contactData.email || !contactData.message) {
+   685→      toast({ title: 'Champs requis', description: 'Veuillez remplir tous les champs obligatoires.', variant: 'destructive' })
+   686→      return
+   687→    }
+   688→    if (!emailRegex.test(contactData.email)) {
+   689→      toast({ title: 'Email invalide', description: 'Veuillez entrer une adresse email valide.', variant: 'destructive' })
+   690→      return
+   691→    }
+   692→    const msg = encodeURIComponent(`Bonjour ! Je suis ${contactData.name} (${contactData.email}).\n\nSujet : ${contactData.subject || 'Général'}\n\n${contactData.message}`)
+   693→    window.open(`https://wa.me/22397787244?text=${msg}`, '_blank')
+   694→    toast({ title: 'Redirection vers WhatsApp', description: 'Votre message sera envoyé via WhatsApp pour une réponse rapide.' })
+   695→    setContactData({ name: '', email: '', subject: '', message: '' })
+   696→  }
+   697→
+   698→  return (
+   699→    <div className="min-h-screen flex flex-col bg-background pb-20 lg:pb-0 scroll-smooth">
+   700→      <Header />
+   701→
+   702→      <main className="flex-1">
+   703→
+   704→        {/* ═══ 1. BANNIÈRE PROMO ═══ */}
+   705→        <AnimatePresence>
+   706→          {showBanner && (
+   707→            <motion.div
+   708→              initial={{ height: 0, opacity: 0 }}
+   709→              animate={{ height: 'auto', opacity: 1 }}
+   710→              exit={{ height: 0, opacity: 0 }}
+   711→              className="overflow-hidden bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white"
+   712→            >
+   713→              <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-4">
+   714→                <p className="text-xs sm:text-sm font-medium text-center sm:text-left flex-1">
+   715→                  <Flame className="h-3.5 w-3.5 inline mr-1" />
+   716→                  Bienvenue ! Tous les services sont actuellement gratuits — Profitez-en pour lancer votre projet digital
+   717→                </p>
+   718→                <div className="flex items-center gap-2 flex-shrink-0">
+   719→                  <a href="#services">
+   720→                    <Button size="sm" variant="secondary" className="h-7 text-xs bg-white text-amber-600 hover:bg-white/90 font-semibold px-3">
+   721→                      Découvrir les services
+   722→                    </Button>
+   723→                  </a>
+   724→
+   725→                  <button onClick={() => setShowBanner(false)} className="text-white/80 hover:text-white transition-colors" aria-label="Fermer">
+   726→                    <X className="h-4 w-4" />
+   727→                  </button>
+   728→                </div>
+   729→              </div>
+   730→            </motion.div>
+   731→          )}
+   732→        </AnimatePresence>
+   733→
+   734→        {/* ═══ 2. HERO ═══ */}
+   735→        <section id="accueil" className="relative overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-white dark:from-amber-950/20 dark:via-orange-950/10 dark:to-background">
+   736→          {/* Animated gradient orbs */}
+   737→          <div className="absolute top-0 -right-40 h-[500px] w-[500px] rounded-full bg-amber-200/40 dark:bg-amber-800/10 blur-3xl animate-pulse" />
+   738→          <div className="absolute -bottom-20 -left-40 h-[400px] w-[400px] rounded-full bg-orange-200/30 dark:bg-orange-800/10 blur-3xl" style={{ animationDelay: '1s', animationDuration: '4s' }} />
+   739→          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[300px] w-[300px] rounded-full bg-red-100/30 dark:bg-red-900/10 blur-3xl" style={{ animationDelay: '2s', animationDuration: '5s' }} />
+   740→          {/* Subtle grid pattern */}
+   741→          <div className="absolute inset-0 bg-[linear-gradient(rgba(245,158,11,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(245,158,11,0.03)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,black,transparent)]" />
+   742→
+   743→          {/* Floating shapes */}
+   744→          <div className="absolute top-20 right-20 w-16 h-16 rounded-xl bg-amber-300/20 dark:bg-amber-600/10 animate-float-slow hidden lg:block" />
+   745→          <div className="absolute bottom-32 right-40 w-10 h-10 rounded-full bg-orange-300/25 dark:bg-orange-600/10 animate-float-medium hidden lg:block" />
+   746→          <div className="absolute top-40 left-20 w-8 h-8 rounded-lg bg-red-300/20 dark:bg-red-600/10 rotate-45 animate-float-fast hidden lg:block" />
+   747→
+   748→          <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
+   749→            <div className="grid lg:grid-cols-2 gap-12 items-center">
+   750→              <div>
+   751→                <motion.div
+   752→                  initial={{ opacity: 0, y: 10 }}
+   753→                  animate={{ opacity: 1, y: 0 }}
+   754→                  transition={{ duration: 0.5 }}
+   755→                >
+   756→                <Badge variant="secondary" className="mb-4 px-3 py-1 text-xs font-medium bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800 shadow-sm">
+   757→                  <Sparkles className="h-3 w-3 mr-1" /> Studio Créatif Indépendant
+   758→                </Badge>
+   759→
+   760→                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
+   761→                  Donnez vie à vos projets digitaux et{' '}
+   762→                  <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 bg-clip-text text-transparent animate-gradient-text">
+   763→                    {typedText}<span className="animate-pulse">|</span>
+   764→                  </span>
+   765→                </h1>
+   766→
+   767→                <p className="mt-6 text-lg text-muted-foreground leading-relaxed max-w-lg">
+   768→                  Création de logos, sites web et visuels sur-mesure pour propulser les entrepreneurs et créateurs de Bamako et d&apos;ailleurs. Chaque projet est une opportunité de transformer votre vision en une réalité qui attire et fidélise.
+   769→                </p>
+   770→                </motion.div>
+   771→
+   772→                <motion.div
+   773→                  initial={{ opacity: 0, y: 10 }}
+   774→                  animate={{ opacity: 1, y: 0 }}
+   775→                  transition={{ duration: 0.5, delay: 0.2 }}
+   776→                  className="mt-8 flex flex-wrap gap-3"
+   777→                >
+   778→                  <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20discuter%20de%20mon%20projet." target="_blank" rel="noopener noreferrer">
+   779→                    <Button size="lg" className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 hover:from-amber-600 hover:via-orange-600 hover:to-red-600 text-white font-semibold shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 transition-all duration-200 hover:scale-105 active:scale-95">
+   780→                      <Rocket className="mr-2 h-4 w-4" /> Lancer mon projet
+   781→                    </Button>
+   782→                  </a>
+   783→                  <a href="#boutique">
+   784→                    <Button size="lg" variant="outline" className="font-semibold hover:bg-accent transition-transform duration-200 hover:scale-105 active:scale-95">
+   785→                      <BookOpen className="mr-2 h-4 w-4" /> Voir la Boutique
+   786→                    </Button>
+   787→                  </a>
+   788→                </motion.div>
+   789→
+   790→                <motion.div
+   791→                  initial={{ opacity: 0, y: 10 }}
+   792→                  animate={{ opacity: 1, y: 0 }}
+   793→                  transition={{ duration: 0.5, delay: 0.3 }}
+   794→                  className="mt-10 flex flex-wrap gap-3"
+   795→                >
+   796→                  {['Design Graphique', 'Sites Web', 'Montage Vidéo', 'Marketing Digital'].map((tag) => (
+   797→                    <span key={tag} className="inline-flex items-center gap-1.5 rounded-full bg-white/80 dark:bg-white/5 border px-3.5 py-1.5 text-xs font-medium text-amber-700 dark:text-amber-400 border-amber-200/80 dark:border-amber-800 shadow-sm backdrop-blur-sm hover:-translate-y-0.5 transition-transform cursor-default">
+   798→                      <CheckCircle2 className="h-3 w-3 text-emerald-500" /> {tag}
+   799→                    </span>
+   800→                  ))}
+   801→                </motion.div>
+   802→
+   803→                <motion.div
+   804→                  initial={{ opacity: 0, y: 10 }}
+   805→                  animate={{ opacity: 1, y: 0 }}
+   806→                  transition={{ duration: 0.5, delay: 0.4 }}
+   807→                  className="mt-8 flex items-center gap-4"
+   808→                >
+   809→                  <div className="flex -space-x-2">
+   810→                    {['from-amber-400 to-orange-500', 'from-emerald-400 to-teal-500', 'from-purple-400 to-pink-500', 'from-blue-400 to-cyan-500'].map((g, i) => (
+   811→                      <div key={i} className={`h-8 w-8 rounded-full border-2 border-white dark:border-slate-900 bg-gradient-to-br ${g}`} />
+   812→                    ))}
+   813→                  </div>
+   814→                  <div>
+   815→                    <p className="text-xs font-bold">50+ Marques propulsées</p>
+   816→                    <div className="flex gap-0.5">
+   817→                      {[1, 2, 3, 4, 5].map((s) => (
+   818→                        <Star key={s} className="h-3 w-3 fill-amber-400 text-amber-400" />
+   819→                      ))}
+   820→                    </div>
+   821→                  </div>
+   822→                </motion.div>
+   823→              </div>
+   824→
+   825→              {/* Hero Visual */}
+   826→              <motion.div
+   827→                initial={{ opacity: 0, x: 30 }}
+   828→                animate={{ opacity: 1, x: 0 }}
+   829→                transition={{ duration: 0.6, delay: 0.2 }}
+   830→                className="hidden lg:block"
+   831→              >
+   832→                <div className="relative">
+   833→                  <div className="absolute -inset-4 bg-gradient-to-r from-amber-400/20 via-orange-400/20 to-red-400/20 rounded-3xl blur-2xl" />
+   834→                  <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/20">
+   835→                    <img src="/demo-photo.png" alt="Studio Créatif - Sacko" className="w-full h-[420px] object-cover" />
+   836→                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+   837→                    <div className="absolute bottom-0 left-0 right-0 p-6">
+   838→                      <div className="flex gap-2 flex-wrap">
+   839→                        {['Design Graphique', 'Sites Web', 'Montage Vidéo', 'Formations'].map((t) => (
+   840→                          <span key={t} className="px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-white text-xs font-medium border border-white/10">{t}</span>
+   841→                        ))}
+   842→                      </div>
+   843→                    </div>
+   844→                  </div>
+   845→                  <div className="absolute -bottom-6 -left-6 bg-white/90 dark:bg-card/90 backdrop-blur-xl rounded-xl shadow-xl p-3 border hover:scale-105 transition-transform cursor-default">
+   846→                    <div className="flex items-center gap-3">
+   847→                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
+   848→                        <Award className="h-5 w-5 text-amber-500" />
+   849→                      </div>
+   850→                      <div>
+   851→                        <p className="text-xs font-bold">50+ Marques</p>
+   852→                        <p className="text-[10px] text-muted-foreground">Propulsées</p>
+   853→                      </div>
+   854→                    </div>
+   855→                  </div>
+   856→                  <div className="absolute -top-4 -right-4 bg-white/90 dark:bg-card/90 backdrop-blur-xl rounded-xl shadow-xl p-3 border hover:scale-105 transition-transform cursor-default">
+   857→                    <div className="flex items-center gap-2">
+   858→                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30">
+   859→                        <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+   860→                      </div>
+   861→                      <div>
+   862→                        <p className="text-xs font-bold">100% Sur-mesure</p>
+   863→                        <p className="text-[10px] text-muted-foreground">Chaque pixel pensé pour vous</p>
+   864→                      </div>
+   865→                    </div>
+   866→                  </div>
+   867→                </div>
+   868→              </motion.div>
+   869→            </div>
+   870→          </div>
+   871→        </section>
+   872→
+   873→        {/* Wave divider */}
+   874→        <div className="relative h-12 -mt-1 overflow-hidden">
+   875→          <svg className="absolute bottom-0 w-full" viewBox="0 0 1440 48" fill="none" preserveAspectRatio="none">
+   876→            <path d="M0 48L60 42C120 36 240 24 360 20C480 16 600 20 720 26C840 32 960 40 1080 40C1200 40 1320 32 1380 28L1440 24V48H1380C1320 48 1200 48 1080 48C960 48 840 48 720 48C600 48 480 48 360 48C240 48 120 48 60 48H0Z" className="fill-background" />
+   877→          </svg>
+   878→        </div>
+   879→
+   880→        {/* ═══ 3. QUICK SERVICE ACCESS BAR ═══ */}
+   881→        <section className="py-6 border-b bg-background">
+   882→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+   883→            <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+   884→              {[
+   885→                { label: 'Logo', icon: Palette },
+   886→                { label: 'Site Web', icon: Globe },
+   887→                { label: 'Vidéo', icon: MonitorPlay },
+   888→                { label: 'Affiche', icon: PenTool },
+   889→                { label: 'Formation', icon: GraduationCap },
+   890→                { label: 'Canva Pro', icon: Layers },
+   891→                { label: 'CapCut Pro', icon: Scissors },
+   892→              ].map((s) => (
+   893→                <a key={s.label} href="#services" className="flex-shrink-0 flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl bg-muted/50 hover:bg-gradient-to-br hover:from-amber-50 hover:to-orange-50 dark:hover:from-amber-950/20 dark:hover:to-orange-950/20 hover:-translate-y-0.5 hover:shadow-md hover:shadow-amber-500/10 hover:border-amber-200 dark:hover:border-amber-800 border border-transparent transition-all duration-300 group">
+   894→                  <s.icon className="h-5 w-5 text-amber-500 group-hover:scale-110 transition-transform" />
+   895→                  <span className="text-xs font-medium">{s.label}</span>
+   896→                </a>
+   897→              ))}
+   898→            </div>
+   899→          </div>
+   900→        </section>
+   901→
+   902→        {/* ═══ 4. STATISTIQUES ═══ */}
+   903→        <section className="py-12 sm:py-16 bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 relative overflow-hidden">
+   904→          <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+   905→            <div className="text-center mb-10">
+   906→              <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">Ce que je fais, en chiffres</h2>
+   907→              <p className="mt-2 text-white/80 text-sm">Transparent, impactant, à taille humaine</p>
+   908→            </div>
+   909→            <div className="grid grid-cols-3 gap-6 sm:gap-12">
+   910→              <AnimatedStat end={50} suffix="+">
+   911→                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mx-auto mb-3">
+   912→                  <Award className="h-6 w-6 text-white" />
+   913→                </div>
+   914→                <p className="text-sm font-semibold text-white/90">Marques propulsées</p>
+   915→                <p className="text-xs text-white/60 mt-1 leading-relaxed hidden sm:block">Logos, affiches et identités créées avec soin</p>
+   916→              </AnimatedStat>
+   917→              <div className="text-center">
+   918→                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mx-auto mb-3">
+   919→                  <Palette className="h-6 w-6 text-white" />
+   920→                </div>
+   921→                <div className="text-3xl sm:text-4xl font-extrabold text-white mb-1">100%</div>
+   922→                <p className="text-sm font-semibold text-white/90">Sur-mesure</p>
+   923→                <p className="text-xs text-white/60 mt-1 leading-relaxed hidden sm:block">Aucun template pré-fait, chaque pixel est pensé pour vous</p>
+   924→              </div>
+   925→              <AnimatedStat end={100} suffix="%">
+   926→                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mx-auto mb-3">
+   927→                  <ThumbsUp className="h-6 w-6 text-white" />
+   928→                </div>
+   929→                <p className="text-sm font-semibold text-white/90">Satisfaction client</p>
+   930→                <p className="text-xs text-white/60 mt-1 leading-relaxed hidden sm:block">Une collaboration basée sur l'écoute et le résultat</p>
+   931→              </AnimatedStat>
+   932→            </div>
+   933→          </div>
+   934→        </section>
+   935→
+   936→        {/* ═══ 5. BARRE DE CONFIANCE ═══ */}
+   937→        <section className="py-6 border-b bg-background">
+   938→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+   939→            <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10">
+   940→              {[
+   941→                { icon: ShieldCheck, label: 'Qualité Garantie' },
+   942→                { icon: Zap, label: 'Livraison Rapide' },
+   943→                { icon: CheckCircle2, label: 'Satisfaction Garantie' },
+   944→                { icon: Gift, label: '100% Gratuit' },
+   945→                { icon: MessageCircle, label: 'Support WhatsApp' },
+   946→              ].map((item) => (
+   947→                <div key={item.label} className="flex items-center gap-2 text-muted-foreground">
+   948→                  <item.icon className="h-4 w-4 text-amber-500" />
+   949→                  <span className="text-xs font-medium whitespace-nowrap">{item.label}</span>
+   950→                </div>
+   951→              ))}
+   952→            </div>
+   953→          </div>
+   954→        </section>
+   955→
+   956→        {/* ═══ TRUST TICKER ═══ */}
+   957→        <div className="py-4 bg-amber-50 dark:bg-amber-950/10 border-y border-amber-200/50 dark:border-amber-800/30 overflow-hidden">
+   958→          <div className="flex animate-marquee whitespace-nowrap">
+   959→            {[...Array(2)].map((_, setIdx) => (
+   960→              <div key={setIdx} className="flex items-center gap-8 mx-4">
+   961→                {[
+   962→                  { icon: '⭐', text: '50+ Marques créées' },
+   963→                  { icon: '🎨', text: '100% Sur-mesure' },
+   964→                  { icon: '⚡', text: 'Livraison en 24-48h' },
+   965→                  { icon: '💰', text: 'Offre Découverte Gratuite' },
+   966→                  { icon: '📱', text: 'Support WhatsApp 7j/7' },
+   967→                  { icon: '🔒', text: 'Paiement Sécurisé' },
+   968→                  { icon: '🏆', text: '5/5 Satisfaction Client' },
+   969→                  { icon: '🇲🇱', text: 'Expert Bamako, Mali' },
+   970→                ].map((item, i) => (
+   971→                  <span key={`${setIdx}-${i}`} className="inline-flex items-center gap-2 text-sm font-medium text-amber-700 dark:text-amber-400 flex-shrink-0">
+   972→                    <span>{item.icon}</span>
+   973→                    <span>{item.text}</span>
+   974→                    <span className="text-amber-300 dark:text-amber-700">•</span>
+   975→                  </span>
+   976→                ))}
+   977→              </div>
+   978→            ))}
+   979→          </div>
+   980→        </div>
+   981→
+   982→        {/* ═══ 5.5 COMMENT ÇA MARCHE ═══ */}
+   983→        <section className="py-16 sm:py-20 bg-gradient-to-b from-background to-muted/20">
+   984→          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+   985→            <div className="text-center mb-12">
+   986→              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+   987→                <Zap className="h-3 w-3 mr-1" /> Processus
+   988→              </Badge>
+   989→              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Comment ça marche ?</h2>
+   990→              <p className="mt-3 text-muted-foreground max-w-xl mx-auto leading-relaxed">
+   991→                4 étapes simples pour concrétiser votre projet. De votre première idée à la livraison finale, je vous accompagne à chaque étape.
+   992→              </p>
+   993→            </div>
+   994→
+   995→            <div className="relative">
+   996→              {/* Ligne de connexion verticale (desktop) / horizontale (mobile) */}
+   997→              <div className="hidden sm:block absolute top-16 left-[calc(12.5%+20px)] right-[calc(12.5%+20px)] h-0.5 bg-gradient-to-r from-amber-300 via-orange-400 to-red-400 opacity-40" />
+   998→
+   999→              <div className="grid sm:grid-cols-4 gap-6 sm:gap-4">
+  1000→                {[
+  1001→                  {
+  1002→                    step: '01',
+  1003→                    icon: MessageCircle,
+  1004→                    title: 'Contactez-moi',
+  1005→                    desc: "Envoyez-moi un message sur WhatsApp ou remplissez le formulaire. Décrivez votre projet en quelques mots.",
+  1006→                    color: 'from-amber-400 to-amber-500',
+  1007→                    bg: 'bg-amber-50 dark:bg-amber-950/20',
+  1008→                    border: 'border-amber-200 dark:border-amber-800',
+  1009→                  },
+  1010→                  {
+  1011→                    step: '02',
+  1012→                    icon: Search,
+  1013→                    title: 'Brief & Devis',
+  1014→                    desc: "Je vous pose les bonnes questions pour comprendre vos besoins. Vous recevez une proposition claire avec délai et prix.",
+  1015→                    color: 'from-orange-400 to-orange-500',
+  1016→                    bg: 'bg-orange-50 dark:bg-orange-950/20',
+  1017→                    border: 'border-orange-200 dark:border-orange-800',
+  1018→                  },
+  1019→                  {
+  1020→                    step: '03',
+  1021→                    icon: PenTool,
+  1022→                    title: 'Création',
+  1023→                    desc: "Je conçois votre projet avec soin. Vous recevez des aperçus et pouvez demander des ajustements.",
+  1024→                    color: 'from-red-400 to-red-500',
+  1025→                    bg: 'bg-red-50 dark:bg-red-950/20',
+  1026→                    border: 'border-red-200 dark:border-red-800',
+  1027→                  },
+  1028→                  {
+  1029→                    step: '04',
+  1030→                    icon: Rocket,
+  1031→                    title: 'Livraison',
+  1032→                    desc: "Fichiers sources livrés en haute qualité. Suivi après livraison pour s'assurer que tout est parfait.",
+  1033→                    color: 'from-emerald-400 to-emerald-500',
+  1034→                    bg: 'bg-emerald-50 dark:bg-emerald-950/20',
+  1035→                    border: 'border-emerald-200 dark:border-emerald-800',
+  1036→                  },
+  1037→                ].map((s, i) => (
+  1038→                  <div key={s.step} className={`relative text-center p-5 rounded-2xl border ${s.border} ${s.bg} transition-all duration-300 hover:-translate-y-1 hover:shadow-lg`}>
+  1039→                    <div className={`inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${s.color} text-white shadow-lg mb-3`}>
+  1040→                      <s.icon className="h-5 w-5" />
+  1041→                    </div>
+  1042→                    <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Étape {s.step}</div>
+  1043→                    <h3 className="text-sm font-extrabold mb-2">{s.title}</h3>
+  1044→                    <p className="text-xs text-muted-foreground leading-relaxed">{s.desc}</p>
+  1045→                    {i < 3 && (
+  1046→                      <ArrowDown className="h-5 w-5 text-amber-400 mx-auto mt-3 sm:hidden" />
+  1047→                    )}
+  1048→                  </div>
+  1049→                ))}
+  1050→              </div>
+  1051→            </div>
+  1052→          </div>
+  1053→        </section>
+  1054→
+  1055→        {/* ═══ OUTILS MAÎTRISÉS ═══ */}
+  1056→        <div className="py-8 bg-muted/30 border-y overflow-hidden">
+  1057→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-6">
+  1058→            <p className="text-center text-xs font-bold uppercase tracking-widest text-muted-foreground">
+  1059→              <Wrench className="h-3.5 w-3.5 inline mr-1.5" /> Outils & Technologies que nous maîtrisons
+  1060→            </p>
+  1061→          </div>
+  1062→          <div className="flex animate-marquee whitespace-nowrap">
+  1063→            {[...Array(2)].map((_, setIdx) => (
+  1064→              <div key={setIdx} className="flex items-center gap-10 mx-5">
+  1065→                {[
+  1066→                  { name: 'Canva Pro', emoji: '🎨' },
+  1067→                  { name: 'CapCut Pro', emoji: '🎬' },
+  1068→                  { name: 'PicsArt Pro', emoji: '📸' },
+  1069→                  { name: 'Photoshop', emoji: '🖌️' },
+  1070→                  { name: 'Illustrator', emoji: '✏️' },
+  1071→                  { name: 'Premiere Pro', emoji: '🎞️' },
+  1072→                  { name: 'DaVinci Resolve', emoji: '🪄' },
+  1073→                  { name: 'Figma', emoji: '🎯' },
+  1074→                  { name: 'HTML/CSS', emoji: '🌐' },
+  1075→                  { name: 'JavaScript', emoji: '⚡' },
+  1076→                  { name: 'React/Next.js', emoji: '⚛️' },
+  1077→                  { name: 'WordPress', emoji: '📝' },
+  1078→                  { name: 'Meta Business', emoji: '📊' },
+  1079→                  { name: 'TikTok Ads', emoji: '🎵' },
+  1080→                ].map((tool, i) => (
+  1081→                  <span key={`${setIdx}-${i}`} className="inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors flex-shrink-0">
+  1082→                    <span className="text-xl">{tool.emoji}</span>
+  1083→                    <span>{tool.name}</span>
+  1084→                  </span>
+  1085→                ))}
+  1086→              </div>
+  1087→            ))}
+  1088→          </div>
+  1089→        </div>
+  1090→
+  1091→        {/* ═══ POURQUOI NOUS CHOISIR ═══ */}
+  1092→        <section className="py-16 sm:py-20">
+  1093→          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+  1094→            <motion.div
+  1095→              initial={{ opacity: 0, y: 30 }}
+  1096→              whileInView={{ opacity: 1, y: 0 }}
+  1097→              viewport={{ once: true, margin: '-50px' }}
+  1098→              transition={{ duration: 0.6 }}
+  1099→            >
+  1100→              <div className="text-center mb-12">
+
+[showing lines 501-1100 of 3739; use offset=1101 with limit to continue reading]

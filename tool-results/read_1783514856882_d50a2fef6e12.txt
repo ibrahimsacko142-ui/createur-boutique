@@ -1,0 +1,602 @@
+  2301→                  </button>
+  2302→                </div>
+  2303→              </div>
+  2304→              <div className="bg-[#ece5dd] dark:bg-[#1a2730] rounded-b-3xl p-4 min-h-[280px] flex flex-col justify-center">
+  2305→                <AnimatePresence mode="wait">
+  2306→                  <motion.div
+  2307→                    key={testimIndex}
+  2308→                    initial={{ opacity: 0, y: 20, scale: 0.95 }}
+  2309→                    animate={{ opacity: 1, y: 0, scale: 1 }}
+  2310→                    exit={{ opacity: 0, y: -20, scale: 0.95 }}
+  2311→                    transition={{ duration: 0.5, ease: 'easeInOut' }}
+  2312→                    className="flex justify-end"
+  2313→                  >
+  2314→                    <div className="max-w-[85%]">
+  2315→                      <div className="bg-[#005c4b] rounded-xl rounded-tr-sm px-4 py-3 shadow-sm">
+  2316→                        <p className="text-white text-sm leading-relaxed whitespace-pre-wrap">
+  2317→                          {[
+  2318→                            { name: 'Amadou Diallo', time: '14:32', text: "Sacko, le logo est parfait ! 🙏 Je l'ai déjà mis sur ma boutique. Mes clients demandent qui a fait ça. Merci fréro, je te recommande à tous mes amis entrepreneurs.", status: 'Lu à 14:35' },
+  2319→                            { name: 'Fatoumata Traoré', time: '09:15', text: "La formation en design m'a ouvert les yeux. En 2 semaines j'ai déjà créé 3 logos pour des gens de mon quartier et je gagne 15 000 FCFA. C'est fou 🎉", status: 'Lu à 09:20' },
+  2320→                            { name: 'Ibrahim Keita', time: '18:47', text: "Mon site est en ligne depuis 3 jours et j'ai déjà eu 12 clients qui m'ont trouvé sur Google. Avant personne ne me connaissait en dehors de Hamdallaye. Service exceptionnel.", status: 'Lu à 18:50' },
+  2321→                            { name: 'Oumar Sidibé', time: '11:03', text: "Les visuels pour mes affiches de boutique sont incroyables. Mon chiffre d'affaires a augmenté de 40% ce mois-ci. Quand est-ce qu'on refait une commande ? 😊", status: 'Lu à 11:08' },
+  2322→                          ][testimIndex].text}
+  2323→                        </p>
+  2324→                        <div className="flex items-center justify-end gap-1.5 mt-1.5">
+  2325→                          <span className="text-white/50 text-[10px]">{[
+  2326→                            { name: 'Amadou Diallo', time: '14:32' },
+  2327→                            { name: 'Fatoumata Traoré', time: '09:15' },
+  2328→                            { name: 'Ibrahim Keita', time: '18:47' },
+  2329→                            { name: 'Oumar Sidibé', time: '11:03' },
+  2330→                          ][testimIndex].time}</span>
+  2331→                          <svg className="h-4 w-4 text-[#53bdeb]" viewBox="0 0 16 11" fill="currentColor"><path d="M11.071.653a.457.457 0 0 0-.304-.102.493.493 0 0 0-.381.178l-6.19 7.636-2.011-2.085a.463.463 0 0 0-.336-.143.457.457 0 0 0-.336.143.476.476 0 0 0 0 .672l2.359 2.443a.457.457 0 0 0 .336.143c.137 0 .268-.061.381-.178l6.527-8.039a.507.507 0 0 0-.045-.668z"/><path d="M14.071.653a.457.457 0 0 0-.304-.102.493.493 0 0 0-.381.178l-6.19 7.636-1.019-1.056.457-.56a.507.507 0 0 0-.045-.668.457.457 0 0 0-.685 0l-.681.837-.07.012a.463.463 0 0 0-.336.143.476.476 0 0 0 0 .672l2.359 2.443a.457.457 0 0 0 .336.143c.137 0 .268-.061.381-.178l6.527-8.039a.507.507 0 0 0-.045-.668z" opacity=".4"/></svg>
+  2332→                        </div>
+  2333→                      </div>
+  2334→                      <p className="text-[11px] text-muted-foreground mt-1.5 text-right">
+  2335→                        — <strong>{[
+  2336→                          { name: 'Amadou Diallo' },
+  2337→                          { name: 'Fatoumata Traoré' },
+  2338→                          { name: 'Ibrahim Keita' },
+  2339→                          { name: 'Oumar Sidibé' },
+  2340→                        ][testimIndex].name}</strong>, client vérifié
+  2341→                      </p>
+  2342→                    </div>
+  2343→                  </motion.div>
+  2344→                </AnimatePresence>
+  2345→                {/* Dots navigation */}
+  2346→                <div className="flex items-center justify-center gap-2 mt-6">
+  2347→                  {[0, 1, 2, 3].map((i) => (
+  2348→                    <button
+  2349→                      key={i}
+  2350→                      onClick={() => setTestimIndex(i)}
+  2351→                      className={`h-2 rounded-full transition-all duration-300 ${i === testimIndex ? 'w-6 bg-amber-500' : 'w-2 bg-amber-500/30 hover:bg-amber-500/50'}`}
+  2352→                      aria-label={`Témoignage ${i + 1}`}
+  2353→                    />
+  2354→                  ))}
+  2355→                </div>
+  2356→              </div>
+  2357→            </div>
+  2358→
+  2359→            {/* Trust note */}
+  2360→            <div className="mt-8 text-center">
+  2361→              <p className="text-xs text-muted-foreground">
+  2362→                Chaque message est <strong className="text-foreground">réel</strong>, reçu directement sur mon WhatsApp.
+  2363→                Envie d&apos;être le prochain ?{' '}
+  2364→                <a href="#commande-rapide" className="text-amber-600 font-semibold hover:underline">Commandez maintenant</a>.
+  2365→              </p>
+  2366→            </div>
+  2367→          </div>
+  2368→        </section>
+  2369→
+  2370→            {/* Testimonial cards grid */}
+  2371→            <div className="mt-10 grid sm:grid-cols-2 gap-4">
+  2372→              {[
+  2373→                { name: 'Aminata Coulibaly', text: "La formation Marketing Digital a changé ma façon de voir les réseaux sociaux. En 1 mois, j'ai géré 3 comptes et je gagne maintenant 50 000 FCFA par mois. Merci Kante pour l'accompagnement !", rating: 5 },
+  2374→                { name: 'Moussa Traoré', text: "Mon site web créé par Camara Leh est incroyable. Il est rapide, beau et mes clients le trouvent facilement sur Google. Un vrai game changer pour mon entreprise.", rating: 5 },
+  2375→                { name: 'Djénéba Diarra', text: "Sacko a refait toute mon identité visuelle : logo, cartes de visite, affiches. Mes clients me disent que je looks professionnel maintenant. Service au top !", rating: 5 },
+  2376→                { name: 'Ibrahim Kanté', text: "J'ai suivi la formation Création Web et en 3 semaines j'ai pu créer mon propre site e-commerce. Je vends mes produits en ligne maintenant. Formation pratique et efficace.", rating: 5 },
+  2377→              ].map((t, i) => (
+  2378→                <motion.div
+  2379→                  key={t.name}
+  2380→                  initial={{ opacity: 0, y: 20 }}
+  2381→                  whileInView={{ opacity: 1, y: 0 }}
+  2382→                  viewport={{ once: true }}
+  2383→                  transition={{ duration: 0.4, delay: i * 0.1 }}
+  2384→                  className="p-5 rounded-xl bg-muted/50 border border-border hover:border-amber-200 dark:hover:border-amber-800 transition-all hover:shadow-md"
+  2385→                >
+  2386→                  <div className="flex items-center gap-0.5 mb-2">
+  2387→                    {[...Array(t.rating)].map((_, s) => (
+  2388→                      <Star key={s} className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+  2389→                    ))}
+  2390→                  </div>
+  2391→                  <p className="text-sm text-foreground/80 leading-relaxed mb-3">"{t.text}"</p>
+  2392→                  <div className="flex items-center gap-2">
+  2393→                    <div className="h-8 w-8 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white text-xs font-bold">
+  2394→                      {t.name.split(' ').map(n => n[0]).join('')}
+  2395→                    </div>
+  2396→                    <div>
+  2397→                      <p className="text-xs font-bold">{t.name}</p>
+  2398→                      <p className="text-[10px] text-muted-foreground">Client vérifié</p>
+  2399→                    </div>
+  2400→                  </div>
+  2401→                </motion.div>
+  2402→              ))}
+  2403→            </div>
+  2404→
+  2405→
+  2406→
+  2407→
+  2408→        {/* ═══ 15. COMMANDE RAPIDE (Formulaire Qualifiant) ═══ */}
+  2409→        <section id="commande-rapide" className="py-20 sm:py-24">
+  2410→          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+  2411→            <Card className="border-0 shadow-2xl overflow-hidden">
+  2412→              <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 p-1">
+  2413→                <div className="bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 text-white p-6 sm:p-8">
+  2414→                  <div className="text-center">
+  2415→                    <Zap className="h-8 w-8 mx-auto mb-2" />
+  2416→                    <h2 className="text-2xl sm:text-3xl font-extrabold">Démarrez Votre Projet</h2>
+  2417→                    <p className="mt-2 text-white/80 text-sm">Remplissez ce formulaire — je vous recontacte <strong>personnellement</strong> sur WhatsApp avec une proposition adaptée.</p>
+  2418→                    <div className="mt-4 inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm rounded-full px-4 py-1.5 text-white text-xs font-semibold border border-white/20">
+  2419→                      <span className="relative flex h-2 w-2">
+  2420→                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+  2421→                        <span className="relative inline-flex rounded-full h-2 w-2 bg-red-400" />
+  2422→                      </span>
+  2423→                      5 projets maximum par jour — qualité avant quantité
+  2424→                    </div>
+  2425→                  </div>
+  2426→                </div>
+  2427→              </div>
+  2428→              <CardContent className="p-6 sm:p-8 space-y-4">
+  2429→                <div className="grid sm:grid-cols-2 gap-4">
+  2430→                  <div className="space-y-2">
+  2431→                    <Label className="text-sm font-semibold">Service souhaité *</Label>
+  2432→                    <select
+  2433→                      value={quickOrder.service}
+  2434→                      onChange={(e) => setQuickOrder(prev => ({ ...prev, service: e.target.value }))}
+  2435→                      className="w-full h-11 rounded-md border border-input bg-background px-3 text-sm"
+  2436→                    >
+  2437→                      <option value="">Sélectionnez un service...</option>
+  2438→                      <option disabled className="font-semibold text-muted-foreground">── Design & Création ──</option>
+  2439→                      <option value="Logo Professionnel — Gratuit">Logo Professionnel — Gratuit</option>
+  2440→                      <option value="Affiche Professionnelle — Gratuit">Affiche Professionnelle — Gratuit</option>
+  2441→                      <option value="Identité Visuelle Complète — Gratuit">Identité Visuelle Complète — Gratuit</option>
+  2442→                      <option disabled className="font-semibold text-muted-foreground">── Web & Vidéo ──</option>
+  2443→                      <option value="Site Web Simple — Gratuit">Site Web Simple — Gratuit</option>
+  2444→                      <option value="Site Web Professionnel — Gratuit">Site Web Professionnel — Gratuit</option>
+  2445→                      <option value="Montage Vidéo Pro — Gratuit">Montage Vidéo Pro — Gratuit</option>
+  2446→                      <option value="Post Réseaux Sociaux — Gratuit">Post Réseaux Sociaux — Gratuit</option>
+  2447→                      <option disabled className="font-semibold text-muted-foreground">── Carrière Pro ──</option>
+  2448→                      <option value="Pack Lancement Carrière — 3 500 FCFA">Pack Lancement Carrière — 3 500 FCFA</option>
+  2449→                      <option value="Relooking CV — 700 FCFA">Relooking CV — 700 FCFA</option>
+  2450→                      <option value="Impact LinkedIn — 2 000 FCFA">Impact LinkedIn — 2 000 FCFA</option>
+  2451→                    </select>
+  2452→                  </div>
+  2453→                  <div className="space-y-2">
+  2454→                    <Label className="text-sm font-semibold">Secteur d&apos;activité</Label>
+  2455→                    <select
+  2456→                      value={quickOrder.description}
+  2457→                      onChange={(e) => setQuickOrder(prev => ({ ...prev, description: e.target.value }))}
+  2458→                      className="w-full h-11 rounded-md border border-input bg-background px-3 text-sm"
+  2459→                    >
+  2460→                      <option value="">Votre secteur...</option>
+  2461→                      <option value="Commerce / Boutique">Commerce / Boutique</option>
+  2462→                      <option value="Restauration / Alimentation">Restauration / Alimentation</option>
+  2463→                      <option value="Éducation / Formation">Éducation / Formation</option>
+  2464→                      <option value="Tech / Informatique">Tech / Informatique</option>
+  2465→                      <option value="Mode / Beauté">Mode / Beauté</option>
+  2466→                      <option value="Transport / Logistique">Transport / Logistique</option>
+  2467→                      <option value="Santé / Bien-être">Santé / Bien-être</option>
+  2468→                      <option value="BTP / Immobilier">BTP / Immobilier</option>
+  2469→                      <option value="Art / Culture">Art / Culture</option>
+  2470→                      <option value="Autre">Autre</option>
+  2471→                    </select>
+  2472→                  </div>
+  2473→                </div>
+  2474→                <div className="grid sm:grid-cols-2 gap-4">
+  2475→                  <div className="space-y-2">
+  2476→                    <Label className="text-sm font-semibold">Votre nom *</Label>
+  2477→                    <Input placeholder="Ex: Amadou Diallo" value={quickOrder.name} onChange={(e) => setQuickOrder(prev => ({ ...prev, name: e.target.value }))} className="h-11" />
+  2478→                  </div>
+  2479→                  <div className="space-y-2">
+  2480→                    <Label className="text-sm font-semibold">Téléphone WhatsApp *</Label>
+  2481→                    <Input type="tel" placeholder="+223 XX XX XX XX" value={quickOrder.phone} onChange={(e) => setQuickOrder(prev => ({ ...prev, phone: e.target.value }))} className="h-11" />
+  2482→                  </div>
+  2483→                </div>
+  2484→                <Button
+  2485→                  onClick={() => {
+  2486→                    if (!quickOrder.service || !quickOrder.name || !quickOrder.phone) {
+  2487→                      toast({ title: 'Champs requis', description: 'Service, nom et téléphone sont obligatoires.', variant: 'destructive' })
+  2488→                      return
+  2489→                    }
+  2490→                    triggerConfetti()
+  2491→                    const msg = encodeURIComponent(
+  2492→                      `Bonjour Sacko ! Je souhaite un service.\n\n` +
+  2493→                      `Service : ${quickOrder.service}\n` +
+  2494→                      `Secteur : ${quickOrder.description || 'Non précisé'}\n` +
+  2495→                      `Nom : ${quickOrder.name}\n` +
+  2496→                      `Téléphone : ${quickOrder.phone}\n\n` +
+  2497→                      `Je suis prêt(e) à discuter de mon projet. Merci !`
+  2498→                    )
+  2499→                    window.open(`https://wa.me/22397787244?text=${msg}`, '_blank')
+  2500→                    toast({ title: 'Demande envoyée !', description: 'Je vous recontacte personnellement sous 30 minutes.' })
+  2501→                  }}
+  2502→                  className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold h-12 text-sm shadow-lg shadow-emerald-500/20"
+  2503→                >
+  2504→                  <Send className="h-4 w-4 mr-2" /> Envoyer ma demande
+  2505→                </Button>
+  2506→                <p className="text-[11px] text-muted-foreground text-center">
+  2507→                  Vos données restent <strong>privées</strong>. Je vous recontacte uniquement pour votre projet.
+  2508→                </p>
+  2509→              </CardContent>
+  2510→            </Card>
+  2511→          </div>
+  2512→        </section>
+  2513→
+  2514→        {/* ═══ 16. À PROPOS ═══ */}
+  2515→        <section id="apropos" className="py-16 sm:py-20 bg-gradient-to-b from-muted/30 to-background relative overflow-hidden">
+  2516→          <div className="absolute top-10 left-10 h-64 w-64 bg-amber-200/20 dark:bg-amber-900/10 rounded-full blur-3xl" />
+  2517→          <div className="absolute bottom-10 right-10 h-64 w-64 bg-orange-200/15 dark:bg-orange-900/10 rounded-full blur-3xl" />
+  2518→          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  2519→            <motion.div
+  2520→              initial={{ opacity: 0, y: 30 }}
+  2521→              whileInView={{ opacity: 1, y: 0 }}
+  2522→              viewport={{ once: true, margin: '-50px' }}
+  2523→              transition={{ duration: 0.6 }}
+  2524→            >
+  2525→            <div className="grid lg:grid-cols-2 gap-12 items-center">
+  2526→              <div className="space-y-5">
+  2527→                {/* Photo de Sacko */}
+  2528→                <div className="relative">
+  2529→                  <div className="relative rounded-2xl overflow-hidden shadow-2xl border">
+  2530→                    <img src="/demo-photo.png" alt="Sacko - Studio Créatif" className="w-full h-72 sm:h-80 object-cover" />
+  2531→                    <div className="absolute inset-0 bg-gradient-to-t from-amber-900/80 via-amber-900/20 to-transparent" />
+  2532→                    <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
+  2533→                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm mb-2">
+  2534→                        <Palette className="h-6 w-6" />
+  2535→                      </div>
+  2536→                      <h3 className="text-xl font-bold">Sacko</h3>
+  2537→                      <p className="mt-0.5 text-white/80 text-sm">Studio Créatif &bull; Bamako, Mali</p>
+  2538→                    </div>
+  2539→                  </div>
+  2540→                  <div className="absolute -bottom-4 -right-4 bg-white dark:bg-card rounded-xl p-4 shadow-xl border hidden sm:block">
+  2541→                    <div className="flex items-center gap-2.5">
+  2542→                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
+  2543→                        <Zap className="h-4 w-4 text-amber-600" />
+  2544→                      </div>
+  2545→                      <div>
+  2546→                        <p className="text-sm font-bold">50+ Projets livrés</p>
+  2547→                        <p className="text-[10px] text-muted-foreground">À Bamako et au-delà</p>
+  2548→                      </div>
+  2549→                    </div>
+  2550→                  </div>
+  2551→                </div>
+  2552→                {/* Vidéo de présentation */}
+  2553→                <div className="relative rounded-2xl overflow-hidden shadow-xl border">
+  2554→                  <video
+  2555→                    controls
+  2556→                    preload="metadata"
+  2557→                    poster="/demo-photo.png"
+  2558→                    className="w-full h-48 sm:h-56 object-cover bg-black"
+  2559→                  >
+  2560→                    <source src="/demo-video.mp4" type="video/mp4" />
+  2561→                    Votre navigateur ne supporte pas la lecture vidéo.
+  2562→                  </video>
+  2563→                  <div className="absolute top-3 left-3">
+  2564→                    <Badge className="bg-amber-500/90 text-white border-0 text-[10px] font-semibold backdrop-blur-sm">
+  2565→                      <MonitorPlay className="h-3 w-3 mr-1" /> Vidéo de présentation
+  2566→                    </Badge>
+  2567→                  </div>
+  2568→                </div>
+  2569→              </div>
+  2570→
+  2571→              <div>
+  2572→                <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+  2573→                  <Heart className="h-3 w-3 mr-1" /> Qui suis-je
+  2574→                </Badge>
+  2575→                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">À Propos de Sacko</h2>
+  2576→                <div className="mt-6 space-y-4 text-muted-foreground leading-relaxed">
+  2577→                  <p>
+  2578→                    Bienvenue ! Je suis <strong className="text-foreground">Sacko</strong>, créateur digital passionné basé à Bamako. Mon objectif est d&apos;accompagner les entreprises et les porteurs de projets dans la construction d&apos;une <strong className="text-foreground">image de marque forte, professionnelle et mémorable</strong>. De la première idée à la conception finale, je transforme votre vision en une réalité visuelle qui attire et fidélise vos clients.
+  2579→                  </p>
+  2580→                  <p>
+  2581→                    Je maîtrise les outils les plus demandés du marché — <strong className="text-foreground">CapCut Pro, Canva Pro, PicsArt Pro</strong> — et je les mets au service de chaque projet pour garantir des résultats à la hauteur de vos ambitions. Que ce soit un logo percutant, un site web qui convertit, ou une identité visuelle complète, chaque création est pensée pour vous démarquer de la concurrence.
+  2582→                  </p>
+  2583→                  <p>
+  2584→                    Ma mission : <strong className="text-foreground">aider les entrepreneurs et créateurs du Mali et d&apos;Afrique</strong> à prendre le contrôle de leur image numérique. Je crois fermement que chaque business, même le plus modeste, mérite une identité visuelle qui inspire confiance et attire des clients.
+  2585→                  </p>
+  2586→                </div>
+  2587→                <div className="mt-6 grid grid-cols-3 gap-3">
+  2588→                  {[
+  2589→                    { number: '50+', label: 'Marques créées' },
+  2590→                    { number: '100%', label: 'Sur-mesure' },
+  2591→                    { number: '5/5', label: 'Satisfaction' },
+  2592→                  ].map((stat) => (
+  2593→                    <div key={stat.label} className="text-center p-3 rounded-lg bg-muted/50 border">
+  2594→                      <div className="text-lg font-bold text-amber-600">{stat.number}</div>
+  2595→                      <div className="text-[10px] text-muted-foreground">{stat.label}</div>
+  2596→                    </div>
+  2597→                  ))}
+  2598→                </div>
+  2599→                <div className="mt-8 flex flex-wrap gap-3">
+  2600→                  <a href="#services">
+  2601→                    <Button className="bg-amber-500 hover:bg-amber-600 text-white font-semibold">
+  2602→                      Découvrir mes services <ArrowRight className="ml-2 h-4 w-4" />
+  2603→                    </Button>
+  2604→                  </a>
+  2605→                  <a href="#contact">
+  2606→                    <Button variant="outline" className="font-semibold">Me contacter</Button>
+  2607→                  </a>
+  2608→                </div>
+  2609→              </div>
+  2610→            </div>
+  2611→            </motion.div>
+  2612→          </div>
+  2613→        </section>
+  2614→
+  2615→        {/* ═══ 17. FAQ ═══ */}
+  2616→        <section id="faq" className="py-16 sm:py-20 bg-muted/30">
+  2617→          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+  2618→            <div className="text-center mb-12">
+  2619→              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+  2620→                <MessageCircle className="h-3 w-3 mr-1" /> FAQ
+  2621→              </Badge>
+  2622→              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Questions Fréquentes</h2>
+  2623→              <p className="mt-3 text-muted-foreground max-w-xl mx-auto">
+  2624→                Les réponses aux questions les plus posées. Si vous ne trouvez pas votre réponse, contactez-moi directement sur WhatsApp.
+  2625→              </p>
+  2626→            </div>
+  2627→            {/* FAQ Search */}
+  2628→            <div className="relative max-w-md mx-auto mb-6">
+  2629→              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+  2630→              <Input
+  2631→                placeholder="Rechercher dans la FAQ..."
+  2632→                value={faqSearch}
+  2633→                onChange={(e) => setFaqSearch(e.target.value)}
+  2634→                className="pl-10 h-10 bg-background border-border rounded-xl text-sm"
+  2635→              />
+  2636→              {faqSearch && (
+  2637→                <button onClick={() => setFaqSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+  2638→                  <X className="h-4 w-4" />
+  2639→                </button>
+  2640→              )}
+  2641→            </div>
+  2642→            <div className="space-y-3">
+  2643→              {(() => {
+  2644→                const faqs = [
+  2645→                  { q: "L'Offre Découverte est-elle vraiment 100% gratuite ?", a: "Oui, totalement. C'est ma manière de vous prouver la qualité de mon travail avant que vous ne décidiez de passer à une offre Premium payante. Aucun engagement requis, aucun frais caché." },
+  2646→                  { q: "Quels sont les délais de livraison ?", a: "Les services \"Carrière Pro\" (CV, Lettres) sont livrés en moins de 24h. Pour les logos simples, comptez 48h, et pour un site web complet, entre 3 et 7 jours selon la complexité. Chaque projet a un suivi personnalisé." },
+  2647→                  { q: "Puis-je demander des modifications si le résultat ne me plaît pas ?", a: "Absolument. Votre satisfaction est ma priorité. Pour l'Offre Découverte, une révision est incluse. Pour les offres Premium, les révisions sont illimitées jusqu'à ce que le résultat vous corresponde parfaitement. Je ne livre que lorsque vous êtes 100% satisfait." },
+  2648→                  { q: "Pourquoi limitez-vous les commandes à 5 par jour ?", a: "Je privilégie la qualité à la quantité. Travailler avec un nombre limité de clients me permet de dédier toute mon attention et mon expertise à chaque pixel de votre projet. Le résultat : des créations qui convertissent." },
+  2649→                  { q: "Comment se passe le paiement ?", a: "Après avoir rempli le formulaire de commande, vous êtes redirigé vers WhatsApp avec un récapitulatif complet. Sacko reçoit votre commande instantanément et vous guide pour le paiement via Orange Money, MTN MoMo ou tout autre moyen. C'est simple, rapide et direct." },
+  2650→                  { q: "Les formations sont-elles en ligne ou en présentiel ?", a: "Les formations sont 100% en ligne via WhatsApp et supports vidéo. Vous apprenez à votre rythme, avec un suivi personnalisé et un groupe WhatsApp pour poser vos questions." },
+  2651→                ]
+  2652→                const filtered = faqs.filter((f) => !faqSearch || f.q.toLowerCase().includes(faqSearch.toLowerCase()) || f.a.toLowerCase().includes(faqSearch.toLowerCase()))
+  2653→                return filtered.length === 0 ? (
+  2654→                  <div className="text-center py-8">
+  2655→                    <Search className="h-8 w-8 text-muted-foreground/30 mx-auto mb-2" />
+  2656→                    <p className="text-sm text-muted-foreground">Aucune question ne correspond à votre recherche.</p>
+  2657→                  </div>
+  2658→                ) : filtered.map((faq, i) => {
+  2659→                  const isOpen = faqOpen === `faq-${i}`
+  2660→                  return (
+  2661→                    <Card key={i} className="border-0 shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
+  2662→                      <button
+  2663→                        onClick={() => setFaqOpen(isOpen ? null : `faq-${i}`)}
+  2664→                        aria-expanded={isOpen}
+  2665→                        className="w-full flex items-center justify-between p-5 text-left"
+  2666→                      >
+  2667→                        <h3 className="font-semibold text-sm pr-4">{faq.q}</h3>
+  2668→                        <motion.div
+  2669→                          animate={{ rotate: isOpen ? 180 : 0 }}
+  2670→                          transition={{ duration: 0.2 }}
+  2671→                          className="flex-shrink-0"
+  2672→                        >
+  2673→                          <ChevronUp className="h-4 w-4 text-muted-foreground" />
+  2674→                        </motion.div>
+  2675→                      </button>
+  2676→                      <AnimatePresence initial={false}>
+  2677→                        {isOpen && (
+  2678→                          <motion.div
+  2679→                            initial={{ height: 0, opacity: 0 }}
+  2680→                            animate={{ height: 'auto', opacity: 1 }}
+  2681→                            exit={{ height: 0, opacity: 0 }}
+  2682→                            transition={{ duration: 0.25, ease: 'easeInOut' }}
+  2683→                            className="overflow-hidden"
+  2684→                          >
+  2685→                            <p className="text-sm text-muted-foreground leading-relaxed px-5 pb-5">{faq.a}</p>
+  2686→                          </motion.div>
+  2687→                        )}
+  2688→                      </AnimatePresence>
+  2689→                    </Card>
+  2690→                  )
+  2691→                })
+  2692→              })()}
+  2693→            </div>
+  2694→            <div className="mt-8 text-center">
+  2695→              <p className="text-sm text-muted-foreground">
+  2696→                Vous avez d&apos;autres questions ?{' '}
+  2697→                <a href="#contact" className="text-amber-600 font-medium hover:underline">Contactez-moi</a> ou écrivez-moi directement sur{' '}
+  2698→                <a href="https://wa.me/22397787244" target="_blank" rel="noopener noreferrer" className="text-emerald-600 font-medium hover:underline">WhatsApp</a>.
+  2699→              </p>
+  2700→            </div>
+  2701→          </div>
+  2702→        </section>
+  2703→
+  2704→        {/* ═══ LEAD MAGNET — Cadeau Exclusif ═══ */}
+  2705→        <section className="py-16 sm:py-20">
+  2706→          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+  2707→            <Card className="border-0 shadow-xl overflow-hidden">
+  2708→              <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white p-8 sm:p-10 relative overflow-hidden">
+  2709→                <div className="absolute top-0 right-0 w-40 h-40 bg-amber-500/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+  2710→                <div className="absolute bottom-0 left-0 w-32 h-32 bg-emerald-500/10 rounded-full translate-y-1/2 -translate-x-1/2" />
+  2711→                <div className="relative z-10 text-center mb-8">
+  2712→                  <div className="inline-flex items-center gap-2 bg-amber-500/20 rounded-full px-4 py-1.5 text-amber-300 text-xs font-semibold mb-4 border border-amber-500/20">
+  2713→                    <Gift className="h-3.5 w-3.5" /> Cadeau Exclusif pour les Entrepreneurs
+  2714→                  </div>
+  2715→                  <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-3">
+  2716→                    10 Templates Canva <span className="text-amber-400">Gratuits</span>
+  2717→                  </h2>
+  2718→                  <p className="text-slate-300 leading-relaxed max-w-md mx-auto text-sm">
+  2719→                    <strong className="text-white">Boostez la visibilité de votre business dès aujourd&apos;hui.</strong> Rejoignez ma liste de contacts et recevez instantanément un <strong className="text-white">pack de 10 templates Canva exclusifs</strong> conçus pour les boutiques et créateurs de Bamako.
+  2720→                  </p>
+  2721→                </div>
+  2722→                <div className="relative z-10 flex flex-col sm:flex-row gap-3">
+  2723→                  <Input
+  2724→                    placeholder="Votre prénom"
+  2725→                    value={leadMagnet.name}
+  2726→                    onChange={(e) => setLeadMagnet(prev => ({ ...prev, name: e.target.value }))}
+  2727→                    className="h-11 bg-white/10 border-white/20 text-white placeholder:text-slate-500 focus:border-amber-500/50"
+  2728→                  />
+  2729→                  <Input
+  2730→                    placeholder="Votre numéro WhatsApp ou email"
+  2731→                    value={leadMagnet.contact}
+  2732→                    onChange={(e) => setLeadMagnet(prev => ({ ...prev, contact: e.target.value }))}
+  2733→                    className="h-11 bg-white/10 border-white/20 text-white placeholder:text-slate-500 focus:border-amber-500/50"
+  2734→                  />
+  2735→                  <Button
+  2736→                    onClick={() => {
+  2737→                      if (!leadMagnet.name || !leadMagnet.contact) {
+  2738→                        toast({ title: 'Champs requis', description: 'Prénom et contact sont obligatoires.', variant: 'destructive' })
+  2739→                        return
+  2740→                      }
+  2741→                      triggerConfetti()
+  2742→                      const msg = encodeURIComponent(
+  2743→                        `Bonjour Sacko ! Je souhaite recevoir le pack de 10 templates Canva gratuit.\n\nPrénom : ${leadMagnet.name}\nContact : ${leadMagnet.contact}\n\nMerci !`
+  2744→                      )
+  2745→                      window.open(`https://wa.me/22397787244?text=${msg}`, '_blank')
+  2746→                      toast({ title: 'Demande envoyée !', description: 'Vous recevrez votre pack de templates très rapidement.' })
+  2747→                      setLeadMagnet({ name: '', contact: '' })
+  2748→                    }}
+  2749→                    className="h-11 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-sm shadow-lg shadow-amber-500/25 whitespace-nowrap px-6"
+  2750→                  >
+  2751→                    <Gift className="h-4 w-4 mr-1.5" /> Recevoir mon pack
+  2752→                  </Button>
+  2753→                </div>
+  2754→                <p className="relative z-10 text-center text-[11px] text-slate-500 mt-4">
+  2755→                  Aucun spam. Uniquement des ressources et opportunités pour votre business.
+  2756→                </p>
+  2757→              </div>
+  2758→            </Card>
+  2759→          </div>
+  2760→        </section>
+  2761→
+  2762→        {/* ═══ GARANTIES ═══ */}
+  2763→        <section className="py-16 sm:py-20 bg-gradient-to-b from-muted/20 to-background">
+  2764→          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+  2765→            <div className="text-center mb-12">
+  2766→              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+  2767→                <ShieldCheck className="h-3 w-3 mr-1" /> Garanties
+  2768→              </Badge>
+  2769→              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Mes 4 Garanties pour Vous</h2>
+  2770→              <p className="mt-3 text-muted-foreground max-w-xl mx-auto leading-relaxed">
+  2771→                Chaque projet est protégé. Voici les engagements que je prends avec chaque client, sans exception.
+  2772→              </p>
+  2773→            </div>
+  2774→
+  2775→            <motion.div
+  2776→              initial={{ opacity: 0, y: 30 }}
+  2777→              whileInView={{ opacity: 1, y: 0 }}
+  2778→              viewport={{ once: true, margin: '-50px' }}
+  2779→              transition={{ duration: 0.6 }}
+  2780→            >
+  2781→            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+  2782→              {[
+  2783→                {
+  2784→                  icon: ThumbsUp,
+  2785→                  title: 'Satisfaction ou Révision',
+  2786→                  desc: "Votre projet n'est pas terminé tant que vous n'êtes pas 100% satisfait. Révisions incluses.",
+  2787→                  color: 'from-emerald-400 to-teal-500',
+  2788→                  bg: 'bg-emerald-50 dark:bg-emerald-950/20',
+  2789→                },
+  2790→                {
+  2791→                  icon: Timer,
+  2792→                  title: 'Livraison dans les Délais',
+  2793→                  desc: "CV et lettres en 24h, logos en 48h, sites web en 3-7 jours. Promesse tenue.",
+  2794→                  color: 'from-amber-400 to-orange-500',
+  2795→                  bg: 'bg-amber-50 dark:bg-amber-950/20',
+  2796→                },
+  2797→                {
+  2798→                  icon: Lock,
+  2799→                  title: 'Confidentialité Totale',
+  2800→                  desc: 'Vos données, vos idées, vos fichiers restent strictement privés. Aucune partage tiers.',
+  2801→                  color: 'from-blue-400 to-indigo-500',
+  2802→                  bg: 'bg-blue-50 dark:bg-blue-950/20',
+  2803→                },
+  2804→                {
+  2805→                  icon: MessageCircle,
+  2806→                  title: 'Support WhatsApp 7j/7',
+  2807→                  desc: "Un message, une réponse. Je suis disponible pour vous accompagner même après la livraison.",
+  2808→                  color: 'from-purple-400 to-violet-500',
+  2809→                  bg: 'bg-purple-50 dark:bg-purple-950/20',
+  2810→                },
+  2811→              ].map((g) => (
+  2812→                <Card key={g.title} className={`border-0 shadow-md overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${g.bg}`}>
+  2813→                  <div className={`h-1 bg-gradient-to-r ${g.color}`} />
+  2814→                  <CardContent className="p-5 text-center">
+  2815→                    <div className={`inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${g.color} text-white shadow-lg mb-4`}>
+  2816→                      <g.icon className="h-6 w-6" />
+  2817→                    </div>
+  2818→                    <h3 className="text-sm font-extrabold mb-2">{g.title}</h3>
+  2819→                    <p className="text-xs text-muted-foreground leading-relaxed">{g.desc}</p>
+  2820→                  </CardContent>
+  2821→                </Card>
+  2822→              ))}
+  2823→            </div>
+  2824→            </motion.div>
+  2825→          </div>
+  2826→        </section>
+  2827→
+  2828→        {/* ═══ RÉSULTATS CLIENTS ═══ */}
+  2829→        <section className="py-16 sm:py-20 relative overflow-hidden">
+  2830→          <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 dark:from-emerald-950/20 dark:via-teal-950/10 dark:to-cyan-950/20" />
+  2831→          <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+  2832→            <motion.div
+  2833→              initial={{ opacity: 0, y: 30 }}
+  2834→              whileInView={{ opacity: 1, y: 0 }}
+  2835→              viewport={{ once: true, margin: '-50px' }}
+  2836→              transition={{ duration: 0.6 }}
+  2837→            >
+  2838→              <div className="text-center mb-12">
+  2839→                <Badge variant="secondary" className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200">
+  2840→                  <TrendingUp className="h-3 w-3 mr-1" /> Résultats
+  2841→                </Badge>
+  2842→                <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Ils ont <span className="text-emerald-600 dark:text-emerald-400">transformé leur business</span></h2>
+  2843→                <p className="mt-3 text-muted-foreground max-w-xl mx-auto leading-relaxed">
+  2844→                  Des résultats concrets, mesurables. Voici ce que nos clients ont accompli après avoir travaillé avec Studio Créatif.
+  2845→                </p>
+  2846→              </div>
+  2847→
+  2848→              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+  2849→                {[
+  2850→                  { client: 'Boutique Le Baobab', metric: '+40%', desc: "d'augmentation du chiffre d'affaires en 1 mois grâce au nouveau logo et aux visuels réseaux sociaux", icon: TrendingUp, color: 'from-emerald-500 to-teal-500' },
+  2851→                  { client: 'MaliTech Solutions', metric: '+200', desc: 'visiteurs/jour sur le nouveau site web en seulement 2 semaines après le lancement', icon: Users, color: 'from-blue-500 to-indigo-500' },
+  2852→                  { client: 'Restaurant Djoliba', metric: '3x', desc: "plus de commandes en ligne après la refonte de l'identité visuelle complète et des affiches promotionnelles", icon: Award, color: 'from-amber-500 to-orange-500' },
+  2853→                  { client: 'Salon Awa Beauty', metric: '15K+', desc: 'vues sur la vidéo promotionnelle TikTok en 48h, générant 20+ nouvelles clientes', icon: Eye, color: 'from-purple-500 to-violet-500' },
+  2854→                ].map((result, i) => (
+  2855→                  <motion.div
+  2856→                    key={result.client}
+  2857→                    initial={{ opacity: 0, y: 20 }}
+  2858→                    whileInView={{ opacity: 1, y: 0 }}
+  2859→                    viewport={{ once: true }}
+  2860→                    transition={{ duration: 0.4, delay: i * 0.1 }}
+  2861→                    className="group relative bg-background rounded-2xl border border-border p-5 sm:p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-emerald-200 dark:hover:border-emerald-800"
+  2862→                  >
+  2863→                    <div className={`inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${result.color} text-white shadow-lg mb-4 group-hover:scale-110 transition-transform duration-300`}>
+  2864→                      <result.icon className="h-6 w-6" />
+  2865→                    </div>
+  2866→                    <div className="text-3xl font-extrabold bg-gradient-to-r bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 mb-1">{result.metric}</div>
+  2867→                    <h3 className="text-sm font-bold mb-2">{result.client}</h3>
+  2868→                    <p className="text-xs text-muted-foreground leading-relaxed">{result.desc}</p>
+  2869→                  </motion.div>
+  2870→                ))}
+  2871→              </div>
+  2872→
+  2873→              <div className="mt-8 text-center">
+  2874→                <p className="text-sm text-muted-foreground">
+  2875→                  Envie de résultats similaires ?{' '}
+  2876→                  <a href="https://wa.me/22397787244?text=Bonjour%20!%20J%27ai%20vu%20vos%20r%C3%A9sultats%20clients%20et%20je%20veux%20la%20m%C3%Aamme%20chose%20pour%20mon%20business." target="_blank" rel="noopener noreferrer" className="text-emerald-600 font-semibold hover:underline">
+  2877→                    Discutons de votre projet
+  2878→                  </a>
+  2879→                </p>
+  2880→              </div>
+  2881→            </motion.div>
+  2882→          </div>
+  2883→        </section>
+  2884→
+  2885→        {/* Wave divider */}
+  2886→        <div className="relative h-16 -mt-1 overflow-hidden">
+  2887→          <svg className="absolute bottom-0 w-full" viewBox="0 0 1440 64" fill="none" preserveAspectRatio="none">
+  2888→            <path d="M0 64L48 58C96 52 192 40 288 34C384 28 480 28 576 32C672 36 768 44 864 46C960 48 1056 44 1152 38C1248 32 1344 24 1392 20L1440 16V64H0Z" className="fill-amber-500" />
+  2889→          </svg>
+  2890→        </div>
+  2891→
+  2892→        {/* ═══ 18. CTA FINAL ═══ */}
+  2893→        <section className="py-16 sm:py-20 bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 relative overflow-hidden">
+  2894→          <div className="absolute inset-0">
+  2895→            <div className="absolute top-0 left-1/4 h-64 w-64 bg-white/10 rounded-full blur-3xl" />
+  2896→            <div className="absolute bottom-0 right-1/4 h-64 w-64 bg-white/10 rounded-full blur-3xl" />
+  2897→          </div>
+  2898→          <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
+  2899→            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
+  2900→              Prêt à faire passer votre communication <span className="bg-gradient-to-r from-white via-yellow-200 to-white bg-clip-text text-transparent animate-gradient-text">au niveau supérieur</span> ?
+
+[showing lines 2301-2900 of 3739; use offset=2901 with limit to continue reading]

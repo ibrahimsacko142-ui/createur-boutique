@@ -576,12 +576,10 @@ export default function Home() {
   // Coach detail modal
   const [selectedCoach, setSelectedCoach] = useState<typeof coaches[0] | null>(null)
 
-  // Promo countdown: 7 days from now
+  // Promo countdown: end of current month
   const [promoEnd] = useState(() => {
-    const d = new Date()
-    d.setDate(d.getDate() + 7)
-    d.setHours(23, 59, 59, 0)
-    return d
+    const now = new Date()
+    return new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 0)
   })
   const countdown = useCountdown(promoEnd)
 
@@ -625,7 +623,7 @@ export default function Home() {
   // Welcome popup for first-time visitors
   useEffect(() => {
     if (showWelcome) {
-      const timer = setTimeout(() => setWelcomeVisible(true), 6000)
+      const timer = setTimeout(() => setWelcomeVisible(true), 15000) // show after 15s instead of 6s
       return () => clearTimeout(timer)
     }
   }, [showWelcome])
@@ -712,13 +710,13 @@ export default function Home() {
             >
               <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-4">
                 <p className="text-xs sm:text-sm font-medium text-center sm:text-left flex-1">
-                  <Flame className="h-3.5 w-3.5 inline mr-1" />
-                  Bienvenue ! Tous les services sont actuellement gratuits — Profitez-en pour lancer votre projet digital
+                  <Sparkles className="h-3.5 w-3.5 inline mr-1" />
+                  Offre spéciale : Première commande à prix réduit — Design, sites web, montage vidéo et plus encore !
                 </p>
                 <div className="flex items-center gap-2 flex-shrink-0">
                   <a href="#services">
                     <Button size="sm" variant="secondary" className="h-7 text-xs bg-white text-amber-600 hover:bg-white/90 font-semibold px-3">
-                      Découvrir les services
+                      Voir les services
                     </Button>
                   </a>
 
@@ -2187,7 +2185,7 @@ export default function Home() {
         </section>
 
         {/* ═══ 12. PORTFOLIO ═══ */}
-        <section id="portfolio" className="py-16 sm:py-20">
+        <section id="portfolio" className="py-16 sm:py-20 bg-gradient-to-b from-background via-purple-50/30 to-background dark:via-purple-950/10">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <Badge variant="secondary" className="mb-3 bg-purple-100 text-purple-700 border-purple-200">
@@ -2205,7 +2203,7 @@ export default function Home() {
                 <button
                   key={cat}
                   onClick={() => setPortfolioFilter(cat)}
-                  className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${portfolioFilter === cat ? 'bg-amber-500 text-white shadow-md shadow-amber-500/25' : 'bg-muted text-muted-foreground hover:bg-accent'}`}
+                  className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${portfolioFilter === cat ? 'bg-purple-500 text-white shadow-md shadow-purple-500/25' : 'bg-muted text-muted-foreground hover:bg-accent'}`}
                 >
                   {cat}
                 </button>
@@ -2613,10 +2611,10 @@ export default function Home() {
         </section>
 
         {/* ═══ 17. FAQ ═══ */}
-        <section id="faq" className="py-16 sm:py-20 bg-muted/30">
+        <section id="faq" className="py-16 sm:py-20 bg-gradient-to-b from-emerald-50/40 to-background dark:from-emerald-950/10">
           <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+              <Badge variant="secondary" className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200">
                 <MessageCircle className="h-3 w-3 mr-1" /> FAQ
               </Badge>
               <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Questions Fréquentes</h2>
@@ -2927,7 +2925,7 @@ export default function Home() {
         </section>
 
         {/* ═══ 19. CONTACT ═══ */}
-        <section id="contact" className="py-16 sm:py-20 bg-muted/30">
+        <section id="contact" className="py-16 sm:py-20 bg-gradient-to-b from-blue-50/40 to-background dark:from-blue-950/10">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -2937,7 +2935,7 @@ export default function Home() {
             >
             <div className="grid lg:grid-cols-2 gap-12">
               <div>
-                <Badge variant="secondary" className="mb-3">
+                <Badge variant="secondary" className="mb-3 bg-blue-100 text-blue-700 border-blue-200">
                   <Send className="h-3 w-3 mr-1" /> Contact
                 </Badge>
                 <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Contactez-Moi</h2>
