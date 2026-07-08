@@ -1,197 +1,25 @@
 ---
 Task ID: 1
 Agent: Main Agent
-Task: Réfléchir et ajouter des meilleures fonctionnalités au site Studio Créatif
+Task: Remplacer Maketou par CinetPay comme passerelle de paiement
 
 Work Log:
-- Read entire page.tsx (2233 lines) and all components to understand current state
-- Identified 20+ possible features, selected the 7 most impactful
-- Implemented Typing Animation in Hero (useTypingText hook cycling 5 phrases)
-- Implemented Book Cart with localStorage (useLocalStorage hook, floating cart button, slide-out cart panel)
-- Implemented Testimonials Auto-Carousel (phone mockup frame, AnimatePresence transitions, play/pause, dot navigation)
-- Implemented Promo Countdown Timer (7-day countdown with animated digits below boutique)
-- Implemented WhatsApp Expandable Widget (chat preview bubble, online status, replaces simple floating button on desktop)
-- Implemented Social Proof Notifications (6 staggered notifications showing fake "recent orders")
-- Implemented Cookie Consent Banner (accept/refuse, persists in localStorage, positioned above mobile nav)
-- Fixed duplicate ShoppingCart import error
-- Fixed desktop back-to-top + WhatsApp button stacking (separate z-index layers)
-- Build passed successfully, pushed to Vercel
+- Analysé l'image fournie par l'utilisateur (pinadvertise.com - portefeuille de liaison)
+- Recherché les alternatives de paiement pour le Mali (CinetPay, PayDunya, Orange Money)
+- Confirmé que CinetPay supporte le Mali avec Orange Money Mali (2.5% commission)
+- Lu la documentation API CinetPay (endpoint v2/payment, v2/payment/check)
+- Réécrit `.env.local` : supprimé MAKETOU_API_KEY et MAKETOU_PRODUCT_GENERIC, ajouté CINETPAY_API_KEY et CINETPAY_SITE_ID
+- Réécrit `src/app/api/payment/create/route.ts` : API CinetPay (POST /v2/payment avec apikey, site_id, amount, currency=XOF)
+- Réécrit `src/app/api/payment/status/route.ts` : Vérification via POST /v2/payment/check
+- Réécrit `src/app/api/payment/webhook/route.ts` : Webhook CinetPay avec notification WhatsApp
+- Mis à jour `src/app/api/payments/route.ts` : Remplacé les appels Maketou par CinetPay, ajouté méthode PATCH pour webhook
+- Mis à jour `src/app/page.tsx` : 17 remplacements Maketou → CinetPay (textes, toasts, FAQ, badges)
+- Mis à jour `src/components/Footer.tsx` : Badge Maketou → CinetPay
+- Mis à jour `src/app/dashboard/page.tsx` : Labels Maketou → CinetPay
+- Vérifié qu'aucune référence à Maketou ne reste dans le code source
+- Build Next.js réussi sans erreur (8.7s compilation)
 
 Stage Summary:
-- 7 new interactive features added to the site
-- All features use client-side state (no database needed)
-- Build: successful, Push: successful to GitHub main
-- Key artifacts: modified /home/z/my-project/src/app/page.tsx
-
----
-Task ID: 2
-Agent: Main Agent
-Task: Continuer à améliorer et ajouter des fonctionnalités au site
-
-Work Log:
-- Fixed AnimatedStat to trigger on scroll (IntersectionObserver) instead of hover
-- Added Portfolio Lightbox (click to zoom, full-screen overlay with title/desc)
-- Added Book Search bar in boutique (search by title, author, keyword, category)
-- Added "no results" empty state for book search with reset button
-- Added FAQ Search bar with real-time filtering + empty state
-- Added 2 new FAQ questions (payment methods, online vs in-person formations)
-- Added Service Recommendation Quiz (3-step modal: goal → budget → timing → personalized result)
-- Added floating quiz trigger button "Quel service vous convient ?"
-- Added live visitors counter in promo banner (simulated, fluctuates 8-28)
-- Added zoom icon overlay on portfolio cards on hover
-- Fixed FAQ section duplicate data and JSX structure issues
-- Build passed, pushed to Vercel
-
-Stage Summary:
-- 6 new features added: Portfolio Lightbox, Book Search, FAQ Search, Service Quiz, Live Visitors, Scroll-triggered Stats
-- All pushed to Vercel successfully
-
----
-Task ID: 3
-Agent: Sub-agent (features)
-Task: Add 7 new features and improvements to page.tsx
-
-Changes:
-1. **Scroll Progress Bar** — Fixed 3px gradient bar (amber→orange→red) at top of page, width driven by scrollProgress state updated in scroll handler.
-2. **Escape Key Handler** — New useEffect listening for 'Escape' keydown; closes lightbox, book modal, quiz, and cart simultaneously.
-3. **Trust Ticker Marquee** — Horizontal scrolling banner between "Barre de Confiance" and "Comment ça marche" sections, showing 8 trust signals with icons, using existing `.animate-marquee` CSS class.
-4. **Comparison Table (Découverte vs Premium)** — Full feature comparison table with 9 rows placed before Services section; uses CheckCircle2 icons, color-coded columns (emerald for Découverte, amber for Premium).
-5. **Recommended Books ("Populaires en ce moment")** — Horizontal scroll carousel of 4 featured book covers with "TOP" badges, placed before Book Detail Modal in the books section.
-6. **Scroll-Reveal Animations** — Added `motion.div` with `whileInView` fade-up to À Propos grid, Garanties grid, and Contact grid sections.
-7. **Sticky Mobile CTA Bar** — Spring-animated floating WhatsApp CTA button that appears on mobile after 500px scroll, positioned above the bottom nav bar (z-49).
-
-No changes needed to globals.css (marquee animation already present).
-
-Build result: ✅ Compiled successfully, all pages generated.---
-Task ID: 1
-Agent: Main Agent + subagent
-Task: Ajouter 7 nouvelles fonctionnalités au site Studio Créatif
-
-Work Log:
-- Read full page.tsx (2925 lines) to understand current state
-- Confirmed 3 previously pending features (lightbox, FAQ search, quiz) were already implemented
-- Planned 7 new improvement features
-- Delegated implementation to subagent
-- Subagent added all 7 features successfully
-- Build passed with Next.js 16.1.3 Turbopack
-- Committed and pushed to GitHub/Vercel
-
-Stage Summary:
-- 7 new features added and deployed:
-  1. Scroll Progress Bar (3px gradient bar at top)
-  2. Escape Key Handler (closes all modals)
-  3. Trust Ticker Marquee (horizontal scrolling trust signals)
-  4. Comparison Table (Découverte vs Premium, 9 rows)
-  5. Recommended Books section (horizontal scroll with TOP badges)
-  6. Scroll-Reveal Animations (À Propos, Garanties, Contact sections)
-  7. Sticky Mobile CTA Bar (appears after 500px scroll)
-- Push successful: 86752d3..406d26d main -> main
-
----
-Task ID: 2
-Agent: Main Agent + subagent
-Task: 6 nouvelles améliorations UX et fonctionnalités
-
-Work Log:
-- Analyzed current state: Header already has dark mode toggle + scroll progress
-- Removed duplicate scroll progress bar from page.tsx
-- Added Welcome Popup (first-time visitors, 6s delay, localStorage)
-- Added Interactive Pricing Estimator (6 services, real-time FCFA calculation)
-- Added CSS confetti effect on form submissions
-- Added availability badges (X/5 places) on service cards
-- Added animated gradient text on key headings
-- Build passed, pushed to Vercel
-
-Stage Summary:
-- 6 features deployed:
-  1. Popup Bienvenue avec offre logo gratuit (6s delay, localStorage)
-  2. Estimateur de Prix interactif (6 services, calcul FCFA en temps réel)
-  3. Effet confetti CSS sur soumission formulaire
-  4. Badges de disponibilité X/5 places sur chaque service
-  5. Texte gradient animé sur titres clés (Hero + CTA Final)
-  6. Suppression doublon barre de progression
-- Push successful: 406d26d..adc1d51
-
----
-Task ID: 3
-Agent: Main Agent
-Task: Update coaches (Sacko/Camara Leh/Kante), redesign coachs section, add share button, side nav dots, glow hover, floating particles
-
-Work Log:
-- Updated coaches data: replaced Coach Moussa and Coach Aminata with Camara Leh (Dev Web) and Kante (Marketing Digital)
-- Added `stats` field to each coach with project/experience/client metrics
-- Redesigned "Nos Coachs" section: larger avatars (h-24), skill tag badges, per-coach stats row, individual WhatsApp CTA buttons, animated underline, extra radial gradient backgrounds
-- Added Share2 icon import from lucide-react
-- Added shareToast state and activeDotSection state
-- Added intersection observer useEffect to track active section for side nav dots
-- Added share button (fixed, desktop, right-6) with navigator.share / clipboard fallback + toast notification
-- Added side navigation dots (fixed, desktop xl+, right-4, 7 section links with active state)
-- Updated service card hover: duration-500, shadow-2xl, -translate-y-1.5, scale-[1.01]
-- Added floating particle CSS keyframes (float slow/medium/fast) to globals.css
-- Added 3 floating decorative shapes in hero (amber square, orange circle, red diamond, lg only)
-- Moved back-to-top desktop button to right-20 to avoid overlap with share button
-- Build passed successfully, pushed to GitHub
-
-Stage Summary:
-- Coaches updated: Sacko (Fondateur), Camara Leh (Dev Web), Kante (Marketing Digital)
-- 6 new features: redesigned coach cards, share button, side nav dots, service card glow, floating particles, back-to-top repositioned
-- Push successful: adc1d51..e267147
-
----
-Task ID: 4
-Agent: Main Agent
-Task: Add 8 new features/improvements (batch 2)
-
-Work Log:
-- Read full page.tsx (3443 lines) and worklog.md to understand current state
-- Identified exact insertion points for all 8 features
-- Added `selectedCoach` state and updated Escape key handler to close coach modal
-- Added CSS animations to globals.css (waveShift, shimmer, pulseRing, scrollbar-hide)
-- Added wave SVG divider between Hero and Quick Service Access Bar
-- Added wave SVG divider before CTA Final section
-- Added "Outils Maîtrisés" scrolling marquee strip after Comment ça marche section (14 tools)
-- Added "Pourquoi Nous Choisir" section after Outils strip (6 advantage cards)
-- Added "Résultats Clients" section after Garanties section (4 client result cards)
-- Added Coach Detail Modal with skills, bio, formations list, and WhatsApp CTA per coach
-- Made coach cards clickable (onClick + cursor-pointer)
-- Added 4 testimonial cards grid below phone mockup testimonials
-- Added improved Cookie Consent Banner (accept/refuse, spring animation)
-- Added "Moyens de Paiement" section before Footer (Orange Money, Wave, Moov Money, Carte Virtuelle)
-- Build passed successfully, pushed to GitHub
-
-Stage Summary:
-- 8 new features added and deployed:
-  1. Résultats Clients section (4 client success stories with metrics)
-  2. Outils Maîtrisés scrolling strip (14 tools/technologies)
-  3. Coach Detail Modal (clickable cards, skills, bio, formations, WhatsApp CTA)
-  4. Animated SVG Wave Dividers (after hero, before CTA Final)
-  5. Expanded Testimonials (4 additional card-based testimonials)
-  6. Improved Cookie Consent Banner (spring animation, accept/refuse)
-  7. Pourquoi Nous Choisir section (6 advantage cards)
-  8. Moyens de Paiement section (4 payment methods)
-- Push successful: e267147..acd83fc
-
----
-Task ID: 1
-Agent: Main
-Task: Finaliser l'intégration Maketou — page.tsx, Footer, create route, dashboard
-
-Work Log:
-- Read current state of all files (page.tsx, Footer.tsx, API routes)
-- Found that processPayment() was already updated for Maketou redirect flow
-- Found that payment return handler had a bug (CART_PLACEHOLDER in redirectURL, and cartId lookup that wouldn't work)
-- Removed OM/MoMo/Wave individual badges from book section (already done in previous session)
-- Updated "Moyens de paiement" section (lines 3635-3653): replaced Wave/Moov/Carte Virtuelle with unified Maketou badge
-- Updated CTA section (lines 3119-3124): replaced 3 separate badges (OM, MoMo, Maketou) with single "Paiement Maketou Sécurisé"
-- Fixed redirectURL in create/route.ts: removed CART_PLACEHOLDER, simplified to `/?payment_success=true&order=${orderId}`
-- Updated payment return handler in page.tsx: simplified to show success directly (no cartId lookup needed)
-- Updated Footer.tsx: Maketou as primary badge, OM and MTN MoMo as sub-badges
-- Verified dashboard page already exists with PIN login, stats cards, payments table, auto-refresh
-- Build succeeded: all routes compiled correctly
-
-Stage Summary:
-- All payment references unified under Maketou
-- redirectURL bug fixed (CART_PLACEHOLDER removed)
-- Payment return flow simplified (no cartId needed in URL)
-- Dashboard at /dashboard ready (PIN: sacko2024)
-- Build successful: 9 routes, 0 errors
+- Maketou entièrement supprimé et remplacé par CinetPay
+- Build réussi, prêt pour déploiement
+- Reste à l'utilisateur : créer un compte CinetPay, obtenir API key + site ID, configurer dans Vercel

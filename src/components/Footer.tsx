@@ -122,11 +122,11 @@ export default function Footer() {
 
         {/* Modes de paiement acceptés */}
         <div className="mt-8 pt-6 border-t">
-          <h3 className="text-xs font-semibold uppercase tracking-wider mb-3 text-center">Paiement sécurisé via Maketou</h3>
+          <h3 className="text-xs font-semibold uppercase tracking-wider mb-3 text-center">Paiement sécurisé via CinetPay</h3>
           <div className="flex flex-wrap items-center justify-center gap-2.5">
             <span className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 border border-transparent px-4 py-1.5 text-[11px] font-bold text-emerald-700 dark:text-emerald-400">
               <span className="h-2 w-2 rounded-full bg-emerald-500" />
-              Maketou
+              CinetPay
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-lg bg-orange-100 dark:bg-orange-900/30 border border-transparent px-3 py-1.5 text-[10px] font-bold text-orange-700 dark:text-orange-400">
               <span className="h-2 w-2 rounded-full bg-orange-500" />

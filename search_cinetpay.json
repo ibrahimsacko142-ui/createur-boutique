@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://cinetpay.com",
+    "name": "CinetPay: Réinventer le paiement, propulser votre croissance",
+    "snippet": "Collectez des paiements en ligne sans aucune intégration technique complexe. Créez simplement un lien de paiement, partagez-le avec vos clients par email, SMS ...",
+    "host_name": "cinetpay.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=BLtV302xAE4",
+    "name": "Intégration API Mobile Money — CinetPay Fullstack - YouTube",
+    "snippet": "Tu veux ajouter un système de paiement Mobile Money sur ton application web avec l'API CinetPay ? Dans cette vidéo, je te montre comment ...",
+    "host_name": "www.youtube.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.amazon.com.mx/INT%C3%89GRATION-MOYENS-PAIEMENT-MOBILE-PLATEFORME-ebook/dp/B084HM2QTM",
+    "name": "Un guide théorique et pratique pour l'intégration de l'API  - Amazon",
+    "snippet": "INTÉGRATION DES MOYENS DE PAIEMENT MOBILE MONEY A SA PLATEFORME: Un guide théorique et pratique pour l'intégration de l'API de CinetPay (French Edition).",
+    "host_name": "www.amazon.com.mx",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.facebook.com/cinetpay/photos/lint%C3%A9gration-de-lapi-de-cinetpay-vous-permet-de-disposer-des-moyens-de-paiement-/1927013824106127",
+    "name": "CinetPay | Facebook - Facebook",
+    "snippet": "L'intégration de l'API de Cinetpay vous permet de disposer des moyens de paiement des opérateurs mobiles sur votre site internet .",
+    "host_name": "www.facebook.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/cinetpay/seamlessIntegration",
+    "name": "cinetpay-seamless - GitHub",
+    "snippet": "Votre frontend passe ce token au Seamless qui ouvre la ...",
+    "host_name": "github.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.facebook.com/agenceecofin/videos/cinetpay-r%C3%A9volutionne-le-secteur-de-le-paiement-en-afrique/446642843498454",
+    "name": "CinetPay révolutionne le secteur de l'e-paiement en Afrique.",
+    "snippet": "CinetP CinetPay CinetPay the public administrations, a platform for accepting online payment with local payment means, including mobile phones ...",
+    "host_name": "www.facebook.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://fr.scribd.com/document/461684918/Reussir-l-integration-CinetPay-v1-6-2",
+    "name": "Intégration de CinetPay : Guide Complet | PDF | Serveur (Informatique)",
+    "snippet": "Rating 5.0 (1) Le document décrit les trois étapes pour implémenter le paiement sur la plateforme CinetPay. L'étape 1 consiste à envoyer un formulaire de paiement en POST ...",
+    "host_name": "fr.scribd.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://cinetpay.com/pricing",
+    "name": "Une tarification simple et équitable - CinetPay",
+    "snippet": "CinetPay Payment Link. Encaisser avec des liens de paiements au Mali en toute simplicité. Entre 1,5% et 3,5% selon le volume de vos opérations d' ...",
+    "host_name": "cinetpay.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=tqBJxRpy1Xo",
+    "name": "Integrating Mobile Money Payment into a React Native App - YouTube",
+    "snippet": "Intégration API Mobile Money — CinetPay Fullstack. Vander Otis•5.8K ... Paiement Mobile Money avec Lygos – Ajoute-le à ton site web facilement !",
+    "host_name": "www.youtube.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://fr.linkedin.com/posts/cinetpay_int%C3%A9grer-les-paiements-en-ligne-en-quelques-activity-7384981591200079872-ViyH",
+    "name": "Post de CINETPAY - LinkedIn",
+    "snippet": "Intégrer les paiements en ligne en quelques lignes de code ? Avec l'API CinetPay, transformez votre plateforme en solution de paiement ...",
+    "host_name": "fr.linkedin.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

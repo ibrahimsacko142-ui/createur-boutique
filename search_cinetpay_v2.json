@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://context7.com/websites/cinetpay_api_1_0-en",
+    "name": "CinetPay (websites/cinetpay_api_1_0-en)",
+    "snippet": "Usage Example Source: https://docs.cinetpay.com/api/1.0-en/sdk/android Example code snippet demonstrating how to initiate a payment by adding credentials.",
+    "host_name": "context7.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://lobehub.com/de/skills/africandigitalassetframework-africa-stack-skills-cinetpay",
+    "name": "CinetPay Payment Integration - LobeHub",
+    "snippet": "Authentication relies on a secure apikey and numeric site_id obtained from the merchant panel; store credentials in environment variables. Best for West African ...",
+    "host_name": "lobehub.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/cinetpay/seamlessIntegration",
+    "name": "cinetpay-seamless - GitHub",
+    "snippet": "Votre frontend passe ce token au Seamless qui ouvre la ...",
+    "host_name": "github.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://cinetpay.com/products/api-direct",
+    "name": "Intégration directe - CinetPay",
+    "snippet": "Avec notre API Direct vous pouvez facilement effectuer des transferts d'argent sur le compte mobile money et wallet de vos clients. Accédez à la documentation.",
+    "host_name": "cinetpay.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://api-reference.checkout.com",
+    "name": "Checkout.com API Reference",
+    "snippet": "Use your public key for client-side authentication. It only has access to a limited set of our APIs – mostly those called as part of your payment environment.",
+    "host_name": "api-reference.checkout.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://documentation.iqonic.design/handyman/cinetpay-payment",
+    "name": "CinetPay Payment - Iqnoic Design Documentation",
+    "snippet": "Go to Cinetpay Login and log in with your access information. Then click on the “Integrations” menu . You will find your APIKEY and your SITEID. Add API Key to ...",
+    "host_name": "documentation.iqonic.design",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.nexigroup.com/nexi-checkout/en-EU/api/payment-v1",
+    "name": "Payment API | Checkout - Nexi group developer portal",
+    "snippet": "This endpoint makes it possible to change the order on the checkout page after the payment object has been created. This is typically used when managing ...",
+    "host_name": "developer.nexigroup.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.scribd.com/document/946517663/Successful-integration-CinetPay-v1-6-2",
+    "name": "CinetPay Integration Guide 1.6.2 | PDF | Html Element - Scribd",
+    "snippet": "The document describes the three steps to implement payment on the CinetPay platform. Step 1 involves sending a payment form via POST containing mandatory ...",
+    "host_name": "www.scribd.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.xgenious.com/docs/prohandy-admin-panel/payment-gateway-settings/cinetpay-integratoin-how-to-get-api-key-and-site-id",
+    "name": "CinetPay Integratoin- How to get Api Key and Site Id - Xgenious",
+    "snippet": "To get api key and site id for cinetpay payment gateway. login to your merchant panel using this url https://app.cinetpay.com/marchand.",
+    "host_name": "docs.xgenious.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://pub.dev/documentation/cinetpay/latest",
+    "name": "Paiement par CinetPay - Dart API docs - Pub.dev",
+    "snippet": "apikey | L'identifiant du marchand | Chaine de caractère | Obligatoire · site_id | L'identifiant du service | Entier | Obligatoire ...",
+    "host_name": "pub.dev",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

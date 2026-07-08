@@ -585,21 +585,21 @@ export default function Home() {
   const [paymentProcessing, setPaymentProcessing] = useState(false)
   const [checkoutItem, setCheckoutItem] = useState<{ type: 'cart' | 'book' | 'service'; title: string; price: number; qty?: number } | null>(null)
 
-  // Gérer le retour après paiement Maketou
+  // Gérer le retour après paiement CinetPay
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     if (params.get('payment_success') === 'true') {
-      const order = params.get('order')
+      const txn = params.get('txn_id') || params.get('order')
       // Nettoyer l'URL
       window.history.replaceState({}, '', window.location.pathname + '#boutique')
       // Afficher le succès directement
-      setOrderId(order || 'Maketou')
+      setOrderId(txn || 'CinetPay')
       setShowCheckout(true)
       setCheckoutStep(4)
       triggerConfetti()
       toast({
         title: 'Paiement effectué !',
-        description: 'Votre commande a été enregistrée via Maketou. Sacko a reçu la notification et vous contactera bientôt.',
+        description: 'Votre commande a été enregistrée via CinetPay. Sacko a reçu la notification et vous contactera bientôt.',
       })
     }
   }, [])
@@ -667,7 +667,7 @@ export default function Home() {
     const items = checkoutItem ? [checkoutItem.title] : cart
 
     try {
-      // Appeler notre API pour créer le panier Maketou
+      // Appeler notre API pour créer le paiement CinetPay
       const res = await fetch('/api/payment/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -685,7 +685,7 @@ export default function Home() {
       const data = await res.json()
 
       if (data.demo) {
-        // Maketou non configuré — fallback WhatsApp
+        // CinetPay non configuré — fallback WhatsApp
         setTimeout(() => {
           setPaymentProcessing(false)
           setCheckoutStep(4)
@@ -697,16 +697,16 @@ export default function Home() {
       }
 
       if (data.success && data.redirect_url) {
-        // Rediriger le client vers la page de paiement Maketou
+        // Rediriger le client vers la page de paiement CinetPay
         setPaymentProcessing(false)
         setShowCheckout(false)
         setCart([])
         setCheckoutItem(null)
         toast({
           title: 'Redirection vers le paiement...',
-          description: 'Vous allez être redirigé vers la page de paiement sécurisé Maketou.',
+          description: 'Vous allez être redirigé vers la page de paiement sécurisé CinetPay.',
         })
-        // Rediriger vers Maketou
+        // Rediriger vers CinetPay
         window.location.href = data.redirect_url
       } else {
         setPaymentProcessing(false)
@@ -1274,7 +1274,7 @@ export default function Home() {
                   { icon: Zap, title: 'Réactivité Extraordinaire', desc: "Réponse en moins de 30 minutes sur WhatsApp. Pas de formulaire sans suivi, pas d'attente de 48h. Je suis disponible 7j/7.", color: 'from-amber-400 to-orange-500' },
                   { icon: Target, title: '100% Personnalisé', desc: "Aucun template pré-fait. Chaque projet est conçu de zéro selon votre identité, vos couleurs et votre vision. Votre marque est unique.", color: 'from-emerald-400 to-teal-500' },
                   { icon: ThumbsUp, title: 'Satisfaction Garantie', desc: 'Révisions illimitées sur les offres Premium. Je ne livre que lorsque vous êtes 100% satisfait du résultat final.', color: 'from-blue-400 to-indigo-500' },
-                  { icon: Lock, title: 'Paiement Sécurisé', desc: 'Payez via Maketou (Orange Money, MTN MoMo, carte bancaire). Le paiement est automatique et sécurisé. Confirmation instantanée pour Sacko.', color: 'from-purple-400 to-violet-500' },
+                  { icon: Lock, title: 'Paiement Sécurisé', desc: 'Payez via CinetPay (Orange Money, MTN MoMo, carte bancaire). Le paiement est automatique et sécurisé. Confirmation instantanée pour Sacko.', color: 'from-purple-400 to-violet-500' },
                   { icon: Users, title: '3 Experts Unis', desc: 'Sacko pour le design, Camara Leh pour le web, Kante pour le marketing. Trois coachs complémentaires pour couvrir tous vos besoins.', color: 'from-cyan-400 to-blue-500' },
                   { icon: Heart, title: 'Passion Africaine', desc: 'Nous comprenons le marché malien et africain. Nos créations sont pensées pour plaire à votre clientele locale et vous démarquer.', color: 'from-rose-400 to-pink-500' },
                 ].map((item, i) => (
@@ -2042,7 +2042,7 @@ export default function Home() {
                 <div className="flex items-center gap-2">
                   <span className="text-[10px] text-muted-foreground font-medium">Paiement :</span>
                   <div className="flex items-center gap-1.5">
-                    <span className="inline-flex items-center gap-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-[10px] font-bold px-2 py-1 rounded-md">Maketou</span>
+                    <span className="inline-flex items-center gap-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-[10px] font-bold px-2 py-1 rounded-md">CinetPay</span>
                   </div>
                 </div>
               </div>
@@ -2260,7 +2260,7 @@ export default function Home() {
                           </div>
                           <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
                             <ShieldCheck className="h-3 w-3 text-amber-500" />
-                            <span>Paiement : Maketou (Orange Money, MTN MoMo, Carte)</span>
+                            <span>Paiement : CinetPay (Orange Money, MTN MoMo, Carte)</span>
                           </div>
                         </div>
 
@@ -2823,7 +2823,7 @@ export default function Home() {
                   { q: "Quels sont les délais de livraison ?", a: "Les services \"Carrière Pro\" (CV, Lettres) sont livrés en moins de 24h. Pour les logos simples, comptez 48h, et pour un site web complet, entre 3 et 7 jours selon la complexité. Chaque projet a un suivi personnalisé." },
                   { q: "Puis-je demander des modifications si le résultat ne me plaît pas ?", a: "Absolument. Votre satisfaction est ma priorité. Pour l'Offre Découverte, une révision est incluse. Pour les offres Premium, les révisions sont illimitées jusqu'à ce que le résultat vous corresponde parfaitement. Je ne livre que lorsque vous êtes 100% satisfait." },
                   { q: "Pourquoi limitez-vous les commandes à 5 par jour ?", a: "Je privilégie la qualité à la quantité. Travailler avec un nombre limité de clients me permet de dédier toute mon attention et mon expertise à chaque pixel de votre projet. Le résultat : des créations qui convertissent." },
-                  { q: "Comment se passe le paiement ?", a: "Le paiement se fait automatiquement via Maketou. Après avoir rempli vos informations, vous êtes redirigé vers la page de paiement sécurisé Maketou où vous choisissez Orange Money, MTN MoMo ou carte bancaire. Sacko reçoit la confirmation automatiquement. En mode démonstration, la commande est envoyée par WhatsApp." },
+                  { q: "Comment se passe le paiement ?", a: "Le paiement se fait automatiquement via CinetPay. Après avoir rempli vos informations, vous êtes redirigé vers la page de paiement sécurisé CinetPay où vous choisissez Orange Money, MTN MoMo ou carte bancaire. Sacko reçoit la confirmation automatiquement. En mode démonstration, la commande est envoyée par WhatsApp." },
                   { q: "Les formations sont-elles en ligne ou en présentiel ?", a: "Les formations sont 100% en ligne via WhatsApp et supports vidéo. Vous apprenez à votre rythme, avec un suivi personnalisé et un groupe WhatsApp pour poser vos questions." },
                 ]
                 const filtered = faqs.filter((f) => !faqSearch || f.q.toLowerCase().includes(faqSearch.toLowerCase()) || f.a.toLowerCase().includes(faqSearch.toLowerCase()))
@@ -3097,7 +3097,7 @@ export default function Home() {
                 <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4" /> Satisfaction garantie</span>
               </div>
               <div className="flex items-center gap-3 text-white/70 text-xs">
-                <span className="px-4 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-400/30 font-bold">Paiement Maketou Sécurisé</span>
+                <span className="px-4 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-400/30 font-bold">Paiement CinetPay Sécurisé</span>
               </div>
             </div>
           </div>
@@ -3615,7 +3615,7 @@ export default function Home() {
             <p className="text-sm font-semibold text-muted-foreground">Paiement sécurisé via</p>
             <div className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20 border border-emerald-200 dark:border-emerald-800 shadow-sm">
               <div className="h-3 w-3 rounded-full bg-emerald-500" />
-              <span className="text-sm font-bold text-emerald-700 dark:text-emerald-400">Maketou</span>
+              <span className="text-sm font-bold text-emerald-700 dark:text-emerald-400">CinetPay</span>
               <span className="text-[10px] text-muted-foreground">— Orange Money, MTN MoMo, Carte bancaire</span>
             </div>
           </div>
@@ -3872,7 +3872,7 @@ export default function Home() {
                 </div>
                 <div className="flex items-center gap-1.5 mt-1">
                   <ShieldCheck className="h-3 w-3 text-white/80" />
-                  <p className="text-[11px] text-white/80">Paiement automatique via Maketou — Orange Money, MTN MoMo, Carte bancaire</p>
+                  <p className="text-[11px] text-white/80">Paiement automatique via CinetPay — Orange Money, MTN MoMo, Carte bancaire</p>
                 </div>
                 {/* Progress bar */}
                 <div className="flex gap-1.5 mt-3">
@@ -4011,7 +4011,7 @@ export default function Home() {
                         <Lock className="h-7 w-7 text-emerald-500" />
                       </div>
                       <h4 className="font-bold text-base">Confirmez votre commande</h4>
-                      <p className="text-xs text-muted-foreground mt-0.5">Vous serez redirigé vers la page de paiement sécurisé Maketou</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">Vous serez redirigé vers la page de paiement sécurisé CinetPay</p>
                     </div>
 
                     <div className="bg-muted/50 border border-border rounded-xl p-3.5 space-y-2">
@@ -4035,7 +4035,7 @@ export default function Home() {
 
                     <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-xl p-3">
                       <p className="text-[11px] text-amber-700 dark:text-amber-400 text-center">
-                        💡 Le paiement se fait via <strong>Maketou</strong> — Orange Money, MTN MoMo, carte bancaire disponible sur la page de paiement.
+                        💡 Le paiement se fait via <strong>CinetPay</strong> — Orange Money, MTN MoMo, carte bancaire disponible sur la page de paiement.
                       </p>
                     </div>
 
@@ -4054,7 +4054,7 @@ export default function Home() {
                     <div className="flex items-center justify-center gap-3 pt-1 flex-wrap">
                       <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
                         <Shield className="h-3 w-3 text-emerald-500" />
-                        <span>Maketou</span>
+                        <span>CinetPay</span>
                       </div>
                       <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
                         <Lock className="h-3 w-3 text-emerald-500" />
@@ -4083,13 +4083,13 @@ export default function Home() {
                     </div>
                     <div className="text-center">
                       <h4 className="font-bold text-base">Vérification du paiement...</h4>
-                      <p className="text-sm text-muted-foreground mt-1">Vérification auprès de Maketou</p>
+                      <p className="text-sm text-muted-foreground mt-1">Vérification auprès de CinetPay</p>
                       <p className="text-xs text-muted-foreground mt-0.5">Veuillez ne pas fermer cette page</p>
                     </div>
                     <div className="w-full max-w-xs space-y-2">
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                        <span className="text-xs text-muted-foreground">Paiement reçu par Maketou...</span>
+                        <span className="text-xs text-muted-foreground">Paiement reçu par CinetPay...</span>
                       </div>
                       <div className="flex items-center gap-2 opacity-60">
                         <div className="h-4 w-4 rounded-full border-2 border-emerald-400 border-t-transparent animate-spin" />
@@ -4127,7 +4127,7 @@ export default function Home() {
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-xs text-muted-foreground">Méthode</span>
-                        <span className="text-xs font-semibold">Maketou</span>
+                        <span className="text-xs font-semibold">CinetPay</span>
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-xs text-muted-foreground">Articles</span>

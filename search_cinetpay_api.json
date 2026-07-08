@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://github.com/cinetpay/seamlessIntegration",
+    "name": "cinetpay-seamless - GitHub",
+    "snippet": "CinetPay Seamless Integration permet d'integrer facilement CinetPay de façon transparente à son service - cinetpay/cinetpay-seamless.\nCinetPay Seamless Integration permet d'integrer facilement CinetPay de façon transparente à son service - cinetpay/cinetpay-seamless. Missing: prix libre",
+    "host_name": "github.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://cinetpay.com/products/api-direct",
+    "name": "Intégration directe - CinetPay",
+    "snippet": "Avec notre API Direct vous pouvez facilement effectuer des transferts d'argent sur le compte mobile money et wallet de vos clients. Accédez à la documentation.\nAvec notre API Direct vous pouvez facilement effectuer des transferts d'argent sur le compte mobile money et wallet de vos clients. Accédez à la documentation. Missing: Next. React prix libre",
+    "host_name": "cinetpay.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=qcnrdQmz2gA",
+    "name": "Integration de l'api de Cinetpay en moins de 5 mn - YouTube",
+    "snippet": "https://docs.cinetpay.com/",
+    "host_name": "www.youtube.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=g24Xctv7x_M",
+    "name": "Cinetpay API integration with PHP and Laravel (Update) - YouTube",
+    "snippet": "integration cinetpay \"\" (une mise à jour a été ) -integration cinetpay laravel -Intégration de l'api de cinetpay dans un projet php et un ...\nintegration cinetpay \"\" (une mise à jour a été ) -integration cinetpay laravel -Intégration de l'api de cinetpay dans un projet php et un ... Missing: documentation Next. prix libre",
+    "host_name": "www.youtube.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://pub.dev/documentation/cinetpay/latest",
+    "name": "Paiement par CinetPay - Dart API docs - Pub.dev",
+    "snippet": "Pour effectuer le paiement, certaines données devront-être sousmises pour préparer le guichet. Ainsi, on a : amount | Montant du paiement (>= 100 XOF) | Entier ...",
+    "host_name": "pub.dev",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://packagist.org/packages/cinetpay/cinetpay-php",
+    "name": "cinetpay/cinetpay-php - Packagist.org",
+    "snippet": "CinetPay SDK PHP Integration permet d'intégrer rapidement CinetPay à un site en ligne fait avec PHP. Installation. Veuillez utiliser composer ...",
+    "host_name": "packagist.org",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=BLtV302xAE4",
+    "name": "Intégration API Mobile Money — CinetPay Fullstack - YouTube",
+    "snippet": "... with-cinetpay Besoin d'être accompagné dans l'intégration d'un paiement mobile money ? contacte-moi ici https://maelconception.com ...",
+    "host_name": "www.youtube.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://fr.scribd.com/document/461684918/Reussir-l-integration-CinetPay-v1-6-2",
+    "name": "Intégration de CinetPay : Guide Complet | PDF | Serveur (Informatique)",
+    "snippet": "Rating 5.0 (1) Le document décrit les trois étapes pour implémenter le paiement sur la plateforme CinetPay. L'étape 1 consiste à envoyer un formulaire de paiement en POST ...",
+    "host_name": "fr.scribd.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://pypi.org/project/CinetPay",
+    "name": "CinetPay - PyPI",
+    "snippet": "Python SDK for CinetPay Payment API. Currently Supported Services. Payment API. Next. We will add progressively support for following CinetPay ...",
+    "host_name": "pypi.org",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=0MamSgN6yh4",
+    "name": "Build a Price Tracker Platform in React, Next JS, Supabase  - YouTube",
+    "snippet": "... React 19 + Next JS 16 with Tailwind CSS, Convex, Supabase, Shadcn UI Tutorial ... API 01:30:29 Email Alerts 01:35:39 Deployment + Testing 01:40:51 ... Missing: CinetPay documentation integration prix libre",
+    "host_name": "www.youtube.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

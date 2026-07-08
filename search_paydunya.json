@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developers.paydunya.com/doc/EN/NodeJS",
+    "name": "NodeJS - PayDunya Documentation",
+    "snippet": "API keys are your digital references towards PayDunya systems. We use them to identify your account and the applications you will create.",
+    "host_name": "developers.paydunya.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://bubble.io/plugin/paydunya-live-api-1694200499230x429636690131025900",
+    "name": "PayDunya Live API Plugin - Bubble",
+    "snippet": "This plugin integrates almost all of Paydunya's API calls allowing, among other things, to: Generate payment links to PayDunya Checkout page.",
+    "host_name": "bubble.io",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developers.paydunya.com/doc/EN/php",
+    "name": "PHP | PayDunya Documentation",
+    "snippet": "API keys are your digital references towards PayDunya systems. We use them to identify your account and the applications you will create.",
+    "host_name": "developers.paydunya.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://tradly.app/integrations/paydunya-for-africa",
+    "name": "PayDunya for Africa - Tradly",
+    "snippet": "Go to the \"Developers\" section and retrieve your API keys. · Follow the integration instructions provided ...",
+    "host_name": "tradly.app",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developers.paydunya.com/doc/EN/introduction",
+    "name": "INTRODUCTION | PayDunya Documentation",
+    "snippet": "API keys are your digital references towards PayDunya systems. We use them to identify your account and the applications you will create.",
+    "host_name": "developers.paydunya.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developers.paydunya.com/doc/EN/NET",
+    "name": ".NET | PayDunya Documentation",
+    "snippet": "API keys are your digital references towards PayDunya systems. We use them to identify your account and the applications you will create.",
+    "host_name": "developers.paydunya.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.orange.com/apis/om-webpay",
+    "name": "Orange Money Web Payment / M Payment (1.0) API – Overview",
+    "snippet": "Orange Money enables major market players to accept online payments. It was designed for Web merchants, but other types of services can also now benefit.",
+    "host_name": "developer.orange.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://apps.apple.com/ml/app/paydunya-business/id1437785151",
+    "name": "PAYDUNYA BUSINESS App - App Store",
+    "snippet": "Version mobile de la plateforme PayDunya qui vous permet de : -Consulter votre solde -Voir l'ensemble de vos transactions -Faire des demandes de paiement (à ...",
+    "host_name": "apps.apple.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=tKLpZoMkmL4",
+    "name": "#16 - Add a mobile money payment method with Paydunya - YouTube",
+    "snippet": "16 - Ajouter une méthode de paiement par mobile money avec Paydunya Si vous voulez un site internet pour votre entreprise ou un autre ...",
+    "host_name": "www.youtube.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://absitech.dev/blog/integrer-wave-orange-money-stripe-e-commerce-senegalais-2026",
+    "name": "Intégrer Wave, Orange Money et Stripe : guide complet pour e",
+    "snippet": "Wave, Orange Money, Stripe, PayDunya, CinetPay : comparatif technique et tarifaire complet en 2026. Vous lancez un e-commerce, une marketplace, ...",
+    "host_name": "absitech.dev",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]
