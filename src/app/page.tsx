@@ -60,7 +60,6 @@ import {
   Cookie,
   Calculator,
   Share2,
-  ExternalLink,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -523,8 +522,6 @@ const books: Book[] = [
 /* ═══════════════════════════════════════════════
    MAIN PAGE
    ═══════════════════════════════════════════════ */
-const TALIOPAY_URL = process.env.NEXT_PUBLIC_TALIOPAY_STORE_URL || 'https://boutiques.mytalio.shop'
-
 export default function Home() {
   const [contactData, setContactData] = useState({ name: '', email: '', subject: '', message: '' })
   const [showBanner, setShowBanner] = useState(true)
@@ -580,31 +577,6 @@ export default function Home() {
   // Coach detail modal
   const [selectedCoach, setSelectedCoach] = useState<typeof coaches[0] | null>(null)
 
-  // Checkout / Payment
-  const [showCheckout, setShowCheckout] = useState(false)
-  const [checkoutStep, setCheckoutStep] = useState(0) // 0=recap, 1=info, 2=processing, 3=success
-  const [checkoutInfo, setCheckoutInfo] = useState({ name: '', phone: '', email: '' })
-  const [orderId, setOrderId] = useState('')
-  const [paymentProcessing, setPaymentProcessing] = useState(false)
-  const [checkoutItem, setCheckoutItem] = useState<{ type: 'cart' | 'book' | 'service'; title: string; price: number; qty?: number } | null>(null)
-
-  // Gérer le retour après commande
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search)
-    if (params.get('order_success') === 'true') {
-      const txn = params.get('txn_id') || params.get('order')
-      window.history.replaceState({}, '', window.location.pathname + '#boutique')
-      setOrderId(txn || 'SC')
-      setShowCheckout(true)
-      setCheckoutStep(4)
-      triggerConfetti()
-      toast({
-        title: 'Commande envoyée !',
-        description: 'Votre commande a été enregistrée. Sacko va vous contacter sur WhatsApp pour confirmer.',
-      })
-    }
-  }, [])
-
   // Live visitors (simulated)
   const [liveVisitors, setLiveVisitors] = useState(12)
 
@@ -622,130 +594,6 @@ export default function Home() {
   }, [setCart])
 
   const isInCart = useCallback((title: string) => cart.includes(title), [cart])
-
-  const generateOrderId = useCallback(() => {
-    const ts = Date.now().toString(36).toUpperCase()
-    const rnd = Math.random().toString(36).substring(2, 6).toUpperCase()
-    return `SC-${ts}-${rnd}`
-  }, [])
-
-  const getCartTotal = useCallback(() => {
-    if (checkoutItem) return checkoutItem.price
-    return cart.length >= 12 ? 7000 : cart.length * 1000
-  }, [cart, checkoutItem])
-
-  const getCartItems = useCallback(() => {
-    if (checkoutItem) return [checkoutItem.title]
-    return cart
-  }, [cart, checkoutItem])
-
-  const openCheckout = useCallback((item?: { type: 'cart' | 'book' | 'service'; title: string; price: number; qty?: number }) => {
-    if (item) {
-      setCheckoutItem(item)
-    } else {
-      setCheckoutItem(null)
-    }
-    setCheckoutStep(0)
-    setCheckoutInfo({ name: '', phone: '', email: '' })
-    setPaymentProcessing(false)
-    setOrderId('')
-    setShowCart(false)
-    setShowCheckout(true)
-  }, [])
-
-  const triggerConfetti = useCallback(() => {
-    setConfettiActive(true)
-    setTimeout(() => setConfettiActive(false), 3000)
-  }, [])
-
-  const processPayment = useCallback(async () => {
-    const id = generateOrderId()
-    setOrderId(id)
-    setCheckoutStep(2)
-    setPaymentProcessing(true)
-
-    const total = checkoutItem ? checkoutItem.price : (cart.length >= 12 ? 7000 : cart.length * 1000)
-    const items = checkoutItem ? [checkoutItem.title] : cart
-
-    // ─── Tout → Taliopay (paiement automatique) ───
-    if (TALIOPAY_URL) {
-      // Enregistrer la commande localement
-      try {
-        await fetch('/api/payments', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            cartId: id,
-            orderId: id,
-            amount: total,
-            product: items.length === 1 ? items[0] : `${items.length} article(s)`,
-            customerName: checkoutInfo.name,
-            customerPhone: checkoutInfo.phone,
-            customerEmail: checkoutInfo.email || '',
-            status: 'waiting_payment',
-            createdAt: new Date().toISOString(),
-          }),
-        }).catch(() => {})
-      } catch { /* non bloquant */ }
-
-      setTimeout(() => {
-        setPaymentProcessing(false)
-        setCheckoutStep(4)
-        triggerConfetti()
-        setCart([])
-        setCheckoutItem(null)
-        window.open(TALIOPAY_URL, '_blank')
-      }, 2000)
-      return
-    }
-
-    // ─── Fallback WhatsApp (si Taliopay non configuré) ───
-    try {
-      const res = await fetch('/api/payment/create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          amount: total,
-          product: items.length === 1 ? items[0] : `${items.length} article(s)`,
-          description: `Studio Créatif — ${items.length} article(s)`,
-          customerName: checkoutInfo.name,
-          customerPhone: checkoutInfo.phone,
-          customerEmail: checkoutInfo.email || '',
-          transactionId: id,
-          items,
-        }),
-      })
-
-      const data = await res.json()
-
-      if (data.success && data.whatsapp_url) {
-        setTimeout(() => {
-          setPaymentProcessing(false)
-          setCheckoutStep(4)
-          triggerConfetti()
-          setCart([])
-          setCheckoutItem(null)
-          window.open(data.whatsapp_url, '_blank')
-        }, 2500)
-      } else {
-        setPaymentProcessing(false)
-        toast({
-          title: 'Erreur',
-          description: data.error || 'Impossible de créer la commande. Réessayez ou contactez via WhatsApp.',
-          variant: 'destructive',
-        })
-        setCheckoutStep(1)
-      }
-    } catch {
-      setPaymentProcessing(false)
-      toast({
-        title: 'Erreur de connexion',
-        description: 'Vérifiez votre connexion et réessayez.',
-        variant: 'destructive',
-      })
-      setCheckoutStep(1)
-    }
-  }, [checkoutItem, cart, checkoutInfo, generateOrderId, triggerConfetti, toast])
 
   // Auto-scroll testimonials
   useEffect(() => {
@@ -2058,12 +1906,6 @@ export default function Home() {
                   <span className="text-2xl font-extrabold text-amber-600">1 000</span>
                   <span className="text-sm font-semibold text-amber-700 dark:text-amber-400">FCFA / livre</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] text-muted-foreground font-medium">Paiement :</span>
-                  <div className="flex items-center gap-1.5">
-                    <span className="inline-flex items-center gap-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-[10px] font-bold px-2 py-1 rounded-md">Taliopay</span>
-                  </div>
-                </div>
               </div>
             </div>
 
@@ -2156,21 +1998,17 @@ export default function Home() {
                   </div>
                   {/* Order buttons */}
                   <div className="mt-2.5 flex gap-1.5">
-                    <Button
-                      onClick={(e) => { e.stopPropagation(); openCheckout({ type: 'book', title: book.title, price: 1000 }) }}
-                      className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white text-[11px] font-bold h-9 shadow-sm"
-                    >
-                      <Lock className="h-3 w-3 mr-1" /> Payer
-                    </Button>
                     <a
                       href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je veux commander le livre : ${book.title} par ${book.author} (1 000 FCFA). Comment procéder ?`)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={(e) => e.stopPropagation()}
-                      className="flex-shrink-0"
+                      className="flex-1"
                     >
-                      <Button variant="outline" size="sm" className="h-9 w-9 p-0 hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-700">
-                        <MessageCircle className="h-3.5 w-3.5" />
+                      <Button
+                        className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white text-[11px] font-bold h-9 shadow-sm"
+                      >
+                        <MessageCircle className="h-3 w-3 mr-1" /> Commander
                       </Button>
                     </a>
                   </div>
@@ -2277,30 +2115,18 @@ export default function Home() {
                             <FileCheck className="h-3 w-3 text-amber-500" />
                             <span>Format PDF — lisible sur téléphone et PC</span>
                           </div>
-                          <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
-                            <ShieldCheck className="h-3 w-3 text-amber-500" />
-                            <span>Paiement : WhatsApp (Orange Money, MTN MoMo)</span>
-                          </div>
                         </div>
 
-                        <div className="flex gap-2 mt-4">
                         <a
                           href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je veux commander le livre : ${selectedBook.title} par ${selectedBook.author} (1 000 FCFA). Comment procéder ?`)}`}
                           target="_blank" rel="noopener noreferrer"
                           onClick={() => setSelectedBook(null)}
-                          className="flex-1"
+                          className="block mt-4"
                         >
-                          <Button variant="outline" className="w-full border-emerald-300 text-emerald-700 hover:bg-emerald-50 font-semibold">
-                            <MessageCircle className="h-4 w-4 mr-2" /> WhatsApp
+                          <Button className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-bold shadow-lg shadow-emerald-500/20 h-12">
+                            <MessageCircle className="h-4 w-4 mr-2" /> Commander via WhatsApp — 1 000 FCFA
                           </Button>
                         </a>
-                        <Button
-                          onClick={() => { setSelectedBook(null); openCheckout({ type: 'book', title: selectedBook.title, price: 1000 }) }}
-                          className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-lg shadow-amber-500/20"
-                        >
-                          <Lock className="h-4 w-4 mr-2" /> Payer 1 000 F
-                        </Button>
-                      </div>
                       </div>
                     </div>
                   </motion.div>
@@ -2366,14 +2192,11 @@ export default function Home() {
                       <div className="text-2xl font-extrabold text-amber-600">7 000 <span className="text-sm font-normal">FCFA</span></div>
                     </div>
                     <div className="flex gap-2">
-                    <a href={`https://wa.me/22397787244?text=${encodeURIComponent('Bonjour Sacko ! Je veux commander le Pack Complet de 12 livres (7 000 FCFA au lieu de 12 000). Comment procéder ?')}`} target="_blank" rel="noopener noreferrer">
-                      <Button variant="outline" className="border-emerald-300 text-emerald-700 hover:bg-emerald-50 font-semibold">
-                        <MessageCircle className="h-4 w-4 mr-1.5" /> WhatsApp
+                    <a href={`https://wa.me/22397787244?text=${encodeURIComponent('Bonjour Sacko ! Je veux commander le Pack Complet de 12 livres (7 000 FCFA au lieu de 12 000). Comment procéder ?')}`} target="_blank" rel="noopener noreferrer" className="block">
+                      <Button className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-bold shadow-lg shadow-emerald-500/20 whitespace-nowrap">
+                        <MessageCircle className="h-4 w-4 mr-1.5" /> Commander le Pack — 7 000 F
                       </Button>
                     </a>
-                    <Button onClick={() => openCheckout({ type: 'service', title: 'Pack Complet 12 Livres', price: 7000 })} className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-lg shadow-amber-500/20 whitespace-nowrap">
-                      <Lock className="h-4 w-4 mr-1.5" /> Payer 7 000 F
-                    </Button>
                   </div>
                   </div>
                 </div>
@@ -3835,364 +3658,12 @@ export default function Home() {
                   onClick={() => setShowCart(false)}
                   className="flex-1"
                 >
-                  <Button variant="outline" className="w-full border-emerald-300 text-emerald-700 hover:bg-emerald-50 font-semibold h-11 text-sm">
-                    <MessageCircle className="h-4 w-4 mr-2" /> WhatsApp
+                  <Button className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-bold shadow-lg shadow-emerald-500/20 h-11 text-sm">
+                    <MessageCircle className="h-4 w-4 mr-2" /> Commander via WhatsApp
                   </Button>
                 </a>
-                <Button
-                  onClick={() => openCheckout()}
-                  className="flex-1 bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 hover:from-amber-600 hover:via-orange-600 hover:to-red-600 text-white font-bold shadow-lg shadow-amber-500/20 h-11 text-sm"
-                >
-                  <ExternalLink className="h-4 w-4 mr-2" /> Payer sur Taliopay
-                </Button>
               </div>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* ═══ CHECKOUT / PAYMENT MODAL ═══ */}
-      <AnimatePresence>
-        {showCheckout && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[200] flex items-center justify-center p-4"
-          >
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-              onClick={() => { if (!paymentProcessing) setShowCheckout(false) }}
-            />
-
-            {/* Modal */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 30 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 30 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className="relative z-10 w-full max-w-md bg-background rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
-            >
-              {/* Header */}
-              <div className="relative bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 p-4 text-white flex-shrink-0">
-                <button
-                  onClick={() => { if (!paymentProcessing) setShowCheckout(false) }}
-                  className="absolute top-3 right-3 h-8 w-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-                <div className="flex items-center gap-2">
-                  <Lock className="h-5 w-5" />
-                  <h3 className="font-bold text-lg">Commande Sécurisée</h3>
-                </div>
-                <div className="flex items-center gap-1.5 mt-1">
-                  <ShieldCheck className="h-3 w-3 text-white/80" />
-                  <p className="text-[11px] text-white/80">Confirmation instantanée via WhatsApp — Orange Money, MTN MoMo</p>
-                </div>
-                {/* Progress bar */}
-                <div className="flex gap-1.5 mt-3">
-                  {[0, 1, 2, 3].map((s) => (
-                    <div key={s} className={`h-1 flex-1 rounded-full transition-all duration-500 ${s <= checkoutStep ? 'bg-white' : 'bg-white/30'}`} />
-                  ))}
-                </div>
-                <div className="flex justify-between mt-1">
-                  <span className="text-[9px] text-white/60">Récapitulatif</span>
-                  <span className="text-[9px] text-white/60">Vos infos</span>
-                  <span className="text-[9px] text-white/60">Étape</span>
-                  <span className="text-[9px] text-white/60">Confirmation</span>
-                </div>
-              </div>
-
-              {/* Content */}
-              <div className="flex-1 overflow-y-auto p-5">
-                {/* ─── STEP 0: Order Recap ─── */}
-                {checkoutStep === 0 && (
-                  <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-4">
-                    <div className="text-center">
-                      <div className="h-14 w-14 mx-auto rounded-2xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-3">
-                        <ShoppingCart className="h-7 w-7 text-amber-500" />
-                      </div>
-                      <h4 className="font-bold text-base">Votre Commande</h4>
-                      <p className="text-xs text-muted-foreground mt-0.5">Vérifiez votre sélection avant de payer</p>
-                    </div>
-
-                    <div className="space-y-2 max-h-48 overflow-y-auto">
-                      {(checkoutItem ? [checkoutItem.title] : cart).map((title, i) => {
-                        const book = books.find(b => b.title === title)
-                        return (
-                          <div key={i} className="flex items-center gap-3 p-2.5 rounded-xl bg-muted/50 border border-border">
-                            {book ? (
-                              <img src={book.cover} alt="" className="h-11 w-8 object-cover rounded-md shadow-sm" />
-                            ) : (
-                              <div className="h-11 w-8 rounded-md bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center flex-shrink-0">
-                                <BookOpen className="h-4 w-4 text-amber-500" />
-                              </div>
-                            )}
-                            <div className="flex-1 min-w-0">
-                              <p className="text-xs font-semibold leading-tight line-clamp-2">{title}</p>
-                              <p className="text-[10px] text-amber-600 font-bold mt-0.5">1 000 FCFA</p>
-                            </div>
-                          </div>
-                        )
-                      })}
-                    </div>
-
-                    <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm font-semibold">Sous-total</span>
-                        <span className="text-sm font-medium">{(checkoutItem ? 1 : cart.length)} article(s)</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-base font-bold">Total à payer</span>
-                        <span className="text-2xl font-extrabold text-amber-600">{getCartTotal().toLocaleString('fr-FR')} <span className="text-sm">FCFA</span></span>
-                      </div>
-                    </div>
-
-                    <Button onClick={() => setCheckoutStep(1)} className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold h-12 text-sm">
-                      Continuer <ArrowRight className="h-4 w-4 ml-2" />
-                    </Button>
-                  </motion.div>
-                )}
-
-                {/* ─── STEP 1: Customer Info ─── */}
-                {checkoutStep === 1 && (
-                  <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-4">
-                    <div className="text-center">
-                      <div className="h-14 w-14 mx-auto rounded-2xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-3">
-                        <UserCheck className="h-7 w-7 text-blue-500" />
-                      </div>
-                      <h4 className="font-bold text-base">Vos Informations</h4>
-                      <p className="text-xs text-muted-foreground mt-0.5">Renseignez vos coordonnées pour la livraison</p>
-                    </div>
-
-                    <div className="space-y-3">
-                      <div>
-                        <Label className="text-xs font-semibold mb-1.5 block">Nom complet *</Label>
-                        <Input
-                          placeholder="Ex: Amadou Diallo"
-                          value={checkoutInfo.name}
-                          onChange={(e) => setCheckoutInfo({ ...checkoutInfo, name: e.target.value })}
-                          className="h-11 rounded-xl text-sm"
-                        />
-                      </div>
-                      <div>
-                        <Label className="text-xs font-semibold mb-1.5 block">Numéro de téléphone *</Label>
-                        <div className="relative">
-                          <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                          <Input
-                            placeholder="Ex: 70 12 34 56 / 07 XX XX XX"
-                            value={checkoutInfo.phone}
-                            onChange={(e) => setCheckoutInfo({ ...checkoutInfo, phone: e.target.value })}
-                            className="pl-10 h-11 rounded-xl text-sm"
-                            type="tel"
-                          />
-                        </div>
-                        <p className="text-[10px] text-muted-foreground mt-1">Le même numéro que votre compte mobile money</p>
-                      </div>
-                      <div>
-                        <Label className="text-xs font-semibold mb-1.5 block">Email (optionnel)</Label>
-                        <div className="relative">
-                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                          <Input
-                            placeholder="votre@email.com"
-                            value={checkoutInfo.email}
-                            onChange={(e) => setCheckoutInfo({ ...checkoutInfo, email: e.target.value })}
-                            className="pl-10 h-11 rounded-xl text-sm"
-                            type="email"
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex gap-2">
-                      <Button variant="outline" onClick={() => setCheckoutStep(0)} className="flex-1 h-11 font-semibold text-sm">
-                        <ArrowDown className="h-4 w-4 mr-2 rotate-180" /> Retour
-                      </Button>
-                      <Button
-                        onClick={() => { if (checkoutInfo.name.trim() && checkoutInfo.phone.trim()) setCheckoutStep(2); else toast({ title: 'Champs requis', description: 'Veuillez remplir votre nom et numéro de téléphone.' }) }}
-                        className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold h-11 text-sm"
-                      >
-                        Continuer <ArrowRight className="h-4 w-4 ml-2" />
-                      </Button>
-                    </div>
-                  </motion.div>
-                )}
-
-                {/* ─── STEP 2: Confirm & Pay ─── */}
-                {checkoutStep === 2 && (
-                  <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-4">
-                    <div className="text-center">
-                      <div className="h-14 w-14 mx-auto rounded-2xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mb-3">
-                        <Lock className="h-7 w-7 text-emerald-500" />
-                      </div>
-                      <h4 className="font-bold text-base">Confirmez votre commande</h4>
-                      <p className="text-xs text-muted-foreground mt-0.5">Vous serez redirigé vers WhatsApp pour confirmer votre commande</p>
-                    </div>
-
-                    <div className="bg-muted/50 border border-border rounded-xl p-3.5 space-y-2">
-                      <div className="flex justify-between text-xs">
-                        <span className="text-muted-foreground">Nom</span>
-                        <span className="font-semibold">{checkoutInfo.name}</span>
-                      </div>
-                      <div className="flex justify-between text-xs">
-                        <span className="text-muted-foreground">Téléphone</span>
-                        <span className="font-semibold">{checkoutInfo.phone}</span>
-                      </div>
-                      <div className="flex justify-between text-xs">
-                        <span className="text-muted-foreground">Email</span>
-                        <span className="font-semibold">{checkoutInfo.email || '—'}</span>
-                      </div>
-                      <div className="border-t pt-2 flex justify-between text-sm">
-                        <span className="font-bold">Total</span>
-                        <span className="font-extrabold text-emerald-600">{getCartTotal().toLocaleString('fr-FR')} FCFA</span>
-                      </div>
-                    </div>
-
-                    <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-xl p-3">
-                      <p className="text-[11px] text-amber-700 dark:text-amber-400 text-center">
-                        💡 Après confirmation, vous serez redirigé vers <strong>WhatsApp</strong> pour finaliser avec Sacko. Paiement via Orange Money, MTN MoMo ou autre.
-                      </p>
-                    </div>
-
-                    <div className="flex gap-2">
-                      <Button variant="outline" onClick={() => setCheckoutStep(1)} className="flex-1 h-11 font-semibold text-sm">
-                        <ArrowDown className="h-4 w-4 mr-2 rotate-180" /> Retour
-                      </Button>
-                      <Button
-                        onClick={() => processPayment()}
-                        className="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold h-11 text-sm"
-                      >
-                        <ExternalLink className="h-4 w-4 mr-2" /> Payer {getCartTotal().toLocaleString('fr-FR')} F sur Taliopay
-                      </Button>
-                    </div>
-
-                    <div className="flex items-center justify-center gap-3 pt-1 flex-wrap">
-                      <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
-                        <Shield className="h-3 w-3 text-emerald-500" />
-                        <span>Taliopay</span>
-                      </div>
-                      <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
-                        <Lock className="h-3 w-3 text-emerald-500" />
-                        <span>SSL 256-bit</span>
-                      </div>
-                      <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
-                        <CheckCircle2 className="h-3 w-3 text-emerald-500" />
-                        <span>Paiement automatique</span>
-                      </div>
-                      <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
-                        <Zap className="h-3 w-3 text-emerald-500" />
-                        <span>Confirmation instantanée</span>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-
-                {/* ─── STEP 3: Processing ─── */}
-                {checkoutStep === 3 && (
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center py-8 space-y-5">
-                    <div className="relative">
-                      <div className="h-20 w-20 rounded-full border-4 border-amber-200 dark:border-amber-800 border-t-amber-500 animate-spin" />
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <Lock className="h-8 w-8 text-amber-500" />
-                      </div>
-                    </div>
-                    <div className="text-center">
-                      <h4 className="font-bold text-base">Vérification du paiement...</h4>
-                      <p className="text-sm text-muted-foreground mt-1">Redirection vers Taliopay...</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">Veuillez ne pas fermer cette page</p>
-                    </div>
-                    <div className="w-full max-w-xs space-y-2">
-                      <div className="flex items-center gap-2">
-                        <CheckCircle2 className="h-4 w-4 text-blue-500" />
-                        <span className="text-xs text-muted-foreground">Redirection vers Taliopay...</span>
-                      </div>
-                      <div className="flex items-center gap-2 opacity-60">
-                        <div className="h-4 w-4 rounded-full border-2 border-blue-400 border-t-transparent animate-spin" />
-                        <span className="text-xs text-muted-foreground">Ouverture de la page de paiement...</span>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-
-                {/* ─── STEP 4: Success ─── */}
-                {checkoutStep === 4 && (
-                  <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center py-4 space-y-4">
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ type: 'spring', stiffness: 300, damping: 15, delay: 0.2 }}
-                      className="h-20 w-20 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center shadow-lg shadow-emerald-500/30"
-                    >
-                      <CheckCircle2 className="h-10 w-10 text-white" />
-                    </motion.div>
-
-                    <div className="text-center">
-                      <h4 className="font-extrabold text-xl text-emerald-600">Commande Envoyée !</h4>
-                      <p className="text-sm text-muted-foreground mt-1">Votre commande a été enregistrée</p>
-                    </div>
-
-                    <div className="w-full bg-muted/50 border border-border rounded-xl p-4 space-y-2.5">
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs text-muted-foreground">Référence</span>
-                        <span className="text-xs font-mono font-bold text-amber-600 bg-amber-50 dark:bg-amber-950/30 px-2 py-0.5 rounded-md">{orderId}</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs text-muted-foreground">Montant</span>
-                        <span className="text-sm font-bold">{getCartTotal().toLocaleString('fr-FR')} FCFA</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs text-muted-foreground">Méthode</span>
-                        <span className="text-xs font-semibold">Taliopay</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs text-muted-foreground">Articles</span>
-                        <span className="text-xs font-semibold">{(checkoutItem ? 1 : cart.length)} article(s)</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs text-muted-foreground">Date</span>
-                        <span className="text-xs font-medium">{new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric', timeZone: 'Africa/Bamako' })}</span>
-                      </div>
-                    </div>
-
-                    <div className="w-full bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-xl p-3.5">
-                      <div className="flex items-start gap-2.5">
-                        <ExternalLink className="h-5 w-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                        <div>
-                          <p className="text-xs font-bold text-blue-700 dark:text-blue-400">Redirigé vers Taliopay !</p>
-                          <p className="text-[11px] text-blue-600/80 dark:text-blue-400/70 mt-0.5 leading-relaxed">
-                            Vous avez été redirigé vers Taliopay pour finaliser le paiement en toute sécurité (Orange Money, Moov Money, carte bancaire). Si la page ne s&apos;est pas ouverte, <a href={TALIOPAY_URL} target="_blank" rel="noopener noreferrer" className="underline font-bold">cliquez ici</a>. Référence : <strong>{orderId}</strong>
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex gap-2 w-full">
-                      <Button
-                        variant="outline"
-                        onClick={() => { setShowCheckout(false); if (!checkoutItem) { setCart([]) } }}
-                        className="flex-1 h-11 font-semibold text-sm"
-                      >
-                        Fermer
-                      </Button>
-                      <a
-                        href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je viens de passer la commande ${orderId}. Voici mon numéro : ${checkoutInfo.phone}`)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1"
-                      >
-                        <Button className="w-full bg-[#25d366] hover:bg-[#20bd5a] text-white font-semibold h-11 text-sm">
-                          <MessageCircle className="h-4 w-4 mr-2" /> Suivi WhatsApp
-                        </Button>
-                      </a>
-                    </div>
-                  </motion.div>
-                )}
-              </div>
-            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
