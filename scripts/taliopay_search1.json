@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developers.djomy.africa",
+    "name": "API Développeur Djomy",
+    "snippet": "path Parameters. reference ; Lister tous les liens de paiement · query Parameters ...",
+    "host_name": "developers.djomy.africa",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://opendocs.alipay.com/apis/009zdp",
+    "name": "https://opendocs.alipay.com/apis/009zdp",
+    "snippet": "Learn why",
+    "host_name": "opendocs.alipay.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.pawapay.io/index.html",
+    "name": "Mobile Money Payments API for Africa — PawaPay",
+    "snippet": "Collect and send mobile money payments across 20+ African markets through one API. Direct MNO connections. Enterprise compliance included.",
+    "host_name": "www.pawapay.io",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://elyonpay.com/api.html",
+    "name": "API de paiement ElyonPay – Mobile Money & Carte en Afrique",
+    "snippet": "Des paiements rapides, simples et sécurisés. Vendez en un clic, en face à face ou en ligne et acceptez les moyens de paiement locaux et internationaux.",
+    "host_name": "elyonpay.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://malipo.mw/documentation",
+    "name": "Malipo Documentation | Payment Solutions API & Integration Guides",
+    "snippet": "The Malipo Payments API is a payment system aggregation platform designed to allow merchants to accept payments from customers using a variety of payment ...",
+    "host_name": "malipo.mw",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://kkiapay.me",
+    "name": "Accueil - kkiaPay - Agrégateur de paiement par mobile money, carte",
+    "snippet": "Une API simple pour les développeurs · Des modules prêts à l'emploi · Disponible sur toutes les plateformes : · Des ...",
+    "host_name": "kkiapay.me",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.stripe.com/payments/payment-methods?locale=fr-FR",
+    "name": "API Payment Methods - Stripe Documentation",
+    "snippet": "L'API Payment Methods vous permet à elle seule d'accepter de nombreux moyens de paiement. Un objet PaymentMethod contient les informations sur les moyens de ...",
+    "host_name": "docs.stripe.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.alipayplus.com/alipayplus/alipayplus/api_acq/pay_cashier",
+    "name": "pay (Cashier Payment) | API Reference - Alipay+ Docs",
+    "snippet": "The pay API is used by the Acquiring Service Provider (ACQP) to send a request to Alipay+ to place orders. Note: In the following sections, Mobile Payment ...",
+    "host_name": "docs.alipayplus.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.api-money.com",
+    "name": "API Money: La solution de paiement dédiée aux marketplaces",
+    "snippet": "API-money est une solution innovante de paiement via gestion de porte- monnaie électronique dédiée aux marketplaces.",
+    "host_name": "www.api-money.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://linkmobilepay.com/api/documentation",
+    "name": "Developer - Api Documentation - LINK MOBILE PAY",
+    "snippet": "Cette section décrit le LINK MOBILE PAY API de passerelle de paiement. LINK MOBILE PAY L'API est facile à mettre en œuvre dans votre logiciel d'entreprise.",
+    "host_name": "linkmobilepay.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

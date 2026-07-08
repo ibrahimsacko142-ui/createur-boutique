@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developer.phonepe.com/payment-gateway/website-integration/standard-checkout/api-integration/api-integration-website",
+    "name": "Introduction to Website Checkout",
+    "snippet": "To integrate PhonePe Payment Gateway into your website using the API integration method, here's an overview of the user journey and checkout pages across ...",
+    "host_name": "developer.phonepe.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.totalpay.global",
+    "name": "Developer API: Integration flow",
+    "snippet": "Checkout integration provides a set of APIs that allow customizing payment processing for the business. These protocols implement acquiring ...",
+    "host_name": "docs.totalpay.global",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://api-reference.checkout.com",
+    "name": "Checkout.com API Reference",
+    "snippet": "Checkout.com provides a collection of APIs that enable you to integrate with our various products and services. Our APIs accept and return JSON in the HTTP ...",
+    "host_name": "api-reference.checkout.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.samsung.com/pay/web/api-integration.html",
+    "name": "Web Checkout v1 SDK: API Integration Guide - Samsung Developer",
+    "snippet": "This API is used for creating transactions within the Web Checkout service. This is the point of entry for service integration.",
+    "host_name": "developer.samsung.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.squareup.com/docs/checkout-api",
+    "name": "Checkout API - Square Developer",
+    "snippet": "The Checkout API provides several endpoints to create and manage Square-hosted checkout pages. Developers can call the CreatePaymentLink endpoint to create ...",
+    "host_name": "developer.squareup.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.payone.com/en/integration/api-developer-guide/index",
+    "name": "Developer guide (API) - PAYONE",
+    "snippet": "Our basic integration methods Hosted Checkout Page/Hosted Tokenization Page/Server-to-server. All necessary API resources to follow up on payments (i.e. for ...",
+    "host_name": "developer.payone.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developers.google.com/pay/api/web/overview",
+    "name": "Overview | Google Pay API",
+    "snippet": "The Google Pay API enables fast checkout on your website, and gives you convenient access to hundreds of millions of cards saved to Google Accounts worldwide.",
+    "host_name": "developers.google.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.ottu.com/developers/payments/checkout-api",
+    "name": "Checkout API - Ottu Documentation",
+    "snippet": "Ottu provides a comprehensive collection of APIs that offer a seamless and efficient way to test payments and enable merchants to accept and process ...",
+    "host_name": "docs.ottu.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=tpGBBncw_6w",
+    "name": "Checkout.com Hosted Payment Page — Full Integration Tutorial",
+    "snippet": "Support the channel and get the full source here: https://www.patreon.com/posts/152248381 In this tutorial, I walk through how to integrate ...",
+    "host_name": "www.youtube.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://blog.postman.com/best-payment-apis-for-developers",
+    "name": "Best Payment APIs for Developers in 2026 - Postman Blog",
+    "snippet": "The 10 best payment APIs for 2026 include Stripe, PayPal (consumer reach & trust), Square (omnichannel retail), and more.",
+    "host_name": "blog.postman.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]
