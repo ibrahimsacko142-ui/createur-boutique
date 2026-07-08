@@ -523,7 +523,7 @@ const books: Book[] = [
 /* ═══════════════════════════════════════════════
    MAIN PAGE
    ═══════════════════════════════════════════════ */
-const TALIOPAY_URL = process.env.NEXT_PUBLIC_TALIOPAY_STORE_URL || ''
+const TALIOPAY_URL = process.env.NEXT_PUBLIC_TALIOPAY_STORE_URL || 'https://boutiques.mytalio.shop'
 
 export default function Home() {
   const [contactData, setContactData] = useState({ name: '', email: '', subject: '', message: '' })
@@ -670,7 +670,7 @@ export default function Home() {
       || checkoutItem.title.includes('Pack') || checkoutItem.title.includes('Formation')
 
     // ─── Produits digitaux → Taliopay ───
-    if (TALIOPAY_URL && TALIOPAY_URL !== 'https://www.taliopay.com/VOTRE_BOUTIQUE' && isDigitalProduct) {
+    if (TALIOPAY_URL && isDigitalProduct) {
       // Enregistrer la commande localement
       try {
         await fetch('/api/payments', {
