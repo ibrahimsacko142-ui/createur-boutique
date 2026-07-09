@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://ikeepay.com",
+    "name": "ikeePay: Online payment solutions, Virtual Cards, International sales",
+    "snippet": "Connect your site, app or service to over 98% of African Mobile Money solutions and international payment methods — through a single unified API.",
+    "host_name": "ikeepay.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://ikeepay.com/about",
+    "name": "Our Vision, Banking Security, Financial Inclusion, Pan  - ikeePay",
+    "snippet": "We unify Mobile Money and international card payments to fuel your global growth. ... Simplified API integration for e-commerce. Global Business. Available ...",
+    "host_name": "ikeepay.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=skGbP69dwLc",
+    "name": "One API for Mobile Money & Card Payments | Stripe | MTN - YouTube",
+    "snippet": "... Walkthrough 0:00 - Creating an App & API Key 0:00 - Building ... Live demo: collecting a payment end-to-end. Tech stack: Backend: Go + ...",
+    "host_name": "www.youtube.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://ikeepay.com/transfert/ga",
+    "name": "Money transfer, Mobile Money, Cash-out, Secure payment, Gabon",
+    "snippet": "Whether you are an expat supporting your family or a business paying local suppliers, ikeePay eliminates the complexity of traditional cross-border transfers.",
+    "host_name": "ikeepay.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.ecommerce.cawl-solutions.fr/en/integration/basic-integration-methods/mobile-integration",
+    "name": "Mobile/Client Integration - CAWL ecommerce",
+    "snippet": "Our modern RESTful API supports payments from all mobile platforms. For each platform, we have created SDKs that support full integration and provide payment ...",
+    "host_name": "docs.ecommerce.cawl-solutions.fr",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://ikeepay.com/transfert/sn",
+    "name": "Money transfer, Mobile Money, Cash-out, Secure payment, Sénégal",
+    "snippet": "Simplifiez vos transactions avec iKeePay. Une solution de paiement rapide, sécurisée et adaptée à tous vos besoins.",
+    "host_name": "ikeepay.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.antom.com/ac/dws2/apiintegrationguide",
+    "name": "API integration guide | Digital Wallet Solution - Antom Docs",
+    "snippet": "You need to take the following integration steps to enable the user to complete the wallet account registration process.",
+    "host_name": "docs.antom.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developers.korapay.com/docs/mobile-money-apis",
+    "name": "Accept Mobile Money Payment with APIs - Kora Developer Documentation",
+    "snippet": "Step 2: Authorize mobile money transaction · Step 3: Verify Payment · Step 4: Setup Webhook.",
+    "host_name": "developers.korapay.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.mobilemoneyapi.io",
+    "name": "Mobile Money API Developer Portal: Home",
+    "snippet": "A full set of developer documentation and guides for getting started with the Mobile Money API Specification. api_fundamentals. API fundamentals.",
+    "host_name": "developer.mobilemoneyapi.io",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://blog.brankas.com/payment-gateway-integration-for-mobile-apps",
+    "name": "A Guide to Payment Gateway Integration for Your Mobile App",
+    "snippet": "How to Integrate a Payment Gateway Into Your Mobile Application · Step 1: Set Up Your Merchant Account · Step 2: Obtain API Keys · Step 3: Choose ...",
+    "host_name": "blog.brankas.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

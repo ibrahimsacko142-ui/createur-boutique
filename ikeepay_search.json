@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://ikeepay.com",
+    "name": "ikeePay: Online payment solutions, Virtual Cards, International sales",
+    "snippet": "Connect your site, app or service to over 98 methods — through a single unified API. A single endpoint for cards, wallets, crypto and local partners. Connect ...",
+    "host_name": "ikeepay.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.ifthenpay.com/docs/en",
+    "name": "API Documentation | ifthenpay",
+    "snippet": "The ifthenpay API allows you to easily generate payment references, receive notifications and query payments data.",
+    "host_name": "www.ifthenpay.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.xe.com/platform/payments-api",
+    "name": "The Trusted Global Payment API Integration - Xe",
+    "snippet": "Rating 4.8 (118,578) Our API docs have easy-to-follow instructions and code examples to streamline developer implementation. Full API documentation with code samples. Use the ...",
+    "host_name": "www.xe.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.openpayd.com/api",
+    "name": "OpenPayd API",
+    "snippet": "At OpenPayd, we built our API for developers, with low integration times and accessible documentation. Everything you need to implement a banking solution ...",
+    "host_name": "www.openpayd.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://dev.ipayafrica.com/C2B.html",
+    "name": "Welcome to iPay C2B API documentation",
+    "snippet": "This is a sample PHP script of how you would ideally integrate with iPay Payments Gateway and also handling the callback from iPay and doing the IPN check.",
+    "host_name": "dev.ipayafrica.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.getknit.dev/blog/ecommerce-api-integration-guides-resources",
+    "name": "eCommerce API Integration Guides & Resources",
+    "snippet": "Detailed documentation should cover the integration setup, including endpoint configurations, authentication methods, data flow, error-handling ...",
+    "host_name": "www.getknit.dev",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://ikeepay.com/about",
+    "name": "Our Vision, Banking Security, Financial Inclusion, Pan  - ikeePay",
+    "snippet": "Simplified API integration for e-commerce Global Business Available in +190 countries. Send and receive funds directly to local Mobile Money accounts. Ikeepay ...",
+    "host_name": "ikeepay.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.globalpayments.com/developers",
+    "name": "Global Payments API For Developers",
+    "snippet": "Developers Getting started Integration options Start taking payments Browse our API Contact our",
+    "host_name": "www.globalpayments.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.worldpay.com/apis",
+    "name": "APIs - Worldpay Developer Hub",
+    "snippet": "Access Worldpay APIs offer fast integration, a simple JSON schema and the latest payment products all with the highest level of service quality.",
+    "host_name": "docs.worldpay.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.jengaapi.io",
+    "name": "Jenga API: Payment Gateway API Integration Services | Website",
+    "snippet": "Simple guides, API references and dashboards that get you started in minutes. We abstract all the complexity for you. Check out docs ...",
+    "host_name": "www.jengaapi.io",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

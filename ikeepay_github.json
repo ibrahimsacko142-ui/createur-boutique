@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://github.com/kkiapay/android-sdk",
+    "name": "Android Sdk for KKIAPAY API - GitHub",
+    "snippet": "Kkiapay Android Sdk ... Kkiapay is a developer friendly solution that allows you to accept mobile money and credit card payments in your application or website.",
+    "host_name": "github.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/topics/payment-api?l=javascript&o=desc&s=stars",
+    "name": "payment-api · GitHub Topics",
+    "snippet": "This repo includes the back-end code for a JavaScript application that uses Node.js to build a shopping cart and embed a payment form using North's Browser ...",
+    "host_name": "github.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/twikey/twikey-api-java",
+    "name": "Twikey API client for Java - GitHub",
+    "snippet": "Twikey offers a simple and safe multichannel solution to negotiate and collect recurring (or even occasional) payments.",
+    "host_name": "github.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.apideck.com/integrations/github",
+    "name": "GitHub API Integration - Apideck",
+    "snippet": "Integrate GitHub API in minutes. 5+ data models, OAuth handled, SOC 2 certified. Sync data with GitHub and 6+ apps. Free trial.",
+    "host_name": "www.apideck.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/katorymnd/pawapay-node-sdk",
+    "name": "katorymnd/pawapay-node-sdk - GitHub",
+    "snippet": "A professional, high-performance Node.js SDK for integrating with the pawaPay API. This SDK provides a streamlined interface for mobile money deposits, ...",
+    "host_name": "github.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/SelectSystemsInternational/LimepayApiSDK",
+    "name": "This is a C# SDK for the Limepay Payment API · GitHub",
+    "snippet": "Limepay Direct API Integration SDK. C# Library for the Limepay Api. Limepay Api SDK Initial build. API version: 31/07/2022; SDK version: 3.0.0 ...",
+    "host_name": "github.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.mastercard.com/open-finance-us/documentation/connect/integrating/sdk",
+    "name": "SDK Integration | Mastercard Open Finance US",
+    "snippet": "iOS Applications — The Data Connect iOS SDK is a compiled binary in XCFramework format, which allows you to easily integrate our SDK into your development ...",
+    "host_name": "developer.mastercard.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/topics/merchant-api",
+    "name": "merchant-api · GitHub Topics",
+    "snippet": "High-performance e-commerce REST API built with Node.js/Express, MongoDB (with strategic indexing), Redis caching, and compression middleware. Features JWT ...",
+    "host_name": "github.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://ikeepay.com",
+    "name": "ikeePay: Online payment solutions, Virtual Cards, International sales",
+    "snippet": "Connect to over 20 emerging markets through a single, robust API integration. ... Securely manage your international transactions and Mobile Money. Navigation.",
+    "host_name": "ikeepay.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/globalpayments-samples/pay-by-link",
+    "name": "Global Payments Pay by Link - GitHub",
+    "snippet": "Pay by Link implementation for Global Payments API Platform. Create secure payment links for remote transactions with multi-currency support.",
+    "host_name": "github.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

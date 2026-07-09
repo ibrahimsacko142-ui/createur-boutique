@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://docs.epay.eu/api/create-webhook",
+    "name": "Create Webhook | ePay documentation",
+    "snippet": "Each webhook must subscribe to one or more supported events and include a shared secret used as the value of the Authorization header when sending webhook.\nRegisters a new webhook endpoint limited to domains already approved on your point of sale configuration. A maximum of 10 active webhooks is allowed per ...",
+    "host_name": "docs.epay.eu",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://ikeepay.com",
+    "name": "ikeePay: Online payment solutions, Virtual Cards, International sales links, Collections, Mobile money",
+    "snippet": "We support multiple currencies: $, £, €, ₦, XOF, CFA, GHS and more. Instant Settlement. Enjoy real-time settlements in your local currencies.\nJoin the digital finance revolution in Africa with ikeepay. Sell, receive and manage your international transactions and Mobile Money with ease.",
+    "host_name": "ikeepay.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.edfapay.com/docs/webhook",
+    "name": "Webhook - EdfaPay API Documentation",
+    "snippet": "EdfaPay's Webhook API offers a robust and reliable method for your system to receive real-time notifications concerning transaction status updates.",
+    "host_name": "docs.edfapay.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.fedapay.com/integration-api/en/collects-management-en",
+    "name": "Collects management - FedaPay",
+    "snippet": "This guide will walk you through the process of setting up and managing payment collects using the API, from the initial creation to the finalization.",
+    "host_name": "docs.fedapay.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://laracasts.com/discuss/channels/laravel/how-to-setup-a-callback-api-endpoint-that-recieves-payment-status-from-a-payment-gateway",
+    "name": "How to setup a callback API endpoint that recieves payment status from a payment gateway",
+    "snippet": "I am trying to figure out how to setup a callback url to receive payment status from a payment gateway. Here's a summary of the whole setup.",
+    "host_name": "laracasts.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.authorize.net/api/reference/features/webhooks.html",
+    "name": "Authorize.net API Documentation - Webhooks",
+    "snippet": "The Webhooks REST API enables you to create webhooks to receive notifications for events that are not the result of an API request and are not returned in an ...",
+    "host_name": "developer.authorize.net",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.sensepass.com/sensepay/transaction-api/api-notifications/callback-webhook",
+    "name": "Callback/Webhook - Transaction API - Sensepass",
+    "snippet": "Creating a new transaction object (Payment Request). POST /transactions/init. This API creates new payment request based on the fields below.",
+    "host_name": "docs.sensepass.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.azupay.com.au/docs/webhooks",
+    "name": "Webhooks - Implementation and Security - Azupay Developer Docs",
+    "snippet": "Transaction level webhooks can be enabled on any transaction request that specifies a Callback Option on our API documentation when the transaction is created.",
+    "host_name": "developer.azupay.com.au",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://appypay.stoplight.io/docs/appypay-payment-gateway/3325ef2da9b78-merchant-webhooks",
+    "name": "Merchant Webhooks | AppyPay Payment Gateway - Stoplight.io",
+    "snippet": "The non-transactional webhook is a callback function that allows event-driven communication between 2 APIs for events that are not directly related to ...",
+    "host_name": "appypay.stoplight.io",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.ifthenpay.com/docs/en",
+    "name": "API Documentation | ifthenpay",
+    "snippet": "It allows you to simulate webhook requests for each available payment method, enabling you to test and validate integrations efficiently. You ...",
+    "host_name": "www.ifthenpay.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

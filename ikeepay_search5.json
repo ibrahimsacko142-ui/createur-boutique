@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://ikeepay.com",
+    "name": "ikeePay: Online payment solutions, Virtual Cards, International sales",
+    "snippet": "Connect your site, app or service to over 98% of African Mobile Money solutions and international payment methods — through a single unified API. ... Ikeepay API ...",
+    "host_name": "ikeepay.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.bridgeapi.io/docs/create-your-first-payment-api",
+    "name": "Create your first payment link from the API - Bridge API Documentation",
+    "snippet": "Our API allows you to effortlessly create payment links for your online store or bill collection. Collect bills with the beneficiary name displayed",
+    "host_name": "docs.bridgeapi.io",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://pakaidonk.id/dokumentasi-api/create-payment-emoney",
+    "name": "Create Payment Emoney - Pakaidonk E-money",
+    "snippet": "API Name, Create E-money. Function, Layanan untuk menerima dana dari Aplikasi E-wallet. Layanan ini akan memberi notifikasi pembayaran ...",
+    "host_name": "pakaidonk.id",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://ikeepay.com/about",
+    "name": "Our Vision, Banking Security, Financial Inclusion, Pan  - ikeePay",
+    "snippet": "Simplifiez vos transactions avec iKeePay. Une solution de paiement rapide, sécurisée et adaptée à tous vos besoins.",
+    "host_name": "ikeepay.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.epay.eu/api/create-payment-link",
+    "name": "Create Payment Link - ePay documentation",
+    "snippet": "Creates a new payment link with the ePay Payments API. This endpoint requires a valid ApiKey and must be called from the server side",
+    "host_name": "docs.epay.eu",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.astrapay.com/docs/api",
+    "name": "Introduction – AstraPay API Merchant",
+    "snippet": "Endpoint untuk API Generate Report By ID memiliki URL seperti di bawah ini: Protocol: HTTPS Method: GET URL Sandbox: hostname/report-service/api/ext/[id ...",
+    "host_name": "www.astrapay.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://ikeepay.com/transfert/ne",
+    "name": "Money transfer, Mobile Money, Cash-out, Secure payment, Niger",
+    "snippet": "Whether you are an expat supporting your family or a business paying local suppliers, ikeePay eliminates the complexity of traditional cross-border transfers.",
+    "host_name": "ikeepay.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.finpay.id/en/produk-payment-gateway-en",
+    "name": "Produk - Payment Gateway (EN) - Finpay",
+    "snippet": "Create payment links that can be shared via WhatsApp, email, or social media. Manage transactions, reports,",
+    "host_name": "www.finpay.id",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.adyen.com/unified-commerce/pay-by-link/create-payment-links/api",
+    "name": "Pay by Link through the API - Adyen Docs",
+    "snippet": "Creating payment links through the API allows you to accept most payment methods, including buy now, pay later payment methods such as Klarna and Afterpay.",
+    "host_name": "docs.adyen.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.paysafe.com/en/payments-api",
+    "name": "Payments API - Paysafe Developer",
+    "snippet": "The Paysafe Payments API helps you to process payments of your customers using a variety of payment methods and a single API Endpoint.",
+    "host_name": "developer.paysafe.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

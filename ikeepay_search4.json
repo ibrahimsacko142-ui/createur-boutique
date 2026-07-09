@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developers.openai.com/api/reference/overview",
+    "name": "API Overview | OpenAI API Reference",
+    "snippet": "Use this reference to look up OpenAI API endpoints, request and response schemas, streaming events, client library methods, and shared behavior such as ...",
+    "host_name": "developers.openai.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.android.com/reference",
+    "name": "API reference - Android Developers",
+    "snippet": "Provides APIs to help you request, monitor, and manage on demand downloads for Play Feature Delivery, Play Asset Delivery, and offers additional APIs such as in ...",
+    "host_name": "developer.android.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://api.akeneo.com/api-reference-index.html",
+    "name": "REST API reference - Akeneo API documentation",
+    "snippet": "This API provides two endpoints for interacting with products. Get list of products get /api/rest/v1/products-uuid",
+    "host_name": "api.akeneo.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/learnprogramming/comments/1fqhf34/what_does_api_reference_mean_in_documentation",
+    "name": "What does 'API Reference' mean in documentation - Reddit",
+    "snippet": "The API reference is the middle link on the express website: https://expressjs.com/en/4x/api.html - that is the reference document that describes the API. What's the meaning of API on documentations. - Reddit What really is an API reference? I think the webdev community has it ... More results from www.reddit.com",
+    "host_name": "www.reddit.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://docs.readme.com/main/docs/api-reference",
+    "name": "API Reference - ReadMe Docs",
+    "snippet": "An API reference is the definitive technical guide to your API, documenting every endpoint, parameter, and response code in detail.",
+    "host_name": "docs.readme.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developers.ringcentral.com/api-reference",
+    "name": "API Reference - RingCentral Developers",
+    "snippet": "This reference serves as your comprehensive guide to RingCentral's RingEX APIs. It not only provides detailed API documentation but also allows you to interact ...",
+    "host_name": "developers.ringcentral.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://dev.appsflyer.com/hc/reference/api-reference-overview",
+    "name": "API Reference Overview - AppsFlyer developer hub",
+    "snippet": "OneLink · Raw data report · Measurements · SKAN · ROI · Mobile · Analytics · Marketplace. Partner integration settings. Audiences.",
+    "host_name": "dev.appsflyer.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.gov.uk/guidance/writing-api-reference-documentation",
+    "name": "Writing API reference documentation - GOV.UK",
+    "snippet": "This guidance covers the tools and processes you need to help you write your API reference documentation.",
+    "host_name": "www.gov.uk",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://scalar.com",
+    "name": "Scalar",
+    "snippet": "API interfaces built for developers and agents. Create beautiful docs, SDKs and secure MCP servers from your API. Scalar keeps every interface in ...",
+    "host_name": "scalar.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://ikeepay.com",
+    "name": "Online payment solutions, Virtual Cards, International sales",
+    "snippet": "The most complete payment infrastructure for digital Africa. Connect your site, app or service to over 98% of African Mobile Money solutions and international payment methods — through a single unified API.",
+    "host_name": "ikeepay.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]
