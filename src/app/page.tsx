@@ -70,7 +70,7 @@ import { Label } from '@/components/ui/label'
 import { useToast } from '@/hooks/use-toast'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import PaystackModal from '@/components/PaystackModal'
+import PaymentModal from '@/components/PaymentModal'
 
 
 /* ─── Typing Text Hook ─── */
@@ -581,13 +581,13 @@ export default function Home() {
   // Coach detail modal
   const [selectedCoach, setSelectedCoach] = useState<typeof coaches[0] | null>(null)
 
-  // Paystack payment modal
-  const [paystackOpen, setPaystackOpen] = useState(false)
-  const [paystackService, setPaystackService] = useState({ name: '', amount: 0, description: '' })
+  // iKeePay payment modal
+  const [paymentOpen, setPaymentOpen] = useState(false)
+  const [paymentService, setPaymentService] = useState({ name: '', amount: 0, description: '' })
 
-  const openPaystack = useCallback((name: string, amount: number, description?: string) => {
-    setPaystackService({ name, amount, description: description || '' })
-    setPaystackOpen(true)
+  const openPayment = useCallback((name: string, amount: number, description?: string) => {
+    setPaymentService({ name, amount, description: description || '' })
+    setPaymentOpen(true)
   }, [])
 
   // Promo countdown: end of current month
@@ -1345,7 +1345,7 @@ export default function Home() {
               </p>
               <div className="flex items-center justify-center gap-6 mt-5 text-xs">
                 <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-emerald-500" /> Découverte = Gratuit</span>
-                <span className="flex items-center gap-1.5"><ShieldCheck className="h-3.5 w-3.5 text-amber-500" /> Premium = Paiement sécurisé Paystack</span>
+                <span className="flex items-center gap-1.5"><ShieldCheck className="h-3.5 w-3.5 text-amber-500" /> Premium = Paiement sécurisé iKeePay</span>
               </div>
             </div>
 
@@ -1428,7 +1428,7 @@ export default function Home() {
                         </Button>
                       </a>
                       <Button
-                        onClick={() => openPaystack(`Offre Premium : ${section.cat}`, 15000, 'Service premium sur devis')}
+                        onClick={() => openPayment(`Offre Premium : ${section.cat}`, 15000, 'Service premium sur devis')}
                         className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-10 shadow-md shadow-amber-500/20"
                       >
                         <ShieldCheck className="h-3.5 w-3.5 mr-1.5" /> Payer
@@ -1509,7 +1509,7 @@ export default function Home() {
                       </a>
                       <Button
                         size="sm"
-                        onClick={() => openPaystack(`${s.name} (${s.sub})`, parseInt(s.price.replace(/\s/g, '')), s.hook)}
+                        onClick={() => openPayment(`${s.name} (${s.sub})`, parseInt(s.price.replace(/\s/g, '')), s.hook)}
                         className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-9"
                       >
                         <ShieldCheck className="h-3.5 w-3.5 mr-1.5" /> Payer {s.price} F
@@ -1549,7 +1549,7 @@ export default function Home() {
                       </a>
                       <Button
                         size="lg"
-                        onClick={() => openPaystack('Pack Lancement Carrière (CV + Lettre + LinkedIn + Guide)', 3500, 'Pack complet : CV Premium + Lettre de motivation + Profil LinkedIn + Guide entretien')}
+                        onClick={() => openPayment('Pack Lancement Carrière (CV + Lettre + LinkedIn + Guide)', 3500, 'Pack complet : CV Premium + Lettre de motivation + Profil LinkedIn + Guide entretien')}
                         className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-xl shadow-amber-500/25 px-6 whitespace-nowrap"
                       >
                         <ShieldCheck className="h-5 w-5 mr-2" /> Payer 3 500 F
@@ -1789,7 +1789,7 @@ export default function Home() {
                         </Button>
                       </a>
                       <Button
-                        onClick={() => openPaystack(`Formation Premium : ${form.title}`, form.premium.priceNum, `${form.subtitle} — ${form.duration}, ${form.lessons}`)}
+                        onClick={() => openPayment(`Formation Premium : ${form.title}`, form.premium.priceNum, `${form.subtitle} — ${form.duration}, ${form.lessons}`)}
                         className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-10 shadow-lg shadow-amber-500/20"
                       >
                         <ShieldCheck className="h-3.5 w-3.5 mr-1.5" /> Payer {form.premium.price} F
@@ -2151,7 +2151,7 @@ export default function Home() {
                           </Button>
                         </a>
                         <Button
-                          onClick={() => { openPaystack(`Livre : ${selectedBook.title} (${selectedBook.author})`, 1000, 'Livre PDF — livraison instantanée via WhatsApp'); setSelectedBook(null) }}
+                          onClick={() => { openPayment(`Livre : ${selectedBook.title} (${selectedBook.author})`, 1000, 'Livre PDF — livraison instantanée via WhatsApp'); setSelectedBook(null) }}
                           className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-lg shadow-amber-500/20 h-12"
                         >
                           <ShieldCheck className="h-4 w-4 mr-2" /> Payer 1 000 F
@@ -2228,7 +2228,7 @@ export default function Home() {
                       </Button>
                     </a>
                     <Button
-                      onClick={() => openPaystack('Pack Complet 12 livres (PDF)', 7000, '12 livres numériques en PDF — livraison instantanée via WhatsApp')}
+                      onClick={() => openPayment('Pack Complet 12 livres (PDF)', 7000, '12 livres numériques en PDF — livraison instantanée via WhatsApp')}
                       className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-lg shadow-amber-500/20 whitespace-nowrap"
                     >
                       <ShieldCheck className="h-4 w-4 mr-1.5" /> Payer 7 000 F
@@ -3566,7 +3566,7 @@ export default function Home() {
             <p className="text-sm font-semibold text-muted-foreground">Paiement sécurisé via</p>
             <div className="flex flex-wrap items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20 border border-emerald-200 dark:border-emerald-800 shadow-sm">
               <ShieldCheck className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-              <span className="text-sm font-bold text-emerald-700 dark:text-emerald-400">Paystack</span>
+              <span className="text-sm font-bold text-emerald-700 dark:text-emerald-400">iKeePay</span>
               <span className="text-[10px] text-muted-foreground">—</span>
               <span className="text-xs font-medium text-amber-600 dark:text-amber-400">Orange Money</span>
               <span className="text-[10px] text-muted-foreground">·</span>
@@ -3582,13 +3582,13 @@ export default function Home() {
       {/* ═══ 20. FOOTER ═══ */}
       <Footer />
 
-      {/* ═══ PAYSTACK PAYMENT MODAL ═══ */}
-      <PaystackModal
-        isOpen={paystackOpen}
-        onClose={() => setPaystackOpen(false)}
-        serviceName={paystackService.name}
-        amount={paystackService.amount}
-        description={paystackService.description}
+      {/* ═══ IKEEPAY PAYMENT MODAL ═══ */}
+      <PaymentModal
+        isOpen={paymentOpen}
+        onClose={() => setPaymentOpen(false)}
+        serviceName={paymentService.name}
+        amount={paymentService.amount}
+        description={paymentService.description}
       />
 
       {/* ═══ STICKY MOBILE CTA ═══ */}
@@ -3786,7 +3786,7 @@ export default function Home() {
                   </Button>
                 </a>
                 <Button
-                  onClick={() => { openPaystack(`${cart.length} livre(s) du panier`, Math.min(cart.length * 1000, 7000), cart.map(t => `- ${t}`).join('\n')); setShowCart(false) }}
+                  onClick={() => { openPayment(`${cart.length} livre(s) du panier`, Math.min(cart.length * 1000, 7000), cart.map(t => `- ${t}`).join('\n')); setShowCart(false) }}
                   className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-lg shadow-amber-500/20 h-11 text-sm"
                 >
                   <ShieldCheck className="h-4 w-4 mr-2" /> Payer {Math.min(cart.length * 1000, 7000).toLocaleString('fr-FR')} F
