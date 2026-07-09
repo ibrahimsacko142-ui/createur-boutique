@@ -70,6 +70,7 @@ import { Label } from '@/components/ui/label'
 import { useToast } from '@/hooks/use-toast'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import PaystackModal from '@/components/PaystackModal'
 
 
 /* ─── Typing Text Hook ─── */
@@ -579,6 +580,15 @@ export default function Home() {
 
   // Coach detail modal
   const [selectedCoach, setSelectedCoach] = useState<typeof coaches[0] | null>(null)
+
+  // Paystack payment modal
+  const [paystackOpen, setPaystackOpen] = useState(false)
+  const [paystackService, setPaystackService] = useState({ name: '', amount: 0, description: '' })
+
+  const openPaystack = useCallback((name: string, amount: number, description?: string) => {
+    setPaystackService({ name, amount, description: description || '' })
+    setPaystackOpen(true)
+  }, [])
 
   // Promo countdown: end of current month
   const [promoEnd] = useState(() => {
@@ -1335,7 +1345,7 @@ export default function Home() {
               </p>
               <div className="flex items-center justify-center gap-6 mt-5 text-xs">
                 <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-emerald-500" /> Découverte = Gratuit</span>
-                <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-amber-500" /> Premium = Sur devis via WhatsApp</span>
+                <span className="flex items-center gap-1.5"><ShieldCheck className="h-3.5 w-3.5 text-amber-500" /> Premium = Paiement sécurisé Paystack</span>
               </div>
             </div>
 
@@ -1417,15 +1427,12 @@ export default function Home() {
                           <MessageCircle className="h-3.5 w-3.5 mr-1.5" /> WhatsApp
                         </Button>
                       </a>
-                      <a
-                        href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je veux l'Offre Premium : ${section.cat} — 15 000 FCFA. Comment payer ?`)}`}
-                        target="_blank" rel="noopener noreferrer"
-                        className="flex-1"
+                      <Button
+                        onClick={() => openPaystack(`Offre Premium : ${section.cat}`, 15000, 'Service premium sur devis')}
+                        className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-10 shadow-md shadow-amber-500/20"
                       >
-                        <Button className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-10 shadow-md shadow-amber-500/20">
-                          <Lock className="h-3.5 w-3.5 mr-1.5" /> Payer
-                        </Button>
-                      </a>
+                        <ShieldCheck className="h-3.5 w-3.5 mr-1.5" /> Payer
+                      </Button>
                       </div>
                     </div>
                     </div>
@@ -1500,15 +1507,13 @@ export default function Home() {
                           <MessageCircle className="h-3.5 w-3.5 mr-1.5" /> WhatsApp
                         </Button>
                       </a>
-                      <a
-                        href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je veux commander : ${s.name} (${s.sub}) — ${s.price} FCFA.`)}`}
-                        target="_blank" rel="noopener noreferrer"
-                        className="flex-1"
+                      <Button
+                        size="sm"
+                        onClick={() => openPaystack(`${s.name} (${s.sub})`, parseInt(s.price.replace(/\s/g, '')), s.hook)}
+                        className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-9"
                       >
-                        <Button size="sm" className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-9">
-                          <Lock className="h-3.5 w-3.5 mr-1.5" /> Payer {s.price} F
-                        </Button>
-                      </a>
+                        <ShieldCheck className="h-3.5 w-3.5 mr-1.5" /> Payer {s.price} F
+                      </Button>
                       </div>
                     </div>
                   </CardContent>
@@ -1542,11 +1547,13 @@ export default function Home() {
                           <MessageCircle className="h-5 w-5 mr-2" /> WhatsApp
                         </Button>
                       </a>
-                      <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20veux%20le%20Pack%20Lancement%20Carri%C3%A8re%20%C3%A0%203%20500%20FCFA." target="_blank" rel="noopener noreferrer">
-                        <Button size="lg" className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-xl shadow-amber-500/25 px-6 whitespace-nowrap">
-                          <Lock className="h-5 w-5 mr-2" /> Payer 3 500 F
-                        </Button>
-                      </a>
+                      <Button
+                        size="lg"
+                        onClick={() => openPaystack('Pack Lancement Carrière (CV + Lettre + LinkedIn + Guide)', 3500, 'Pack complet : CV Premium + Lettre de motivation + Profil LinkedIn + Guide entretien')}
+                        className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-xl shadow-amber-500/25 px-6 whitespace-nowrap"
+                      >
+                        <ShieldCheck className="h-5 w-5 mr-2" /> Payer 3 500 F
+                      </Button>
                     </div>
                     <span className="text-[10px] text-slate-500">Économie de 1 300 FCFA</span>
                   </div>
@@ -1781,15 +1788,12 @@ export default function Home() {
                           <MessageCircle className="h-3.5 w-3.5 mr-1.5" /> WhatsApp
                         </Button>
                       </a>
-                      <a
-                        href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je veux la formation Premium ${form.title} (${form.premium.price} FCFA). Comment payer ?`)}`}
-                        target="_blank" rel="noopener noreferrer"
-                        className="flex-1"
+                      <Button
+                        onClick={() => openPaystack(`Formation Premium : ${form.title}`, form.premium.priceNum, `${form.subtitle} — ${form.duration}, ${form.lessons}`)}
+                        className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-10 shadow-lg shadow-amber-500/20"
                       >
-                        <Button className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-10 shadow-lg shadow-amber-500/20">
-                          <Lock className="h-3.5 w-3.5 mr-1.5" /> Payer {form.premium.price} F
-                        </Button>
-                      </a>
+                        <ShieldCheck className="h-3.5 w-3.5 mr-1.5" /> Payer {form.premium.price} F
+                      </Button>
                       </div>
                     </div>
                   </div>
@@ -2135,16 +2139,24 @@ export default function Home() {
                           </div>
                         </div>
 
+                        <div className="flex gap-2 mt-4">
                         <a
                           href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je veux commander le livre : ${selectedBook.title} par ${selectedBook.author} (1 000 FCFA). Comment procéder ?`)}`}
                           target="_blank" rel="noopener noreferrer"
                           onClick={() => setSelectedBook(null)}
-                          className="block mt-4"
+                          className="flex-1"
                         >
-                          <Button className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-bold shadow-lg shadow-emerald-500/20 h-12">
-                            <MessageCircle className="h-4 w-4 mr-2" /> Commander via WhatsApp — 1 000 FCFA
+                          <Button variant="outline" className="w-full border-emerald-300 text-emerald-700 hover:bg-emerald-50 font-bold h-12">
+                            <MessageCircle className="h-4 w-4 mr-2" /> WhatsApp
                           </Button>
                         </a>
+                        <Button
+                          onClick={() => { openPaystack(`Livre : ${selectedBook.title} (${selectedBook.author})`, 1000, 'Livre PDF — livraison instantanée via WhatsApp'); setSelectedBook(null) }}
+                          className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-lg shadow-amber-500/20 h-12"
+                        >
+                          <ShieldCheck className="h-4 w-4 mr-2" /> Payer 1 000 F
+                        </Button>
+                        </div>
                       </div>
                     </div>
                   </motion.div>
@@ -2212,9 +2224,15 @@ export default function Home() {
                     <div className="flex gap-2">
                     <a href={`https://wa.me/22397787244?text=${encodeURIComponent('Bonjour Sacko ! Je veux commander le Pack Complet de 12 livres (7 000 FCFA au lieu de 12 000). Comment procéder ?')}`} target="_blank" rel="noopener noreferrer" className="block">
                       <Button className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-bold shadow-lg shadow-emerald-500/20 whitespace-nowrap">
-                        <MessageCircle className="h-4 w-4 mr-1.5" /> Commander le Pack — 7 000 F
+                        <MessageCircle className="h-4 w-4 mr-1.5" /> WhatsApp
                       </Button>
                     </a>
+                    <Button
+                      onClick={() => openPaystack('Pack Complet 12 livres (PDF)', 7000, '12 livres numériques en PDF — livraison instantanée via WhatsApp')}
+                      className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-lg shadow-amber-500/20 whitespace-nowrap"
+                    >
+                      <ShieldCheck className="h-4 w-4 mr-1.5" /> Payer 7 000 F
+                    </Button>
                   </div>
                   </div>
                 </div>
@@ -3545,19 +3563,33 @@ export default function Home() {
       <section className="py-8 border-t bg-muted/20">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center justify-center gap-3">
-            <p className="text-sm font-semibold text-muted-foreground">Commande & Paiement via</p>
-            <div className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20 border border-emerald-200 dark:border-emerald-800 shadow-sm">
-              <div className="h-3 w-3 rounded-full bg-emerald-500" />
-              <span className="text-sm font-bold text-emerald-700 dark:text-emerald-400">WhatsApp</span>
-              <span className="text-[10px] text-muted-foreground">— Orange Money, MTN MoMo</span>
+            <p className="text-sm font-semibold text-muted-foreground">Paiement sécurisé via</p>
+            <div className="flex flex-wrap items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20 border border-emerald-200 dark:border-emerald-800 shadow-sm">
+              <ShieldCheck className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+              <span className="text-sm font-bold text-emerald-700 dark:text-emerald-400">Paystack</span>
+              <span className="text-[10px] text-muted-foreground">—</span>
+              <span className="text-xs font-medium text-amber-600 dark:text-amber-400">Orange Money</span>
+              <span className="text-[10px] text-muted-foreground">·</span>
+              <span className="text-xs font-medium text-yellow-600 dark:text-yellow-400">Moov Money</span>
+              <span className="text-[10px] text-muted-foreground">·</span>
+              <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Carte bancaire</span>
             </div>
           </div>
-          <p className="text-center text-[11px] text-muted-foreground mt-3">Commande simple — Confirmation via WhatsApp — Paiement par Orange Money ou MTN MoMo</p>
+          <p className="text-center text-[11px] text-muted-foreground mt-3">Paiement vérifié automatiquement — Confirmation instantanée via WhatsApp</p>
         </div>
       </section>
 
       {/* ═══ 20. FOOTER ═══ */}
       <Footer />
+
+      {/* ═══ PAYSTACK PAYMENT MODAL ═══ */}
+      <PaystackModal
+        isOpen={paystackOpen}
+        onClose={() => setPaystackOpen(false)}
+        serviceName={paystackService.name}
+        amount={paystackService.amount}
+        description={paystackService.description}
+      />
 
       {/* ═══ STICKY MOBILE CTA ═══ */}
       <AnimatePresence>
@@ -3749,10 +3781,16 @@ export default function Home() {
                   onClick={() => setShowCart(false)}
                   className="flex-1"
                 >
-                  <Button className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-bold shadow-lg shadow-emerald-500/20 h-11 text-sm">
-                    <MessageCircle className="h-4 w-4 mr-2" /> Commander via WhatsApp
+                  <Button variant="outline" className="w-full border-emerald-300 text-emerald-700 hover:bg-emerald-50 font-bold h-11 text-sm">
+                    <MessageCircle className="h-4 w-4 mr-2" /> WhatsApp
                   </Button>
                 </a>
+                <Button
+                  onClick={() => { openPaystack(`${cart.length} livre(s) du panier`, Math.min(cart.length * 1000, 7000), cart.map(t => `- ${t}`).join('\n')); setShowCart(false) }}
+                  className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-lg shadow-amber-500/20 h-11 text-sm"
+                >
+                  <ShieldCheck className="h-4 w-4 mr-2" /> Payer {Math.min(cart.length * 1000, 7000).toLocaleString('fr-FR')} F
+                </Button>
               </div>
             </div>
           </motion.div>

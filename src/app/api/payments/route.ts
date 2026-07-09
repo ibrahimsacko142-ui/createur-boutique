@@ -41,6 +41,10 @@ export function updatePaymentStatus(cartId: string, status: string) {
   }
 }
 
+export function getPayment(cartId: string): StoredPayment | undefined {
+  return paymentsStore.get(cartId)
+}
+
 export function getPayments(): StoredPayment[] {
   return Array.from(paymentsStore.values()).sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()

@@ -1,30 +1,38 @@
-# Work Log — Studio Créatif
-
 ---
 Task ID: 1
-Agent: main
-Task: Intégration Taliopay comme passerelle de paiement (remplacement de CinetPay/Maketou)
+Agent: Main Agent
+Task: Intégration complète Paystack avec vérification stricte + suppression fichiers personnels
 
 Work Log:
-- Recherché et analysé Taliopay : plateforme de vente digitale pour l'Afrique francophone
-- Confirmé que le Mali est supporté avec Orange Money et Moov Money
-- Lu et analysé tout le code existant (page.tsx 4355 lignes, API routes, Footer)
-- Supprimé toute référence CinetPay (badges, textes, logique API)
-- Supprimé la logique de vérification CinetPay dans /api/payments/route.ts
-- Ajouté NEXT_PUBLIC_TALIOPAY_STORE_URL dans .env.local
-- Modifié processPayment() : ebooks/formations/packs → Taliopay, services → WhatsApp (fallback)
-- Mis à jour le badge boutique : "Taliopay" (bleu) au lieu de "CinetPay" (vert)
-- Mis à jour le bouton panier : "Payer sur Taliopay" avec icône ExternalLink
-- Mis à jour le bouton checkout : "Payer X F sur Taliopay" (gradient bleu)
-- Mis à jour l'étape de processing : "Redirection vers Taliopay..."
-- Mis à jour le message de succès : "Redirigé vers Taliopay !" avec lien de fallback
-- Mis à jour le Footer : Taliopay + Orange Money + Moov Money + Carte Visa/MC
-- Build réussi, déployé sur Vercel via git push
-- Vérifié sur le site live : ✅ Taliopay affiché, ✅ CinetPay supprimé, ✅ Maketou supprimé
+- Analysé l'intégralité du site (3 849 lignes page.tsx, 21 sections)
+- Confirmé que le lien WhatsApp groupe était déjà intégré à 3 endroits
+- Confirmé que demo-photo.png et demo-video.mp4 n'étaient PAS affichés sur le site (fichiers orphelins)
+- Créé .env.local avec clés Paystack live (pk_live + sk_live)
+- Créé src/lib/paystack.ts : initializeTransaction, verifyTransaction, verifyWebhookSignature (HMAC-SHA512 + timing-safe)
+- Créé /api/paystack/initialize : validation stricte, référence unique SC-timestamp-random, enregistrement commande
+- Créé /api/paystack/verify : vérification côté serveur Paystack API, ne marque completed QUE si status=success
+- Créé /api/paystack/webhook : signature HMAC-SHA512, DOUBLE vérification (signature + API call), idempotence
+- Ajouté export getPayment() dans /api/payments/route.ts
+- Créé src/components/PaystackModal.tsx : modal 5 étapes (form → loading → verifying → success → error), PaystackPop inline SDK, retry 3x vérification, fallback WhatsApp
+- Modifié page.tsx : import PaystackModal, état paystackOpen + openPaystack callback
+- Remplacé TOUS les boutons "Payer" premium par des boutons onClick→Paystack :
+  - Services (5 catégories) → 15 000 FCFA
+  - Carrière Pro (5 services individuels) → prix exacts (800, 700, 2000, 500, 1500)
+  - Pack Lancement Carrière → 3 500 FCFA
+  - Formations Premium (4 formations) → prix exacts (15000, 20000, 25000, 20000)
+  - Livre individuel (modal détail) → 1 000 FCFA
+  - Pack 12 livres → 7 000 FCFA
+  - Panier livres → calcul dynamique avec plafond 7 000
+- Mis à jour la section "Moyens de paiement" : Paystack + Orange Money + Moov Money + Carte
+- Mis à jour le label "Premium = Sur devis via WhatsApp" → "Premium = Paiement sécurisé Paystack"
+- Supprimé demo-photo.png et demo-video.mp4 du public/
+- Build Next.js réussi sans erreur
 
 Stage Summary:
-- Site déployé : https://createur-boutique.vercel.app/
-- Taliopay est maintenant la passerelle de paiement affichée
-- Le flux : ebooks/formations → redirection Taliopay | services → WhatsApp
-- ⚠️ ACTION REQUISE : L'utilisateur doit créer sa boutique Taliopay et mettre à jour NEXT_PUBLIC_TALIOPAY_STORE_URL dans Vercel avec son URL réelle (actuellement placeholder)
-- ⚠️ Tant que l'URL n'est pas configurée, le checkout tombera sur WhatsApp (fallback)
+- Paystack intégré sur 100% des boutons payants du site
+- Vérification stricte : webhook signature HMAC + double vérification API + timing-safe comparison
+- Chaque bouton "Payer" ouvre un modal Paystack (nom, email, tél) → popup Paystack → vérification auto → confirmation WhatsApp
+- WhatsApp reste disponible comme alternative sur chaque bouton
+- Dashboard /dashboard affiche déjà les paiements Paystack (via le store partagé existant)
+- IMPORTANT : User doit configurer le webhook Paystack dashboard → https://createur-boutique.vercel.app/api/paystack/webhook
+- IMPORTANT : User doit ajouter NEXT_PUBLIC_PAYSTACK_KEY et PAYSTACK_SECRET_KEY dans Vercel Environment Variables
