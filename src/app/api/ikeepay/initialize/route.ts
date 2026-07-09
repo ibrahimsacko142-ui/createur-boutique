@@ -78,9 +78,10 @@ export async function POST(req: NextRequest) {
       access_code: result.data.access_code,
     })
   } catch (error) {
-    console.error('[iKeePay Initialize API Error]', error)
+    const errMsg = error instanceof Error ? error.message : "Erreur serveur lors de l'initialisation"
+    console.error('[iKeePay Initialize API Error]', errMsg)
     return NextResponse.json(
-      { error: "Erreur serveur lors de l'initialisation" },
+      { error: errMsg },
       { status: 500 }
     )
   }
