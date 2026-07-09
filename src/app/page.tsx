@@ -70,7 +70,7 @@ import { Label } from '@/components/ui/label'
 import { useToast } from '@/hooks/use-toast'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import PaymentModal from '@/components/PaymentModal'
+
 
 
 /* ─── Typing Text Hook ─── */
@@ -581,13 +581,13 @@ export default function Home() {
   // Coach detail modal
   const [selectedCoach, setSelectedCoach] = useState<typeof coaches[0] | null>(null)
 
-  // iKeePay payment modal
-  const [paymentOpen, setPaymentOpen] = useState(false)
-  const [paymentService, setPaymentService] = useState({ name: '', amount: 0, description: '' })
-
-  const openPayment = useCallback((name: string, amount: number, description?: string) => {
-    setPaymentService({ name, amount, description: description || '' })
-    setPaymentOpen(true)
+  // WhatsApp direct payment
+  const openWhatsApp = useCallback((name: string, amount: number, description?: string) => {
+    const price = amount.toLocaleString('fr-FR')
+    const msg = encodeURIComponent(
+      `Bonjour Sacko ! Je veux commander :\n\n• ${name}\n• Prix : ${price} FCFA${description ? `\n• Détails : ${description}` : ''}\n\nComment puis-je payer ?`
+    )
+    window.open(`https://wa.me/22397787244?text=${msg}`, '_blank')
   }, [])
 
   // Promo countdown: end of current month
@@ -1428,7 +1428,7 @@ export default function Home() {
                         </Button>
                       </a>
                       <Button
-                        onClick={() => openPayment(`Offre Premium : ${section.cat}`, 15000, 'Service premium sur devis')}
+                        onClick={() => openWhatsApp(`Offre Premium : ${section.cat}`, 15000, 'Service premium sur devis')}
                         className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-10 shadow-md shadow-amber-500/20"
                       >
                         <ShieldCheck className="h-3.5 w-3.5 mr-1.5" /> Payer
@@ -1509,7 +1509,7 @@ export default function Home() {
                       </a>
                       <Button
                         size="sm"
-                        onClick={() => openPayment(`${s.name} (${s.sub})`, parseInt(s.price.replace(/\s/g, '')), s.hook)}
+                        onClick={() => openWhatsApp(`${s.name} (${s.sub})`, parseInt(s.price.replace(/\s/g, '')), s.hook)}
                         className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-9"
                       >
                         <ShieldCheck className="h-3.5 w-3.5 mr-1.5" /> Payer {s.price} F
@@ -1549,7 +1549,7 @@ export default function Home() {
                       </a>
                       <Button
                         size="lg"
-                        onClick={() => openPayment('Pack Lancement Carrière (CV + Lettre + LinkedIn + Guide)', 3500, 'Pack complet : CV Premium + Lettre de motivation + Profil LinkedIn + Guide entretien')}
+                        onClick={() => openWhatsApp('Pack Lancement Carrière (CV + Lettre + LinkedIn + Guide)', 3500, 'Pack complet : CV Premium + Lettre de motivation + Profil LinkedIn + Guide entretien')}
                         className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-xl shadow-amber-500/25 px-6 whitespace-nowrap"
                       >
                         <ShieldCheck className="h-5 w-5 mr-2" /> Payer 3 500 F
@@ -1789,7 +1789,7 @@ export default function Home() {
                         </Button>
                       </a>
                       <Button
-                        onClick={() => openPayment(`Formation Premium : ${form.title}`, form.premium.priceNum, `${form.subtitle} — ${form.duration}, ${form.lessons}`)}
+                        onClick={() => openWhatsApp(`Formation Premium : ${form.title}`, form.premium.priceNum, `${form.subtitle} — ${form.duration}, ${form.lessons}`)}
                         className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-10 shadow-lg shadow-amber-500/20"
                       >
                         <ShieldCheck className="h-3.5 w-3.5 mr-1.5" /> Payer {form.premium.price} F
@@ -2151,7 +2151,7 @@ export default function Home() {
                           </Button>
                         </a>
                         <Button
-                          onClick={() => { openPayment(`Livre : ${selectedBook.title} (${selectedBook.author})`, 1000, 'Livre PDF — livraison instantanée via WhatsApp'); setSelectedBook(null) }}
+                          onClick={() => { openWhatsApp(`Livre : ${selectedBook.title} (${selectedBook.author})`, 1000, 'Livre PDF — livraison instantanée via WhatsApp'); setSelectedBook(null) }}
                           className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-lg shadow-amber-500/20 h-12"
                         >
                           <ShieldCheck className="h-4 w-4 mr-2" /> Payer 1 000 F
@@ -2228,7 +2228,7 @@ export default function Home() {
                       </Button>
                     </a>
                     <Button
-                      onClick={() => openPayment('Pack Complet 12 livres (PDF)', 7000, '12 livres numériques en PDF — livraison instantanée via WhatsApp')}
+                      onClick={() => openWhatsApp('Pack Complet 12 livres (PDF)', 7000, '12 livres numériques en PDF — livraison instantanée via WhatsApp')}
                       className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-lg shadow-amber-500/20 whitespace-nowrap"
                     >
                       <ShieldCheck className="h-4 w-4 mr-1.5" /> Payer 7 000 F
@@ -3582,15 +3582,6 @@ export default function Home() {
       {/* ═══ 20. FOOTER ═══ */}
       <Footer />
 
-      {/* ═══ IKEEPAY PAYMENT MODAL ═══ */}
-      <PaymentModal
-        isOpen={paymentOpen}
-        onClose={() => setPaymentOpen(false)}
-        serviceName={paymentService.name}
-        amount={paymentService.amount}
-        description={paymentService.description}
-      />
-
       {/* ═══ STICKY MOBILE CTA ═══ */}
       <AnimatePresence>
         {showStickyCta && (
@@ -3786,7 +3777,7 @@ export default function Home() {
                   </Button>
                 </a>
                 <Button
-                  onClick={() => { openPayment(`${cart.length} livre(s) du panier`, Math.min(cart.length * 1000, 7000), cart.map(t => `- ${t}`).join('\n')); setShowCart(false) }}
+                  onClick={() => { openWhatsApp(`${cart.length} livre(s) du panier`, Math.min(cart.length * 1000, 7000), cart.map(t => `- ${t}`).join('\n')); setShowCart(false) }}
                   className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-lg shadow-amber-500/20 h-11 text-sm"
                 >
                   <ShieldCheck className="h-4 w-4 mr-2" /> Payer {Math.min(cart.length * 1000, 7000).toLocaleString('fr-FR')} F
