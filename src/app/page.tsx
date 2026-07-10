@@ -1679,6 +1679,99 @@ export default function Home() {
               </a>
             </div>
 
+            {/* ═══ PACK FORMATION COMPLÈTE — Mis en avant ═══ */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.6 }}
+              className="relative mt-10 rounded-3xl overflow-hidden"
+            >
+              {/* Animated border glow */}
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 p-[2px]">
+                <div className="absolute inset-0 rounded-3xl bg-slate-900" />
+              </div>
+              {/* Glow behind card */}
+              <div className="absolute -inset-1 bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-red-500/20 rounded-3xl blur-xl -z-10" />
+
+              <div className="relative p-6 sm:p-8 lg:p-10">
+                {/* Top banner */}
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 text-white shadow-lg shadow-amber-500/30">
+                      <GraduationCap className="h-7 w-7" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h3 className="text-xl sm:text-2xl font-extrabold text-white">Pack Formation Complète</h3>
+                        <span className="inline-flex items-center gap-1 bg-gradient-to-r from-red-500 to-pink-500 text-white text-[9px] font-bold px-2.5 py-1 rounded-full shadow animate-pulse">
+                          <Flame className="h-2.5 w-2.5" /> OFFRE LIMITÉE
+                        </span>
+                      </div>
+                      <p className="text-sm text-slate-400 mt-0.5">Toutes les 4 formations Premium en un seul pack</p>
+                    </div>
+                  </div>
+                  <div className="text-right flex-shrink-0">
+                    <p className="text-sm text-slate-500 line-through">80 000 FCFA</p>
+                    <div className="flex items-baseline gap-1 justify-end">
+                      <span className="text-3xl sm:text-4xl font-black bg-gradient-to-r from-amber-400 via-orange-400 to-amber-400 bg-clip-text text-transparent">30 000</span>
+                      <span className="text-sm text-slate-400 font-semibold">FCFA</span>
+                    </div>
+                    <p className="text-[10px] text-emerald-400 font-bold mt-0.5">Économisez 50 000 FCFA</p>
+                  </div>
+                </div>
+
+                {/* 4 formations included */}
+                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+                  {[
+                    { title: 'Design Graphique', desc: 'Photoshop, Illustrator, branding', icon: Palette, color: 'from-pink-500 to-rose-500' },
+                    { title: 'Montage Vidéo', desc: 'Premiere, DaVinci, motion design', icon: MonitorPlay, color: 'from-purple-500 to-violet-500' },
+                    { title: 'Création Web', desc: 'JavaScript, sites multi-pages, SEO', icon: Code, color: 'from-blue-500 to-cyan-500' },
+                    { title: 'Marketing Digital', desc: 'Facebook/TikTok Ads, calendrier éditorial', icon: Megaphone, color: 'from-emerald-500 to-teal-500' },
+                  ].map((f, i) => (
+                    <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors">
+                      <div className={`flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br ${f.color} text-white flex-shrink-0`}>
+                        <f.icon className="h-4 w-4" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-xs font-bold text-white truncate">{f.title}</p>
+                        <p className="text-[10px] text-slate-500 truncate">{f.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* All bonuses + features */}
+                <div className="grid sm:grid-cols-2 gap-x-8 gap-y-2 mb-6">
+                  {[
+                    'Canva Pro offert pendant 30 jours',
+                    'CapCut Pro offert pendant 30 jours',
+                    'Hébergement web offert 1 an',
+                    'Pack 50 templates exclusifs',
+                    'Certificat de participation pour chaque formation',
+                    'Suivi individuel post-formation',
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-center gap-2 text-xs text-slate-300">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 flex-shrink-0" />
+                      {item}
+                    </div>
+                  ))}
+                </div>
+
+                {/* CTA */}
+                <a
+                  href={`https://wa.me/22397787244?text=${encodeURIComponent('Bonjour Sacko ! Je suis intéressé(e) par le Pack Formation Complète à 30 000 FCFA (au lieu de 80 000). Les 4 formations Premium + tous les bonus. Comment procéder ?')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 hover:from-amber-600 hover:via-orange-600 hover:to-red-600 text-white font-bold text-sm shadow-xl shadow-amber-500/25 hover:shadow-amber-500/40 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                >
+                  <Zap className="h-4 w-4" /> Obtenir le Pack Complet — 30 000 FCFA
+                  <ArrowRight className="h-4 w-4" />
+                </a>
+                <p className="text-center text-[10px] text-slate-500 mt-2.5">Paiement Orange Money / Moov Money — Accès immédiat après confirmation</p>
+              </div>
+            </motion.div>
+
             {/* 4 Featured formation cards */}
             <div className="space-y-6">
               {featuredFormations.map((form, idx) => (
