@@ -85,13 +85,28 @@ export default function Footer() {
           <div>
             <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">Mes Services</h3>
             <ul className="space-y-2.5">
-              {['Design Graphique', 'Création de Logo', 'Site Web', 'Montage Vidéo', 'Marketing Digital', 'Formation Design', 'CapCut Pro', 'PicsArt Pro'].map((item) => (
+              {['Design Graphique', 'Création de Logo', 'Site Web', 'Montage Vidéo', 'Marketing Digital', 'Formation Design'].map((item) => (
                 <li key={item}>
                   <a href="#services" className="text-sm text-muted-foreground hover:text-amber-600 transition-colors">
                     {item}
                   </a>
                 </li>
               ))}
+              <li key="canva-pro">
+                <a href="https://www.canva.com/brand/join?token=nbyqrtelBOlUiCNiK170Ew&referrer=team-invite" target="_blank" rel="noopener noreferrer" className="text-sm text-cyan-600 dark:text-cyan-400 font-medium hover:text-cyan-500 transition-colors">
+                  Canva Pro (gratuit)
+                </a>
+              </li>
+              <li key="capcut-pro">
+                <a href="#services" className="text-sm text-muted-foreground hover:text-amber-600 transition-colors">
+                  CapCut Pro
+                </a>
+              </li>
+              <li key="picsart-pro">
+                <a href="#services" className="text-sm text-muted-foreground hover:text-amber-600 transition-colors">
+                  PicsArt Pro
+                </a>
+              </li>
               <li key="groupe-wa">
                 <a href="https://chat.whatsapp.com/Khpz5MVeokK9X9X5i3INX2" target="_blank" rel="noopener noreferrer" className="text-sm text-emerald-600 font-medium hover:text-emerald-500 transition-colors">
                   Groupe Formation WhatsApp

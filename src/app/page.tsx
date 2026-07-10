@@ -934,15 +934,15 @@ export default function Home() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
               {[
-                { label: 'Logo', icon: Palette },
-                { label: 'Site Web', icon: Globe },
-                { label: 'Vidéo', icon: MonitorPlay },
-                { label: 'Affiche', icon: PenTool },
-                { label: 'Formation', icon: GraduationCap },
-                { label: 'Canva Pro', icon: Layers },
-                { label: 'CapCut Pro', icon: Scissors },
+                { label: 'Logo', icon: Palette, href: '#services' },
+                { label: 'Site Web', icon: Globe, href: '#services' },
+                { label: 'Vidéo', icon: MonitorPlay, href: '#services' },
+                { label: 'Affiche', icon: PenTool, href: '#services' },
+                { label: 'Formation', icon: GraduationCap, href: '#formations' },
+                { label: 'Canva Pro', icon: Layers, href: 'https://www.canva.com/brand/join?token=nbyqrtelBOlUiCNiK170Ew&referrer=team-invite', external: true },
+                { label: 'CapCut Pro', icon: Scissors, href: '#services' },
               ].map((s) => (
-                <a key={s.label} href="#services" className="flex-shrink-0 flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl bg-muted/50 hover:bg-gradient-to-br hover:from-amber-50 hover:to-orange-50 dark:hover:from-amber-950/20 dark:hover:to-orange-950/20 hover:-translate-y-0.5 hover:shadow-md hover:shadow-amber-500/10 hover:border-amber-200 dark:hover:border-amber-800 border border-transparent transition-all duration-300 group">
+                <a key={s.label} href={s.href} {...(s.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})} className="flex-shrink-0 flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl bg-muted/50 hover:bg-gradient-to-br hover:from-amber-50 hover:to-orange-50 dark:hover:from-amber-950/20 dark:hover:to-orange-950/20 hover:-translate-y-0.5 hover:shadow-md hover:shadow-amber-500/10 hover:border-amber-200 dark:hover:border-amber-800 border border-transparent transition-all duration-300 group">
                   <s.icon className="h-5 w-5 text-amber-500 group-hover:scale-110 transition-transform" />
                   <span className="text-xs font-medium">{s.label}</span>
                 </a>
@@ -1462,7 +1462,7 @@ export default function Home() {
                         <h3 className="font-bold text-base">Bonus : Accès Premium Offert</h3>
                         <Badge className="bg-white/20 text-white border-0 text-[10px]">NOUVEAU</Badge>
                       </div>
-                      <p className="text-sm text-white/90 leading-relaxed">Chaque formation inclut un <strong>accès gratuit</strong> à Canva Pro, CapCut Pro ou PicsArt Pro. C&apos;est mon cadeau pour vous accompagner dans la pratique.</p>
+                      <p className="text-sm text-white/90 leading-relaxed">Chaque formation inclut un <strong>accès gratuit</strong> à <a href="https://www.canva.com/brand/join?token=nbyqrtelBOlUiCNiK170Ew&referrer=team-invite" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-amber-300 transition-colors">Canva Pro</a>, CapCut Pro ou PicsArt Pro. C&apos;est mon cadeau pour vous accompagner dans la pratique.</p>
                     </div>
                   </div>
                 </div>
