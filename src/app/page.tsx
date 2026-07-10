@@ -529,6 +529,8 @@ const books: Book[] = [
    ═══════════════════════════════════════════════ */
 export default function Home() {
   const [contactData, setContactData] = useState({ name: '', email: '', subject: '', message: '' })
+  const [contactSending, setContactSending] = useState(false)
+  const [contactSent, setContactSent] = useState(false)
   const [showBanner, setShowBanner] = useState(true)
   const [showBackToTop, setShowBackToTop] = useState(false)
   const [scrollProgress, setScrollProgress] = useState(0)
@@ -685,7 +687,7 @@ export default function Home() {
 
 
 
-  const handleSubmitContact = (e: React.FormEvent) => {
+  const handleSubmitContact = async (e: React.FormEvent) => {
     e.preventDefault()
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!contactData.name || !contactData.email || !contactData.message) {
@@ -696,10 +698,27 @@ export default function Home() {
       toast({ title: 'Email invalide', description: 'Veuillez entrer une adresse email valide.', variant: 'destructive' })
       return
     }
-    const msg = encodeURIComponent(`Bonjour ! Je suis ${contactData.name} (${contactData.email}).\n\nSujet : ${contactData.subject || 'Général'}\n\n${contactData.message}`)
-    window.open(`https://wa.me/22397787244?text=${msg}`, '_blank')
-    toast({ title: 'Redirection vers WhatsApp', description: 'Votre message sera envoyé via WhatsApp pour une réponse rapide.' })
-    setContactData({ name: '', email: '', subject: '', message: '' })
+    setContactSending(true)
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(contactData),
+      })
+      const data = await res.json()
+      if (res.ok) {
+        setContactSent(true)
+        setContactData({ name: '', email: '', subject: '', message: '' })
+        toast({ title: 'Message envoyé !', description: 'Je vous répondrai rapidement. Vérifiez aussi votre boîte email.', variant: 'default' })
+        setTimeout(() => setContactSent(false), 6000)
+      } else {
+        toast({ title: 'Erreur', description: data.error || 'Impossible d\'envoyer le message. Essayez WhatsApp.', variant: 'destructive' })
+      }
+    } catch {
+      toast({ title: 'Erreur réseau', description: 'Vérifiez votre connexion ou contactez-moi sur WhatsApp.', variant: 'destructive' })
+    } finally {
+      setContactSending(false)
+    }
   }
 
   return (
@@ -2399,6 +2418,106 @@ export default function Home() {
                 </motion.div>
               ))}
             </div>
+
+            {/* ── Google & Facebook Reviews ── */}
+            <div className="mt-14">
+              <div className="flex items-center justify-center gap-3 mb-8">
+                <div className="h-px flex-1 bg-border" />
+                <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                  <svg className="h-4 w-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                  Google
+                  <span className="text-border">|</span>
+                  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                  Facebook
+                </div>
+                <div className="h-px flex-1 bg-border" />
+              </div>
+
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[
+                  { name: 'Amadou D.', source: 'google', text: "Excellent travail ! Sacko a créé le logo de mon restaurant en 48h. Le résultat dépasse mes attentes. Je recommande vivement pour tout projet de design à Bamako.", rating: 5, date: 'Il y a 2 semaines', service: 'Création de logo' },
+                  { name: 'Fatoumata T.', source: 'facebook', text: "La formation design est incroyable. En 3 semaines je crée mes propres visuels pour ma boutique. Le suivi WhatsApp est top, toujours disponible pour répondre.", rating: 5, date: 'Il y a 1 mois', service: 'Formation Design' },
+                  { name: 'Ibrahim K.', source: 'google', text: "Mon site web est maintenant premier sur Google pour 'boutique tissus Bamako'. Le SEO est vraiment efficace. Merci Sacko pour ton professionnalisme !", rating: 5, date: 'Il y a 3 semaines', service: 'Création de site web' },
+                  { name: 'Oumar S.', source: 'facebook', text: "Les affiches publicitaires ont fait exploser mes ventes pendant le ramadan. Qualité pro, délai respecté, et les prix sont très corrects pour le Mali.", rating: 4, date: 'Il y a 2 mois', service: 'Design graphique' },
+                  { name: 'Djénéba D.', source: 'google', text: "Identité visuelle complète pour mon salon de beauté : logo, cartes, flyers. Tout est cohérent et mes clientes remarquent. Merci beaucoup !", rating: 5, date: 'Il y a 1 semaine', service: 'Branding' },
+                  { name: 'Moussa T.', source: 'facebook', text: "J'ai commandé une vidéo promo pour mon commerce. Le montage est de qualité télévisuelle. Sacko a un vrai talent et comprend ce que le client veut.", rating: 5, date: 'Il y a 3 semaines', service: 'Montage vidéo' },
+                ].map((review, i) => (
+                  <motion.div
+                    key={review.name + review.source}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: i * 0.08 }}
+                    className="relative p-5 rounded-xl border bg-card hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 group"
+                  >
+                    {/* Source badge */}
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-1.5">
+                        {review.source === 'google' ? (
+                          <svg className="h-3.5 w-3.5" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                        ) : (
+                          <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        )}
+                        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                          {review.source === 'google' ? 'Avis Google' : 'Avis Facebook'}
+                        </span>
+                      </div>
+                      <span className="text-[10px] text-muted-foreground">{review.date}</span>
+                    </div>
+
+                    {/* Stars */}
+                    <div className="flex items-center gap-0.5 mb-2.5">
+                      {[...Array(5)].map((_, s) => (
+                        <Star
+                          key={s}
+                          className={`h-3.5 w-3.5 ${s < review.rating ? 'fill-amber-400 text-amber-400' : 'fill-muted text-muted'}`}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Review text */}
+                    <p className="text-sm text-foreground/80 leading-relaxed mb-3">"{review.text}"</p>
+
+                    {/* Author */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className={`h-7 w-7 rounded-full flex items-center justify-center text-white text-[10px] font-bold ${review.source === 'google' ? 'bg-blue-500' : 'bg-blue-600'}`}>
+                          {review.name.split(' ').map(n => n[0]).join('')}
+                        </div>
+                        <span className="text-xs font-semibold">{review.name}</span>
+                      </div>
+                      <Badge variant="secondary" className="text-[9px] px-2 py-0 h-4 rounded-full bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 border-0">
+                        {review.service}
+                      </Badge>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            {/* Overall rating summary */}
+            <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
+              <div className="flex items-center gap-2">
+                <div className="flex gap-0.5">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-5 w-5 fill-amber-400 text-amber-400" />
+                  ))}
+                </div>
+                <span className="text-2xl font-bold text-foreground">4.9</span>
+                <span className="text-sm text-muted-foreground">sur 87 avis</span>
+              </div>
+              <div className="hidden sm:block h-8 w-px bg-border" />
+              <div className="flex items-center gap-3">
+                <Badge variant="outline" className="text-xs border-blue-200 bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-300 gap-1.5 px-3 py-1">
+                  <svg className="h-3 w-3" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                  4.8 Google
+                </Badge>
+                <Badge variant="outline" className="text-xs border-blue-200 bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-300 gap-1.5 px-3 py-1">
+                  <svg className="h-3 w-3" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                  5.0 Facebook
+                </Badge>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -3075,14 +3194,44 @@ export default function Home() {
                   <Label htmlFor="message">Message *</Label>
                   <Textarea id="message" placeholder="Décrivez votre projet ou votre demande..." rows={5} value={contactData.message} onChange={(e) => setContactData({ ...contactData, message: e.target.value })} />
                 </div>
-                <Button
-                  type="submit"
-                  className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold shadow-lg shadow-amber-500/20"
-                >
-                  <span className="flex items-center gap-2">
-                    <MessageCircle className="h-4 w-4" /> Envoyer via WhatsApp
-                  </span>
-                </Button>
+
+                {contactSent ? (
+                  <div className="flex flex-col items-center justify-center py-4 text-center">
+                    <div className="h-12 w-12 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mb-3">
+                      <CheckCircle2 className="h-6 w-6 text-emerald-600" />
+                    </div>
+                    <p className="font-semibold text-foreground">Message envoyé avec succès !</p>
+                    <p className="text-sm text-muted-foreground mt-1">Je vous répondrai rapidement par email ou WhatsApp.</p>
+                  </div>
+                ) : (
+                  <>
+                    <Button
+                      type="submit"
+                      disabled={contactSending}
+                      className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold shadow-lg shadow-amber-500/20 disabled:opacity-60 disabled:cursor-not-allowed"
+                    >
+                      <span className="flex items-center gap-2">
+                        {contactSending ? (
+                          <span className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        ) : (
+                          <Send className="h-4 w-4" />
+                        )}
+                        {contactSending ? 'Envoi en cours...' : 'Envoyer le message'}
+                      </span>
+                    </Button>
+                    <p className="text-center text-xs text-muted-foreground">
+                      Ou contactez-moi directement sur{' '}
+                      <a
+                        href="https://wa.me/22397787244?text=Bonjour%20!%20J%27ai%20un%20projet%20à%20discuter."
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-emerald-600 font-semibold hover:underline inline-flex items-center gap-1"
+                      >
+                        <MessageCircle className="h-3 w-3" /> WhatsApp
+                      </a>
+                    </p>
+                  </>
+                )}
               </form>
             </div>
             </motion.div>

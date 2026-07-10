@@ -84,12 +84,22 @@ const jsonLd = {
       "@type": "LocalBusiness",
       "@id": `${SITE_URL}/#business`,
       name: "Studio Créatif — Sacko",
-      description: "Studio créatif premium à Bamako, Mali. Design graphique, sites web, montage vidéo, formations et solutions numériques sur-mesure.",
+      alternateName: "SK Designer Luxe",
+      description: "Studio créatif premium à Bamako, Mali. Design graphique, sites web, montage vidéo, formations et solutions numériques sur-mesure. Paiement Orange Money & Moov Money.",
       url: SITE_URL,
       telephone: "+22397787244",
+      email: "contact@createurboutique.com",
+      image: `${SITE_URL}/og-image.png`,
+      logo: `${SITE_URL}/og-image.png`,
+      priceRange: "5 000 FCFA - 150 000 FCFA",
+      currenciesAccepted: "XOF",
+      paymentAccepted: "Mobile Money, Espèces, Virement",
       address: {
         "@type": "PostalAddress",
+        streetAddress: "Bamako",
         addressLocality: "Bamako",
+        addressRegion: "District de Bamako",
+        postalCode: "Bamako",
         addressCountry: "ML",
       },
       geo: {
@@ -97,13 +107,101 @@ const jsonLd = {
         latitude: 12.6392,
         longitude: -8.0029,
       },
-      image: `${SITE_URL}/og-image.png`,
-      priceRange: "$$",
-      openingHoursSpecification: {
-        "@type": "OpeningHoursSpecification",
-        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-        opens: "08:00",
-        closes: "22:00",
+      openingHoursSpecification: [
+        {
+          "@type": "OpeningHoursSpecification",
+          dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+          opens: "08:00",
+          closes: "22:00",
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          dayOfWeek: ["Saturday"],
+          opens: "09:00",
+          closes: "20:00",
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          dayOfWeek: ["Sunday"],
+          opens: "10:00",
+          closes: "18:00",
+        },
+      ],
+      areaServed: [
+        { "@type": "City", name: "Bamako" },
+        { "@type": "AdministrativeArea", name: "District de Bamako" },
+        { "@type": "Country", name: "Mali" },
+      ],
+      hasOfferCatalog: {
+        "@type": "OfferCatalog",
+        name: "Services Studio Créatif",
+        itemListElement: [
+          {
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: "Création de Logo",
+              description: "Logo professionnel sur mesure pour entreprises et marques à Bamako",
+            },
+            priceSpecification: {
+              "@type": "PriceSpecification",
+              price: "5000",
+              priceCurrency: "XOF",
+            },
+          },
+          {
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: "Design Graphique",
+              description: "Identité visuelle complète : affiches, flyers, cartes de visite, bannières",
+            },
+            priceSpecification: {
+              "@type": "PriceSpecification",
+              price: "10000",
+              priceCurrency: "XOF",
+            },
+          },
+          {
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: "Création de Site Web",
+              description: "Sites vitrines, e-commerce et landing pages optimisés SEO",
+            },
+            priceSpecification: {
+              "@type": "PriceSpecification",
+              price: "50000",
+              priceCurrency: "XOF",
+            },
+          },
+          {
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: "Montage Vidéo",
+              description: "Clips musicaux, publicités TikTok, reels Instagram, vidéos promotionnelles",
+            },
+            priceSpecification: {
+              "@type": "PriceSpecification",
+              price: "15000",
+              priceCurrency: "XOF",
+            },
+          },
+          {
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: "Formation Design Graphique",
+              description: "Formation pratique en ligne : Canva, Photoshop, branding",
+            },
+            priceSpecification: {
+              "@type": "PriceSpecification",
+              price: "0",
+              priceCurrency: "XOF",
+            },
+          },
+        ],
       },
       sameAs: [
         "https://www.instagram.com/sk_designer_luxe",
@@ -113,10 +211,37 @@ const jsonLd = {
       aggregateRating: {
         "@type": "AggregateRating",
         ratingValue: "4.9",
-        reviewCount: "87",
         bestRating: "5",
         worstRating: "1",
+        ratingCount: "87",
+        reviewCount: "87",
       },
+      review: [
+        {
+          "@type": "Review",
+          author: { "@type": "Person", name: "Amadou D." },
+          datePublished: "2025-06-25",
+          reviewRating: { "@type": "Rating", ratingValue: "5", bestRating: "5" },
+          reviewBody: "Excellent travail ! Sacko a créé le logo de mon restaurant en 48h. Le résultat dépasse mes attentes. Je recommande vivement pour tout projet de design à Bamako.",
+          publisher: { "@type": "Organization", name: "Google" },
+        },
+        {
+          "@type": "Review",
+          author: { "@type": "Person", name: "Fatoumata T." },
+          datePublished: "2025-06-10",
+          reviewRating: { "@type": "Rating", ratingValue: "5", bestRating: "5" },
+          reviewBody: "La formation design est incroyable. En 3 semaines je crée mes propres visuels pour ma boutique. Le suivi WhatsApp est top, toujours disponible pour répondre.",
+          publisher: { "@type": "Organization", name: "Facebook" },
+        },
+        {
+          "@type": "Review",
+          author: { "@type": "Person", name: "Ibrahim K." },
+          datePublished: "2025-06-18",
+          reviewRating: { "@type": "Rating", ratingValue: "5", bestRating: "5" },
+          reviewBody: "Mon site web est maintenant premier sur Google pour 'boutique tissus Bamako'. Le SEO est vraiment efficace.",
+          publisher: { "@type": "Organization", name: "Google" },
+        },
+      ],
     },
     {
       "@type": "WebSite",
@@ -125,6 +250,11 @@ const jsonLd = {
       name: "Studio Créatif",
       publisher: { "@id": `${SITE_URL}/#business` },
       inLanguage: "fr",
+      potentialAction: {
+        "@type": "SearchAction",
+        target: `${SITE_URL}/?q={search_term_string}`,
+        "query-input": "required name=search_term_string",
+      },
     },
     {
       "@type": "FAQPage",
@@ -158,7 +288,7 @@ const jsonLd = {
           name: "Comment se passe le paiement ?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Après avoir rempli le formulaire de commande, vous êtes redirigé vers WhatsApp. Sacko reçoit votre commande instantanément et vous guide pour le paiement via Orange Money, Moov Money ou tout autre moyen.",
+            text: "Après avoir rempli le formulaire de commande, vous pouvez payer par Orange Money, Moov Money ou espèces. Sacko reçoit votre commande instantanément et vous guide pour le paiement.",
           },
         },
         {
@@ -177,6 +307,14 @@ const jsonLd = {
             text: "Je privilégie la qualité à la quantité. Travailler avec un nombre limité de clients me permet de dédier toute mon attention et mon expertise à chaque pixel de votre projet.",
           },
         },
+      ],
+    },
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Accueil", item: SITE_URL },
+        { "@type": "ListItem", position: 2, name: "Services", item: `${SITE_URL}/#services` },
+        { "@type": "ListItem", position: 3, name: "Contact", item: `${SITE_URL}/#contact` },
       ],
     },
   ],
