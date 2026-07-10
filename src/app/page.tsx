@@ -74,6 +74,7 @@ import Preloader from '@/components/Preloader'
 import ClientLogos from '@/components/ClientLogos'
 import VideoShowcase from '@/components/VideoShowcase'
 import BlogPreview from '@/components/BlogPreview'
+import PhotoAIStudio from '@/components/PhotoAIStudio'
 
 
 
@@ -3745,6 +3746,9 @@ export default function Home() {
 
         {/* ═══ BLOG & ACTUALITÉS ═══ */}
         <BlogPreview />
+
+        {/* ═══ PHOTO AI STUDIO ═══ */}
+        <PhotoAIStudio />
 
         {/* ═══ NOS CRÉATIONS VIDÉO ═══ */}
         <VideoShowcase />
