@@ -13,7 +13,6 @@ const navLinks = [
   { label: 'Boutique', href: '#boutique' },
   { label: 'Coachs', href: '#coachs' },
   { label: 'Portfolio', href: '#portfolio' },
-  { label: 'Photo AI', href: '#photo-ai' },
   { label: 'Blog', href: '#blog' },
   { label: 'Contact', href: '#contact' },
 ]
