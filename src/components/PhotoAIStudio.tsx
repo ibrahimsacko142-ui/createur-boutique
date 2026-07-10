@@ -95,6 +95,10 @@ export default function PhotoAIStudio() {
       toast({ title: 'Fichier invalide', description: 'Veuillez sélectionner une image.', variant: 'destructive' })
       return
     }
+    if (file.size > 10 * 1024 * 1024) {
+      toast({ title: 'Fichier trop gros', description: 'Maximum 10 Mo autorisé.', variant: 'destructive' })
+      return
+    }
     setUploadedFile(file)
     setUploadedPreview(URL.createObjectURL(file))
     setImageUrl('')
@@ -106,13 +110,28 @@ export default function PhotoAIStudio() {
     setError(null)
     setResultUrl(null)
 
-    if (mode === 'edit' && !imageUrl && !uploadedFile) {
-      setError('Veuillez fournir une image (URL ou upload).')
+    if (mode === 'edit' && !imageUrl.trim()) {
+      setError('Veuillez coller l\'URL publique de votre photo ci-dessus.')
       return
     }
     if (mode === 'create' && !prompt.trim()) {
       setError('Veuillez décrire l\'image souhaitée.')
       return
+    }
+
+    // In edit mode with uploaded file: warn that public URL is preferred
+    if (mode === 'edit' && uploadedFile && !imageUrl.trim()) {
+      setError('L\'upload de fichier local n\'est pas supporté en mode édition. Veuillez coller une URL d\'image publique ci-dessous (lien d\'une image hébergée sur Imgur, Google Drive public, etc.).')
+      return
+    }
+
+    // Validate URL format in edit mode
+    if (mode === 'edit' && imageUrl.trim()) {
+      const urlStr = imageUrl.trim()
+      if (!urlStr.startsWith('http://') && !urlStr.startsWith('https://')) {
+        setError('L\'URL doit commencer par http:// ou https://')
+        return
+      }
     }
 
     setLoading(true)
@@ -127,40 +146,35 @@ export default function PhotoAIStudio() {
         } else if (styleObj) {
           finalPrompt = `${styleObj.desc} photo, ${gender === 'male' ? 'male' : 'female'} subject, professional studio quality`
         }
+      } else if (mode === 'create' && !finalPrompt && style) {
+        // Auto-build prompt from style for create mode
+        const styleObj = STYLES.find(s => s.id === style)
+        if (styleObj) {
+          finalPrompt = `${styleObj.desc}, ${gender === 'male' ? 'male' : 'female'} subject, professional studio quality`
+        }
       }
 
       const formData = new FormData()
-      formData.append('text', finalPrompt)
+      formData.append('text', finalPrompt || 'professional photo')
       formData.append('ratio', ratio)
       formData.append('res', resolution)
 
-      if (mode === 'edit') {
-        let imgLink = imageUrl.trim()
-        if (uploadedFile && !imgLink) {
-          // Convert uploaded file to base64 data URL for the API
-          imgLink = await new Promise<string>((resolve) => {
-            const reader = new FileReader()
-            reader.onload = (e) => resolve(e.target?.result as string)
-            reader.readAsDataURL(uploadedFile)
-          })
-        }
-        if (imgLink) {
-          formData.append('links', imgLink)
-        }
+      if (mode === 'edit' && imageUrl.trim()) {
+        formData.append('links', imageUrl.trim())
       }
 
-      const res = await fetch('/api/photo-ai', {
+      const apiRes = await fetch('/api/photo-ai', {
         method: 'POST',
         body: formData,
       })
 
-      const data = await res.json()
+      const data = await apiRes.json()
 
       if (data.success && data.url) {
         setResultUrl(data.url)
         toast({ title: 'Image générée !', description: 'Votre photo AI est prête.' })
       } else {
-        setError(data.error || 'Erreur lors de la génération. Vérifiez vos accès API.')
+        setError(data.error || 'Erreur lors de la génération. Réessayez.')
       }
     } catch (err) {
       setError('Erreur de connexion au serveur. Réessayez.')
@@ -276,7 +290,7 @@ export default function PhotoAIStudio() {
               />
             </div>
 
-            {/* Image Upload (edit mode) */}
+            {/* Image URL (edit mode) */}
             <AnimatePresence>
               {mode === 'edit' && (
                 <motion.div
@@ -288,46 +302,83 @@ export default function PhotoAIStudio() {
                 >
                   <div className="space-y-3">
                     <Label className="text-sm font-semibold flex items-center gap-1.5">
-                      <Upload className="h-3.5 w-3.5 text-amber-500" /> Votre photo
+                      <Upload className="h-3.5 w-3.5 text-amber-500" /> URL de votre photo
                     </Label>
 
-                    {/* Upload area */}
-                    <div
-                      onClick={() => fileInputRef.current?.click()}
-                      className="relative flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border hover:border-purple-300 dark:hover:border-purple-700 bg-muted/30 p-6 cursor-pointer transition-colors group"
-                    >
-                      {uploadedPreview ? (
-                        <div className="relative">
-                          <img src={uploadedPreview} alt="Aperçu" className="max-h-32 rounded-lg object-contain" />
-                          <button
-                            onClick={(e) => { e.stopPropagation(); setUploadedFile(null); setUploadedPreview(null) }}
-                            className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-red-500 text-white flex items-center justify-center hover:bg-red-600 transition-colors"
-                          >
-                            <X className="h-3 w-3" />
-                          </button>
-                        </div>
-                      ) : (
-                        <>
-                          <div className="h-10 w-10 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center group-hover:bg-purple-200 dark:group-hover:bg-purple-900/50 transition-colors">
-                            <ImageIcon className="h-5 w-5 text-purple-500" />
-                          </div>
-                          <p className="text-xs text-muted-foreground text-center">
-                            <span className="font-semibold text-purple-600">Cliquez pour uploader</span> ou collez une URL ci-dessous
-                          </p>
-                        </>
-                      )}
-                      <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
-                    </div>
-
-                    {/* URL input */}
+                    {/* URL input — primary method */}
                     <div className="relative">
                       <Input
-                        placeholder="Ou collez l'URL de votre image ici..."
+                        placeholder="https://example.com/votre-photo.jpg"
                         value={imageUrl}
-                        onChange={(e) => { setImageUrl(e.target.value); setUploadedFile(null); setUploadedPreview(null) }}
-                        className="pr-10 text-xs"
+                        onChange={(e) => { setImageUrl(e.target.value); if (e.target.value.trim()) { setUploadedFile(null); setUploadedPreview(null) } }}
+                        className="pr-10 text-sm"
                       />
                       <ImageIcon className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    </div>
+
+                    {/* Aperçu de l'URL */}
+                    <AnimatePresence>
+                      {imageUrl.trim() && !uploadedPreview && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                          className="overflow-hidden"
+                        >
+                          <div className="relative rounded-xl border bg-muted/30 p-2">
+                            <img
+                              src={imageUrl.trim()}
+                              alt="Aperçu URL"
+                              className="max-h-40 mx-auto rounded-lg object-contain"
+                              onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+                              onLoad={(e) => { (e.target as HTMLImageElement).style.display = 'block' }}
+                            />
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
+                    {/* Help text */}
+                    <div className="flex items-start gap-2 p-3 rounded-xl bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800/30">
+                      <AlertCircle className="h-4 w-4 text-amber-500 mt-0.5 flex-shrink-0" />
+                      <p className="text-[11px] text-amber-700 dark:text-amber-400 leading-relaxed">
+                        Collez le <strong>lien public</strong> de votre photo (hébergée sur Imgur, Google Photos, Dropbox, etc.). 
+                        L&apos;URL doit commencer par <code className="bg-amber-100 dark:bg-amber-900/30 px-1 rounded">https://</code> et pointer directement vers une image (.jpg, .png, .webp).
+                      </p>
+                    </div>
+
+                    {/* Upload area — for local preview only */}
+                    <div className="relative">
+                      <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-dashed border-border hover:border-purple-300 dark:hover:border-purple-700 bg-muted/20 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        {uploadedPreview ? (
+                          <>
+                            <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                            <span>Image sélectionnée (aperçu uniquement — utilisez l&apos;URL ci-dessus pour la transformation)</span>
+                            <button
+                              type="button"
+                              onClick={(e) => { e.stopPropagation(); setUploadedFile(null); setUploadedPreview(null) }}
+                              className="ml-1 text-red-400 hover:text-red-600"
+                            >
+                              <X className="h-3 w-3" />
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <ImageIcon className="h-4 w-4" />
+                            <span>Sélectionner un fichier local (aperçu visuel uniquement)</span>
+                          </>
+                        )}
+                      </button>
+                      {uploadedPreview && (
+                        <div className="mt-2 rounded-lg overflow-hidden border">
+                          <img src={uploadedPreview} alt="Aperçu local" className="max-h-32 mx-auto object-contain" />
+                        </div>
+                      )}
+                      <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
                     </div>
                   </div>
                 </motion.div>
@@ -497,12 +548,26 @@ export default function PhotoAIStudio() {
                         alt="Résultat AI"
                         className="w-full h-full object-contain"
                       />
-                    ) : uploadedPreview && mode === 'edit' ? (
+                    ) : (imageUrl.trim() && mode === 'edit') ? (
                       <div className="relative w-full h-full">
-                        <img src={uploadedPreview} alt="Photo uploadée" className="w-full h-full object-contain" />
+                        <img
+                          src={imageUrl.trim()}
+                          alt="Photo source"
+                          className="w-full h-full object-contain"
+                          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+                        />
                         <div className="absolute bottom-2 left-2">
                           <Badge variant="secondary" className="text-[9px] bg-black/60 text-white border-0 backdrop-blur-sm">
                             Photo originale
+                          </Badge>
+                        </div>
+                      </div>
+                    ) : uploadedPreview && mode === 'edit' ? (
+                      <div className="relative w-full h-full">
+                        <img src={uploadedPreview} alt="Aperçu local" className="w-full h-full object-contain" />
+                        <div className="absolute bottom-2 left-2 flex gap-1">
+                          <Badge variant="secondary" className="text-[9px] bg-amber-500/90 text-white border-0 backdrop-blur-sm">
+                            Aperçu local
                           </Badge>
                         </div>
                       </div>
@@ -516,7 +581,7 @@ export default function PhotoAIStudio() {
                           <p className="text-[11px] text-muted-foreground/40 mt-0.5">
                             {mode === 'create'
                               ? 'Votre image apparaîtra ici'
-                              : 'Uploadez une photo pour voir l\'aperçu'}
+                              : 'Collez une URL pour voir l\'aperçu'}
                           </p>
                         </div>
                       </div>

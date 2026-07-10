@@ -1,0 +1,489 @@
+   100→   100→   100→    setImageUrl('')
+   101→   101→   101→    setError(null)
+   102→   102→   102→    setResultUrl(null)
+   103→   103→   103→  }
+   104→   104→   104→
+   105→   105→   105→  const handleGenerate = async () => {
+   106→   106→   106→    setError(null)
+   107→   107→   107→    setResultUrl(null)
+   108→   108→   108→
+   109→   109→   109→    if (mode === 'edit' && !imageUrl && !uploadedFile) {
+   110→   110→   110→      setError('Veuillez fournir une image (URL ou upload).')
+   111→   111→   111→      return
+   112→   112→   112→    }
+   113→   113→   113→    if (mode === 'create' && !prompt.trim()) {
+   114→   114→   114→      setError('Veuillez décrire l\'image souhaitée.')
+   115→   115→   115→      return
+   116→   116→   116→    }
+   117→   117→   117→
+   118→   118→   118→    setLoading(true)
+   119→   119→   119→
+   120→   120→   120→    try {
+   121→   121→   121→      // Build the prompt: combine user text + style for edit mode
+   122→   122→   122→      let finalPrompt = prompt.trim()
+   123→   123→   123→      if (mode === 'edit' && style) {
+   124→   124→   124→        const styleObj = STYLES.find(s => s.id === style)
+   125→   125→   125→        if (styleObj && finalPrompt) {
+   126→   126→   126→          finalPrompt = `${finalPrompt}, ${styleObj.desc}, ${gender === 'male' ? 'male' : 'female'} subject`
+   127→   127→   127→        } else if (styleObj) {
+   128→   128→   128→          finalPrompt = `${styleObj.desc} photo, ${gender === 'male' ? 'male' : 'female'} subject, professional studio quality`
+   129→   129→   129→        }
+   130→   130→   130→      }
+   131→   131→   131→
+   132→   132→   132→      const formData = new FormData()
+   133→   133→   133→      formData.append('text', finalPrompt)
+   134→   134→   134→      formData.append('ratio', ratio)
+   135→   135→   135→      formData.append('res', resolution)
+   136→   136→   136→
+   137→   137→   137→      if (mode === 'edit') {
+   138→   138→   138→        let imgLink = imageUrl.trim()
+   139→   139→   139→        if (uploadedFile && !imgLink) {
+   140→   140→   140→          // Convert uploaded file to base64 data URL for the API
+   141→   141→   141→          imgLink = await new Promise<string>((resolve) => {
+   142→   142→   142→            const reader = new FileReader()
+   143→   143→   143→            reader.onload = (e) => resolve(e.target?.result as string)
+   144→   144→   144→            reader.readAsDataURL(uploadedFile)
+   145→   145→   145→          })
+   146→   146→   146→        }
+   147→   147→   147→        if (imgLink) {
+   148→   148→   148→          formData.append('links', imgLink)
+   149→   149→   149→        }
+   150→   150→   150→      }
+   151→   151→   151→
+   152→   152→   152→      const res = await fetch('/api/photo-ai', {
+   153→   153→   153→        method: 'POST',
+   154→   154→   154→        body: formData,
+   155→   155→   155→      })
+   156→   156→   156→
+   157→   157→   157→      const data = await res.json()
+   158→   158→   158→
+   159→   159→   159→      if (data.success && data.url) {
+   160→   160→   160→        setResultUrl(data.url)
+   161→   161→   161→        toast({ title: 'Image générée !', description: 'Votre photo AI est prête.' })
+   162→   162→   162→      } else {
+   163→   163→   163→        setError(data.error || 'Erreur lors de la génération. Vérifiez vos accès API.')
+   164→   164→   164→      }
+   165→   165→   165→    } catch (err) {
+   166→   166→   166→      setError('Erreur de connexion au serveur. Réessayez.')
+   167→   167→   167→    } finally {
+   168→   168→   168→      setLoading(false)
+   169→   169→   169→    }
+   170→   170→   170→  }
+   171→   171→   171→
+   172→   172→   172→  const handleReset = () => {
+   173→   173→   173→    setPrompt('')
+   174→   174→   174→    setImageUrl('')
+   175→   175→   175→    setUploadedFile(null)
+   176→   176→   176→    setUploadedPreview(null)
+   177→   177→   177→    setResultUrl(null)
+   178→   178→   178→    setError(null)
+   179→   179→   179→    setMode('create')
+   180→   180→   180→    setStyle('apple_executive')
+   181→   181→   181→    setGender('male')
+   182→   182→   182→    setRatio('1:1')
+   183→   183→   183→    setResolution('2K')
+   184→   184→   184→  }
+   185→   185→   185→
+   186→   186→   186→  const orderViaWhatsApp = () => {
+   187→   187→   187→    const styleLabel = STYLES.find(s => s.id === style)?.label || style
+   188→   188→   188→    const msg = mode === 'create'
+   189→   189→   189→      ? `Bonjour Sacko ! Je veux une image AI créée avec le style "${styleLabel}" (${ratio}, ${resolution}). Prompt : ${prompt}`
+   190→   190→   190→      : `Bonjour Sacko ! Je veux transformer ma photo en style "${styleLabel}" (${ratio}, ${resolution}). J'ai une image à envoyer.`
+   191→   191→   191→    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer')
+   192→   192→   192→  }
+   193→   193→   193→
+   194→   194→   194→  // Compute aspect ratio class for preview
+   195→   195→   195→  const ratioClass: Record<string, string> = {
+   196→   196→   196→    '1:1': 'aspect-square',
+   197→   197→   197→    '4:3': 'aspect-[4/3]',
+   198→   198→   198→    '3:4': 'aspect-[3/4]',
+   199→   199→   199→    '16:9': 'aspect-video',
+   200→   200→   200→    '9:16': 'aspect-[9/16]',
+   201→   201→   201→  }
+   202→   202→   202→
+   203→   203→   203→  return (
+   204→   204→   204→    <section id="photo-ai" className="py-16 sm:py-20 relative overflow-hidden">
+   205→   205→   205→      {/* Background */}
+   206→   206→   206→      <div className="absolute inset-0 -z-10">
+   207→   207→   207→        <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
+   208→   208→   208→        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl" />
+   209→   209→   209→      </div>
+   210→   210→   210→
+   211→   211→   211→      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+   212→   212→   212→        {/* Header */}
+   213→   213→   213→        <motion.div
+   214→   214→   214→          className="text-center mb-12"
+   215→   215→   215→          initial={{ opacity: 0, y: 30 }}
+   216→   216→   216→          whileInView={{ opacity: 1, y: 0 }}
+   217→   217→   217→          viewport={{ once: true }}
+   218→   218→   218→          transition={{ duration: 0.6 }}
+   219→   219→   219→        >
+   220→   220→   220→          <Badge variant="secondary" className="mb-4 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border-purple-200">
+   221→   221→   221→            <Camera className="h-3 w-3 mr-1.5" /> Nouveau
+   222→   222→   222→          </Badge>
+   223→   223→   223→          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
+   224→   224→   224→            Photo AI{' '}
+   225→   225→   225→            <span className="bg-gradient-to-r from-purple-500 via-pink-500 to-amber-500 bg-clip-text text-transparent">
+   226→   226→   226→              Studio
+   227→   227→   227→            </span>
+   228→   228→   228→          </h2>
+   229→   229→   229→          <p className="mt-4 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+   230→   230→   230→            Transformez n&apos;importe quelle photo en image professionnelle grâce à l&apos;IA.
+   231→   231→   231→            Photo de profil LinkedIn, style Apple, mode luxe — en un clic.
+   232→   232→   232→          </p>
+   233→   233→   233→        </motion.div>
+   234→   234→   234→
+   235→   235→   235→        <div className="grid lg:grid-cols-5 gap-8">
+   236→   236→   236→          {/* ── LEFT: Controls ── */}
+   237→   237→   237→          <div className="lg:col-span-3 space-y-5">
+   238→   238→   238→            {/* Mode Toggle */}
+   239→   239→   239→            <div className="flex rounded-xl bg-muted p-1">
+   240→   240→   240→              {([
+   241→   241→   241→                { id: 'create' as Mode, label: 'Créer une image', icon: Wand2, desc: 'Texte vers image' },
+   242→   242→   242→                { id: 'edit' as Mode, label: 'Transformer une photo', icon: ImageLucide, desc: 'Éditer une image' },
+   243→   243→   243→              ]).map((m) => (
+   244→   244→   244→                <button
+   245→   245→   245→                  key={m.id}
+   246→   246→   246→                  onClick={() => { setMode(m.id); setError(null); setResultUrl(null) }}
+   247→   247→   247→                  className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg text-sm font-semibold transition-all ${
+   248→   248→   248→                    mode === m.id
+   249→   249→   249→                      ? 'bg-background text-foreground shadow-sm'
+   250→   250→   250→                      : 'text-muted-foreground hover:text-foreground'
+   251→   251→   251→                  }`}
+   252→   252→   252→                >
+   253→   253→   253→                  <m.icon className="h-4 w-4" />
+   254→   254→   254→                  <span className="hidden sm:inline">{m.label}</span>
+   255→   255→   255→                  <span className="sm:hidden">{m.desc}</span>
+   256→   256→   256→                </button>
+   257→   257→   257→              ))}
+   258→   258→   258→            </div>
+   259→   259→   259→
+   260→   260→   260→            {/* Prompt */}
+   261→   261→   261→            <div className="space-y-2">
+   262→   262→   262→              <Label className="text-sm font-semibold flex items-center gap-1.5">
+   263→   263→   263→                {mode === 'create' ? <Sparkles className="h-3.5 w-3.5 text-purple-500" /> : <Palette className="h-3.5 w-3.5 text-pink-500" />}
+   264→   264→   264→                {mode === 'create' ? 'Décrivez votre image' : 'Instructions de transformation (optionnel)'}
+   265→   265→   265→              </Label>
+   266→   266→   266→              <textarea
+   267→   267→   267→                className="w-full rounded-xl border bg-background px-4 py-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-purple-500/40 focus:border-purple-500 transition-all placeholder:text-muted-foreground/60"
+   268→   268→   268→                rows={3}
+   269→   269→   269→                placeholder={
+   270→   270→   270→                  mode === 'create'
+   271→   271→   271→                    ? "Ex: Un homme d'affaires africain en costume bleu marine, fond blanc, éclairage studio professionnel..."
+   272→   272→   272→                    : "Ex: Rends le fond flou, ajoute un éclairage professionnel, style portrait corporate..."
+   273→   273→   273→                }
+   274→   274→   274→                value={prompt}
+   275→   275→   275→                onChange={(e) => setPrompt(e.target.value)}
+   276→   276→   276→              />
+   277→   277→   277→            </div>
+   278→   278→   278→
+   279→   279→   279→            {/* Image Upload (edit mode) */}
+   280→   280→   280→            <AnimatePresence>
+   281→   281→   281→              {mode === 'edit' && (
+   282→   282→   282→                <motion.div
+   283→   283→   283→                  initial={{ opacity: 0, height: 0 }}
+   284→   284→   284→                  animate={{ opacity: 1, height: 'auto' }}
+   285→   285→   285→                  exit={{ opacity: 0, height: 0 }}
+   286→   286→   286→                  transition={{ duration: 0.3 }}
+   287→   287→   287→                  className="overflow-hidden"
+   288→   288→   288→                >
+   289→   289→   289→                  <div className="space-y-3">
+   290→   290→   290→                    <Label className="text-sm font-semibold flex items-center gap-1.5">
+   291→   291→   291→                      <Upload className="h-3.5 w-3.5 text-amber-500" /> Votre photo
+   292→   292→   292→                    </Label>
+   293→   293→   293→
+   294→   294→   294→                    {/* Upload area */}
+   295→   295→   295→                    <div
+   296→   296→   296→                      onClick={() => fileInputRef.current?.click()}
+   297→   297→   297→                      className="relative flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border hover:border-purple-300 dark:hover:border-purple-700 bg-muted/30 p-6 cursor-pointer transition-colors group"
+   298→   298→   298→                    >
+   299→   299→   299→                      {uploadedPreview ? (
+   300→   300→   300→                        <div className="relative">
+   301→   301→   301→                          <img src={uploadedPreview} alt="Aperçu" className="max-h-32 rounded-lg object-contain" />
+   302→   302→   302→                          <button
+   303→   303→   303→                            onClick={(e) => { e.stopPropagation(); setUploadedFile(null); setUploadedPreview(null) }}
+   304→   304→   304→                            className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-red-500 text-white flex items-center justify-center hover:bg-red-600 transition-colors"
+   305→   305→   305→                          >
+   306→   306→   306→                            <X className="h-3 w-3" />
+   307→   307→   307→                          </button>
+   308→   308→   308→                        </div>
+   309→   309→   309→                      ) : (
+   310→   310→   310→                        <>
+   311→   311→   311→                          <div className="h-10 w-10 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center group-hover:bg-purple-200 dark:group-hover:bg-purple-900/50 transition-colors">
+   312→   312→   312→                            <ImageIcon className="h-5 w-5 text-purple-500" />
+   313→   313→   313→                          </div>
+   314→   314→   314→                          <p className="text-xs text-muted-foreground text-center">
+   315→   315→   315→                            <span className="font-semibold text-purple-600">Cliquez pour uploader</span> ou collez une URL ci-dessous
+   316→   316→   316→                          </p>
+   317→   317→   317→                        </>
+   318→   318→   318→                      )}
+   319→   319→   319→                      <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
+   320→   320→   320→                    </div>
+   321→   321→   321→
+   322→   322→   322→                    {/* URL input */}
+   323→   323→   323→                    <div className="relative">
+   324→   324→   324→                      <Input
+   325→   325→   325→                        placeholder="Ou collez l'URL de votre image ici..."
+   326→   326→   326→                        value={imageUrl}
+   327→   327→   327→                        onChange={(e) => { setImageUrl(e.target.value); setUploadedFile(null); setUploadedPreview(null) }}
+   328→   328→   328→                        className="pr-10 text-xs"
+   329→   329→   329→                      />
+   330→   330→   330→                      <ImageIcon className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+   331→   331→   331→                    </div>
+   332→   332→   332→                  </div>
+   333→   333→   333→                </motion.div>
+   334→   334→   334→              )}
+   335→   335→   335→            </AnimatePresence>
+   336→   336→   336→
+   337→   337→   337→            {/* Style Grid */}
+   338→   338→   338→            <div className="space-y-2">
+   339→   339→   339→              <Label className="text-sm font-semibold flex items-center gap-1.5">
+   340→   340→   340→                <Palette className="h-3.5 w-3.5 text-amber-500" /> Style
+   341→   341→   341→              </Label>
+   342→   342→   342→              <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 max-h-48 overflow-y-auto pr-1">
+   343→   343→   343→                {STYLES.map((s) => (
+   344→   344→   344→                  <button
+   345→   345→   345→                    key={s.id}
+   346→   346→   346→                    onClick={() => setStyle(s.id)}
+   347→   347→   347→                    className={`flex flex-col items-center gap-1 p-2.5 rounded-xl border text-center transition-all hover:shadow-md ${
+   348→   348→   348→                      style === s.id
+   349→   349→   349→                        ? 'border-purple-400 bg-purple-50 dark:bg-purple-900/20 shadow-sm'
+   350→   350→   350→                        : 'border-border hover:border-purple-200 dark:hover:border-purple-800'
+   351→   351→   351→                    }`}
+   352→   352→   352→                  >
+   353→   353→   353→                    <span className="text-lg">{s.icon}</span>
+   354→   354→   354→                    <span className="text-[10px] font-semibold leading-tight line-clamp-2">{s.label}</span>
+   355→   355→   355→                  </button>
+   356→   356→   356→                ))}
+   357→   357→   357→              </div>
+   358→   358→   358→            </div>
+   359→   359→   359→
+   360→   360→   360→            {/* Gender + Ratio + Resolution — inline row */}
+   361→   361→   361→            <div className="grid grid-cols-3 gap-4">
+   362→   362→   362→              {/* Gender */}
+   363→   363→   363→              <div className="space-y-2">
+   364→   364→   364→                <Label className="text-xs font-semibold flex items-center gap-1">
+   365→   365→   365→                  <User className="h-3 w-3" /> Genre
+   366→   366→   366→                </Label>
+   367→   367→   367→                <div className="flex rounded-lg border bg-muted/30 p-0.5">
+   368→   368→   368→                  {GENDERS.map((g) => (
+   369→   369→   369→                    <button
+   370→   370→   370→                      key={g.id}
+   371→   371→   371→                      onClick={() => setGender(g.id)}
+   372→   372→   372→                      className={`flex-1 flex items-center justify-center gap-1 py-2 rounded-md text-[11px] font-semibold transition-all ${
+   373→   373→   373→                        gender === g.id
+   374→   374→   374→                          ? 'bg-background text-foreground shadow-sm'
+   375→   375→   375→                          : 'text-muted-foreground'
+   376→   376→   376→                      }`}
+   377→   377→   377→                    >
+   378→   378→   378→                      {g.id === 'male' ? '♂' : '♀'} {g.label}
+   379→   379→   379→                    </button>
+   380→   380→   380→                  ))}
+   381→   381→   381→                </div>
+   382→   382→   382→              </div>
+   383→   383→   383→
+   384→   384→   384→              {/* Ratio */}
+   385→   385→   385→              <div className="space-y-2">
+   386→   386→   386→                <Label className="text-xs font-semibold flex items-center gap-1">
+   387→   387→   387→                  <Maximize className="h-3 w-3" /> Format
+   388→   388→   388→                </Label>
+   389→   389→   389→                <div className="flex flex-wrap gap-1">
+   390→   390→   390→                  {RATIOS.map((r) => (
+   391→   391→   391→                    <button
+   392→   392→   392→                      key={r.id}
+   393→   393→   393→                      onClick={() => setRatio(r.id)}
+   394→   394→   394→                      className={`px-2 py-1.5 rounded-md text-[10px] font-bold transition-all ${
+   395→   395→   395→                        ratio === r.id
+   396→   396→   396→                          ? 'bg-purple-500 text-white shadow-sm'
+   397→   397→   397→                          : 'bg-muted text-muted-foreground hover:bg-muted/80'
+   398→   398→   398→                      }`}
+   399→   399→   399→                    >
+   400→   400→   400→                      {r.label}
+   401→   401→   401→                    </button>
+   402→   402→   402→                  ))}
+   403→   403→   403→                </div>
+   404→   404→   404→              </div>
+   405→   405→   405→
+   406→   406→   406→              {/* Resolution */}
+   407→   407→   407→              <div className="space-y-2">
+   408→   408→   408→                <Label className="text-xs font-semibold flex items-center gap-1">
+   409→   409→   409→                  <Monitor className="h-3 w-3" /> Qualité
+   410→   410→   410→                </Label>
+   411→   411→   411→                <div className="flex gap-1">
+   412→   412→   412→                  {RESOLUTIONS.map((r) => (
+   413→   413→   413→                    <button
+   414→   414→   414→                      key={r.id}
+   415→   415→   415→                      onClick={() => setResolution(r.id)}
+   416→   416→   416→                      className={`flex-1 py-1.5 rounded-md text-[10px] font-bold transition-all ${
+   417→   417→   417→                        resolution === r.id
+   418→   418→   418→                          ? 'bg-amber-500 text-white shadow-sm'
+   419→   419→   419→                          : 'bg-muted text-muted-foreground hover:bg-muted/80'
+   420→   420→   420→                      }`}
+   421→   421→   421→                    >
+   422→   422→   422→                      {r.label}
+   423→   423→   423→                    </button>
+   424→   424→   424→                  ))}
+   425→   425→   425→                </div>
+   426→   426→   426→              </div>
+   427→   427→   427→            </div>
+   428→   428→   428→
+   429→   429→   429→            {/* Generate Button */}
+   430→   430→   430→            <Button
+   431→   431→   431→              onClick={handleGenerate}
+   432→   432→   432→              disabled={loading}
+   433→   433→   433→              className="w-full py-3.5 bg-gradient-to-r from-purple-500 via-pink-500 to-amber-500 hover:from-purple-600 hover:via-pink-600 hover:to-amber-600 text-white font-bold text-sm shadow-lg shadow-purple-500/20 disabled:opacity-60"
+   434→   434→   434→            >
+   435→   435→   435→              {loading ? (
+   436→   436→   436→                <span className="flex items-center gap-2">
+   437→   437→   437→                  <Loader2 className="h-4 w-4 animate-spin" /> Génération en cours...
+   438→   438→   438→                </span>
+   439→   439→   439→              ) : (
+   440→   440→   440→                <span className="flex items-center gap-2">
+   441→   441→   441→                  <Wand2 className="h-4 w-4" />
+   442→   442→   442→                  {mode === 'create' ? 'Générer l\'image' : 'Transformer la photo'}
+   443→   443→   443→                </span>
+   444→   444→   444→              )}
+   445→   445→   445→            </Button>
+   446→   446→   446→
+   447→   447→   447→            {/* Error */}
+   448→   448→   448→            <AnimatePresence>
+   449→   449→   449→              {error && (
+   450→   450→   450→                <motion.div
+   451→   451→   451→                  initial={{ opacity: 0, y: -10 }}
+   452→   452→   452→                  animate={{ opacity: 1, y: 0 }}
+   453→   453→   453→                  exit={{ opacity: 0 }}
+   454→   454→   454→                  className="flex items-start gap-2 p-3 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800"
+   455→   455→   455→                >
+   456→   456→   456→                  <AlertCircle className="h-4 w-4 text-red-500 mt-0.5 flex-shrink-0" />
+   457→   457→   457→                  <div className="flex-1">
+   458→   458→   458→                    <p className="text-xs font-semibold text-red-700 dark:text-red-400">{error}</p>
+   459→   459→   459→                    <p className="text-[10px] text-red-500 mt-1">
+   460→   460→   460→                      Besoin d&apos;aide ?{' '}
+   461→   461→   461→                      <a
+   462→   462→   462→                        href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Bonjour ! L\'outil Photo AI Studio affiche une erreur. Pouvez-vous m\'aider ?')}`}
+   463→   463→   463→                        target="_blank"
+   464→   464→   464→                        rel="noopener noreferrer"
+   465→   465→   465→                        className="font-semibold underline"
+   466→   466→   466→                      >
+   467→   467→   467→                        Contactez Sacko sur WhatsApp
+   468→   468→   468→                      </a>
+   469→   469→   469→                    </p>
+   470→   470→   470→                  </div>
+   471→   471→   471→                </motion.div>
+   472→   472→   472→              )}
+   473→   473→   473→            </AnimatePresence>
+   474→   474→   474→          </div>
+   475→   475→   475→
+   476→   476→   476→          {/* ── RIGHT: Preview ── */}
+   477→   477→   477→          <div className="lg:col-span-2">
+   478→   478→   478→            <div className="sticky top-24 space-y-4">
+   479→   479→   479→              {/* Result / Preview Card */}
+   480→   480→   480→              <Card className="overflow-hidden border-2 border-dashed border-border">
+   481→   481→   481→                <CardContent className="p-0">
+   482→   482→   482→                  <div className={`relative bg-muted/30 flex items-center justify-center ${ratioClass[ratio] || 'aspect-square'} min-h-[280px] max-h-[420px]`}>
+   483→   483→   483→                    {loading ? (
+   484→   484→   484→                      <div className="flex flex-col items-center gap-3">
+   485→   485→   485→                        <div className="relative">
+   486→   486→   486→                          <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 animate-pulse" />
+   487→   487→   487→                          <Sparkles className="absolute -top-2 -right-2 h-6 w-6 text-amber-500 animate-bounce" />
+   488→   488→   488→                        </div>
+   489→   489→   489→                        <p className="text-xs text-muted-foreground font-medium">Création magique en cours...</p>
+   490→   490→   490→                        <div className="w-32 h-1 rounded-full bg-muted overflow-hidden">
+   491→   491→   491→                          <div className="h-full w-1/2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full animate-[loading_1.5s_ease-in-out_infinite]" />
+   492→   492→   492→                        </div>
+   493→   493→   493→                      </div>
+   494→   494→   494→                    ) : resultUrl ? (
+   495→   495→   495→                      <img
+   496→   496→   496→                        src={resultUrl}
+   497→   497→   497→                        alt="Résultat AI"
+   498→   498→   498→                        className="w-full h-full object-contain"
+   499→   499→   499→                      />
+   500→   500→   500→                    ) : uploadedPreview && mode === 'edit' ? (
+   501→   501→   501→                      <div className="relative w-full h-full">
+   502→   502→   502→                        <img src={uploadedPreview} alt="Photo uploadée" className="w-full h-full object-contain" />
+   503→   503→   503→                        <div className="absolute bottom-2 left-2">
+   504→   504→   504→                          <Badge variant="secondary" className="text-[9px] bg-black/60 text-white border-0 backdrop-blur-sm">
+   505→   505→   505→                            Photo originale
+   506→   506→   506→                          </Badge>
+   507→   507→   507→                        </div>
+   508→   508→   508→                      </div>
+   509→   509→   509→                    ) : (
+   510→   510→   510→                      <div className="flex flex-col items-center gap-3 text-center p-6">
+   511→   511→   511→                        <div className="h-16 w-16 rounded-2xl bg-muted flex items-center justify-center">
+   512→   512→   512→                          <ImageLucide className="h-8 w-8 text-muted-foreground/40" />
+   513→   513→   513→                        </div>
+   514→   514→   514→                        <div>
+   515→   515→   515→                          <p className="text-sm font-semibold text-muted-foreground/60">Aperçu</p>
+   516→   516→   516→                          <p className="text-[11px] text-muted-foreground/40 mt-0.5">
+   517→   517→   517→                            {mode === 'create'
+   518→   518→   518→                              ? 'Votre image apparaîtra ici'
+   519→   519→   519→                              : 'Uploadez une photo pour voir l\'aperçu'}
+   520→   520→   520→                          </p>
+   521→   521→   521→                        </div>
+   522→   522→   522→                      </div>
+   523→   523→   523→                    )}
+   524→   524→   524→                  </div>
+   525→   525→   525→
+   526→   526→   526→                  {/* Result actions */}
+   527→   527→   527→                  {resultUrl && (
+   528→   528→   528→                    <div className="p-3 border-t bg-muted/20 flex items-center gap-2">
+   529→   529→   529→                      <a
+   530→   530→   530→                        href={resultUrl}
+   531→   531→   531→                        download
+   532→   532→   532→                        target="_blank"
+   533→   533→   533→                        rel="noopener noreferrer"
+   534→   534→   534→                        className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold transition-colors"
+   535→   535→   535→                      >
+   536→   536→   536→                        <Download className="h-3.5 w-3.5" /> Télécharger
+   537→   537→   537→                      </a>
+   538→   538→   538→                      <button
+   539→   539→   539→                        onClick={handleGenerate}
+   540→   540→   540→                        className="px-3 py-2 rounded-lg bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 text-xs font-bold hover:bg-purple-200 dark:hover:bg-purple-900/50 transition-colors"
+   541→   541→   541→                      >
+   542→   542→   542→                        <RotateCcw className="h-3.5 w-3.5" />
+   543→   543→   543→                      </button>
+   544→   544→   544→                      <button
+   545→   545→   545→                        onClick={orderViaWhatsApp}
+   546→   546→   546→                        className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors"
+   547→   547→   547→                      >
+   548→   548→   548→                        <MessageCircle className="h-3.5 w-3.5" /> Commander
+   549→   549→   549→                      </button>
+   550→   550→   550→                    </div>
+   551→   551→   551→                  )}
+   552→   552→   552→                </CardContent>
+   553→   553→   553→              </Card>
+   554→   554→   554→
+   555→   555→   555→              {/* Info card */}
+   556→   556→   556→              <Card className="p-4 bg-gradient-to-br from-purple-50 to-amber-50 dark:from-purple-950/20 dark:to-amber-950/20 border-purple-100 dark:border-purple-900/30">
+   557→   557→   557→                <div className="flex items-start gap-3">
+   558→   558→   558→                  <div className="h-8 w-8 rounded-lg bg-purple-100 dark:bg-purple-900/40 flex items-center justify-center flex-shrink-0">
+   559→   559→   559→                    <Sparkles className="h-4 w-4 text-purple-500" />
+   560→   560→   560→                  </div>
+   561→   561→   561→                  <div>
+   562→   562→   562→                    <p className="text-xs font-bold text-foreground">Comment ça marche ?</p>
+   563→   563→   563→                    <ol className="mt-1.5 space-y-1 text-[11px] text-muted-foreground list-decimal list-inside">
+   564→   564→   564→                      <li>{mode === 'create' ? 'Décrivez l\'image' : 'Uploadez votre photo'}</li>
+   565→   565→   565→                      <li>Choisissez le style, format et qualité</li>
+   566→   566→   566→                      <li>Cliquez sur Générer</li>
+   567→   567→   567→                      <li>Téléchargez ou commandez via WhatsApp</li>
+   568→   568→   568→                    </ol>
+   569→   569→   569→                  </div>
+   570→   570→   570→                </div>
+   571→   571→   571→              </Card>
+   572→   572→   572→
+   573→   573→   573→              {/* Reset */}
+   574→   574→   574→              {resultUrl && (
+   575→   575→   575→                <button
+   576→   576→   576→                  onClick={handleReset}
+   577→   577→   577→                  className="w-full flex items-center justify-center gap-2 py-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
+   578→   578→   578→                >
+   579→   579→   579→                  <RotateCcw className="h-3 w-3" /> Nouvelle génération
+   580→   580→   580→                </button>
+   581→   581→   581→              )}
+   582→   582→   582→            </div>
+   583→   583→   583→          </div>
+   584→   584→   584→        </div>
+   585→   585→   585→      </div>
+   586→   586→   586→    </section>
+   587→   587→   587→  )
+   588→   588→   588→}
