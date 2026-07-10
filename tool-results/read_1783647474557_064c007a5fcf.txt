@@ -1,0 +1,502 @@
+  2500→                      <option value="Montage Vidéo Pro — Gratuit">Montage Vidéo Pro — Gratuit</option>
+  2501→                      <option value="Post Réseaux Sociaux — Gratuit">Post Réseaux Sociaux — Gratuit</option>
+  2502→                      <option disabled className="font-semibold text-muted-foreground">── Carrière Pro ──</option>
+  2503→                      <option value="Pack Lancement Carrière — 3 500 FCFA">Pack Lancement Carrière — 3 500 FCFA</option>
+  2504→                      <option value="Relooking CV — 700 FCFA">Relooking CV — 700 FCFA</option>
+  2505→                      <option value="Impact LinkedIn — 2 000 FCFA">Impact LinkedIn — 2 000 FCFA</option>
+  2506→                    </select>
+  2507→                  </div>
+  2508→                  <div className="space-y-2">
+  2509→                    <Label className="text-sm font-semibold">Secteur d&apos;activité</Label>
+  2510→                    <select
+  2511→                      value={quickOrder.description}
+  2512→                      onChange={(e) => setQuickOrder(prev => ({ ...prev, description: e.target.value }))}
+  2513→                      className="w-full h-11 rounded-md border border-input bg-background px-3 text-sm"
+  2514→                    >
+  2515→                      <option value="">Votre secteur...</option>
+  2516→                      <option value="Commerce / Boutique">Commerce / Boutique</option>
+  2517→                      <option value="Restauration / Alimentation">Restauration / Alimentation</option>
+  2518→                      <option value="Éducation / Formation">Éducation / Formation</option>
+  2519→                      <option value="Tech / Informatique">Tech / Informatique</option>
+  2520→                      <option value="Mode / Beauté">Mode / Beauté</option>
+  2521→                      <option value="Transport / Logistique">Transport / Logistique</option>
+  2522→                      <option value="Santé / Bien-être">Santé / Bien-être</option>
+  2523→                      <option value="BTP / Immobilier">BTP / Immobilier</option>
+  2524→                      <option value="Art / Culture">Art / Culture</option>
+  2525→                      <option value="Autre">Autre</option>
+  2526→                    </select>
+  2527→                  </div>
+  2528→                </div>
+  2529→                <div className="grid sm:grid-cols-2 gap-4">
+  2530→                  <div className="space-y-2">
+  2531→                    <Label className="text-sm font-semibold">Votre nom *</Label>
+  2532→                    <Input placeholder="Ex: Amadou Diallo" value={quickOrder.name} onChange={(e) => setQuickOrder(prev => ({ ...prev, name: e.target.value }))} className="h-11" />
+  2533→                  </div>
+  2534→                  <div className="space-y-2">
+  2535→                    <Label className="text-sm font-semibold">Téléphone WhatsApp *</Label>
+  2536→                    <Input type="tel" placeholder="+223 XX XX XX XX" value={quickOrder.phone} onChange={(e) => setQuickOrder(prev => ({ ...prev, phone: e.target.value }))} className="h-11" />
+  2537→                  </div>
+  2538→                </div>
+  2539→                <Button
+  2540→                  onClick={async () => {
+  2541→                    if (!quickOrder.service || !quickOrder.name || !quickOrder.phone) {
+  2542→                      toast({ title: 'Champs requis', description: 'Service, nom et téléphone sont obligatoires.', variant: 'destructive' })
+  2543→                      return
+  2544→                    }
+  2545→                    // Extract amount from service string if present
+  2546→                    const amountMatch = quickOrder.service.match(/(\d[\d\s]*)\s*FCFA/i)
+  2547→                    const amount = amountMatch ? amountMatch[1].replace(/\s/g, '') + ' FCFA' : ''
+  2548→
+  2549→                    // Save order to API
+  2550→                    try {
+  2551→                      const res = await fetch('/api/orders', {
+  2552→                        method: 'POST',
+  2553→                        headers: { 'Content-Type': 'application/json' },
+  2554→                        body: JSON.stringify({
+  2555→                          service: quickOrder.service,
+  2556→                          secteur: quickOrder.description || '',
+  2557→                          name: quickOrder.name,
+  2558→                          phone: quickOrder.phone,
+  2559→                          amount,
+  2560→                        }),
+  2561→                      })
+  2562→                      const data = await res.json()
+  2563→                      if (data.success && data.orderId) {
+  2564→                        toast({
+  2565→                          title: 'Commande enregistrée !',
+  2566→                          description: `Votre numéro : ${data.orderId}. Gardez-le pour suivre votre commande.`,
+  2567→                          duration: 8000,
+  2568→                        })
+  2569→                        setLastOrderId(data.orderId)
+  2570→                      }
+  2571→                    } catch {
+  2572→                      // API failed, still proceed to WhatsApp
+  2573→                    }
+  2574→
+  2575→                    triggerConfetti()
+  2576→                    const msg = encodeURIComponent(
+  2577→                      `Bonjour Sacko ! Je souhaite un service.\n\n` +
+  2578→                      `Service : ${quickOrder.service}\n` +
+  2579→                      `Secteur : ${quickOrder.description || 'Non précisé'}\n` +
+  2580→                      `Nom : ${quickOrder.name}\n` +
+  2581→                      `Téléphone : ${quickOrder.phone}\n\n` +
+  2582→                      `Je suis prêt(e) à discuter de mon projet. Merci !`
+  2583→                    )
+  2584→                    window.open(`https://wa.me/22397787244?text=${msg}`, '_blank')
+  2585→                  }}
+  2586→                  className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold h-12 text-sm shadow-lg shadow-emerald-500/20"
+  2587→                >
+  2588→                  <Send className="h-4 w-4 mr-2" /> Envoyer ma demande
+  2589→                </Button>
+  2590→                <p className="text-[11px] text-muted-foreground text-center">
+  2591→                  Vos données restent <strong>privées</strong>. Je vous recontacte uniquement pour votre projet.
+  2592→                </p>
+  2593→              </CardContent>
+  2594→            </Card>
+  2595→
+  2596→            {/* Order Tracking */}
+  2597→            <Card className="border-0 shadow-lg overflow-hidden mt-6">
+  2598→              <div className="p-6 sm:p-8">
+  2599→                <div className="flex items-center gap-2 mb-4">
+  2600→                  <Search className="h-5 w-5 text-amber-500" />
+  2601→                  <h3 className="font-bold text-base">Suivre votre commande</h3>
+  2602→                </div>
+  2603→                <p className="text-sm text-muted-foreground mb-4">Entrez votre numéro de commande pour vérifier l&apos;avancement.</p>
+  2604→                <div className="flex gap-2">
+  2605→                  <Input
+  2606→                    placeholder="Ex: SC-M123ABC"
+  2607→                    value={trackId}
+  2608→                    onChange={(e) => setTrackId(e.target.value.toUpperCase())}
+  2609→                    className="h-11 font-mono text-sm"
+  2610→                  />
+  2611→                  <Button
+  2612→                    onClick={async () => {
+  2613→                      if (!trackId) return
+  2614→                      setTrackLoading(true)
+  2615→                      setTrackResult(null)
+  2616→                      try {
+  2617→                        const res = await fetch(`/api/orders?id=${encodeURIComponent(trackId)}`)
+  2618→                        const data = await res.json()
+  2619→                        if (data.success) {
+  2620→                          setTrackResult(data.order)
+  2621→                        } else {
+  2622→                          toast({ title: 'Non trouvé', description: 'Aucune commande avec ce numéro.', variant: 'destructive' })
+  2623→                        }
+  2624→                      } catch {
+  2625→                        toast({ title: 'Erreur', description: 'Impossible de vérifier. Réessayez.', variant: 'destructive' })
+  2626→                      }
+  2627→                      setTrackLoading(false)
+  2628→                    }}
+  2629→                    disabled={trackLoading}
+  2630→                    variant="outline"
+  2631→                    className="h-11 px-6 font-semibold flex-shrink-0"
+  2632→                  >
+  2633→                    {trackLoading ? '...' : 'Vérifier'}
+  2634→                  </Button>
+  2635→                </div>
+  2636→                {lastOrderId && (
+  2637→                  <p className="text-xs text-emerald-600 font-medium mt-3">
+  2638→                    Votre dernière commande : <span className="font-mono font-bold">{lastOrderId}</span>
+  2639→                    <button onClick={() => { setTrackId(lastOrderId) }} className="ml-1 underline hover:no-underline">vérifier</button>
+  2640→                  </p>
+  2641→                )}
+  2642→                {trackResult && (
+  2643→                  <motion.div
+  2644→                    initial={{ opacity: 0, y: 10 }}
+  2645→                    animate={{ opacity: 1, y: 0 }}
+  2646→                    className="mt-5 p-4 rounded-xl border bg-muted/30"
+  2647→                  >
+  2648→                    <div className="flex items-center justify-between mb-3">
+  2649→                      <span className="font-mono text-sm font-bold">{trackResult.id}</span>
+  2650→                      <span className={`text-xs font-bold px-3 py-1 rounded-full ${
+  2651→                        trackResult.status === 'livree' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' :
+  2652→                        trackResult.status === 'en_cours' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' :
+  2653→                        trackResult.status === 'annulee' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' :
+  2654→                        'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+  2655→                      }`}>{trackResult.statusLabel}</span>
+  2656→                    </div>
+  2657→                    <p className="text-sm font-medium">{trackResult.service}</p>
+  2658→                    <div className="flex items-center justify-between mt-3 text-[11px] text-muted-foreground">
+  2659→                      <span>Créée : {new Date(trackResult.createdAt).toLocaleDateString('fr-FR')}</span>
+  2660→                      <span>Mise à jour : {new Date(trackResult.updatedAt).toLocaleDateString('fr-FR')}</span>
+  2661→                    </div>
+  2662→                  </motion.div>
+  2663→                )}
+  2664→              </div>
+  2665→            </Card>
+  2666→          </div>
+  2667→        </section>
+  2668→
+  2669→        {/* ═══ 16. À PROPOS ═══ */}
+  2670→        <section id="apropos" className="py-16 sm:py-20 bg-gradient-to-b from-muted/30 to-background relative overflow-hidden">
+  2671→          <div className="absolute top-10 left-10 h-64 w-64 bg-amber-200/20 dark:bg-amber-900/10 rounded-full blur-3xl" />
+  2672→          <div className="absolute bottom-10 right-10 h-64 w-64 bg-orange-200/15 dark:bg-orange-900/10 rounded-full blur-3xl" />
+  2673→          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  2674→            <motion.div
+  2675→              initial={{ opacity: 0, y: 30 }}
+  2676→              whileInView={{ opacity: 1, y: 0 }}
+  2677→              viewport={{ once: true, margin: '-50px' }}
+  2678→              transition={{ duration: 0.6 }}
+  2679→            >
+  2680→            <div className="max-w-3xl mx-auto space-y-6">
+  2681→                <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+  2682→                  <Heart className="h-3 w-3 mr-1" /> Qui suis-je
+  2683→                </Badge>
+  2684→                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-center">À Propos de Sacko</h2>
+  2685→                <div className="space-y-4 text-muted-foreground leading-relaxed text-center">
+  2686→                  <p>
+  2687→                    Salut ! Je suis <strong className="text-foreground">Sacko</strong>, un jeune créateur digital de Bamako. J&apos;ai commencé le design tout seul, en autodidacte, parce que je voyais des entrepreneurs autour de moi qui avaient besoin de visuels pro mais qui n&apos;avaient pas les moyens de payer des agences chères.
+  2688→                  </p>
+  2689→                  <p>
+  2690→                    Au début, c&apos;était juste un passe-temps. Je créais des logos pour mes amis, des affiches pour les boutiques du quartier. Puis les gens ont commencé à me recommander, et petit à petit, Studio Créatif est né. Aujourd&apos;hui, j&apos;accompagne des entreprises et des porteurs de projets à Bamako et partout au Mali avec des services de <strong className="text-foreground">design graphique, création de sites web, montage vidéo et formations digitales</strong>.
+  2691→                  </p>
+  2692→                  <p>
+  2693→                    Ce qui me motive, c&apos;est de voir un client recevoir son logo ou son site pour la première fois et dire &quot;C&apos;est exactement ce que je voulais !&quot;. Chaque projet est différent, chaque client a une histoire, et mon but c&apos;est de transformer cette histoire en une identité visuelle qui marque les esprits.
+  2694→                  </p>
+  2695→                </div>
+  2696→
+  2697→                {/* Skills cards */}
+  2698→                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-8">
+  2699→                  {[
+  2700→                    { emoji: '🎨', name: 'Design', tools: 'Canva, Photoshop, Illustrator' },
+  2701→                    { emoji: '💻', name: 'Sites Web', tools: 'HTML, CSS, Next.js' },
+  2702→                    { emoji: '🎬', name: 'Vidéo', tools: 'CapCut, Premiere Pro, DaVinci' },
+  2703→                    { emoji: '📱', name: 'Réseaux', tools: 'Instagram, TikTok, Facebook' },
+  2704→                  ].map((skill) => (
+  2705→                    <div key={skill.name} className="text-center p-4 rounded-xl bg-muted/50 border hover:border-amber-200 dark:hover:border-amber-800 transition-colors">
+  2706→                      <div className="text-2xl mb-2">{skill.emoji}</div>
+  2707→                      <p className="text-sm font-bold">{skill.name}</p>
+  2708→                      <p className="text-[10px] text-muted-foreground mt-1">{skill.tools}</p>
+  2709→                    </div>
+  2710→                  ))}
+  2711→                </div>
+  2712→
+  2713→                {/* Personal touch */}
+  2714→                <div className="mt-6 p-5 rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/10 border border-amber-200/50 dark:border-amber-800/30">
+  2715→                  <div className="flex items-start gap-3">
+  2716→                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-orange-500 text-white font-bold text-sm flex-shrink-0 mt-0.5">S</div>
+  2717→                    <div>
+  2718→                      <p className="text-sm leading-relaxed">
+  2719→                        <strong className="text-foreground">Ma promesse :</strong> pas de blabla, pas de faux résultats. Je montre ce que je sais faire, je livre dans les délais, et si le résultat ne vous plaît pas, je recommence. C&apos;est aussi simple que ça.
+  2720→                      </p>
+  2721→                      <p className="text-xs text-muted-foreground mt-2">— Sacko, Bamako 🇲🇱</p>
+  2722→                    </div>
+  2723→                  </div>
+  2724→                </div>
+  2725→
+  2726→                <div className="mt-6 flex flex-wrap gap-3 justify-center">
+  2727→                  <a href="#services">
+  2728→                    <Button className="bg-amber-500 hover:bg-amber-600 text-white font-semibold">
+  2729→                      Découvrir mes services <ArrowRight className="ml-2 h-4 w-4" />
+  2730→                    </Button>
+  2731→                  </a>
+  2732→                  <a href="https://chat.whatsapp.com/Khpz5MVeokK9X9X5i3INX2" target="_blank" rel="noopener noreferrer">
+  2733→                    <Button variant="outline" className="font-semibold">
+  2734→                      <MessageCircle className="mr-2 h-4 w-4 text-emerald-500" /> Rejoindre le groupe formation
+  2735→                    </Button>
+  2736→                  </a>
+  2737→                </div>
+  2738→              </div>
+  2739→            </motion.div>
+  2740→          </div>
+  2741→        </section>
+  2742→
+  2743→        {/* ═══ 17. FAQ ═══ */}
+  2744→        <section id="faq" className="py-16 sm:py-20 bg-gradient-to-b from-emerald-50/40 to-background dark:from-emerald-950/10">
+  2745→          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+  2746→            <div className="text-center mb-12">
+  2747→              <Badge variant="secondary" className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200">
+  2748→                <MessageCircle className="h-3 w-3 mr-1" /> FAQ
+  2749→              </Badge>
+  2750→              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Questions Fréquentes</h2>
+  2751→              <p className="mt-3 text-muted-foreground max-w-xl mx-auto">
+  2752→                Les réponses aux questions les plus posées. Si vous ne trouvez pas votre réponse, contactez-moi directement sur WhatsApp.
+  2753→              </p>
+  2754→            </div>
+  2755→            {/* FAQ Search */}
+  2756→            <div className="relative max-w-md mx-auto mb-6">
+  2757→              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+  2758→              <Input
+  2759→                placeholder="Rechercher dans la FAQ..."
+  2760→                value={faqSearch}
+  2761→                onChange={(e) => setFaqSearch(e.target.value)}
+  2762→                className="pl-10 h-10 bg-background border-border rounded-xl text-sm"
+  2763→              />
+  2764→              {faqSearch && (
+  2765→                <button onClick={() => setFaqSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+  2766→                  <X className="h-4 w-4" />
+  2767→                </button>
+  2768→              )}
+  2769→            </div>
+  2770→            <div className="space-y-3">
+  2771→              {(() => {
+  2772→                const faqs = [
+  2773→                  { q: "L'Offre Découverte est-elle vraiment 100% gratuite ?", a: "Oui, totalement. C'est ma manière de vous prouver la qualité de mon travail avant que vous ne décidiez de passer à une offre Premium payante. Aucun engagement requis, aucun frais caché." },
+  2774→                  { q: "Quels sont les délais de livraison ?", a: "Les services \"Carrière Pro\" (CV, Lettres) sont livrés en moins de 24h. Pour les logos simples, comptez 48h, et pour un site web complet, entre 3 et 7 jours selon la complexité. Chaque projet a un suivi personnalisé." },
+  2775→                  { q: "Puis-je demander des modifications si le résultat ne me plaît pas ?", a: "Absolument. Votre satisfaction est ma priorité. Pour l'Offre Découverte, une révision est incluse. Pour les offres Premium, les révisions sont illimitées jusqu'à ce que le résultat vous corresponde parfaitement. Je ne livre que lorsque vous êtes 100% satisfait." },
+  2776→                  { q: "Pourquoi limitez-vous les commandes à 5 par jour ?", a: "Parce que je travaille seul et je veux que chaque client ait un vrai suivi. Mieux vaut faire 5 projets bien que 20 mal. Si je suis plein un jour, on planifie le lendemain, c'est tout." },
+  2777→                  { q: "Comment se passe le paiement ?", a: "On discute sur WhatsApp, je vous donne un prix clair, et vous payez directement via Orange Money ou Moov Money. Pas de processus compliqué, pas de frais cachés. Dès que c'est confirmé, je commence le travail." },
+  2778→                  { q: "Les formations sont-elles en ligne ou en présentiel ?", a: "Les formations sont 100% en ligne via WhatsApp et supports vidéo. Vous apprenez à votre rythme, avec un suivi personnalisé et un groupe WhatsApp pour poser vos questions." },
+  2779→                ]
+  2780→                const filtered = faqs.filter((f) => !faqSearch || f.q.toLowerCase().includes(faqSearch.toLowerCase()) || f.a.toLowerCase().includes(faqSearch.toLowerCase()))
+  2781→                return filtered.length === 0 ? (
+  2782→                  <div className="text-center py-8">
+  2783→                    <Search className="h-8 w-8 text-muted-foreground/30 mx-auto mb-2" />
+  2784→                    <p className="text-sm text-muted-foreground">Aucune question ne correspond à votre recherche.</p>
+  2785→                  </div>
+  2786→                ) : filtered.map((faq, i) => {
+  2787→                  const isOpen = faqOpen === `faq-${i}`
+  2788→                  return (
+  2789→                    <Card key={i} className="border-0 shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
+  2790→                      <button
+  2791→                        onClick={() => setFaqOpen(isOpen ? null : `faq-${i}`)}
+  2792→                        aria-expanded={isOpen}
+  2793→                        className="w-full flex items-center justify-between p-5 text-left"
+  2794→                      >
+  2795→                        <h3 className="font-semibold text-sm pr-4">{faq.q}</h3>
+  2796→                        <motion.div
+  2797→                          animate={{ rotate: isOpen ? 180 : 0 }}
+  2798→                          transition={{ duration: 0.2 }}
+  2799→                          className="flex-shrink-0"
+  2800→                        >
+  2801→                          <ChevronUp className="h-4 w-4 text-muted-foreground" />
+  2802→                        </motion.div>
+  2803→                      </button>
+  2804→                      <AnimatePresence initial={false}>
+  2805→                        {isOpen && (
+  2806→                          <motion.div
+  2807→                            initial={{ height: 0, opacity: 0 }}
+  2808→                            animate={{ height: 'auto', opacity: 1 }}
+  2809→                            exit={{ height: 0, opacity: 0 }}
+  2810→                            transition={{ duration: 0.25, ease: 'easeInOut' }}
+  2811→                            className="overflow-hidden"
+  2812→                          >
+  2813→                            <p className="text-sm text-muted-foreground leading-relaxed px-5 pb-5">{faq.a}</p>
+  2814→                          </motion.div>
+  2815→                        )}
+  2816→                      </AnimatePresence>
+  2817→                    </Card>
+  2818→                  )
+  2819→                })
+  2820→              })()}
+  2821→            </div>
+  2822→            <div className="mt-8 text-center">
+  2823→              <p className="text-sm text-muted-foreground">
+  2824→                Vous avez d&apos;autres questions ?{' '}
+  2825→                <a href="#contact" className="text-amber-600 font-medium hover:underline">Contactez-moi</a> ou écrivez-moi directement sur{' '}
+  2826→                <a href="https://wa.me/22397787244" target="_blank" rel="noopener noreferrer" className="text-emerald-600 font-medium hover:underline">WhatsApp</a>.
+  2827→              </p>
+  2828→            </div>
+  2829→          </div>
+  2830→        </section>
+  2831→
+  2832→        {/* ═══ LEAD MAGNET — Cadeau Exclusif ═══ */}
+  2833→        <section className="py-16 sm:py-20">
+  2834→          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+  2835→            <Card className="border-0 shadow-xl overflow-hidden">
+  2836→              <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white p-8 sm:p-10 relative overflow-hidden">
+  2837→                <div className="absolute top-0 right-0 w-40 h-40 bg-amber-500/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+  2838→                <div className="absolute bottom-0 left-0 w-32 h-32 bg-emerald-500/10 rounded-full translate-y-1/2 -translate-x-1/2" />
+  2839→                <div className="relative z-10 text-center mb-8">
+  2840→                  <div className="inline-flex items-center gap-2 bg-amber-500/20 rounded-full px-4 py-1.5 text-amber-300 text-xs font-semibold mb-4 border border-amber-500/20">
+  2841→                    <Gift className="h-3.5 w-3.5" /> Cadeau Exclusif pour les Entrepreneurs
+  2842→                  </div>
+  2843→                  <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-3">
+  2844→                    10 Templates Canva <span className="text-amber-400">Gratuits</span>
+  2845→                  </h2>
+  2846→                  <p className="text-slate-300 leading-relaxed max-w-md mx-auto text-sm">
+  2847→                    <strong className="text-white">Boostez la visibilité de votre business dès aujourd&apos;hui.</strong> Rejoignez ma liste de contacts et recevez instantanément un <strong className="text-white">pack de 10 templates Canva exclusifs</strong> conçus pour les boutiques et créateurs de Bamako.
+  2848→                  </p>
+  2849→                </div>
+  2850→                <div className="relative z-10 flex flex-col sm:flex-row gap-3">
+  2851→                  <Input
+  2852→                    placeholder="Votre prénom"
+  2853→                    value={leadMagnet.name}
+  2854→                    onChange={(e) => setLeadMagnet(prev => ({ ...prev, name: e.target.value }))}
+  2855→                    className="h-11 bg-white/10 border-white/20 text-white placeholder:text-slate-500 focus:border-amber-500/50"
+  2856→                  />
+  2857→                  <Input
+  2858→                    placeholder="Votre numéro WhatsApp ou email"
+  2859→                    value={leadMagnet.contact}
+  2860→                    onChange={(e) => setLeadMagnet(prev => ({ ...prev, contact: e.target.value }))}
+  2861→                    className="h-11 bg-white/10 border-white/20 text-white placeholder:text-slate-500 focus:border-amber-500/50"
+  2862→                  />
+  2863→                  <Button
+  2864→                    onClick={() => {
+  2865→                      if (!leadMagnet.name || !leadMagnet.contact) {
+  2866→                        toast({ title: 'Champs requis', description: 'Prénom et contact sont obligatoires.', variant: 'destructive' })
+  2867→                        return
+  2868→                      }
+  2869→                      triggerConfetti()
+  2870→                      const msg = encodeURIComponent(
+  2871→                        `Bonjour Sacko ! Je souhaite recevoir le pack de 10 templates Canva gratuit.\n\nPrénom : ${leadMagnet.name}\nContact : ${leadMagnet.contact}\n\nMerci !`
+  2872→                      )
+  2873→                      window.open(`https://wa.me/22397787244?text=${msg}`, '_blank')
+  2874→                      toast({ title: 'Demande envoyée !', description: 'Vous recevrez votre pack de templates très rapidement.' })
+  2875→                      setLeadMagnet({ name: '', contact: '' })
+  2876→                    }}
+  2877→                    className="h-11 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-sm shadow-lg shadow-amber-500/25 whitespace-nowrap px-6"
+  2878→                  >
+  2879→                    <Gift className="h-4 w-4 mr-1.5" /> Recevoir mon pack
+  2880→                  </Button>
+  2881→                </div>
+  2882→                <p className="relative z-10 text-center text-[11px] text-slate-500 mt-4">
+  2883→                  Aucun spam. Uniquement des ressources et opportunités pour votre business.
+  2884→                </p>
+  2885→              </div>
+  2886→            </Card>
+  2887→          </div>
+  2888→        </section>
+  2889→
+  2890→        {/* ═══ GARANTIES ═══ */}
+  2891→        <section className="py-16 sm:py-20 bg-gradient-to-b from-muted/20 to-background">
+  2892→          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+  2893→            <div className="text-center mb-12">
+  2894→              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+  2895→                <ShieldCheck className="h-3 w-3 mr-1" /> Garanties
+  2896→              </Badge>
+  2897→              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Mes 4 Garanties pour Vous</h2>
+  2898→              <p className="mt-3 text-muted-foreground max-w-xl mx-auto leading-relaxed">
+  2899→                Chaque projet est protégé. Voici les engagements que je prends avec chaque client, sans exception.
+  2900→              </p>
+  2901→            </div>
+  2902→
+  2903→            <motion.div
+  2904→              initial={{ opacity: 0, y: 30 }}
+  2905→              whileInView={{ opacity: 1, y: 0 }}
+  2906→              viewport={{ once: true, margin: '-50px' }}
+  2907→              transition={{ duration: 0.6 }}
+  2908→            >
+  2909→            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+  2910→              {[
+  2911→                {
+  2912→                  icon: ThumbsUp,
+  2913→                  title: 'Satisfaction ou Révision',
+  2914→                  desc: "Votre projet n'est pas terminé tant que vous n'êtes pas 100% satisfait. Révisions incluses.",
+  2915→                  color: 'from-emerald-400 to-teal-500',
+  2916→                  bg: 'bg-emerald-50 dark:bg-emerald-950/20',
+  2917→                },
+  2918→                {
+  2919→                  icon: Timer,
+  2920→                  title: 'Livraison dans les Délais',
+  2921→                  desc: "CV et lettres en 24h, logos en 48h, sites web en 3-7 jours. Promesse tenue.",
+  2922→                  color: 'from-amber-400 to-orange-500',
+  2923→                  bg: 'bg-amber-50 dark:bg-amber-950/20',
+  2924→                },
+  2925→                {
+  2926→                  icon: Lock,
+  2927→                  title: 'Confidentialité Totale',
+  2928→                  desc: 'Vos données, vos idées, vos fichiers restent strictement privés. Aucune partage tiers.',
+  2929→                  color: 'from-blue-400 to-indigo-500',
+  2930→                  bg: 'bg-blue-50 dark:bg-blue-950/20',
+  2931→                },
+  2932→                {
+  2933→                  icon: MessageCircle,
+  2934→                  title: 'Support WhatsApp 7j/7',
+  2935→                  desc: "Un message, une réponse. Je suis disponible pour vous accompagner même après la livraison.",
+  2936→                  color: 'from-purple-400 to-violet-500',
+  2937→                  bg: 'bg-purple-50 dark:bg-purple-950/20',
+  2938→                },
+  2939→              ].map((g) => (
+  2940→                <Card key={g.title} className={`border-0 shadow-md overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${g.bg}`}>
+  2941→                  <div className={`h-1 bg-gradient-to-r ${g.color}`} />
+  2942→                  <CardContent className="p-5 text-center">
+  2943→                    <div className={`inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${g.color} text-white shadow-lg mb-4`}>
+  2944→                      <g.icon className="h-6 w-6" />
+  2945→                    </div>
+  2946→                    <h3 className="text-sm font-extrabold mb-2">{g.title}</h3>
+  2947→                    <p className="text-xs text-muted-foreground leading-relaxed">{g.desc}</p>
+  2948→                  </CardContent>
+  2949→                </Card>
+  2950→              ))}
+  2951→            </div>
+  2952→            </motion.div>
+  2953→          </div>
+  2954→        </section>
+  2955→
+  2956→        {/* ═══ RÉSULTATS CLIENTS ═══ */}
+  2957→        <section className="py-16 sm:py-20 relative overflow-hidden">
+  2958→          <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 dark:from-emerald-950/20 dark:via-teal-950/10 dark:to-cyan-950/20" />
+  2959→          <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+  2960→            <motion.div
+  2961→              initial={{ opacity: 0, y: 30 }}
+  2962→              whileInView={{ opacity: 1, y: 0 }}
+  2963→              viewport={{ once: true, margin: '-50px' }}
+  2964→              transition={{ duration: 0.6 }}
+  2965→            >
+  2966→              <div className="text-center mb-12">
+  2967→                <Badge variant="secondary" className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200">
+  2968→                  <TrendingUp className="h-3 w-3 mr-1" /> Résultats
+  2969→                </Badge>
+  2970→                <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Ils ont <span className="text-emerald-600 dark:text-emerald-400">transformé leur business</span></h2>
+  2971→                <p className="mt-3 text-muted-foreground max-w-xl mx-auto leading-relaxed">
+  2972→                  Des résultats concrets, mesurables. Voici ce que nos clients ont accompli après avoir travaillé avec Studio Créatif.
+  2973→                </p>
+  2974→              </div>
+  2975→
+  2976→              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+  2977→                {[
+  2978→                  { client: 'Boutique Le Baobab', metric: '+40%', desc: "d'augmentation du chiffre d'affaires en 1 mois grâce au nouveau logo et aux visuels réseaux sociaux", icon: TrendingUp, color: 'from-emerald-500 to-teal-500' },
+  2979→                  { client: 'MaliTech Solutions', metric: '+200', desc: 'visiteurs/jour sur le nouveau site web en seulement 2 semaines après le lancement', icon: Users, color: 'from-blue-500 to-indigo-500' },
+  2980→                  { client: 'Restaurant Djoliba', metric: '3x', desc: "plus de commandes en ligne après la refonte de l'identité visuelle complète et des affiches promotionnelles", icon: Award, color: 'from-amber-500 to-orange-500' },
+  2981→                  { client: 'Salon Awa Beauty', metric: '15K+', desc: 'vues sur la vidéo promotionnelle TikTok en 48h, générant 20+ nouvelles clientes', icon: Eye, color: 'from-purple-500 to-violet-500' },
+  2982→                ].map((result, i) => (
+  2983→                  <motion.div
+  2984→                    key={result.client}
+  2985→                    initial={{ opacity: 0, y: 20 }}
+  2986→                    whileInView={{ opacity: 1, y: 0 }}
+  2987→                    viewport={{ once: true }}
+  2988→                    transition={{ duration: 0.4, delay: i * 0.1 }}
+  2989→                    className="group relative bg-background rounded-2xl border border-border p-5 sm:p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-emerald-200 dark:hover:border-emerald-800"
+  2990→                  >
+  2991→                    <div className={`inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${result.color} text-white shadow-lg mb-4 group-hover:scale-110 transition-transform duration-300`}>
+  2992→                      <result.icon className="h-6 w-6" />
+  2993→                    </div>
+  2994→                    <div className="text-3xl font-extrabold bg-gradient-to-r bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 mb-1">{result.metric}</div>
+  2995→                    <h3 className="text-sm font-bold mb-2">{result.client}</h3>
+  2996→                    <p className="text-xs text-muted-foreground leading-relaxed">{result.desc}</p>
+  2997→                  </motion.div>
+  2998→                ))}
+  2999→              </div>
+
+[showing lines 2500-2999 of 3878; use offset=3000 with limit to continue reading]

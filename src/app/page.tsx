@@ -70,6 +70,10 @@ import { Label } from '@/components/ui/label'
 import { useToast } from '@/hooks/use-toast'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import Preloader from '@/components/Preloader'
+import ClientLogos from '@/components/ClientLogos'
+import VideoShowcase from '@/components/VideoShowcase'
+import BlogPreview from '@/components/BlogPreview'
 
 
 
@@ -581,15 +585,6 @@ export default function Home() {
   // Coach detail modal
   const [selectedCoach, setSelectedCoach] = useState<typeof coaches[0] | null>(null)
 
-  // WhatsApp direct payment
-  const openWhatsApp = useCallback((name: string, amount: number, description?: string) => {
-    const price = amount.toLocaleString('fr-FR')
-    const msg = encodeURIComponent(
-      `Bonjour Sacko ! Je veux commander :\n\n• ${name}\n• Prix : ${price} FCFA${description ? `\n• Détails : ${description}` : ''}\n\nComment puis-je payer ?`
-    )
-    window.open(`https://wa.me/22397787244?text=${msg}`, '_blank')
-  }, [])
-
   // Promo countdown: end of current month
   const [promoEnd] = useState(() => {
     const now = new Date()
@@ -667,7 +662,7 @@ export default function Home() {
 
   // Intersection observer for side nav dots
   useEffect(() => {
-    const sectionIds = ['accueil', 'services', 'formations', 'coachs', 'boutique', 'portfolio', 'contact']
+    const sectionIds = ['accueil', 'services', 'formations', 'coachs', 'boutique', 'portfolio', 'blog', 'contact']
     const observers: IntersectionObserver[] = []
     sectionIds.forEach(id => {
       const el = document.getElementById(id)
@@ -709,6 +704,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background pb-20 lg:pb-0 scroll-smooth">
+      <Preloader />
       <Header />
 
       <main className="flex-1">
@@ -1124,6 +1120,9 @@ export default function Home() {
           </div>
         </div>
 
+        {/* ═══ NOS CLIENTS ═══ */}
+        <ClientLogos />
+
         {/* ═══ POURQUOI NOUS CHOISIR ═══ */}
         <section className="py-16 sm:py-20">
           <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -1345,7 +1344,7 @@ export default function Home() {
               </p>
               <div className="flex items-center justify-center gap-6 mt-5 text-xs">
                 <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-emerald-500" /> Découverte = Gratuit</span>
-                <span className="flex items-center gap-1.5"><ShieldCheck className="h-3.5 w-3.5 text-amber-500" /> Premium = Paiement sécurisé iKeePay</span>
+                <span className="flex items-center gap-1.5"><MessageCircle className="h-3.5 w-3.5 text-emerald-500" /> Premium = Via WhatsApp</span>
               </div>
             </div>
 
@@ -1417,23 +1416,14 @@ export default function Home() {
                           <h4 className="text-sm font-bold text-amber-700 dark:text-amber-400">{section.premium.title}</h4>
                         </div>
                         <p className="text-xs text-muted-foreground leading-relaxed mb-4">{section.premium.desc}</p>
-                        <div className="flex gap-2">
                         <a
                         href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je suis intéressé(e) par l'Offre Premium : ${section.cat}. Pouvez-vous me donner un devis ?`)}`}
                         target="_blank" rel="noopener noreferrer"
-                        className="flex-1"
                       >
-                        <Button variant="outline" className="w-full border-emerald-300 text-emerald-700 hover:bg-emerald-50 font-bold text-xs h-10">
-                          <MessageCircle className="h-3.5 w-3.5 mr-1.5" /> WhatsApp
+                        <Button className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-10 shadow-md shadow-amber-500/20">
+                          <MessageCircle className="h-3.5 w-3.5 mr-1.5" /> Commander via WhatsApp
                         </Button>
                       </a>
-                      <Button
-                        onClick={() => openWhatsApp(`Offre Premium : ${section.cat}`, 15000, 'Service premium sur devis')}
-                        className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-10 shadow-md shadow-amber-500/20"
-                      >
-                        <ShieldCheck className="h-3.5 w-3.5 mr-1.5" /> Payer
-                      </Button>
-                      </div>
                     </div>
                     </div>
                   </CardContent>
@@ -1497,24 +1487,14 @@ export default function Home() {
                       <h3 className="text-lg font-bold text-white">{s.name}</h3>
                       <p className="text-xs text-slate-500 mb-2">{s.sub}</p>
                       <p className="text-sm text-slate-300 leading-relaxed mb-4">{s.hook}</p>
-                      <div className="flex gap-2">
                       <a
                         href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je souhaite commander : ${s.name} (${s.sub}) — ${s.price} FCFA.`)}`}
                         target="_blank" rel="noopener noreferrer"
-                        className="flex-1"
                       >
-                        <Button variant="outline" size="sm" className="w-full border-emerald-400/30 text-emerald-400 hover:bg-emerald-500/10 font-semibold text-xs h-9">
-                          <MessageCircle className="h-3.5 w-3.5 mr-1.5" /> WhatsApp
+                        <Button size="sm" className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-9">
+                          <MessageCircle className="h-3.5 w-3.5 mr-1.5" /> Commander {s.price} F
                         </Button>
                       </a>
-                      <Button
-                        size="sm"
-                        onClick={() => openWhatsApp(`${s.name} (${s.sub})`, parseInt(s.price.replace(/\s/g, '')), s.hook)}
-                        className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-9"
-                      >
-                        <ShieldCheck className="h-3.5 w-3.5 mr-1.5" /> Payer {s.price} F
-                      </Button>
-                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -1541,20 +1521,11 @@ export default function Home() {
                     </div>
                   </div>
                   <div className="flex flex-col items-center gap-3 flex-shrink-0">
-                    <div className="flex gap-2">
-                      <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20veux%20le%20Pack%20Lancement%20Carri%C3%A8re%20%C3%A0%203%20500%20FCFA." target="_blank" rel="noopener noreferrer">
-                        <Button size="lg" variant="outline" className="border-emerald-400/50 text-emerald-300 hover:bg-emerald-500/10 font-bold px-6 whitespace-nowrap">
-                          <MessageCircle className="h-5 w-5 mr-2" /> WhatsApp
-                        </Button>
-                      </a>
-                      <Button
-                        size="lg"
-                        onClick={() => openWhatsApp('Pack Lancement Carrière (CV + Lettre + LinkedIn + Guide)', 3500, 'Pack complet : CV Premium + Lettre de motivation + Profil LinkedIn + Guide entretien')}
-                        className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-xl shadow-amber-500/25 px-6 whitespace-nowrap"
-                      >
-                        <ShieldCheck className="h-5 w-5 mr-2" /> Payer 3 500 F
+                    <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20veux%20le%20Pack%20Lancement%20Carri%C3%A8re%20%C3%A0%203%20500%20FCFA." target="_blank" rel="noopener noreferrer">
+                      <Button size="lg" className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-xl shadow-amber-500/25 px-6 whitespace-nowrap">
+                        <MessageCircle className="h-5 w-5 mr-2" /> Commander le Pack 3 500 F
                       </Button>
-                    </div>
+                    </a>
                     <span className="text-[10px] text-slate-500">Économie de 1 300 FCFA</span>
                   </div>
                 </div>
@@ -1778,23 +1749,14 @@ export default function Home() {
                           <span className="text-[11px] text-amber-300 font-medium">{form.premium.bonus}</span>
                         </div>
                       )}
-                      <div className="flex gap-2">
                       <a
                         href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je suis intéressé(e) par la formation Premium ${form.title} (${form.premium.price} FCFA). Comment y accéder ?`)}`}
                         target="_blank" rel="noopener noreferrer"
-                        className="flex-1"
                       >
-                        <Button variant="outline" className="w-full border-emerald-300 text-emerald-700 hover:bg-emerald-50 font-bold text-xs h-10">
-                          <MessageCircle className="h-3.5 w-3.5 mr-1.5" /> WhatsApp
+                        <Button className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-10 shadow-lg shadow-amber-500/20">
+                          <MessageCircle className="h-3.5 w-3.5 mr-1.5" /> S'inscrire {form.premium.price} F
                         </Button>
                       </a>
-                      <Button
-                        onClick={() => openWhatsApp(`Formation Premium : ${form.title}`, form.premium.priceNum, `${form.subtitle} — ${form.duration}, ${form.lessons}`)}
-                        className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-10 shadow-lg shadow-amber-500/20"
-                      >
-                        <ShieldCheck className="h-3.5 w-3.5 mr-1.5" /> Payer {form.premium.price} F
-                      </Button>
-                      </div>
                     </div>
                   </div>
                 </motion.div>
@@ -2139,24 +2101,15 @@ export default function Home() {
                           </div>
                         </div>
 
-                        <div className="flex gap-2 mt-4">
                         <a
                           href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je veux commander le livre : ${selectedBook.title} par ${selectedBook.author} (1 000 FCFA). Comment procéder ?`)}`}
                           target="_blank" rel="noopener noreferrer"
                           onClick={() => setSelectedBook(null)}
-                          className="flex-1"
                         >
-                          <Button variant="outline" className="w-full border-emerald-300 text-emerald-700 hover:bg-emerald-50 font-bold h-12">
-                            <MessageCircle className="h-4 w-4 mr-2" /> WhatsApp
+                          <Button className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-lg shadow-amber-500/20 h-12">
+                            <MessageCircle className="h-4 w-4 mr-2" /> Commander 1 000 F
                           </Button>
                         </a>
-                        <Button
-                          onClick={() => { openWhatsApp(`Livre : ${selectedBook.title} (${selectedBook.author})`, 1000, 'Livre PDF — livraison instantanée via WhatsApp'); setSelectedBook(null) }}
-                          className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-lg shadow-amber-500/20 h-12"
-                        >
-                          <ShieldCheck className="h-4 w-4 mr-2" /> Payer 1 000 F
-                        </Button>
-                        </div>
                       </div>
                     </div>
                   </motion.div>
@@ -2221,19 +2174,11 @@ export default function Home() {
                       <span className="text-xs text-muted-foreground line-through">12 000 FCFA</span>
                       <div className="text-2xl font-extrabold text-amber-600">7 000 <span className="text-sm font-normal">FCFA</span></div>
                     </div>
-                    <div className="flex gap-2">
                     <a href={`https://wa.me/22397787244?text=${encodeURIComponent('Bonjour Sacko ! Je veux commander le Pack Complet de 12 livres (7 000 FCFA au lieu de 12 000). Comment procéder ?')}`} target="_blank" rel="noopener noreferrer" className="block">
-                      <Button className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-bold shadow-lg shadow-emerald-500/20 whitespace-nowrap">
-                        <MessageCircle className="h-4 w-4 mr-1.5" /> WhatsApp
+                      <Button className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-lg shadow-amber-500/20 whitespace-nowrap">
+                        <MessageCircle className="h-4 w-4 mr-1.5" /> Commander le Pack 7 000 F
                       </Button>
                     </a>
-                    <Button
-                      onClick={() => openWhatsApp('Pack Complet 12 livres (PDF)', 7000, '12 livres numériques en PDF — livraison instantanée via WhatsApp')}
-                      className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-lg shadow-amber-500/20 whitespace-nowrap"
-                    >
-                      <ShieldCheck className="h-4 w-4 mr-1.5" /> Payer 7 000 F
-                    </Button>
-                  </div>
                   </div>
                 </div>
               </Card>
@@ -2419,8 +2364,6 @@ export default function Home() {
                 <a href="#commande-rapide" className="text-amber-600 font-semibold hover:underline">Commandez maintenant</a>.
               </p>
             </div>
-          </div>
-        </section>
 
             {/* Testimonial cards grid */}
             <div className="mt-10 grid sm:grid-cols-2 gap-4">
@@ -2456,9 +2399,8 @@ export default function Home() {
                 </motion.div>
               ))}
             </div>
-
-
-
+          </div>
+        </section>
 
         {/* ═══ 15. COMMANDE RAPIDE (Formulaire Qualifiant) ═══ */}
         <section id="commande-rapide" className="py-20 sm:py-24">
@@ -3146,6 +3088,7 @@ export default function Home() {
             </motion.div>
           </div>
         </section>
+
       {/* ═══ COACH DETAIL MODAL ═══ */}
       <AnimatePresence>
         {selectedCoach && (
@@ -3538,6 +3481,7 @@ export default function Home() {
           { id: 'coachs', label: 'Coachs' },
           { id: 'boutique', label: 'Boutique' },
           { id: 'portfolio', label: 'Portfolio' },
+          { id: 'blog', label: 'Blog' },
           { id: 'contact', label: 'Contact' },
         ].map((item) => (
           <a
@@ -3557,25 +3501,29 @@ export default function Home() {
         ))}
       </div>
 
+        {/* ═══ BLOG & ACTUALITÉS ═══ */}
+        <BlogPreview />
+
+        {/* ═══ NOS CRÉATIONS VIDÉO ═══ */}
+        <VideoShowcase />
+
       </main>
 
       {/* ═══ MOYENS DE PAIEMENT ═══ */}
       <section className="py-8 border-t bg-muted/20">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center justify-center gap-3">
-            <p className="text-sm font-semibold text-muted-foreground">Paiement sécurisé via</p>
-            <div className="flex flex-wrap items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20 border border-emerald-200 dark:border-emerald-800 shadow-sm">
-              <ShieldCheck className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-              <span className="text-sm font-bold text-emerald-700 dark:text-emerald-400">iKeePay</span>
-              <span className="text-[10px] text-muted-foreground">—</span>
+            <p className="text-sm font-semibold text-muted-foreground">Commandez et payez facilement via</p>
+            <div className="flex flex-wrap items-center justify-center gap-3 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20 border border-emerald-200 dark:border-emerald-800 shadow-sm">
+              <MessageCircle className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+              <span className="text-sm font-bold text-emerald-700 dark:text-emerald-400">WhatsApp</span>
+              <span className="text-[10px] text-muted-foreground">+</span>
               <span className="text-xs font-medium text-amber-600 dark:text-amber-400">Orange Money</span>
               <span className="text-[10px] text-muted-foreground">·</span>
               <span className="text-xs font-medium text-yellow-600 dark:text-yellow-400">Moov Money</span>
-              <span className="text-[10px] text-muted-foreground">·</span>
-              <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Carte bancaire</span>
             </div>
           </div>
-          <p className="text-center text-[11px] text-muted-foreground mt-3">Paiement vérifié automatiquement — Confirmation instantanée via WhatsApp</p>
+          <p className="text-center text-[11px] text-muted-foreground mt-3">Commande via WhatsApp — Paiement mobile money — Confirmation instantanée</p>
         </div>
       </section>
 
@@ -3764,25 +3712,16 @@ export default function Home() {
                   <p className="text-[10px] text-amber-600/70 mt-0.5">Le pack complet 12 livres = 7 000 FCFA</p>
                 </div>
               )}
-              <div className="flex gap-2">
-                <a
-                  href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je veux commander ${cart.length} livre(s) :\n\n${cart.map(t => `- ${t} (1 000 FCFA)`).join('\n')}\n\nTotal : ${cart.length * 1000} FCFA. Comment procéder pour le paiement ?`)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => setShowCart(false)}
-                  className="flex-1"
-                >
-                  <Button variant="outline" className="w-full border-emerald-300 text-emerald-700 hover:bg-emerald-50 font-bold h-11 text-sm">
-                    <MessageCircle className="h-4 w-4 mr-2" /> WhatsApp
-                  </Button>
-                </a>
-                <Button
-                  onClick={() => { openWhatsApp(`${cart.length} livre(s) du panier`, Math.min(cart.length * 1000, 7000), cart.map(t => `- ${t}`).join('\n')); setShowCart(false) }}
-                  className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-lg shadow-amber-500/20 h-11 text-sm"
-                >
-                  <ShieldCheck className="h-4 w-4 mr-2" /> Payer {Math.min(cart.length * 1000, 7000).toLocaleString('fr-FR')} F
+              <a
+                href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je veux commander ${cart.length} livre(s) :\n\n${cart.map(t => `- ${t} (1 000 FCFA)`).join('\n')}\n\nTotal : ${cart.length * 1000} FCFA. Comment procéder pour le paiement ?`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setShowCart(false)}
+              >
+                <Button className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-lg shadow-amber-500/20 h-11 text-sm">
+                  <MessageCircle className="h-4 w-4 mr-2" /> Commander {Math.min(cart.length * 1000, 7000).toLocaleString('fr-FR')} F
                 </Button>
-              </div>
+              </a>
             </div>
           </motion.div>
         )}

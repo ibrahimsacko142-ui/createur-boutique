@@ -70,7 +70,7 @@
     70→import { useToast } from '@/hooks/use-toast'
     71→import Header from '@/components/Header'
     72→import Footer from '@/components/Footer'
-    73→import PaystackModal from '@/components/PaystackModal'
+    73→
     74→
     75→
     76→/* ─── Typing Text Hook ─── */
@@ -581,13 +581,13 @@
    581→  // Coach detail modal
    582→  const [selectedCoach, setSelectedCoach] = useState<typeof coaches[0] | null>(null)
    583→
-   584→  // Paystack payment modal
-   585→  const [paystackOpen, setPaystackOpen] = useState(false)
-   586→  const [paystackService, setPaystackService] = useState({ name: '', amount: 0, description: '' })
-   587→
-   588→  const openPaystack = useCallback((name: string, amount: number, description?: string) => {
-   589→    setPaystackService({ name, amount, description: description || '' })
-   590→    setPaystackOpen(true)
+   584→  // WhatsApp direct payment
+   585→  const openWhatsApp = useCallback((name: string, amount: number, description?: string) => {
+   586→    const price = amount.toLocaleString('fr-FR')
+   587→    const msg = encodeURIComponent(
+   588→      `Bonjour Sacko ! Je veux commander :\n\n• ${name}\n• Prix : ${price} FCFA${description ? `\n• Détails : ${description}` : ''}\n\nComment puis-je payer ?`
+   589→    )
+   590→    window.open(`https://wa.me/22397787244?text=${msg}`, '_blank')
    591→  }, [])
    592→
    593→  // Promo countdown: end of current month
@@ -1345,7 +1345,7 @@
   1345→              </p>
   1346→              <div className="flex items-center justify-center gap-6 mt-5 text-xs">
   1347→                <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-emerald-500" /> Découverte = Gratuit</span>
-  1348→                <span className="flex items-center gap-1.5"><ShieldCheck className="h-3.5 w-3.5 text-amber-500" /> Premium = Paiement sécurisé Paystack</span>
+  1348→                <span className="flex items-center gap-1.5"><ShieldCheck className="h-3.5 w-3.5 text-amber-500" /> Premium = Paiement sécurisé iKeePay</span>
   1349→              </div>
   1350→            </div>
   1351→
@@ -1428,7 +1428,7 @@
   1428→                        </Button>
   1429→                      </a>
   1430→                      <Button
-  1431→                        onClick={() => openPaystack(`Offre Premium : ${section.cat}`, 15000, 'Service premium sur devis')}
+  1431→                        onClick={() => openWhatsApp(`Offre Premium : ${section.cat}`, 15000, 'Service premium sur devis')}
   1432→                        className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-10 shadow-md shadow-amber-500/20"
   1433→                      >
   1434→                        <ShieldCheck className="h-3.5 w-3.5 mr-1.5" /> Payer
@@ -1509,7 +1509,7 @@
   1509→                      </a>
   1510→                      <Button
   1511→                        size="sm"
-  1512→                        onClick={() => openPaystack(`${s.name} (${s.sub})`, parseInt(s.price.replace(/\s/g, '')), s.hook)}
+  1512→                        onClick={() => openWhatsApp(`${s.name} (${s.sub})`, parseInt(s.price.replace(/\s/g, '')), s.hook)}
   1513→                        className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-9"
   1514→                      >
   1515→                        <ShieldCheck className="h-3.5 w-3.5 mr-1.5" /> Payer {s.price} F
@@ -1549,7 +1549,7 @@
   1549→                      </a>
   1550→                      <Button
   1551→                        size="lg"
-  1552→                        onClick={() => openPaystack('Pack Lancement Carrière (CV + Lettre + LinkedIn + Guide)', 3500, 'Pack complet : CV Premium + Lettre de motivation + Profil LinkedIn + Guide entretien')}
+  1552→                        onClick={() => openWhatsApp('Pack Lancement Carrière (CV + Lettre + LinkedIn + Guide)', 3500, 'Pack complet : CV Premium + Lettre de motivation + Profil LinkedIn + Guide entretien')}
   1553→                        className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-xl shadow-amber-500/25 px-6 whitespace-nowrap"
   1554→                      >
   1555→                        <ShieldCheck className="h-5 w-5 mr-2" /> Payer 3 500 F
@@ -1789,7 +1789,7 @@
   1789→                        </Button>
   1790→                      </a>
   1791→                      <Button
-  1792→                        onClick={() => openPaystack(`Formation Premium : ${form.title}`, form.premium.priceNum, `${form.subtitle} — ${form.duration}, ${form.lessons}`)}
+  1792→                        onClick={() => openWhatsApp(`Formation Premium : ${form.title}`, form.premium.priceNum, `${form.subtitle} — ${form.duration}, ${form.lessons}`)}
   1793→                        className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-10 shadow-lg shadow-amber-500/20"
   1794→                      >
   1795→                        <ShieldCheck className="h-3.5 w-3.5 mr-1.5" /> Payer {form.premium.price} F
@@ -1999,4 +1999,4 @@
   1999→                      1 000 F
   2000→                    </div>
 
-[showing lines 1-2000 of 3887; use offset=2001 with limit to continue reading]
+[showing lines 1-2000 of 3878; use offset=2001 with limit to continue reading]

@@ -62,4 +62,131 @@ Stage Summary:
 - Flux de paiement : modal → POST /api/ikeepay/initialize → redirect vers iKeePay → callback → GET /api/ikeepay/verify
 - ATTENTION : L'URL de base API iKeePay est configurée à https://api.ikeepay.com — si iKeePay utilise un autre domaine, il faut modifier IKEEPAY_BASE_URL dans Vercel
 - L'utilisateur doit configurer le webhook iKeePay dashboard → https://createur-boutique.vercel.app/api/ikeepay/webhook
-- Anciennes routes /api/paystack/* conservées pour compatibilité mais plus utilisées
+- Anciennes routes /api/paystack/* conservées pour compatibilité mais plus utilisées---
+Task ID: 1
+Agent: Main Agent
+Task: Explorer la structure du projet et comprendre le code existant
+
+Work Log:
+- Read the entire page.tsx (3878 lines monolith SPA)
+- Read Header.tsx, Footer.tsx, globals.css
+- Identified all iKeePay/Paystack references (only 1 remaining at line 3569)
+- Mapped all 25+ sections of the site
+- Identified duplicate "Payer" buttons (7 locations)
+- Found structural bug: testimonial cards outside their section
+- Identified unused openWhatsApp function
+
+Stage Summary:
+- Complete understanding of the codebase achieved
+- Cleanup plan established
+---
+Task ID: 2
+Agent: Main Agent
+Task: Nettoyer les références iKeePay et boutons "Payer" dupliqués
+
+Work Log:
+- Replaced iKeePay payment section with WhatsApp + Orange Money + Moov Money
+- Removed 7 duplicate "Payer" button instances (services, carrière pro cards, carrière pro pack, formations premium, book modal, book pack, cart panel)
+- Removed unused openWhatsApp function
+- Fixed ShieldCheck icon reference (changed to MessageCircle for "Premium = Via WhatsApp")
+- Fixed testimonial cards structural bug (moved inside section, added proper closing tags)
+- Fixed book modal unclosed div tag
+- Python cleanup script used for bulk replacements
+
+Stage Summary:
+- All iKeePay references removed
+- Clean single-button UX (WhatsApp only) for all payments
+- HTML structure bugs fixed
+- File reduced from 3878 to ~3820 lines
+---
+Task ID: 3
+Agent: full-stack-developer (subagent)
+Task: Créer le composant Preloader
+
+Work Log:
+- Created /home/z/my-project/src/components/Preloader.tsx
+- Branded loading screen with "S" logo, gradient, typing animation
+- Apple-level exit animation (slides up with custom cubic-bezier)
+- Auto-dismisses after 2.2s + page load
+
+Stage Summary:
+- Professional preloader component created at /home/z/my-project/src/components/Preloader.tsx
+---
+Task ID: 4
+Agent: full-stack-developer (subagent)
+Task: Créer le composant ClientLogos (Mur de Marques)
+
+Work Log:
+- Created /home/z/my-project/src/components/ClientLogos.tsx
+- 12 fictional Malian/African business names with sector icons
+- Dual-row marquee scrolling in opposite directions
+- Glassmorphism card design with hover effects
+- Scroll-triggered reveal animation
+
+Stage Summary:
+- Client brand wall component created at /home/z/my-project/src/components/ClientLogos.tsx
+---
+Task ID: 5
+Agent: full-stack-developer (subagent)
+Task: Créer le composant VideoShowcase
+
+Work Log:
+- Created /home/z/my-project/src/components/VideoShowcase.tsx
+- 6 video project cards with gradient thumbnails
+- Play button, duration badge, type badge per card
+- Hover overlay with WhatsApp CTA
+- Responsive grid (2 cols mobile, 3 cols desktop)
+
+Stage Summary:
+- Video showcase component created at /home/z/my-project/src/components/VideoShowcase.tsx
+---
+Task ID: 6
+Agent: full-stack-developer (subagent)
+Task: Créer le composant BlogPreview
+
+Work Log:
+- Created /home/z/my-project/src/components/BlogPreview.tsx
+- 3 realistic French blog article previews
+- Design, Marketing, Formation categories
+- Reading time, date, category badges
+- WhatsApp click action per article
+
+Stage Summary:
+- Blog preview component created at /home/z/my-project/src/components/BlogPreview.tsx
+---
+Task ID: 7
+Agent: Main Agent
+Task: Améliorer les animations CSS et le polish global
+
+Work Log:
+- Added custom scrollbar styles (custom-scrollbar class)
+- Added glow pulse animation (animate-glow-pulse)
+- Added text glow animation (animate-text-glow)
+- Added slide-up reveal animation (animate-slide-up)
+- Added fade-in-scale animation (animate-fade-in-scale)
+- Added underline grow animation (animate-underline)
+- Improved focus-visible styles with brand color
+- Better selection color (amber tint)
+- Smooth image loading with content-visibility
+
+Stage Summary:
+- 7 new CSS animations added to globals.css
+- Professional polish enhancements throughout
+---
+Task ID: 8
+Agent: Main Agent
+Task: Intégrer les nouveaux composants et mettre à jour la navigation
+
+Work Log:
+- Imported Preloader, ClientLogos, VideoShowcase, BlogPreview in page.tsx
+- Added <Preloader /> at top of return JSX
+- Placed <ClientLogos /> after Outils section
+- Placed <BlogPreview /> and <VideoShowcase /> before </main>
+- Updated Header nav links (added Blog)
+- Updated side navigation dots (added blog)
+- Updated Footer navigation (added Blog)
+- Updated intersection observer for active section tracking
+
+Stage Summary:
+- All 4 new sections integrated
+- Navigation fully updated across Header, Footer, and side dots
