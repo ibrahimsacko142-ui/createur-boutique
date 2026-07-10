@@ -1714,10 +1714,10 @@ export default function Home() {
                   <div className="text-right flex-shrink-0">
                     <p className="text-sm text-slate-500 line-through">80 000 FCFA</p>
                     <div className="flex items-baseline gap-1 justify-end">
-                      <span className="text-3xl sm:text-4xl font-black bg-gradient-to-r from-amber-400 via-orange-400 to-amber-400 bg-clip-text text-transparent">30 000</span>
+                      <span className="text-3xl sm:text-4xl font-black bg-gradient-to-r from-amber-400 via-orange-400 to-amber-400 bg-clip-text text-transparent">3 000</span>
                       <span className="text-sm text-slate-400 font-semibold">FCFA</span>
                     </div>
-                    <p className="text-[10px] text-emerald-400 font-bold mt-0.5">Économisez 50 000 FCFA</p>
+                    <p className="text-[10px] text-emerald-400 font-bold mt-0.5">Économisez 77 000 FCFA</p>
                   </div>
                 </div>
 
@@ -1760,12 +1760,12 @@ export default function Home() {
 
                 {/* CTA */}
                 <a
-                  href={`https://wa.me/22397787244?text=${encodeURIComponent('Bonjour Sacko ! Je suis intéressé(e) par le Pack Formation Complète à 30 000 FCFA (au lieu de 80 000). Les 4 formations Premium + tous les bonus. Comment procéder ?')}`}
+                  href={`https://wa.me/22397787244?text=${encodeURIComponent('Bonjour Sacko ! Je suis intéressé(e) par le Pack Formation Complète à 3 000 FCFA (au lieu de 80 000). Les 4 formations Premium + tous les bonus. Comment procéder ?')}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 hover:from-amber-600 hover:via-orange-600 hover:to-red-600 text-white font-bold text-sm shadow-xl shadow-amber-500/25 hover:shadow-amber-500/40 transition-all hover:scale-[1.02] active:scale-[0.98]"
                 >
-                  <Zap className="h-4 w-4" /> Obtenir le Pack Complet — 30 000 FCFA
+                  <Zap className="h-4 w-4" /> Obtenir le Pack Complet — 3 000 FCFA
                   <ArrowRight className="h-4 w-4" />
                 </a>
                 <p className="text-center text-[10px] text-slate-500 mt-2.5">Paiement Orange Money / Moov Money — Accès immédiat après confirmation</p>
