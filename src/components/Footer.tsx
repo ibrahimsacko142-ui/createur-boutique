@@ -93,7 +93,8 @@ export default function Footer() {
                 </li>
               ))}
               <li key="canva-pro">
-                <a href="https://www.canva.com/brand/join?token=nbyqrtelBOlUiCNiK170Ew&referrer=team-invite" target="_blank" rel="noopener noreferrer" className="text-sm text-cyan-600 dark:text-cyan-400 font-medium hover:text-cyan-500 transition-colors">
+                <a href="https://www.canva.com/brand/join?token=nbyqrtelBOlUiCNiK170Ew&referrer=team-invite" target="_blank" rel="noopener noreferrer" className="text-sm text-cyan-600 dark:text-cyan-400 font-medium hover:text-cyan-500 transition-colors inline-flex items-center gap-1.5">
+                  <img src="/canva-pro-real.png" alt="" className="h-4 w-4 rounded object-cover" />
                   Canva Pro (gratuit)
                 </a>
               </li>

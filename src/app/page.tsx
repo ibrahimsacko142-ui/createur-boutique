@@ -932,21 +932,37 @@ export default function Home() {
         {/* ═══ 3. QUICK SERVICE ACCESS BAR ═══ */}
         <section className="py-6 border-b bg-background">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+            <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide items-center">
               {[
                 { label: 'Logo', icon: Palette, href: '#services' },
                 { label: 'Site Web', icon: Globe, href: '#services' },
                 { label: 'Vidéo', icon: MonitorPlay, href: '#services' },
                 { label: 'Affiche', icon: PenTool, href: '#services' },
                 { label: 'Formation', icon: GraduationCap, href: '#formations' },
-                { label: 'Canva Pro', icon: Layers, href: 'https://www.canva.com/brand/join?token=nbyqrtelBOlUiCNiK170Ew&referrer=team-invite', external: true },
                 { label: 'CapCut Pro', icon: Scissors, href: '#services' },
               ].map((s) => (
-                <a key={s.label} href={s.href} {...(s.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})} className="flex-shrink-0 flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl bg-muted/50 hover:bg-gradient-to-br hover:from-amber-50 hover:to-orange-50 dark:hover:from-amber-950/20 dark:hover:to-orange-950/20 hover:-translate-y-0.5 hover:shadow-md hover:shadow-amber-500/10 hover:border-amber-200 dark:hover:border-amber-800 border border-transparent transition-all duration-300 group">
+                <a key={s.label} href={s.href} className="flex-shrink-0 flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl bg-muted/50 hover:bg-gradient-to-br hover:from-amber-50 hover:to-orange-50 dark:hover:from-amber-950/20 dark:hover:to-orange-950/20 hover:-translate-y-0.5 hover:shadow-md hover:shadow-amber-500/10 hover:border-amber-200 dark:hover:border-amber-800 border border-transparent transition-all duration-300 group">
                   <s.icon className="h-5 w-5 text-amber-500 group-hover:scale-110 transition-transform" />
                   <span className="text-xs font-medium">{s.label}</span>
                 </a>
               ))}
+              {/* Canva Pro — avec image cliquable */}
+              <a
+                href="https://www.canva.com/brand/join?token=nbyqrtelBOlUiCNiK170Ew&referrer=team-invite"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-shrink-0 flex items-center gap-2 pl-3 pr-4 py-2 rounded-xl bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-cyan-950/30 dark:to-blue-950/30 hover:from-cyan-100 hover:to-blue-100 dark:hover:from-cyan-950/50 dark:hover:to-blue-950/50 hover:-translate-y-0.5 hover:shadow-md hover:shadow-cyan-500/15 border border-cyan-200 dark:border-cyan-800/50 transition-all duration-300 group"
+              >
+                <img
+                  src="/canva-pro-real.png"
+                  alt="Canva Pro"
+                  className="h-9 w-9 rounded-lg object-cover group-hover:scale-110 transition-transform"
+                />
+                <div className="flex flex-col">
+                  <span className="text-xs font-bold text-cyan-700 dark:text-cyan-300 leading-tight">Canva Pro</span>
+                  <span className="text-[9px] text-cyan-500 dark:text-cyan-400 font-medium">Gratuit</span>
+                </div>
+              </a>
             </div>
           </div>
         </section>
@@ -1454,15 +1470,15 @@ export default function Home() {
               <Card className="border-0 shadow-lg overflow-hidden">
                 <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white p-5 sm:p-7">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm shadow-lg flex-shrink-0">
-                      <Gift className="h-5 w-5 text-white" />
-                    </div>
+                    <a href="https://www.canva.com/brand/join?token=nbyqrtelBOlUiCNiK170Ew&referrer=team-invite" target="_blank" rel="noopener noreferrer" className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm shadow-lg flex-shrink-0 hover:bg-white/30 transition-colors">
+                      <img src="/canva-pro-real.png" alt="Canva Pro" className="h-8 w-8 rounded-lg object-cover" />
+                    </a>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         <h3 className="font-bold text-base">Bonus : Accès Premium Offert</h3>
                         <Badge className="bg-white/20 text-white border-0 text-[10px]">NOUVEAU</Badge>
                       </div>
-                      <p className="text-sm text-white/90 leading-relaxed">Chaque formation inclut un <strong>accès gratuit</strong> à <a href="https://www.canva.com/brand/join?token=nbyqrtelBOlUiCNiK170Ew&referrer=team-invite" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-amber-300 transition-colors">Canva Pro</a>, CapCut Pro ou PicsArt Pro. C&apos;est mon cadeau pour vous accompagner dans la pratique.</p>
+                      <p className="text-sm text-white/90 leading-relaxed">Chaque formation inclut un <a href="https://www.canva.com/brand/join?token=nbyqrtelBOlUiCNiK170Ew&referrer=team-invite" target="_blank" rel="noopener noreferrer" className="font-bold underline underline-offset-2 hover:text-amber-300 transition-colors">accès gratuit à Canva Pro</a>, CapCut Pro ou PicsArt Pro. C&apos;est mon cadeau pour vous accompagner dans la pratique.</p>
                     </div>
                   </div>
                 </div>
