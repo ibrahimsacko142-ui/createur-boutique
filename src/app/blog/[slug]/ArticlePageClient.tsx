@@ -7,7 +7,6 @@ import { Badge } from '@/components/ui/badge'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import AdBanner from '@/components/AdBanner'
-import AdsterraBanner from '@/components/AdsterraBanner'
 import type { ArticleData } from '@/lib/articles'
 
 const WHATSAPP_NUMBER = '22397787244'
@@ -91,8 +90,6 @@ export default function ArticlePageClient({
         {/* Ad: banner + interstitial (only loads once) */}
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 mt-6">
           <AdBanner />
-          <div className="h-3" />
-          <AdsterraBanner placement="banner" />
         </div>
 
         {/* Article content */}
@@ -116,8 +113,6 @@ export default function ArticlePageClient({
 
           {/* Mid-article ad */}
           <div className="my-10">
-            <AdsterraBanner placement="native" />
-            <div className="h-4" />
             <AdBanner />
           </div>
 
@@ -143,8 +138,6 @@ export default function ArticlePageClient({
           {/* Bottom ad */}
           <div className="mt-10">
             <AdBanner />
-            <div className="h-3" />
-            <AdsterraBanner placement="sidebar" />
           </div>
         </section>
 

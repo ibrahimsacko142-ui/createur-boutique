@@ -75,7 +75,6 @@ import ClientLogos from '@/components/ClientLogos'
 import VideoShowcase from '@/components/VideoShowcase'
 import BlogPreview from '@/components/BlogPreview'
 import AdBanner from '@/components/AdBanner'
-import AdsterraBanner from '@/components/AdsterraBanner'
 
 
 
@@ -1126,9 +1125,6 @@ export default function Home() {
         <div className="py-4 bg-muted/10">
           <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
             <AdBanner />
-            <div className="mt-3">
-              <AdsterraBanner placement="banner" />
-            </div>
           </div>
         </div>
 
@@ -1680,10 +1676,7 @@ export default function Home() {
         {/* ═══ AD BANNER — Between Services & Formations ═══ */}
         <div className="py-4">
           <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-            <AdsterraBanner placement="native" />
-            <div className="mt-3">
-              <AdBanner />
-            </div>
+            <AdBanner />
           </div>
         </div>
 
@@ -3794,9 +3787,6 @@ export default function Home() {
       <div className="py-4 bg-muted/10">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <AdBanner />
-          <div className="mt-3">
-            <AdsterraBanner placement="sidebar" />
-          </div>
         </div>
       </div>
 
