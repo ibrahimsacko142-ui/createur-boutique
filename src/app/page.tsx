@@ -74,6 +74,8 @@ import Preloader from '@/components/Preloader'
 import ClientLogos from '@/components/ClientLogos'
 import VideoShowcase from '@/components/VideoShowcase'
 import BlogPreview from '@/components/BlogPreview'
+import AdBanner from '@/components/AdBanner'
+import AdsterraBanner from '@/components/AdsterraBanner'
 
 
 
@@ -1120,6 +1122,16 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ═══ AD BANNER — After Hero ═══ */}
+        <div className="py-4 bg-muted/10">
+          <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+            <AdBanner />
+            <div className="mt-3">
+              <AdsterraBanner placement="banner" />
+            </div>
+          </div>
+        </div>
+
         {/* ═══ OUTILS MAÎTRISÉS ═══ */}
         <div className="py-8 bg-muted/30 border-y overflow-hidden">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-6">
@@ -1664,6 +1676,16 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* ═══ AD BANNER — Between Services & Formations ═══ */}
+        <div className="py-4">
+          <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+            <AdsterraBanner placement="banner" />
+            <div className="mt-3">
+              <AdBanner />
+            </div>
+          </div>
+        </div>
 
         {/* ═══ 9. FORMATIONS VEDETTES ═══ */}
         <section id="formations" className="py-16 sm:py-20 text-white" style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)' }}>
@@ -3767,6 +3789,16 @@ export default function Home() {
         <VideoShowcase />
 
       </main>
+
+      {/* ═══ AD BANNER — Before Footer ═══ */}
+      <div className="py-4 bg-muted/10">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+          <AdBanner />
+          <div className="mt-3">
+            <AdsterraBanner placement="banner" />
+          </div>
+        </div>
+      </div>
 
       {/* ═══ MOYENS DE PAIEMENT ═══ */}
       <section className="py-8 border-t bg-muted/20">
