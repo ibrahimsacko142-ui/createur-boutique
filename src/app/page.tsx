@@ -1680,7 +1680,7 @@ export default function Home() {
         {/* ═══ AD BANNER — Between Services & Formations ═══ */}
         <div className="py-4">
           <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-            <AdsterraBanner placement="banner" />
+            <AdsterraBanner placement="native" />
             <div className="mt-3">
               <AdBanner />
             </div>
@@ -3795,7 +3795,7 @@ export default function Home() {
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <AdBanner />
           <div className="mt-3">
-            <AdsterraBanner placement="banner" />
+            <AdsterraBanner placement="sidebar" />
           </div>
         </div>
       </div>

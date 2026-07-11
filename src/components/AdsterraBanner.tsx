@@ -3,59 +3,89 @@
 import { useEffect, useRef } from 'react'
 
 /*
-  Adsterra Ad Banner Component
-  ─────────────────────────────
-  REPLACE 1234567 WITH YOUR REAL ADSTERRA ZONE ID after registering at adsterra.com
-  Multiple zones can be used: one per placement position
+  Adsterra Ad Component — 4 placements disponibles
+  ──────────────────────────────────────────────────
+  placement:
+    "banner"      → Bannière 728x90 (atOptions)
+    "native"      → Annonce native (script auto)
+    "interstitial" → Pop-under / interstitial
+    "sidebar"     → Annonce supplémentaire
 */
 
-const ADSTERRA_ZONE_ID = '1234567' // ⚠️ REPLACE WITH YOUR ADSTERRA ZONE ID
-
 interface AdsterraBannerProps {
+  placement?: 'banner' | 'native' | 'interstitial' | 'sidebar'
   className?: string
-  style?: React.CSSProperties
-  zoneId?: string
 }
 
-export default function AdsterraBanner({ className = '', style = {}, zoneId }: AdsterraBannerProps) {
-  const adRef = useRef<HTMLDivElement>(null)
-  const pushed = useRef(false)
-  const id = zoneId || ADSTERRA_ZONE_ID
+const AD_CONFIGS = {
+  banner: {
+    key: 'ebdefeb6ac9aa3b99ef60ea84707c6be',
+    format: 'iframe',
+    height: 90,
+    width: 728,
+    src: 'https://www.highperformanceformat.com/ebdefeb6ac9aa3b99ef60ea84707c6be/invoke.js',
+  },
+  native: {
+    src: 'https://pl30316034.effectivecpmnetwork.com/63/e4/56/63e4569ad5164536f78deac227dc0aa7.js',
+  },
+  interstitial: {
+    containerId: 'container-6da7673432fce7c53a611838966a9302',
+    src: 'https://pl30316031.effectivecpmnetwork.com/6da7673432fce7c53a611838966a9302/invoke.js',
+  },
+  sidebar: {
+    src: 'https://pl30316030.effectivecpmnetwork.com/bf/f3/d4/bff3d45803026d7e91fca0ab68237c39.js',
+  },
+}
+
+export default function AdsterraBanner({ placement = 'banner', className = '' }: AdsterraBannerProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const loaded = useRef(false)
 
   useEffect(() => {
-    if (pushed.current || id === '1234567') return
-    try {
-      const w = window as unknown as { adsterra?: { push: (args: Record<string, unknown>) => void } }
-      if (w.adsterra) {
-        pushed.current = true
-        w.adsterra.push({})
-      }
-    } catch {
-      // Adsterra not loaded
-    }
-  }, [id])
+    if (loaded.current || !containerRef.current) return
+    loaded.current = true
 
-  // Show placeholder in dev / before real zone ID
-  if (id === '1234567') {
-    return (
-      <div
-        className={`w-full rounded-xl border border-dashed border-amber-500/30 bg-amber-50/50 dark:bg-amber-900/10 flex items-center justify-center py-4 ${className}`}
-        style={style}
-      >
-        <p className="text-[11px] text-amber-600/60 dark:text-amber-400/60 font-medium">
-          Espace publicitaire Adsterra — Inscription sur adsterra.com
-        </p>
-      </div>
-    )
-  }
+    const config = AD_CONFIGS[placement]
+
+    if (placement === 'banner') {
+      // Banner ad using atOptions
+      const w = window as unknown as Record<string, unknown>
+      w.atOptions = {
+        key: config.key,
+        format: config.format,
+        height: config.height,
+        width: config.width,
+        params: {},
+      }
+      const script = document.createElement('script')
+      script.src = (config as { src: string }).src
+      script.async = true
+      containerRef.current.appendChild(script)
+    } else if (placement === 'interstitial') {
+      // Interstitial with container div
+      const cfg = config as { containerId: string; src: string }
+      const div = document.createElement('div')
+      div.id = cfg.containerId
+      containerRef.current.appendChild(div)
+      const script = document.createElement('script')
+      script.src = cfg.src
+      script.async = true
+      script.setAttribute('data-cfasync', 'false')
+      containerRef.current.appendChild(script)
+    } else {
+      // Native / sidebar — simple script
+      const script = document.createElement('script')
+      script.src = (config as { src: string }).src
+      script.async = true
+      containerRef.current.appendChild(script)
+    }
+  }, [placement])
 
   return (
-    <div ref={adRef} className={className} style={style}>
-      <script
-        async
-        src={`//treningsmartlife.com/${id}/${id}.js`}
-        suppressHydrationWarning
-      />
-    </div>
+    <div
+      ref={containerRef}
+      className={`w-full flex justify-center ${className}`}
+      style={{ minHeight: placement === 'banner' ? '90px' : '50px' }}
+    />
   )
 }

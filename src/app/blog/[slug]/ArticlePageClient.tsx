@@ -88,11 +88,11 @@ export default function ArticlePageClient({
           </div>
         </section>
 
-        {/* Ad banner top */}
+        {/* Ad: banner + interstitial (only loads once) */}
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 mt-6">
           <AdBanner />
-          <div className="h-4" />
-          <AdsterraBanner />
+          <div className="h-3" />
+          <AdsterraBanner placement="banner" />
         </div>
 
         {/* Article content */}
@@ -116,18 +116,15 @@ export default function ArticlePageClient({
 
           {/* Mid-article ad */}
           <div className="my-10">
-            <AdsterraBanner className="my-4" />
+            <AdsterraBanner placement="native" />
+            <div className="h-4" />
             <AdBanner />
           </div>
 
           {/* Share + CTA */}
           <div className="mt-12 pt-8 border-t border-border/60">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <Button
-                variant="outline"
-                onClick={() => shareArticle(article)}
-                className="gap-2"
-              >
+              <Button variant="outline" onClick={() => shareArticle(article)} className="gap-2">
                 <Share2 className="h-4 w-4" />
                 Partager l&apos;article
               </Button>
@@ -146,8 +143,8 @@ export default function ArticlePageClient({
           {/* Bottom ad */}
           <div className="mt-10">
             <AdBanner />
-            <div className="h-4" />
-            <AdsterraBanner />
+            <div className="h-3" />
+            <AdsterraBanner placement="sidebar" />
           </div>
         </section>
 
@@ -157,9 +154,7 @@ export default function ArticlePageClient({
             <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-16">
               <h2 className="text-2xl font-bold mb-8">
                 Articles{' '}
-                <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">
-                  recommandés
-                </span>
+                <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">recommandés</span>
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {relatedArticles.map((related) => (
