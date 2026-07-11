@@ -782,19 +782,19 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
                 >
-                <Badge variant="secondary" className="mb-4 px-3 py-1 text-xs font-medium bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800 shadow-sm">
-                  <Sparkles className="h-3 w-3 mr-1" /> Studio Créatif Indépendant
+                <Badge variant="secondary" className="mb-4 px-3 py-1 text-xs font-medium bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800 shadow-sm">
+                  <span className="relative flex h-2 w-2 mr-1.5"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" /><span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" /></span>
+                  Disponible maintenant — Réponse en 5 min
                 </Badge>
 
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
-                  Donnez vie à vos projets digitaux et{' '}
-                  <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 bg-clip-text text-transparent animate-gradient-text">
-                    {typedText}<span className="animate-pulse">|</span>
-                  </span>
+                  <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 bg-clip-text text-transparent">Logo, Site Web, Flyer</span>
+                  {' '}pour votre business à Bamako
                 </h1>
 
                 <p className="mt-6 text-lg text-muted-foreground leading-relaxed max-w-lg">
-                  Création de logos, sites web et visuels sur-mesure pour propulser les entrepreneurs et créateurs de Bamako et d&apos;ailleurs. Chaque projet est une opportunité de transformer votre vision en une réalité qui attire et fidélise.
+                  Vous avez une boutique, un restaurant, un projet ? Je crée votre image professionnelle en 24h. Paiement par Orange Money ou Wave.{' '}
+                  <strong className="text-foreground">Premier logo offert</strong> — sans engagement.
                 </p>
                 </motion.div>
 
@@ -805,13 +805,13 @@ export default function Home() {
                   className="mt-8 flex flex-wrap gap-3"
                 >
                   <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20discuter%20de%20mon%20projet." target="_blank" rel="noopener noreferrer">
-                    <Button size="lg" className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 hover:from-amber-600 hover:via-orange-600 hover:to-red-600 text-white font-semibold shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 transition-all duration-200 hover:scale-105 active:scale-95">
-                      <Rocket className="mr-2 h-4 w-4" /> Lancer mon projet
+                    <Button size="lg" className="bg-[#25d366] hover:bg-[#20bd5a] text-white font-bold shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/40 transition-all duration-200 hover:scale-105 active:scale-95 h-13 px-8 text-base">
+                      <MessageCircle className="mr-2 h-5 w-5" /> Demander mon devis gratuit
                     </Button>
                   </a>
-                  <a href="#boutique">
+                  <a href="#portfolio">
                     <Button size="lg" variant="outline" className="font-semibold hover:bg-accent transition-transform duration-200 hover:scale-105 active:scale-95">
-                      <BookOpen className="mr-2 h-4 w-4" /> Voir la Boutique
+                      <Eye className="mr-2 h-4 w-4" /> Voir mes réalisations
                     </Button>
                   </a>
                 </motion.div>
@@ -822,7 +822,7 @@ export default function Home() {
                   transition={{ duration: 0.5, delay: 0.3 }}
                   className="mt-10 flex flex-wrap gap-3"
                 >
-                  {['Design Graphique', 'Sites Web', 'Montage Vidéo', 'Marketing Digital'].map((tag) => (
+                  {['Logo 5 000 FCFA', 'Site Web 50 000 FCFA', 'Flyer 10 000 FCFA', 'Livraison 24h'].map((tag) => (
                     <span key={tag} className="inline-flex items-center gap-1.5 rounded-full bg-white/80 dark:bg-white/5 border px-3.5 py-1.5 text-xs font-medium text-amber-700 dark:text-amber-400 border-amber-200/80 dark:border-amber-800 shadow-sm backdrop-blur-sm hover:-translate-y-0.5 transition-transform cursor-default">
                       <CheckCircle2 className="h-3 w-3 text-emerald-500" /> {tag}
                     </span>
@@ -841,8 +841,13 @@ export default function Home() {
                     ))}
                   </div>
                   <div>
-                    <p className="text-xs font-bold">Clients satisfaits à Bamako</p>
-                    <p className="text-[10px] text-muted-foreground">Recommandé bouche à oreille</p>
+                    <p className="text-xs font-bold">+87 clients satisfaits au Mali</p>
+                    <div className="flex items-center gap-0.5 mt-0.5">
+                      {[1,2,3,4,5].map(i => (
+                        <svg key={i} className="h-3 w-3 text-amber-400 fill-amber-400" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                      ))}
+                      <span className="text-[10px] text-muted-foreground ml-1">4.9/5 sur Google</span>
+                    </div>
                   </div>
                 </motion.div>
               </div>
@@ -4009,7 +4014,7 @@ export default function Home() {
       </AnimatePresence>
 
       {/* ═══ WHATSAPP EXPANDABLE WIDGET ═══ */}
-      <div className="fixed bottom-6 right-6 z-40 hidden lg:block">
+      <div className="fixed bottom-20 right-4 z-40 lg:bottom-6 lg:right-6">
         <AnimatePresence>
           {showWaWidget && (
             <motion.div
@@ -4059,14 +4064,14 @@ export default function Home() {
           <motion.button
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500 text-white shadow-lg shadow-emerald-500/30 hover:bg-emerald-600 hover:shadow-xl hover:shadow-emerald-500/40 transition-all duration-300 hover:scale-110 group relative"
+            className="flex h-16 w-16 lg:h-14 lg:w-14 items-center justify-center rounded-full bg-[#25d366] text-white shadow-xl shadow-emerald-500/40 hover:bg-[#20bd5a] hover:shadow-2xl transition-all duration-300 hover:scale-110 group relative"
             onClick={() => setShowWaWidget(true)}
             aria-label="Contacter sur WhatsApp"
           >
-            <MessageCircle className="h-6 w-6" />
-            <span className="absolute -top-1 -right-1 flex h-4 w-4">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-white dark:border-background" />
+            <MessageCircle className="h-7 w-7 lg:h-6 lg:w-6" />
+            <span className="absolute -top-1 -right-1 flex h-5 w-5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#25d366] opacity-75" />
+              <span className="relative inline-flex rounded-full h-5 w-5 bg-[#25d366] border-2 border-white dark:border-background" />
             </span>
           </motion.button>
         )}
