@@ -2023,6 +2023,207 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ═══ 11B. SERVICES DIGITAUX EXPRESS ═══ */}
+        <section id="services-numeriques" className="py-16 sm:py-20 bg-gradient-to-b from-background via-cyan-50/30 to-background dark:via-cyan-950/10 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-72 h-72 bg-cyan-200/20 dark:bg-cyan-800/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-rose-200/20 dark:bg-rose-800/10 rounded-full blur-3xl" />
+          <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <Badge variant="secondary" className="mb-3 bg-cyan-100 text-cyan-700 border-cyan-200">
+                <Zap className="h-3 w-3 mr-1" /> Services Express
+              </Badge>
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Gagnez de l&apos;argent <span className="bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 bg-clip-text text-transparent">en ligne</span></h2>
+              <p className="mt-4 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                Des services clés en main pour commencer à gagner de l&apos;argent sur internet depuis le Mali. Paiement par Orange Money ou Wave.
+              </p>
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-6 lg:gap-8">
+              {/* TikTok Monétisation */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ duration: 0.5 }}
+              >
+                <Card className="h-full border-2 border-transparent hover:border-cyan-300 dark:hover:border-cyan-700 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 overflow-hidden group">
+                  <div className="h-2 bg-gradient-to-r from-pink-500 via-red-500 to-cyan-500" />
+                  <CardContent className="p-6 sm:p-8">
+                    {/* Header */}
+                    <div className="flex items-start justify-between mb-5">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-pink-500 via-red-500 to-cyan-500 text-white shadow-lg shadow-pink-500/25">
+                          <svg className="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.87a8.16 8.16 0 0 0 4.77 1.52V6.94a4.85 4.85 0 0 1-1.01-.25z" /></svg>
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-extrabold">TikTok Monétisation</h3>
+                          <p className="text-xs text-muted-foreground">Activez vos revenus TikTok</p>
+                        </div>
+                      </div>
+                      <Badge className="bg-rose-100 text-rose-700 border-rose-200 text-[10px] font-bold">HOT</Badge>
+                    </div>
+
+                    {/* Price */}
+                    <div className="flex items-baseline gap-1.5 mb-5">
+                      <span className="text-3xl font-black text-foreground">10 000</span>
+                      <span className="text-sm font-bold text-cyan-600 dark:text-cyan-400">FCFA</span>
+                      <span className="text-[10px] text-muted-foreground line-through ml-2">25 000 F</span>
+                    </div>
+
+                    {/* Features */}
+                    <ul className="space-y-2.5 mb-6">
+                      {[
+                        'Activation de la monétisation TikTok Creator Rewards',
+                        'Configuration complète du compte pour les revenus',
+                        'Guide stratégique pour atteindre les 10K abonnés',
+                        'Conseils de contenu qui génère des vues au Mali',
+                        'Suivi WhatsApp pendant 7 jours après activation',
+                        'Garantie : argent remboursé si pas activé en 30 jours',
+                      ].map((f) => (
+                        <li key={f} className="flex items-start gap-2 text-sm text-muted-foreground">
+                          <CheckCircle2 className="h-4 w-4 text-cyan-500 mt-0.5 flex-shrink-0" />
+                          <span>{f}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    {/* Trust signals */}
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800 px-2.5 py-1 text-[10px] font-semibold text-emerald-700 dark:text-emerald-400">
+                        <ShieldCheck className="h-3 w-3" /> Garanti 30 jours
+                      </span>
+                      <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 px-2.5 py-1 text-[10px] font-semibold text-amber-700 dark:text-amber-400">
+                        <Clock className="h-3 w-3" /> Livraison 48h
+                      </span>
+                      <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 px-2.5 py-1 text-[10px] font-semibold text-blue-700 dark:text-blue-400">
+                        <Users className="h-3 w-3" /> +23 clients
+                      </span>
+                    </div>
+
+                    {/* CTA */}
+                    <a
+                      href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20veux%20activer%20la%20mon%C3%A9tisation%20TikTok%20(10%20000%20FCFA).%20Comment%20proc%C3%A9der%20%3F"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Button className="w-full bg-gradient-to-r from-pink-500 via-red-500 to-cyan-500 hover:from-pink-600 hover:via-red-600 hover:to-cyan-600 text-white font-bold h-12 text-sm shadow-lg shadow-pink-500/25 transition-all hover:scale-[1.02] active:scale-[0.98]">
+                        <MessageCircle className="h-4 w-4 mr-2" /> Commander sur WhatsApp — 10 000 F
+                      </Button>
+                    </a>
+                    <p className="text-[10px] text-muted-foreground text-center mt-2">Paiement Orange Money / Wave / Moov Money</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+
+              {/* PayPal Account Creation */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+              >
+                <Card className="h-full border-2 border-transparent hover:border-blue-300 dark:hover:border-blue-700 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 overflow-hidden group">
+                  <div className="h-2 bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-400" />
+                  <CardContent className="p-6 sm:p-8">
+                    {/* Header */}
+                    <div className="flex items-start justify-between mb-5">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-400 text-white shadow-lg shadow-blue-500/25">
+                          <Lock className="h-6 w-6" />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-extrabold">Compte PayPal</h3>
+                          <p className="text-xs text-muted-foreground">Recevez des paiements du monde entier</p>
+                        </div>
+                      </div>
+                      <Badge className="bg-blue-100 text-blue-700 border-blue-200 text-[10px] font-bold">POPULAIRE</Badge>
+                    </div>
+
+                    {/* Price */}
+                    <div className="flex items-baseline gap-1.5 mb-5">
+                      <span className="text-3xl font-black text-foreground">5 000</span>
+                      <span className="text-sm font-bold text-blue-600 dark:text-blue-400">FCFA</span>
+                      <span className="text-[10px] text-muted-foreground line-through ml-2">15 000 F</span>
+                    </div>
+
+                    {/* Features */}
+                    <ul className="space-y-2.5 mb-6">
+                      {[
+                        'Création de compte PayPal vérifié et fonctionnel',
+                        'Liaison avec votre numéro de téléphone malien',
+                        'Configuration pour recevoir des paiements internationaux',
+                        'Guide : comment retirer l\'argent au Mali via Wave/Orange Money',
+                        'Sécurité : activation 2FA et protection anti-hacking',
+                        'Suivi WhatsApp pour toute question après création',
+                      ].map((f) => (
+                        <li key={f} className="flex items-start gap-2 text-sm text-muted-foreground">
+                          <CheckCircle2 className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                          <span>{f}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    {/* Trust signals */}
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800 px-2.5 py-1 text-[10px] font-semibold text-emerald-700 dark:text-emerald-400">
+                        <ShieldCheck className="h-3 w-3" /> Compte vérifié
+                      </span>
+                      <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 px-2.5 py-1 text-[10px] font-semibold text-amber-700 dark:text-amber-400">
+                        <Clock className="h-3 w-3" /> Livraison 24h
+                      </span>
+                      <span className="inline-flex items-center gap-1 rounded-full bg-purple-50 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-800 px-2.5 py-1 text-[10px] font-semibold text-purple-700 dark:text-purple-400">
+                        <Globe className="h-3 w-3" /> International
+                      </span>
+                    </div>
+
+                    {/* CTA */}
+                    <a
+                      href="https://wa.me/22397787244?text=Bonjour%20Sacko%20!%20Je%20veux%20cr%C3%A9er%20mon%20compte%20PayPal%20(5%20000%20FCFA).%20Comment%20proc%C3%A9der%20%3F"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Button className="w-full bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-400 hover:from-blue-700 hover:via-blue-600 hover:to-cyan-500 text-white font-bold h-12 text-sm shadow-lg shadow-blue-500/25 transition-all hover:scale-[1.02] active:scale-[0.98]">
+                        <MessageCircle className="h-4 w-4 mr-2" /> Commander sur WhatsApp — 5 000 F
+                      </Button>
+                    </a>
+                    <p className="text-[10px] text-muted-foreground text-center mt-2">Paiement Orange Money / Wave / Moov Money</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            </div>
+
+            {/* Urgency bar */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: 0.3 }}
+              className="mt-10 rounded-2xl bg-gradient-to-r from-amber-50 via-orange-50 to-red-50 dark:from-amber-950/20 dark:via-orange-950/10 dark:to-red-950/20 border border-amber-200/60 dark:border-amber-800/40 p-5 sm:p-6"
+            >
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-500 text-white flex-shrink-0">
+                    <Flame className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-sm">Offre limitée — Prix réduit cette semaine</p>
+                    <p className="text-xs text-muted-foreground">TikTok Monétisation et PayPal séparément coûtent 40 000 FCFA. Profitez-en maintenant.</p>
+                  </div>
+                </div>
+                <a
+                  href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20veux%20les%202%20services%20(TikTok%20Mon%C3%A9tisation%20%2B%20PayPal).%20Est-ce%20qu%27il%20y%20a%20un%20pack%20%3F"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Button variant="outline" className="border-amber-300 dark:border-amber-700 text-amber-700 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/30 font-bold text-xs whitespace-nowrap">
+                    Prendre les 2 services <ArrowRight className="h-3 w-3 ml-1" />
+                  </Button>
+                </a>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
         {/* ═══ 11. BOUTIQUE LIVRES ═══ */}
         <section id="boutique" className="py-16 sm:py-20 bg-gradient-to-b from-muted/30 to-background">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
