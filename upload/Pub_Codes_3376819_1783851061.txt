@@ -1,0 +1,6 @@
+"zone name","placement name","placement id","code (smart link)"
+createur-boutique.vercel.app,Popunder_1,30215531,"<script src=""https://pl30316030.effectivecpmnetwork.com/bf/f3/d4/bff3d45803026d7e91fca0ab68237c39.js""></script>
+"
+createur-boutique.vercel.app,Smartlink_1,30215534,https://www.effectivecpmnetwork.com/xntegh31ay?key=3caffbaacc837287e406a00f78092cd4
+createur-boutique.vercel.app,SocialBar_1,30215535,"<script src=""https://pl30316034.effectivecpmnetwork.com/63/e4/56/63e4569ad5164536f78deac227dc0aa7.js""></script>
+"

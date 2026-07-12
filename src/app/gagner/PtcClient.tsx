@@ -15,7 +15,7 @@ import { useToast } from '@/hooks/use-toast'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 
-const AD_URL = 'https://www.effectivecpmnetwork.com/w24ar3me?key=2270134b3b2815aa1e5c7ea649fb22a7'
+const AD_URL = 'https://www.effectivecpmnetwork.com/xntegh31ay?key=3caffbaacc837287e406a00f78092cd4'
 const TIMER_SECONDS = 30
 const EARN_PER_VIEW = 1
 
@@ -70,8 +70,11 @@ export default function PtcPage() {
       const res = await fetch('/api/send-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: `+${phone.replace(/\s/g, '')}` }) })
       const data = await res.json()
       if (data.success) {
+        if (data.otp) {
+          setOtp(data.otp)
+        }
         setStep('otp')
-        toast({ title: 'Code envoyé !', description: 'Vérifiez votre WhatsApp.' })
+        toast({ title: 'Code envoyé !', description: data.smsSent ? 'Vérifiez votre WhatsApp.' : 'Le code est affiché ci-dessous.' })
       } else {
         toast({ title: 'Erreur', description: data.error || 'Impossible d\'envoyer le code.', variant: 'destructive' })
       }

@@ -335,10 +335,21 @@ export default function RootLayout({
   return (
     <html lang="fr" suppressHydrationWarning>
       <head>
+        {/* Google AdSense */}
         <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5792648101445233"
           crossOrigin="anonymous"
+        />
+        {/* PropellerAds - Popunder */}
+        <script
+          async
+          src="https://pl30316030.effectivecpmnetwork.com/bf/f3/d4/bff3d45803026d7e91fca0ab68237c39.js"
+        />
+        {/* PropellerAds - Social Bar */}
+        <script
+          async
+          src="https://pl30316034.effectivecpmnetwork.com/63/e4/56/63e4569ad5164536f78deac227dc0aa7.js"
         />
         <script
           type="application/ld+json"
