@@ -14,6 +14,7 @@ import { Badge } from '@/components/ui/badge'
 import { useToast } from '@/hooks/use-toast'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import AdsterraBanner from '@/components/AdsterraBanner'
 
 const SITE_URL = 'https://createur-boutique.vercel.app'
 const AD_LINKS = [
@@ -534,6 +535,12 @@ export default function PtcPage() {
 
                 {/* ═══ BANNIÈRE PUB 2 - Grand format ═══ */}
                 <AdIframe url="https://www.effectivecpmnetwork.com/w24ar3me?key=2270134b3b2815aa1e5c7ea649fb22a7" label="Publicite" className="" />
+
+                {/* ═══ ADSTERRA BANNIÈRE ═══ */}
+                <div className="rounded-xl overflow-hidden border bg-white dark:bg-zinc-900 p-0">
+                  <div className="text-[9px] text-center text-muted-foreground py-1 bg-muted/30 border-b font-medium uppercase tracking-wider">Sponsorise</div>
+                  <AdsterraBanner />
+                </div>
 
                 {/* ═══ PARRAINAGE ═══ */}
                 <Card className="border-0 shadow-2xl overflow-hidden">

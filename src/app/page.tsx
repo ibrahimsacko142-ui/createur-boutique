@@ -72,6 +72,7 @@ import { Label } from '@/components/ui/label'
 import { useToast } from '@/hooks/use-toast'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import AdsterraBanner from '@/components/AdsterraBanner'
 import Preloader from '@/components/Preloader'
 import ClientLogos from '@/components/ClientLogos'
 import VideoShowcase from '@/components/VideoShowcase'
@@ -1503,10 +1504,11 @@ export default function Home() {
         </section>
 
         {/* ═══ PUBLICITÉ 1 ═══ */}
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 pb-6">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 pb-6 space-y-4">
           <div className="rounded-xl overflow-hidden border bg-white dark:bg-zinc-900">
             <iframe src="https://www.effectivecpmnetwork.com/xntegh31ay?key=3caffbaacc837287e406a00f78092cd4" className="w-full border-0" style={{ height: '100px' }} sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-forms" loading="lazy" title="Publicité" />
           </div>
+          <AdsterraBanner />
         </div>
 
         {/* ═══ 7. CARRIÈRE PRO ═══ */}
