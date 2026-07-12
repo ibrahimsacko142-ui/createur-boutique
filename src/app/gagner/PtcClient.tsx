@@ -19,7 +19,62 @@ const SITE_URL = 'https://createur-boutique.vercel.app'
 const AD_LINKS = [
   { name: 'Publicité 1', url: 'https://www.effectivecpmnetwork.com/xntegh31ay?key=3caffbaacc837287e406a00f78092cd4' },
   { name: 'Publicité 2', url: 'https://www.effectivecpmnetwork.com/w24ar3me?key=2270134b3b2815aa1e5c7ea649fb22a7' },
+  { name: 'Publicité 3', url: 'https://www.effectivecpmnetwork.com/xntegh31ay?key=3caffbaacc837287e406a00f78092cd4' },
+  { name: 'Publicité 4', url: 'https://www.highcpmrevenuegate.com/xntegh31ay?key=3caffbaacc837287e406a00f78092cd4' },
+  { name: 'Publicité 5', url: 'https://a.magsrv.com/ad-provider.js' },
 ]
+
+/* ═══ Composant bannière pub visible ═══ */
+function AdBanner({ zoneId, network, format = 'auto', className = '' }: { zoneId: string; network: string; format?: string; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (!ref.current) return
+    // Adsterra
+    if (network === 'adsterra') {
+      const s = document.createElement('script')
+      s.setAttribute('type', 'application/javascript')
+      s.innerHTML = `atOptions = {\n  'key' : '${zoneId}',\n  'format' : '${format}',\n  'height' : 90,\n  'width' : 728,\n  'params' : {}\n};`
+      ref.current.appendChild(s)
+      const s2 = document.createElement('script')
+      s2.src = `//www.highperformanceformat.com/${zoneId}/invoke.js`
+      ref.current.appendChild(s2)
+    }
+    // HilltopAds
+    if (network === 'hilltopads') {
+      const s = document.createElement('script')
+      s.async = true
+      s.src = `https://hilltopads.net/bnr.js?zone=${zoneId}`
+      ref.current.appendChild(s)
+    }
+    // PropellerAds banner
+    if (network === 'propeller') {
+      const s = document.createElement('script')
+      s.async = true
+      s.innerHTML = `(propellerads = window.propellerads || []).push({\n  zone_id: ${zoneId}\n});`
+      ref.current.appendChild(s)
+    }
+  }, [zoneId, network, format])
+  return <div ref={ref} className={`ad-banner-container ${className}`} />
+}
+
+/* ═══ Composant pub iframe visible (utilise les liens directs) ═══ */
+function AdIframe({ url, label, className = '' }: { url: string; label: string; className?: string }) {
+  return (
+    <div className={`rounded-xl overflow-hidden border bg-white dark:bg-zinc-900 ${className}`}>
+      <div className="text-[9px] text-center text-muted-foreground py-1 bg-muted/30 border-b font-medium uppercase tracking-wider">
+        {label}
+      </div>
+      <iframe
+        src={url}
+        className="w-full border-0"
+        style={{ minHeight: '120px', height: '150px' }}
+        sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-forms"
+        loading="lazy"
+        title={label}
+      />
+    </div>
+  )
+}
 const TIMER_SECONDS = 30
 const EARN_PER_VIEW = 1
 const REFERRAL_BONUS_NEW = 10
@@ -303,6 +358,9 @@ export default function PtcPage() {
                     </div>
                   </CardContent>
                 </Card>
+
+                {/* ═══ PUB sous login ═══ */}
+                <AdIframe url="https://www.effectivecpmnetwork.com/xntegh31ay?key=3caffbaacc837287e406a00f78092cd4" label="Sponsorise" className="mt-2" />
               </motion.div>
             )}
 
@@ -363,12 +421,18 @@ export default function PtcPage() {
                     </button>
                   </CardContent>
                 </Card>
+
+                {/* ═══ PUB sous OTP ═══ */}
+                <AdIframe url="https://www.highcpmrevenuegate.com/xntegh31ay?key=3caffbaacc837287e406a00f78092cd4" label="Annonce" className="mt-2" />
               </motion.div>
             )}
 
             {/* ═══ DASHBOARD ═══ */}
             {step === 'ready' && (
               <motion.div key="ready" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="space-y-4">
+
+                {/* ═══ BANNIÈRE PUB 1 - Au-dessus des stats ═══ */}
+                <AdIframe url="https://www.effectivecpmnetwork.com/xntegh31ay?key=3caffbaacc837287e406a00f78092cd4" label="Sponsore" className="mb-2" />
 
                 {/* Stats */}
                 <div className="grid grid-cols-3 gap-2">
@@ -483,6 +547,9 @@ export default function PtcPage() {
                   </CardContent>
                 </Card>
 
+                {/* ═══ BANNIÈRE PUB 2 - Grand format ═══ */}
+                <AdIframe url="https://www.effectivecpmnetwork.com/w24ar3me?key=2270134b3b2815aa1e5c7ea649fb22a7" label="Publicite" className="" />
+
                 {/* ═══ PARRAINAGE ═══ */}
                 <Card className="border-0 shadow-2xl overflow-hidden">
                   <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-1">
@@ -553,6 +620,9 @@ export default function PtcPage() {
                     )}
                   </CardContent>
                 </Card>
+
+                {/* ═══ BANNIÈRE PUB 3 - Après parrainage ═══ */}
+                <AdIframe url="https://www.highcpmrevenuegate.com/xntegh31ay?key=3caffbaacc837287e406a00f78092cd4" label="Annonce" className="" />
 
                 {/* Retrait */}
                 {balance >= 500 && (

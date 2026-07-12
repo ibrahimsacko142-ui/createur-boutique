@@ -335,22 +335,36 @@ export default function RootLayout({
   return (
     <html lang="fr" suppressHydrationWarning>
       <head>
-        {/* Google AdSense */}
+        {/* ═══ Google AdSense ═══ */}
         <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5792648101445233"
           crossOrigin="anonymous"
         />
-        {/* PropellerAds - Popunder */}
+
+        {/* ═══ PropellerAds - Popunder ═══ */}
         <script
           async
           src="https://pl30316030.effectivecpmnetwork.com/bf/f3/d4/bff3d45803026d7e91fca0ab68237c39.js"
         />
-        {/* PropellerAds - Social Bar */}
+        {/* ═══ PropellerAds - Social Bar ═══ */}
         <script
           async
           src="https://pl30316034.effectivecpmnetwork.com/63/e4/56/63e4569ad5164536f78deac227dc0aa7.js"
         />
+
+        {/* ═══ Adsterra - Bibliothèque ═══ */}
+        <script async src="//adsterra.com/adProvider/ad.js"></script>
+
+        {/* ═══ HilltopAds - Popunder ═══ */}
+        <script async src="https://hilltopads.net/pb.js?pub=PLACEHOLDER_HILLTOP"></script>
+
+        {/* ═══ PopAds - Popunder ═══ */}
+        <script type="application/javascript" dangerouslySetInnerHTML={{ __html: `var ad_idzone = "PLACEHOLDER_POPADS_ZONE"; var ad_popup_fallback = false; var ad_popup_force = false; var ad_new_tab = false; var ad_frequency_period = 300; var ad_frequency_count = 1; var ad_trigger_method = 1; var ad_tags = ["PTC","Mali","Afrique"];` }} />
+        <script async src="//ads.popads.net/pop.js" />
+
+        {/* ═══ RichPops - Popunder ═══ */}
+        <script async src="https://richpops.com/pb.js?pub=PLACEHOLDER_RICHPOPS"></script>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
