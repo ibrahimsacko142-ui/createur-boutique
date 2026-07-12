@@ -31,13 +31,19 @@ model ContactMessage {
 }
 
 model PtcUser {
-  id         String    @id @default(cuid())
-  phone      String    @unique
-  balance    Int       @default(0)
-  totalViewed Int      @default(0)
-  views      PtcView[]
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  id            String    @id @default(cuid())
+  phone         String    @unique
+  balance       Int       @default(0)
+  totalViewed   Int       @default(0)
+  referralCode  String    @unique @default(cuid())
+  referredBy    String?
+  parrain       PtcUser?  @relation("Referrals", fields: [referredBy], references: [referralCode])
+  referralCount Int       @default(0)
+  referralEarnings Int    @default(0)
+  views         PtcView[]
+  referrals     PtcUser[] @relation("Referrals")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 }
 
 model PtcView {
