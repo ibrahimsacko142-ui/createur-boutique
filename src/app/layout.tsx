@@ -360,7 +360,7 @@ export default function RootLayout({
         <script async src="//adsterra.com/adProvider/ad.js"></script>
 
         {/* ═══ HilltopAds - Popunder ═══ */}
-        <script async src="https://hilltopads.net/pb.js?pub=PLACEHOLDER_HILLTOP"></script>
+        <script async src="https://hilltopads.net/pb.js?pub=Z4eeE3A9aMRR3StOFI783xtaBEJrYBz3yxIGxIecMQUE7hHigCDJgQaXe4KPeRIW"></script>
 
         {/* ═══ PopAds - Popunder ═══ */}
         <script type="application/javascript" dangerouslySetInnerHTML={{ __html: `var ad_idzone = "PLACEHOLDER_POPADS_ZONE"; var ad_popup_fallback = false; var ad_popup_force = false; var ad_new_tab = false; var ad_frequency_period = 300; var ad_frequency_count = 1; var ad_trigger_method = 1; var ad_tags = ["PTC","Mali","Afrique"];` }} />

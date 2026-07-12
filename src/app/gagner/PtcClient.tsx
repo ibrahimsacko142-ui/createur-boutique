@@ -550,6 +550,11 @@ export default function PtcPage() {
                 {/* ═══ BANNIÈRE PUB 2 - Grand format ═══ */}
                 <AdIframe url="https://www.effectivecpmnetwork.com/w24ar3me?key=2270134b3b2815aa1e5c7ea649fb22a7" label="Publicite" className="" />
 
+                {/* ═══ BANNIÈRE PUB 3 - HilltopAds visible ═══ */}
+                <div className="rounded-xl overflow-hidden border bg-white dark:bg-zinc-900 min-h-[100px] flex items-center justify-center">
+                  <AdBanner zoneId="7b50face3b89635dde7d" network="hilltopads" className="w-full" />
+                </div>
+
                 {/* ═══ PARRAINAGE ═══ */}
                 <Card className="border-0 shadow-2xl overflow-hidden">
                   <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-1">
