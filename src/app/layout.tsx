@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const SITE_URL = "https://studio-creatif.org";
+const SITE_URL = "https://createur-boutique.vercel.app";
 
 export const metadata: Metadata = {
   title: "Studio Créatif — Design Graphique, Sites Web & Solutions Numériques à Bamako | Sacko",

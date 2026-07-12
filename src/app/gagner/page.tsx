@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Gagnez de l\'argent avec Studio Créatif',
     description: 'Regardez des pubs, gagnez 1 FCFA par vue. Retrait Orange Money / Wave.',
-    url: 'https://studio-creatif.org/gagner',
+    url: 'https://createur-boutique.vercel.app/gagner',
   },
 }
 

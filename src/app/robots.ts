@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: 'https://studio-creatif.org/sitemap.xml',
+    sitemap: 'https://createur-boutique.vercel.app/sitemap.xml',
   }
 }
