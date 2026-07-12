@@ -1,45 +1,40 @@
 'use client'
 
+import { useEffect, useRef } from 'react'
+
 /*
-  Adsterra Banner — multi-instance SAFE
-  Chaque pub est dans son propre iframe (srcdoc) pour éviter
-  les conflits de variable globale atOptions.
+  Adsterra Banner — approche originale qui marchait.
+  Chaque instance est décalée pour éviter les conflits atOptions.
 */
 
 const ADSTERRA_KEY = 'f0bd986ebfb3589b5e800ceeaa28a9d5'
-
-const AD_HTML = `
-<html>
-<head>
-<meta charset="utf-8">
-<style>*{margin:0;padding:0;box-sizing:border-box}body{background:#f8f9fa;display:flex;align-items:center;justify-content:center;height:100vh;overflow:hidden}</style>
-</head>
-<body>
-<script type="application/javascript">
-var atOptions = {
-  'key' : '${ADSTERRA_KEY}',
-  'format' : 'iframe',
-  'height' : 250,
-  'width' : 300,
-  'params' : {}
-};
-</script>
-<script type="text/javascript" src="https://www.highperformanceformat.com/${ADSTERRA_KEY}/invoke.js"></script>
-</body>
-</html>
-`
+let counter = 0
 
 export default function AdsterraBanner({ className = '' }: { className?: string }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const delay = useRef((counter++) * 1500) // décalage de 1.5s entre chaque instance
+
+  useEffect(() => {
+    if (!ref.current) return
+
+    const timer = setTimeout(() => {
+      const s1 = document.createElement('script')
+      s1.type = 'application/javascript'
+      s1.innerHTML = `atOptions = {'key' : '${ADSTERRA_KEY}','format' : 'iframe','height' : 250,'width' : 300,'params' : {}};`
+      ref.current!.appendChild(s1)
+
+      const s2 = document.createElement('script')
+      s2.src = `//www.highperformanceformat.com/${ADSTERRA_KEY}/invoke.js`
+      ref.current!.appendChild(s2)
+    }, delay.current)
+
+    return () => clearTimeout(timer)
+  }, [])
+
   return (
-    <div className={`w-full flex justify-center ${className}`}>
-      <iframe
-        srcDoc={AD_HTML}
-        width="300"
-        height="250"
-        style={{ border: 'none', maxWidth: '100%' }}
-        loading="lazy"
-        title="Publicité"
-      />
-    </div>
+    <div
+      ref={ref}
+      className={`min-h-[250px] w-full ${className}`}
+    />
   )
 }

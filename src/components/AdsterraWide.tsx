@@ -1,44 +1,40 @@
 'use client'
 
+import { useEffect, useRef } from 'react'
+
 /*
-  Adsterra Banner 728x90 — format large
-  Chaque pub est dans son propre iframe (srcdoc).
+  Adsterra Wide 728x90 — format bannière large.
+  Même approche avec décalage.
 */
 
 const ADSTERRA_KEY = 'f0bd986ebfb3589b5e800ceeaa28a9d5'
-
-const AD_HTML = `
-<html>
-<head>
-<meta charset="utf-8">
-<style>*{margin:0;padding:0;box-sizing:border-box}body{background:#f8f9fa;display:flex;align-items:center;justify-content:center;height:100vh;overflow:hidden}</style>
-</head>
-<body>
-<script type="application/javascript">
-var atOptions = {
-  'key' : '${ADSTERRA_KEY}',
-  'format' : 'iframe',
-  'height' : 90,
-  'width' : 728,
-  'params' : {}
-};
-</script>
-<script type="text/javascript" src="https://www.highperformanceformat.com/${ADSTERRA_KEY}/invoke.js"></script>
-</body>
-</html>
-`
+let counter = 100
 
 export default function AdsterraWide({ className = '' }: { className?: string }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const delay = useRef((counter++) * 1500)
+
+  useEffect(() => {
+    if (!ref.current) return
+
+    const timer = setTimeout(() => {
+      const s1 = document.createElement('script')
+      s1.type = 'application/javascript'
+      s1.innerHTML = `atOptions = {'key' : '${ADSTERRA_KEY}','format' : 'iframe','height' : 90,'width' : 728,'params' : {}};`
+      ref.current!.appendChild(s1)
+
+      const s2 = document.createElement('script')
+      s2.src = `//www.highperformanceformat.com/${ADSTERRA_KEY}/invoke.js`
+      ref.current!.appendChild(s2)
+    }, delay.current)
+
+    return () => clearTimeout(timer)
+  }, [])
+
   return (
-    <div className={`w-full flex justify-center ${className}`}>
-      <iframe
-        srcDoc={AD_HTML}
-        width="728"
-        height="90"
-        style={{ border: 'none', maxWidth: '100%' }}
-        loading="lazy"
-        title="Publicité"
-      />
-    </div>
+    <div
+      ref={ref}
+      className={`min-h-[90px] w-full ${className}`}
+    />
   )
 }
