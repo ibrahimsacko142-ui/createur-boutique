@@ -18,6 +18,7 @@ import AdsterraBanner from '@/components/AdsterraBanner'
 import AdsterraWide from '@/components/AdsterraWide'
 
 const SITE_URL = 'https://createur-boutique.vercel.app'
+const SMART_LINK = 'https://www.effectivecpmnetwork.com/xntegh31ay?key=3caffbaacc837287e406a00f78092cd4'
 const TIMER_SECONDS = 30
 const EARN_PER_VIEW = 10
 const REFERRAL_BONUS_NEW = 10
@@ -440,8 +441,8 @@ export default function PtcPage() {
                             <Wallet className="h-5 w-5 mr-2" /> Réclamer +{EARN_PER_VIEW} FCFA
                           </Button>
                         )}
-                        <Button onClick={() => { setCountdown(TIMER_SECONDS); setIsTimerRunning(true) }} className="w-full h-12 text-sm font-bold bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-lg shadow-orange-500/25">
-                          <Eye className="h-4 w-4 mr-2" /> Voir les pubs &middot; Démarrer le timer
+                        <Button onClick={() => { window.open(SMART_LINK, '_blank'); setCountdown(TIMER_SECONDS); setIsTimerRunning(true) }} className="w-full h-12 text-sm font-bold bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-lg shadow-orange-500/25">
+                          <Eye className="h-4 w-4 mr-2" /> Voir la pub &middot; +{EARN_PER_VIEW} FCFA
                         </Button>
                       </div>
                     )}
