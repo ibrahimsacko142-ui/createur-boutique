@@ -60,6 +60,8 @@ import {
   Cookie,
   Calculator,
   Share2,
+  Wallet,
+  Smartphone,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -2220,6 +2222,54 @@ export default function Home() {
                   </Button>
                 </a>
               </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* ═══ GAGNER EN REGARDANT DES PUBS ═══ */}
+        <section className="py-10 sm:py-14 relative overflow-hidden">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 25 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.5 }}
+            >
+              <a href="/gagner" className="block">
+                <div className="relative rounded-2xl overflow-hidden border-2 border-emerald-300 dark:border-emerald-700 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 group">
+                  {/* Background */}
+                  <div className="bg-gradient-to-r from-emerald-500 via-cyan-500 to-blue-500 p-6 sm:p-8 relative">
+                    <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0djZoLTZWMzRoLTZWMjhoNlYyaDZ2MjZoNnY2aC02eiIvPjwvZz48L2c+PC9zdmc+')] opacity-30" />
+                    
+                    <div className="relative flex flex-col sm:flex-row items-center justify-between gap-5">
+                      <div className="flex items-center gap-4 text-white">
+                        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm shadow-lg flex-shrink-0">
+                          <Wallet className="h-8 w-8" />
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2 mb-1">
+                            <h3 className="text-xl sm:text-2xl font-extrabold">Gagnez de l&apos;argent en regardant des pubs</h3>
+                            <Badge className="bg-white/20 text-white border-white/30 text-[10px] font-bold backdrop-blur-sm">NOUVEAU</Badge>
+                          </div>
+                          <p className="text-white/85 text-sm sm:text-base max-w-lg">
+                            1 FCFA par pub regardée. Retrait à partir de <strong>500 FCFA</strong> via Orange Money ou Wave. Inscrivez-vous gratuitement !
+                          </p>
+                          <div className="flex items-center gap-4 mt-2 text-xs text-white/70">
+                            <span className="flex items-center gap-1"><Eye className="h-3 w-3" /> 1 FCFA/vue</span>
+                            <span className="flex items-center gap-1"><ShieldCheck className="h-3 w-3" /> 100% gratuit</span>
+                            <span className="flex items-center gap-1"><Smartphone className="h-3 w-3" /> Depuis votre téléphone</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex-shrink-0">
+                        <div className="bg-white text-emerald-600 font-extrabold px-6 py-3 rounded-xl shadow-lg group-hover:scale-105 transition-transform flex items-center gap-2 text-sm">
+                          Commencer maintenant <ArrowRight className="h-4 w-4" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </a>
             </motion.div>
           </div>
         </section>
