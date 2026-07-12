@@ -10,6 +10,7 @@ const navLinks = [
   { label: 'Accueil', href: '#accueil' },
   { label: 'Services', href: '#services' },
   { label: 'Gagner en ligne', href: '#services-numeriques' },
+  { label: 'Gagner de l\'argent', href: '/gagner' },
   { label: 'Formations', href: '#formations' },
   { label: 'Boutique', href: '#boutique' },
   { label: 'Portfolio', href: '#portfolio' },

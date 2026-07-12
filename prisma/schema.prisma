@@ -29,3 +29,21 @@ model ContactMessage {
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
 }
+
+model PtcUser {
+  id         String    @id @default(cuid())
+  phone      String    @unique
+  balance    Int       @default(0)
+  totalViewed Int      @default(0)
+  views      PtcView[]
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+model PtcView {
+  id        String   @id @default(cuid())
+  userId    String
+  user      PtcUser  @relation(fields: [userId], references: [id])
+  earned    Int      @default(1)
+  createdAt DateTime @default(now())
+}
