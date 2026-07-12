@@ -24,39 +24,6 @@ const AD_LINKS = [
   { name: 'Publicité 5', url: 'https://a.magsrv.com/ad-provider.js' },
 ]
 
-/* ═══ Composant bannière pub visible ═══ */
-function AdBanner({ zoneId, network, format = 'auto', className = '' }: { zoneId: string; network: string; format?: string; className?: string }) {
-  const ref = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    if (!ref.current) return
-    // Adsterra
-    if (network === 'adsterra') {
-      const s = document.createElement('script')
-      s.setAttribute('type', 'application/javascript')
-      s.innerHTML = `atOptions = {\n  'key' : '${zoneId}',\n  'format' : '${format}',\n  'height' : 90,\n  'width' : 728,\n  'params' : {}\n};`
-      ref.current.appendChild(s)
-      const s2 = document.createElement('script')
-      s2.src = `//www.highperformanceformat.com/${zoneId}/invoke.js`
-      ref.current.appendChild(s2)
-    }
-    // HilltopAds
-    if (network === 'hilltopads') {
-      const s = document.createElement('script')
-      s.async = true
-      s.src = `https://hilltopads.net/bnr.js?zone=${zoneId}`
-      ref.current.appendChild(s)
-    }
-    // PropellerAds banner
-    if (network === 'propeller') {
-      const s = document.createElement('script')
-      s.async = true
-      s.innerHTML = `(propellerads = window.propellerads || []).push({\n  zone_id: ${zoneId}\n});`
-      ref.current.appendChild(s)
-    }
-  }, [zoneId, network, format])
-  return <div ref={ref} className={`ad-banner-container ${className}`} />
-}
-
 /* ═══ Composant pub iframe visible (utilise les liens directs) ═══ */
 function AdIframe({ url, label, className = '', height = 150 }: { url: string; label: string; className?: string; height?: number }) {
   return (
@@ -567,11 +534,6 @@ export default function PtcPage() {
 
                 {/* ═══ BANNIÈRE PUB 2 - Grand format ═══ */}
                 <AdIframe url="https://www.effectivecpmnetwork.com/w24ar3me?key=2270134b3b2815aa1e5c7ea649fb22a7" label="Publicite" className="" />
-
-                {/* ═══ BANNIÈRE PUB 3 - HilltopAds visible ═══ */}
-                <div className="rounded-xl overflow-hidden border bg-white dark:bg-zinc-900 min-h-[100px] flex items-center justify-center">
-                  <AdBanner zoneId="7b50face3b89635dde7d" network="hilltopads" className="w-full" />
-                </div>
 
                 {/* ═══ PARRAINAGE ═══ */}
                 <Card className="border-0 shadow-2xl overflow-hidden">

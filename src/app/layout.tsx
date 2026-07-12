@@ -359,24 +359,6 @@ export default function RootLayout({
         {/* ═══ Adsterra - Bibliothèque ═══ */}
         <script async src="//adsterra.com/adProvider/ad.js"></script>
 
-        {/* ═══ HilltopAds - Popunder ═══ */}
-        <script async src="https://hilltopads.net/pb.js?pub=Z4eeE3A9aMRR3StOFI783xtaBEJrYBz3yxIGxIecMQUE7hHigCDJgQaXe4KPeRIW"></script>
-
-        {/* ═══ PopAds - Popunder ═══ */}
-        <script type="application/javascript" dangerouslySetInnerHTML={{ __html: `var ad_idzone = "PLACEHOLDER_POPADS_ZONE"; var ad_popup_fallback = false; var ad_popup_force = false; var ad_new_tab = false; var ad_frequency_period = 300; var ad_frequency_count = 1; var ad_trigger_method = 1; var ad_tags = ["PTC","Mali","Afrique"];` }} />
-        <script async src="//ads.popads.net/pop.js" />
-
-        {/* ═══ RichPops - Popunder ═══ */}
-        <script async src="https://richpops.com/pb.js?pub=PLACEHOLDER_RICHPOPS"></script>
-
-        {/* ═══ Monetag - Push + Popunder (Propeller) ═══ */}
-        <script async src="https://alwingulla.com/88/tag.min.js" data-zone="PLACEHOLDER_MONETAG" async></script>
-
-        {/* ═══ EroAdvertising - Banner + Popunder ═══ */}
-        <script type="application/javascript" dangerouslySetInnerHTML={{ __html: `var erUrl = 'https://ero-advertising.com/ads/'; var ad_uid = 'PLACEHOLDER_EROAD'; var ad_zone = 'PLACEHOLDER_EROAD_ZONE';` }} />
-
-        {/* ═══ JuicyAds - Bannière automatique ═══ */}
-        <script async src="https://adserver.juicyads.com/js/jads.js" async></script>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
