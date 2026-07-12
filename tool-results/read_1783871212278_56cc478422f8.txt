@@ -1,0 +1,615 @@
+     1→'use client'
+     2→
+     3→import { useState, useEffect, useCallback, useRef } from 'react'
+     4→import { motion, AnimatePresence } from 'framer-motion'
+     5→import {
+     6→  Eye, Clock, Wallet, Play, CheckCircle2, ShieldCheck, MessageCircle,
+     7→  ChevronRight, ArrowLeft, Loader2, Phone, Zap, TrendingUp,
+     8→  Info, Copy, Users, Gift, ArrowRight, ExternalLink, Flag, X,
+     9→} from 'lucide-react'
+    10→import { Button } from '@/components/ui/button'
+    11→import { Card, CardContent } from '@/components/ui/card'
+    12→import { Input } from '@/components/ui/input'
+    13→import { Badge } from '@/components/ui/badge'
+    14→import { useToast } from '@/hooks/use-toast'
+    15→import Header from '@/components/Header'
+    16→import Footer from '@/components/Footer'
+    17→import AdsterraBanner from '@/components/AdsterraBanner'
+    18→
+    19→const SITE_URL = 'https://createur-boutique.vercel.app'
+    20→import AdBanner from '@/components/AdBanner'
+    21→const TIMER_SECONDS = 30
+    22→const EARN_PER_VIEW = 1
+    23→const REFERRAL_BONUS_NEW = 10
+    24→const REFERRAL_BONUS_REFERRER = 5
+    25→
+    26→export default function PtcPage() {
+    27→  const { toast } = useToast()
+    28→  const [phone, setPhone] = useState('')
+    29→  const [otp, setOtp] = useState('')
+    30→  const [generatedOtp, setGeneratedOtp] = useState('')
+    31→  const [step, setStep] = useState<'login' | 'otp' | 'ready'>('login')
+    32→  const [countdown, setCountdown] = useState(0)
+    33→  const [isTimerRunning, setIsTimerRunning] = useState(false)
+    34→  const [balance, setBalance] = useState(0)
+    35→  const [totalViewed, setTotalViewed] = useState(0)
+    36→  const [claiming, setClaiming] = useState(false)
+    37→  const [sendingOtp, setSendingOtp] = useState(false)
+    38→  const [loading, setLoading] = useState(false)
+    39→  const [referralCode, setReferralCode] = useState('')
+    40→  const [referredBy, setReferredBy] = useState('')
+    41→  const [referralCount, setReferralCount] = useState(0)
+    42→  const [referralEarnings, setReferralEarnings] = useState(0)
+    43→  const [showReferralInput, setShowReferralInput] = useState(false)
+    44→  const [refInput, setRefInput] = useState('')
+    45→  const [applyingRef, setApplyingRef] = useState(false)
+    46→  const [copied, setCopied] = useState(false)
+    47→  const intervalRef = useRef<NodeJS.Timeout | null>(null)
+    48→
+    49→  const referralLink = `${SITE_URL}/gagner?ref=${referralCode}`
+    50→
+    51→  const fetchBalance = useCallback(async () => {
+    52→    if (!phone) return
+    53→    try {
+    54→      const res = await fetch(`/api/ptc/balance?phone=${encodeURIComponent(phone)}`)
+    55→      const data = await res.json()
+    56→      if (data.success) {
+    57→        setBalance(data.balance)
+    58→        setTotalViewed(data.totalViewed)
+    59→        if (data.referralCode) setReferralCode(data.referralCode)
+    60→        if (data.referredBy) setReferredBy(data.referredBy)
+    61→        if (data.referralCount !== undefined) setReferralCount(data.referralCount)
+    62→        if (data.referralEarnings !== undefined) setReferralEarnings(data.referralEarnings)
+    63→      }
+    64→    } catch {}
+    65→  }, [phone])
+    66→
+    67→  useEffect(() => {
+    68→    const params = new URLSearchParams(window.location.search)
+    69→    const ref = params.get('ref')
+    70→    if (ref) {
+    71→      setRefInput(ref)
+    72→      setShowReferralInput(true)
+    73→    }
+    74→  }, [])
+    75→
+    76→  useEffect(() => {
+    77→    return () => { if (intervalRef.current) clearTimeout(intervalRef.current) }
+    78→  }, [])
+    79→
+    80→  useEffect(() => {
+    81→    if (isTimerRunning && countdown > 0) {
+    82→      intervalRef.current = setTimeout(() => setCountdown(c => c - 1), 1000)
+    83→    } else if (isTimerRunning && countdown === 0) {
+    84→      setIsTimerRunning(false)
+    85→    }
+    86→    return () => { if (intervalRef.current) clearTimeout(intervalRef.current) }
+    87→  }, [isTimerRunning, countdown])
+    88→
+    89→  const handleSendOtp = async () => {
+    90→    if (!phone || phone.replace(/\s/g, '').length < 8) {
+    91→      toast({ title: 'Numéro invalide', description: 'Entrez votre numéro.', variant: 'destructive' })
+    92→      return
+    93→    }
+    94→    setSendingOtp(true)
+    95→    try {
+    96→      // Create user first
+    97→      await fetch('/api/ptc/balance', {
+    98→        method: 'POST',
+    99→        headers: { 'Content-Type': 'application/json' },
+   100→        body: JSON.stringify({ phone: `+${phone.replace(/\s/g, '')}` }),
+   101→      })
+   102→      // Generate OTP locally
+   103→      const code = Math.floor(100000 + Math.random() * 900000).toString()
+   104→      setGeneratedOtp(code)
+   105→      setOtp('')
+   106→      setStep('otp')
+   107→      toast({ title: 'Code généré !', description: `Votre code est : ${code}` })
+   108→    } catch {
+   109→      toast({ title: 'Erreur', description: 'Problème de connexion.', variant: 'destructive' })
+   110→    }
+   111→    setSendingOtp(false)
+   112→  }
+   113→
+   114→  const handleVerifyOtp = async () => {
+   115→    if (otp !== generatedOtp) {
+   116→      toast({ title: 'Code incorrect', description: 'Le code ne correspond pas.', variant: 'destructive' })
+   117→      return
+   118→    }
+   119→    setLoading(true)
+   120→    try {
+   121→      await fetchBalance()
+   122→      setStep('ready')
+   123→      toast({ title: 'Bienvenue !', description: 'Vous pouvez maintenant gagner de l\'argent.' })
+   124→    } catch {
+   125→      toast({ title: 'Erreur', description: 'Problème de connexion.', variant: 'destructive' })
+   126→    }
+   127→    setLoading(false)
+   128→  }
+   129→
+   130→  const handleWatchAd = (adUrl: string) => {
+   131→    window.open(adUrl, '_blank')
+   132→    setCountdown(TIMER_SECONDS)
+   133→    setIsTimerRunning(true)
+   134→  }
+   135→
+   136→  const handleClaim = async () => {
+   137→    setClaiming(true)
+   138→    try {
+   139→      const res = await fetch('/api/ptc/claim', {
+   140→        method: 'POST',
+   141→        headers: { 'Content-Type': 'application/json' },
+   142→        body: JSON.stringify({ phone }),
+   143→      })
+   144→      const data = await res.json()
+   145→      if (data.success) {
+   146→        setBalance(data.newBalance)
+   147→        setTotalViewed(data.totalViewed)
+   148→        toast({ title: `+${EARN_PER_VIEW} FCFA gagné !`, description: `Nouveau solde : ${data.newBalance} FCFA` })
+   149→      } else {
+   150→        toast({ title: 'Pas encore...', description: data.error || 'Réessayez.', variant: 'destructive' })
+   151→        if (data.waitSeconds) {
+   152→          setCountdown(data.waitSeconds)
+   153→          setIsTimerRunning(true)
+   154→        }
+   155→      }
+   156→    } catch {
+   157→      toast({ title: 'Erreur', description: 'Problème de connexion.', variant: 'destructive' })
+   158→    }
+   159→    setClaiming(false)
+   160→  }
+   161→
+   162→  const handleApplyReferral = async () => {
+   163→    if (!refInput.trim()) {
+   164→      toast({ title: 'Code vide', description: 'Entrez un code de parrainage.', variant: 'destructive' })
+   165→      return
+   166→    }
+   167→    setApplyingRef(true)
+   168→    try {
+   169→      const res = await fetch('/api/ptc/referral', {
+   170→        method: 'POST',
+   171→        headers: { 'Content-Type': 'application/json' },
+   172→        body: JSON.stringify({ phone, referralCode: refInput.trim() }),
+   173→      })
+   174→      const data = await res.json()
+   175→      if (data.success) {
+   176→        setReferredBy(refInput.trim())
+   177→        setBalance(data.newBalance)
+   178→        setShowReferralInput(false)
+   179→        toast({ title: 'Parrainage appliqué !', description: data.message })
+   180→        fetchBalance()
+   181→      } else {
+   182→        toast({ title: 'Erreur', description: data.error || 'Code invalide.', variant: 'destructive' })
+   183→      }
+   184→    } catch {
+   185→      toast({ title: 'Erreur', description: 'Problème de connexion.', variant: 'destructive' })
+   186→    }
+   187→    setApplyingRef(false)
+   188→  }
+   189→
+   190→  const copyLink = () => {
+   191→    navigator.clipboard.writeText(referralLink)
+   192→    setCopied(true)
+   193→    toast({ title: 'Lien copié !', description: 'Partagez-le avec vos amis.' })
+   194→    setTimeout(() => setCopied(false), 2000)
+   195→  }
+   196→
+   197→  return (
+   198→    <div className="min-h-screen flex flex-col bg-background">
+   199→      <Header />
+   200→      <main className="flex-1">
+   201→        {/* Hero */}
+   202→        <section className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-cyan-50 to-blue-50 dark:from-emerald-950/20 dark:via-cyan-950/10 dark:to-blue-950/20">
+   203→          <div className="absolute inset-0 pointer-events-none">
+   204→            <div className="absolute top-0 right-1/4 w-80 h-80 bg-emerald-400/10 rounded-full blur-3xl" />
+   205→            <div className="absolute bottom-0 left-1/4 w-64 h-64 bg-cyan-400/10 rounded-full blur-3xl" />
+   206→          </div>
+   207→          <div className="relative mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14 text-center">
+   208→            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+   209→              <Badge className="mb-4 px-3 py-1 text-xs font-medium bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800">
+   210→                <Zap className="h-3 w-3 mr-1" /> Gagnez de l&apos;argent
+   211→              </Badge>
+   212→              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight mb-4">
+   213→                Regardez des pubs,{' '}
+   214→                <span className="bg-gradient-to-r from-emerald-500 via-cyan-500 to-blue-500 bg-clip-text text-transparent">
+   215→                  gagnez de l&apos;argent
+   216→                </span>
+   217→              </h1>
+   218→              <p className="text-muted-foreground text-base sm:text-lg max-w-xl mx-auto leading-relaxed">
+   219→                Chaque pub regardée vous rapporte <strong className="text-foreground">{EARN_PER_VIEW} FCFA</strong>.
+   220→                Parrainez vos amis et gagnez <strong className="text-foreground">{REFERRAL_BONUS_NEW} FCFA</strong> par filleul.
+   221→                Retrait via Orange Money ou Wave.
+   222→              </p>
+   223→            </motion.div>
+   224→          </div>
+   225→        </section>
+   226→
+   227→        {/* Main Content */}
+   228→        <section className="mx-auto max-w-md px-4 sm:px-6 py-8">
+   229→          <AnimatePresence mode="wait">
+   230→
+   231→            {/* ═══ LOGIN ═══ */}
+   232→            {step === 'login' && (
+   233→              <motion.div key="login" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.3 }}>
+   234→                <Card className="border-0 shadow-2xl overflow-hidden">
+   235→                  <div className="bg-gradient-to-r from-emerald-500 to-cyan-500 p-1">
+   236→                    <div className="bg-gradient-to-br from-emerald-500 to-cyan-600 text-white p-6 text-center">
+   237→                      <div className="flex h-14 w-14 mx-auto items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mb-3">
+   238→                        <Phone className="h-7 w-7" />
+   239→                      </div>
+   240→                      <h2 className="text-xl font-extrabold">Connectez-vous</h2>
+   241→                      <p className="text-sm text-white/80 mt-1">Entrez votre numéro pour recevoir le code</p>
+   242→                    </div>
+   243→                  </div>
+   244→                  <CardContent className="p-6 space-y-4">
+   245→                    <div className="space-y-2">
+   246→                      <label className="text-sm font-semibold">Numéro WhatsApp *</label>
+   247→                      <div className="flex gap-2">
+   248→                        <div className="flex h-11 items-center px-3 rounded-md border border-input bg-muted text-sm font-medium text-muted-foreground">
+   249→                          +223
+   250→                        </div>
+   251→                        <Input
+   252→                          placeholder="XX XX XX XX"
+   253→                          value={phone}
+   254→                          onChange={(e) => setPhone(e.target.value.replace(/[^\d\s]/g, ''))}
+   255→                          className="h-11 flex-1"
+   256→                          type="tel"
+   257→                          maxLength={12}
+   258→                        />
+   259→                      </div>
+   260→                    </div>
+   261→
+   262→                    {showReferralInput && (
+   263→                      <div className="p-3 rounded-lg bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800">
+   264→                        <p className="text-xs font-semibold text-blue-700 dark:text-blue-400 mb-1 flex items-center gap-1">
+   265→                          <Gift className="h-3 w-3" /> Code parrainage détecté
+   266→                        </p>
+   267→                        <p className="text-[11px] text-blue-600 dark:text-blue-400">
+   268→                          Vous avez été invité par un parrain. Il sera appliqué après connexion.
+   269→                        </p>
+   270→                      </div>
+   271→                    )}
+   272→
+   273→                    <Button
+   274→                      onClick={handleSendOtp}
+   275→                      disabled={sendingOtp || phone.replace(/\s/g, '').length < 8}
+   276→                      className="w-full bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white font-bold h-12"
+   277→                    >
+   278→                      {sendingOtp ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <MessageCircle className="h-4 w-4 mr-2" />}
+   279→                      Envoyer le code WhatsApp
+   280→                    </Button>
+   281→
+   282→                    <div className="flex items-center gap-3 text-center">
+   283→                      <div className="flex-1 h-px bg-border" />
+   284→                      <span className="text-[10px] text-muted-foreground font-medium">100% GRATUIT</span>
+   285→                      <div className="flex-1 h-px bg-border" />
+   286→                    </div>
+   287→
+   288→                    <div className="grid grid-cols-3 gap-2 text-center">
+   289→                      <div className="p-2 rounded-lg bg-emerald-50 dark:bg-emerald-950/20">
+   290→                        <p className="text-sm font-black text-emerald-600">{EARN_PER_VIEW} F</p>
+   291→                        <p className="text-[10px] text-muted-foreground">par vue</p>
+   292→                      </div>
+   293→                      <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-950/20">
+   294→                        <p className="text-sm font-black text-blue-600">{REFERRAL_BONUS_NEW} F</p>
+   295→                        <p className="text-[10px] text-muted-foreground">par filleul</p>
+   296→                      </div>
+   297→                      <div className="p-2 rounded-lg bg-amber-50 dark:bg-amber-950/20">
+   298→                        <p className="text-sm font-black text-amber-600">500 F</p>
+   299→                        <p className="text-[10px] text-muted-foreground">retrait min</p>
+   300→                      </div>
+   301→                    </div>
+   302→                  </CardContent>
+   303→                </Card>
+   304→
+   305→                {/* ═══ PUB sous login ═══ */}
+   306→                <AdsterraBanner className="mt-2" />
+   307→              </motion.div>
+   308→            )}
+   309→
+   310→            {/* ═══ OTP ═══ */}
+   311→            {step === 'otp' && (
+   312→              <motion.div key="otp" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.3 }}>
+   313→                <Card className="border-0 shadow-2xl overflow-hidden">
+   314→                  <div className="bg-gradient-to-r from-blue-500 to-indigo-500 p-1">
+   315→                    <div className="bg-gradient-to-br from-blue-500 to-indigo-600 text-white p-6 text-center">
+   316→                      <div className="flex h-14 w-14 mx-auto items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mb-3">
+   317→                        <ShieldCheck className="h-7 w-7" />
+   318→                      </div>
+   319→                      <h2 className="text-xl font-extrabold">Votre code de vérification</h2>
+   320→                      <p className="text-sm text-white/80 mt-1">Copiez ce code et entrez-le ci-dessous</p>
+   321→                    </div>
+   322→                  </div>
+   323→                  <CardContent className="p-6 space-y-4">
+   324→                    {/* CODE AFFICHÉ EN GRAND */}
+   325→                    <div className="text-center py-4 px-6 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border-2 border-dashed border-blue-300 dark:border-blue-700">
+   326→                      <p className="text-[10px] text-muted-foreground font-medium mb-1 uppercase tracking-wider">Votre code</p>
+   327→                      <p className="text-4xl sm:text-5xl font-black tracking-[0.3em] text-blue-600 dark:text-blue-400 select-all">
+   328→                        {generatedOtp}
+   329→                      </p>
+   330→                      <Button
+   331→                        onClick={() => { navigator.clipboard.writeText(generatedOtp); toast({ title: 'Code copié !' }) }}
+   332→                        variant="ghost"
+   333→                        size="sm"
+   334→                        className="mt-3 text-xs text-blue-600 dark:text-blue-400"
+   335→                      >
+   336→                        <Copy className="h-3 w-3 mr-1" /> Copier le code
+   337→                      </Button>
+   338→                    </div>
+   339→
+   340→                    {/* Champ pour entrer le code */}
+   341→                    <div className="space-y-2">
+   342→                      <label className="text-sm font-semibold">Entrez le code ici</label>
+   343→                      <Input
+   344→                        placeholder="Entrez le code à 6 chiffres"
+   345→                        value={otp}
+   346→                        onChange={(e) => setOtp(e.target.value.replace(/[^\d]/g, '').slice(0, 6))}
+   347→                        className="h-14 text-center text-2xl font-bold tracking-[0.5em]"
+   348→                        maxLength={6}
+   349→                        type="tel"
+   350→                      />
+   351→                    </div>
+   352→
+   353→                    <Button
+   354→                      onClick={handleVerifyOtp}
+   355→                      disabled={loading || otp.length !== 6}
+   356→                      className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-bold h-12"
+   357→                    >
+   358→                      {loading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <CheckCircle2 className="h-4 w-4 mr-2" />}
+   359→                      Vérifier et continuer
+   360→                    </Button>
+   361→
+   362→                    <button onClick={() => setStep('login')} className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 mx-auto">
+   363→                      <ArrowLeft className="h-3 w-3" /> Changer de numéro
+   364→                    </button>
+   365→                  </CardContent>
+   366→                </Card>
+   367→
+   368→                {/* ═══ PUB sous OTP ═══ */}
+   369→                <AdBanner />
+   370→              </motion.div>
+   371→            )}
+   372→
+   373→            {/* ═══ DASHBOARD ═══ */}
+   374→            {step === 'ready' && (
+   375→              <motion.div key="ready" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="space-y-4">
+   376→
+   377→                {/* ═══ BANNIÈRE PUB 1 - Au-dessus des stats ═══ */}
+   378→                <AdsterraBanner className="mb-2" />
+   379→
+   380→                {/* Stats */}
+   381→                <div className="grid grid-cols-3 gap-2">
+   382→                  <Card className="border-0 shadow-lg bg-gradient-to-br from-emerald-50 to-cyan-50 dark:from-emerald-950/20 dark:to-cyan-950/20">
+   383→                    <CardContent className="p-3 text-center">
+   384→                      <Wallet className="h-5 w-5 text-emerald-500 mx-auto mb-1" />
+   385→                      <p className="text-xl font-black text-emerald-600 dark:text-emerald-400">{balance}</p>
+   386→                      <p className="text-[10px] text-muted-foreground font-medium">FCFA</p>
+   387→                    </CardContent>
+   388→                  </Card>
+   389→                  <Card className="border-0 shadow-lg bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20">
+   390→                    <CardContent className="p-3 text-center">
+   391→                      <Eye className="h-5 w-5 text-blue-500 mx-auto mb-1" />
+   392→                      <p className="text-xl font-black text-blue-600 dark:text-blue-400">{totalViewed}</p>
+   393→                      <p className="text-[10px] text-muted-foreground font-medium">Vues</p>
+   394→                    </CardContent>
+   395→                  </Card>
+   396→                  <Card className="border-0 shadow-lg bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20">
+   397→                    <CardContent className="p-3 text-center">
+   398→                      <Users className="h-5 w-5 text-amber-500 mx-auto mb-1" />
+   399→                      <p className="text-xl font-black text-amber-600 dark:text-amber-400">{referralCount}</p>
+   400→                      <p className="text-[10px] text-muted-foreground font-medium">Filleuls</p>
+   401→                    </CardContent>
+   402→                  </Card>
+   403→                </div>
+   404→
+   405→                {/* Pubs rémunérées */}
+   406→                <Card className="border-0 shadow-2xl overflow-hidden">
+   407→                  <div className="bg-gradient-to-r from-emerald-500 via-cyan-500 to-blue-500 p-1">
+   408→                    <div className="bg-gradient-to-br from-emerald-500 to-cyan-600 text-white p-5 text-center">
+   409→                      <h2 className="text-xl font-extrabold mb-0.5">PUBLICITÉS RÉMUNÉRÉES</h2>
+   410→                      <p className="text-white/80 text-xs">Regardez, gagnez.</p>
+   411→                      <div className="flex items-center justify-center gap-5 mt-3">
+   412→                        <div><p className="text-[10px] text-white/60">PAR VUE</p><p className="text-lg font-black">{EARN_PER_VIEW} F</p></div>
+   413→                        <div className="w-px h-8 bg-white/20" />
+   414→                        <div><p className="text-[10px] text-white/60">VUES</p><p className="text-lg font-black">{totalViewed}</p></div>
+   415→                        <div className="w-px h-8 bg-white/20" />
+   416→                        <div><p className="text-[10px] text-white/60">GAGNÉ</p><p className="text-lg font-black">{balance} F</p></div>
+   417→                      </div>
+   418→                    </div>
+   419→                  </div>
+   420→
+   421→                  <CardContent className="p-5 space-y-3">
+   422→                    {isTimerRunning && (
+   423→                      <div className="text-center space-y-2">
+   424→                        <p className="text-xs font-medium text-muted-foreground">La pub est ouverte dans un autre onglet...</p>
+   425→                        <div className="relative w-20 h-20 mx-auto">
+   426→                          <svg className="w-20 h-20 -rotate-90" viewBox="0 0 100 100">
+   427→                            <circle cx="50" cy="50" r="42" stroke="currentColor" strokeWidth="6" fill="none" className="text-muted/20" />
+   428→                            <circle cx="50" cy="50" r="42" stroke="currentColor" strokeWidth="6" fill="none" className="text-emerald-500" strokeLinecap="round" strokeDasharray={`${2 * Math.PI * 42}`} strokeDashoffset={`${2 * Math.PI * 42 * (1 - countdown / TIMER_SECONDS)}`} style={{ transition: 'stroke-dashoffset 1s linear' }} />
+   429→                          </svg>
+   430→                          <div className="absolute inset-0 flex items-center justify-center">
+   431→                            <span className="text-xl font-black">{countdown}</span>
+   432→                          </div>
+   433→                        </div>
+   434→                        <p className="text-[10px] text-muted-foreground">Secondes restantes</p>
+   435→                      </div>
+   436→                    )}
+   437→
+   438→                    {!isTimerRunning && countdown === 0 && (
+   439→                      <div className="space-y-2">
+   440→                        {claiming ? (
+   441→                          <Button disabled className="w-full h-13 text-sm font-bold bg-muted text-muted-foreground">
+   442→                            <Loader2 className="h-4 w-4 mr-2 animate-spin" /> Vérification...
+   443→                          </Button>
+   444→                        ) : (
+   445→                          <Button onClick={handleClaim} className="w-full h-13 text-sm font-bold bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white shadow-lg shadow-emerald-500/25">
+   446→                            <CheckCircle2 className="h-4 w-4 mr-2" /> Réclamer +{EARN_PER_VIEW} FCFA
+   447→                          </Button>
+   448→                        )}
+   449→                        <div className="space-y-1.5">
+   450→                          {AD_LINKS.map((ad, i) => (
+   451→                            <Button
+   452→                              key={i}
+   453→                              onClick={() => handleWatchAd(ad.url)}
+   454→                              variant="outline"
+   455→                              className="w-full h-11 text-xs font-semibold border-2 border-orange-200 dark:border-orange-800 text-orange-700 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-950/20"
+   456→                            >
+   457→                              <Play className="h-3.5 w-3.5 mr-1.5" /> Regarder {ad.name} &middot; +{EARN_PER_VIEW} FCFA
+   458→                              <ExternalLink className="h-3 w-3 ml-auto" />
+   459→                            </Button>
+   460→                          ))}
+   461→                        </div>
+   462→                      </div>
+   463→                    )}
+   464→
+   465→                    {!isTimerRunning && countdown > 0 && (
+   466→                      <Button onClick={() => handleWatchAd(AD_LINKS[0].url)} className="w-full h-13 text-sm font-bold bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-lg shadow-orange-500/25">
+   467→                        <Play className="h-4 w-4 mr-2" /> Regarder une pub &middot; +{EARN_PER_VIEW} FCFA
+   468→                      </Button>
+   469→                    )}
+   470→
+   471→                    <div className="p-3 rounded-xl bg-muted/50 border">
+   472→                      <p className="text-[11px] font-bold mb-1.5 flex items-center gap-1">
+   473→                        <Info className="h-3 w-3 text-blue-500" /> Comment ça marche ?
+   474→                      </p>
+   475→                      <ol className="space-y-1 text-[10px] text-muted-foreground leading-relaxed">
+   476→                        <li className="flex items-start gap-1.5"><span className="flex h-4 w-4 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[9px] font-bold flex-shrink-0 mt-0.5">1</span> Cliquez sur &laquo; Regarder une pub &raquo;.</li>
+   477→                        <li className="flex items-start gap-1.5"><span className="flex h-4 w-4 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[9px] font-bold flex-shrink-0 mt-0.5">2</span> Laissez la pub ouverte 30 secondes.</li>
+   478→                        <li className="flex items-start gap-1.5"><span className="flex h-4 w-4 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[9px] font-bold flex-shrink-0 mt-0.5">3</span> Revenez ici et cliquez &laquo; Réclamer &raquo;.</li>
+   479→                      </ol>
+   480→                    </div>
+   481→
+   482→                    <a
+   483→                      href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20veux%20cr%C3%A9er%20ma%20propre%20campagne%20publicitaire."
+   484→                      target="_blank"
+   485→                      rel="noopener noreferrer"
+   486→                      className="flex items-center justify-center gap-1.5 text-[11px] text-cyan-600 dark:text-cyan-400 font-semibold hover:underline pt-1"
+   487→                    >
+   488→                      <Flag className="h-3 w-3" /> Créer votre propre campagne publicitaire <ChevronRight className="h-3 w-3" />
+   489→                    </a>
+   490→                  </CardContent>
+   491→                </Card>
+   492→
+   493→                {/* ═══ BANNIÈRE PUB 2 - Grand format ═══ */}
+   494→                <AdBanner />
+   495→
+   496→                {/* ═══ ADSTERRA BANNIÈRE ═══ */}
+   497→                <div className="rounded-xl overflow-hidden border bg-white dark:bg-zinc-900 p-0">
+   498→                  <div className="text-[9px] text-center text-muted-foreground py-1 bg-muted/30 border-b font-medium uppercase tracking-wider">Sponsorise</div>
+   499→                  <AdsterraBanner />
+   500→                </div>
+   501→
+   502→                {/* ═══ PARRAINAGE ═══ */}
+   503→                <Card className="border-0 shadow-2xl overflow-hidden">
+   504→                  <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-1">
+   505→                    <div className="bg-gradient-to-br from-amber-500 to-orange-600 text-white p-5 text-center">
+   506→                      <h2 className="text-xl font-extrabold mb-0.5 flex items-center justify-center gap-2">
+   507→                        <Users className="h-5 w-5" /> PARRAINAGE
+   508→                      </h2>
+   509→                      <p className="text-white/80 text-xs">Invitez vos amis, gagnez plus</p>
+   510→                      <div className="flex items-center justify-center gap-4 mt-3">
+   511→                        <div><p className="text-[10px] text-white/60">VOTRE GAIN</p><p className="text-lg font-black">+{REFERRAL_BONUS_NEW} F</p></div>
+   512→                        <div className="w-px h-8 bg-white/20" />
+   513→                        <div><p className="text-[10px] text-white/60">GAIN FILLEUL</p><p className="text-lg font-black">+{REFERRAL_BONUS_REFERRER} F</p></div>
+   514→                      </div>
+   515→                    </div>
+   516→                  </div>
+   517→
+   518→                  <CardContent className="p-5 space-y-3">
+   519→                    <div>
+   520→                      <p className="text-[11px] font-bold mb-1.5">Votre lien de parrainage :</p>
+   521→                      <div className="flex gap-1.5">
+   522→                        <div className="flex-1 h-10 flex items-center px-3 rounded-lg bg-muted border text-[11px] text-muted-foreground truncate font-mono">
+   523→                          {referralLink}
+   524→                        </div>
+   525→                        <Button onClick={copyLink} size="sm" variant={copied ? 'default' : 'outline'} className="h-10 px-3 flex-shrink-0">
+   526→                          {copied ? <CheckCircle2 className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+   527→                        </Button>
+   528→                      </div>
+   529→                    </div>
+   530→
+   531→                    <div className="grid grid-cols-2 gap-2">
+   532→                      <div className="p-2.5 rounded-lg bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 text-center">
+   533→                        <p className="text-lg font-black text-amber-600">{referralCount}</p>
+   534→                        <p className="text-[10px] text-muted-foreground">Filleuls</p>
+   535→                      </div>
+   536→                      <div className="p-2.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800 text-center">
+   537→                        <p className="text-lg font-black text-emerald-600">{referralEarnings} F</p>
+   538→                        <p className="text-[10px] text-muted-foreground">Gains parrainage</p>
+   539→                      </div>
+   540→                    </div>
+   541→
+   542→                    {!referredBy ? (
+   543→                      <div>
+   544→                        {!showReferralInput ? (
+   545→                          <Button onClick={() => setShowReferralInput(true)} variant="outline" className="w-full h-10 text-xs font-semibold border-dashed border-2">
+   546→                            <Gift className="h-3.5 w-3.5 mr-1.5" /> Entrer un code de parrainage
+   547→                          </Button>
+   548→                        ) : (
+   549→                          <div className="space-y-2">
+   550→                            <div className="flex gap-1.5">
+   551→                              <Input placeholder="Code parrainage" value={refInput} onChange={(e) => setRefInput(e.target.value)} className="h-10 text-xs font-mono" />
+   552→                              <Button onClick={handleApplyReferral} disabled={applyingRef || !refInput.trim()} size="sm" className="h-10 px-4 bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs">
+   553→                                {applyingRef ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <CheckCircle2 className="h-3.5 w-3.5" />}
+   554→                              </Button>
+   555→                            </div>
+   556→                            <button onClick={() => { setShowReferralInput(false); setRefInput('') }} className="text-[10px] text-muted-foreground hover:text-foreground flex items-center gap-0.5 mx-auto">
+   557→                              <X className="h-2.5 w-2.5" /> Annuler
+   558→                            </button>
+   559→                          </div>
+   560→                        )}
+   561→                      </div>
+   562→                    ) : (
+   563→                      <div className="flex items-center gap-2 p-2.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800">
+   564→                        <CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" />
+   565→                        <p className="text-[11px] text-emerald-700 dark:text-emerald-400 font-medium">
+   566→                          Parrainage activé — +{REFERRAL_BONUS_NEW} FCFA de bonus reçu !
+   567→                        </p>
+   568→                      </div>
+   569→                    )}
+   570→                  </CardContent>
+   571→                </Card>
+   572→
+   573→                {/* ═══ BANNIÈRE PUB 3 - Après parrainage ═══ */}
+   574→                <AdsterraBanner />
+   575→
+   576→                {/* Retrait */}
+   577→                {balance >= 500 && (
+   578→                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+   579→                    <a href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je souhaite retirer ${balance} FCFA de mon solde PTC. Mon numéro : ${phone}`)}`} target="_blank" rel="noopener noreferrer">
+   580→                      <Card className="border-2 border-emerald-300 dark:border-emerald-700 hover:shadow-lg transition-all cursor-pointer hover:-translate-y-0.5">
+   581→                        <CardContent className="p-4 flex items-center justify-between">
+   582→                          <div className="flex items-center gap-3">
+   583→                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30">
+   584→                              <Wallet className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+   585→                            </div>
+   586→                            <div>
+   587→                              <p className="text-sm font-bold">Retirer {balance} FCFA</p>
+   588→                              <p className="text-[11px] text-muted-foreground">Via Orange Money ou Wave</p>
+   589→                            </div>
+   590→                          </div>
+   591→                          <ArrowRight className="h-5 w-5 text-emerald-500" />
+   592→                        </CardContent>
+   593→                      </Card>
+   594→                    </a>
+   595→                  </motion.div>
+   596→                )}
+   597→
+   598→                {balance > 0 && balance < 500 && (
+   599→                  <div className="flex items-center gap-2 p-3 rounded-lg bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800">
+   600→                    <TrendingUp className="h-4 w-4 text-blue-500 flex-shrink-0" />
+   601→                    <p className="text-[11px] text-blue-700 dark:text-blue-400">
+   602→                      Encore <strong>{500 - balance} FCFA</strong> avant de pouvoir retirer. Continuez !
+   603→                    </p>
+   604→                  </div>
+   605→                )}
+   606→              </motion.div>
+   607→            )}
+   608→          </AnimatePresence>
+   609→        </section>
+   610→      </main>
+   611→      <Footer />
+   612→
+   613→    </div>
+   614→  )
+   615→}

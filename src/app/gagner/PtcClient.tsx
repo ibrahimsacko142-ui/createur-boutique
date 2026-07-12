@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   Eye, Clock, Wallet, Play, CheckCircle2, ShieldCheck, MessageCircle,
   ChevronRight, ArrowLeft, Loader2, Phone, Zap, TrendingUp,
-  Info, Copy, Users, Gift, ArrowRight, ExternalLink, Flag, X,
+  Info, Copy, Users, Gift, ArrowRight, X,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -15,11 +15,11 @@ import { useToast } from '@/hooks/use-toast'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import AdsterraBanner from '@/components/AdsterraBanner'
+import AdBanner from '@/components/AdBanner'
 
 const SITE_URL = 'https://createur-boutique.vercel.app'
-import AdBanner from '@/components/AdBanner'
 const TIMER_SECONDS = 30
-const EARN_PER_VIEW = 1
+const EARN_PER_VIEW = 10
 const REFERRAL_BONUS_NEW = 10
 const REFERRAL_BONUS_REFERRER = 5
 
@@ -127,12 +127,6 @@ export default function PtcPage() {
     setLoading(false)
   }
 
-  const handleWatchAd = (adUrl: string) => {
-    window.open(adUrl, '_blank')
-    setCountdown(TIMER_SECONDS)
-    setIsTimerRunning(true)
-  }
-
   const handleClaim = async () => {
     setClaiming(true)
     try {
@@ -218,7 +212,7 @@ export default function PtcPage() {
               <p className="text-muted-foreground text-base sm:text-lg max-w-xl mx-auto leading-relaxed">
                 Chaque pub regardée vous rapporte <strong className="text-foreground">{EARN_PER_VIEW} FCFA</strong>.
                 Parrainez vos amis et gagnez <strong className="text-foreground">{REFERRAL_BONUS_NEW} FCFA</strong> par filleul.
-                Retrait via Orange Money ou Wave.
+                Retrait à partir de <strong className="text-foreground">500 FCFA</strong> via WhatsApp.
               </p>
             </motion.div>
           </div>
@@ -421,7 +415,7 @@ export default function PtcPage() {
                   <CardContent className="p-5 space-y-3">
                     {isTimerRunning && (
                       <div className="text-center space-y-2">
-                        <p className="text-xs font-medium text-muted-foreground">La pub est ouverte dans un autre onglet...</p>
+                        <p className="text-xs font-medium text-muted-foreground">Regardez les pubs ci-dessous pendant le compte à rebours...</p>
                         <div className="relative w-20 h-20 mx-auto">
                           <svg className="w-20 h-20 -rotate-90" viewBox="0 0 100 100">
                             <circle cx="50" cy="50" r="42" stroke="currentColor" strokeWidth="6" fill="none" className="text-muted/20" />
@@ -438,34 +432,18 @@ export default function PtcPage() {
                     {!isTimerRunning && countdown === 0 && (
                       <div className="space-y-2">
                         {claiming ? (
-                          <Button disabled className="w-full h-13 text-sm font-bold bg-muted text-muted-foreground">
+                          <Button disabled className="w-full h-14 text-sm font-bold bg-muted text-muted-foreground">
                             <Loader2 className="h-4 w-4 mr-2 animate-spin" /> Vérification...
                           </Button>
                         ) : (
-                          <Button onClick={handleClaim} className="w-full h-13 text-sm font-bold bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white shadow-lg shadow-emerald-500/25">
-                            <CheckCircle2 className="h-4 w-4 mr-2" /> Réclamer +{EARN_PER_VIEW} FCFA
+                          <Button onClick={handleClaim} className="w-full h-14 text-base font-bold bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white shadow-lg shadow-emerald-500/25">
+                            <Wallet className="h-5 w-5 mr-2" /> Réclamer +{EARN_PER_VIEW} FCFA
                           </Button>
                         )}
-                        <div className="space-y-1.5">
-                          {AD_LINKS.map((ad, i) => (
-                            <Button
-                              key={i}
-                              onClick={() => handleWatchAd(ad.url)}
-                              variant="outline"
-                              className="w-full h-11 text-xs font-semibold border-2 border-orange-200 dark:border-orange-800 text-orange-700 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-950/20"
-                            >
-                              <Play className="h-3.5 w-3.5 mr-1.5" /> Regarder {ad.name} &middot; +{EARN_PER_VIEW} FCFA
-                              <ExternalLink className="h-3 w-3 ml-auto" />
-                            </Button>
-                          ))}
-                        </div>
+                        <Button onClick={() => { setCountdown(TIMER_SECONDS); setIsTimerRunning(true) }} className="w-full h-12 text-sm font-bold bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-lg shadow-orange-500/25">
+                          <Eye className="h-4 w-4 mr-2" /> Voir les pubs &middot; Démarrer le timer
+                        </Button>
                       </div>
-                    )}
-
-                    {!isTimerRunning && countdown > 0 && (
-                      <Button onClick={() => handleWatchAd(AD_LINKS[0].url)} className="w-full h-13 text-sm font-bold bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-lg shadow-orange-500/25">
-                        <Play className="h-4 w-4 mr-2" /> Regarder une pub &middot; +{EARN_PER_VIEW} FCFA
-                      </Button>
                     )}
 
                     <div className="p-3 rounded-xl bg-muted/50 border">
@@ -473,31 +451,29 @@ export default function PtcPage() {
                         <Info className="h-3 w-3 text-blue-500" /> Comment ça marche ?
                       </p>
                       <ol className="space-y-1 text-[10px] text-muted-foreground leading-relaxed">
-                        <li className="flex items-start gap-1.5"><span className="flex h-4 w-4 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[9px] font-bold flex-shrink-0 mt-0.5">1</span> Cliquez sur &laquo; Regarder une pub &raquo;.</li>
-                        <li className="flex items-start gap-1.5"><span className="flex h-4 w-4 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[9px] font-bold flex-shrink-0 mt-0.5">2</span> Laissez la pub ouverte 30 secondes.</li>
-                        <li className="flex items-start gap-1.5"><span className="flex h-4 w-4 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[9px] font-bold flex-shrink-0 mt-0.5">3</span> Revenez ici et cliquez &laquo; Réclamer &raquo;.</li>
+                        <li className="flex items-start gap-1.5"><span className="flex h-4 w-4 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[9px] font-bold flex-shrink-0 mt-0.5">1</span> Cliquez &laquo; Voir les pubs &raquo; pour lancer le timer.</li>
+                        <li className="flex items-start gap-1.5"><span className="flex h-4 w-4 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[9px] font-bold flex-shrink-0 mt-0.5">2</span> Regardez les pubs affichées pendant 30 secondes.</li>
+                        <li className="flex items-start gap-1.5"><span className="flex h-4 w-4 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[9px] font-bold flex-shrink-0 mt-0.5">3</span> Cliquez &laquo; Réclamer +{EARN_PER_VIEW} FCFA &raquo; quand le timer finit.</li>
                       </ol>
                     </div>
-
-                    <a
-                      href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20veux%20cr%C3%A9er%20ma%20propre%20campagne%20publicitaire."
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-1.5 text-[11px] text-cyan-600 dark:text-cyan-400 font-semibold hover:underline pt-1"
-                    >
-                      <Flag className="h-3 w-3" /> Créer votre propre campagne publicitaire <ChevronRight className="h-3 w-3" />
-                    </a>
                   </CardContent>
                 </Card>
 
-                {/* ═══ BANNIÈRE PUB 2 - Grand format ═══ */}
+                {/* ═══ BANNIÈRE PUB 2 ═══ */}
                 <AdBanner />
+                <div className="my-1" /><AdsterraBanner />
 
-                {/* ═══ ADSTERRA BANNIÈRE ═══ */}
+                {/* ═══ ADSTERRA BANNIÈRE 3 ═══ */}
                 <div className="rounded-xl overflow-hidden border bg-white dark:bg-zinc-900 p-0">
                   <div className="text-[9px] text-center text-muted-foreground py-1 bg-muted/30 border-b font-medium uppercase tracking-wider">Sponsorise</div>
                   <AdsterraBanner />
                 </div>
+
+                {/* ═══ ADSENSE PUB 4 ═══ */}
+                <AdBanner />
+
+                {/* ═══ ADSTERRA BANNIÈRE 5 ═══ */}
+                <AdsterraBanner />
 
                 {/* ═══ PARRAINAGE ═══ */}
                 <Card className="border-0 shadow-2xl overflow-hidden">
@@ -570,8 +546,15 @@ export default function PtcPage() {
                   </CardContent>
                 </Card>
 
-                {/* ═══ BANNIÈRE PUB 3 - Après parrainage ═══ */}
+                {/* ═══ BANNIÈRE PUB 6 - Après parrainage ═══ */}
                 <AdsterraBanner />
+                <div className="my-1" /><AdBanner />
+
+                {/* ═══ ADSTERRA BANNIÈRE 7 ═══ */}
+                <AdsterraBanner />
+
+                {/* ═══ ADSENSE PUB 8 ═══ */}
+                <AdBanner />
 
                 {/* Retrait */}
                 {balance >= 500 && (
