@@ -1,9 +1,8 @@
 'use client'
 
 /*
-  Adsterra Banner — multi-instance SAFE
-  Chaque pub est dans son propre iframe (srcdoc) pour éviter
-  les conflits de variable globale atOptions.
+  Adsterra Banner 728x90 — format large
+  Chaque pub est dans son propre iframe (srcdoc).
 */
 
 const ADSTERRA_KEY = 'f0bd986ebfb3589b5e800ceeaa28a9d5'
@@ -19,8 +18,8 @@ const AD_HTML = `
 var atOptions = {
   'key' : '${ADSTERRA_KEY}',
   'format' : 'iframe',
-  'height' : 250,
-  'width' : 300,
+  'height' : 90,
+  'width' : 728,
   'params' : {}
 };
 </script>
@@ -29,13 +28,13 @@ var atOptions = {
 </html>
 `
 
-export default function AdsterraBanner({ className = '' }: { className?: string }) {
+export default function AdsterraWide({ className = '' }: { className?: string }) {
   return (
     <div className={`w-full flex justify-center ${className}`}>
       <iframe
         srcDoc={AD_HTML}
-        width="300"
-        height="250"
+        width="728"
+        height="90"
         style={{ border: 'none', maxWidth: '100%' }}
         loading="lazy"
         title="Publicité"

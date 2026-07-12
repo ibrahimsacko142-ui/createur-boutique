@@ -77,7 +77,7 @@ import Preloader from '@/components/Preloader'
 import ClientLogos from '@/components/ClientLogos'
 import VideoShowcase from '@/components/VideoShowcase'
 import BlogPreview from '@/components/BlogPreview'
-import AdBanner from '@/components/AdBanner'
+import AdsterraWide from '@/components/AdsterraWide'
 
 
 
@@ -1132,7 +1132,7 @@ export default function Home() {
         {/* ═══ AD BANNER — After Hero ═══ */}
         <div className="py-4 bg-muted/10">
           <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 space-y-3">
-            <AdBanner />
+            <AdsterraWide />
             <AdsterraBanner />
           </div>
         </div>
@@ -1507,7 +1507,7 @@ export default function Home() {
         {/* ═══ PUBLICITÉ 1 ═══ */}
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 pb-6 space-y-3">
           <AdsterraBanner />
-          <AdBanner />
+          <AdsterraWide />
           <AdsterraBanner />
         </div>
 
@@ -1692,9 +1692,9 @@ export default function Home() {
         {/* ═══ AD BANNER — Between Services & Formations ═══ */}
         <div className="py-4">
           <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 space-y-3">
-            <AdBanner />
+            <AdsterraWide />
             <AdsterraBanner />
-            <AdBanner />
+            <AdsterraWide />
           </div>
         </div>
 
@@ -1955,7 +1955,7 @@ export default function Home() {
 
         {/* ═══ PUBLICITÉ 2 ═══ */}
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 pb-6 space-y-3">
-          <AdBanner />
+          <AdsterraWide />
           <AdsterraBanner />
         </div>
 
@@ -2693,7 +2693,7 @@ export default function Home() {
         {/* ═══ PUBLICITÉ 3 ═══ */}
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 pb-6 space-y-3">
           <AdsterraBanner />
-          <AdBanner />
+          <AdsterraWide />
           <AdsterraBanner />
         </div>
 
@@ -4066,9 +4066,9 @@ export default function Home() {
       {/* ═══ AD BANNER — Before Footer ═══ */}
       <div className="py-4 bg-muted/10">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 space-y-3">
-          <AdBanner />
+          <AdsterraWide />
           <AdsterraBanner />
-          <AdBanner />
+          <AdsterraWide />
           <AdsterraBanner />
         </div>
       </div>

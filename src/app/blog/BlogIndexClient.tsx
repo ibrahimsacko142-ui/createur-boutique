@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import AdBanner from '@/components/AdBanner'
+import AdsterraBanner from '@/components/AdsterraBanner'
 import type { ArticleData } from '@/lib/articles'
 
 const WHATSAPP_NUMBER = '22397787244'
@@ -80,7 +80,7 @@ export default function BlogIndexClient({ articles }: { articles: ArticleData[] 
 
         {/* Top ad */}
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 mt-8">
-          <AdBanner />
+          <AdsterraBanner />
         </div>
 
         {/* Articles grid */}
@@ -138,7 +138,7 @@ export default function BlogIndexClient({ articles }: { articles: ArticleData[] 
 
           {/* Mid-section ad */}
           <div className="my-10">
-            <AdBanner />
+            <AdsterraBanner />
           </div>
         </section>
 

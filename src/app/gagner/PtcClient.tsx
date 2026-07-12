@@ -15,7 +15,7 @@ import { useToast } from '@/hooks/use-toast'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import AdsterraBanner from '@/components/AdsterraBanner'
-import AdBanner from '@/components/AdBanner'
+import AdsterraWide from '@/components/AdsterraWide'
 
 const SITE_URL = 'https://createur-boutique.vercel.app'
 const TIMER_SECONDS = 30
@@ -360,7 +360,7 @@ export default function PtcPage() {
                 </Card>
 
                 {/* ═══ PUB sous OTP ═══ */}
-                <AdBanner />
+                <AdsterraBanner />
               </motion.div>
             )}
 
@@ -460,7 +460,7 @@ export default function PtcPage() {
                 </Card>
 
                 {/* ═══ BANNIÈRE PUB 2 ═══ */}
-                <AdBanner />
+                <AdsterraWide />
                 <div className="my-1" /><AdsterraBanner />
 
                 {/* ═══ ADSTERRA BANNIÈRE 3 ═══ */}
@@ -469,8 +469,8 @@ export default function PtcPage() {
                   <AdsterraBanner />
                 </div>
 
-                {/* ═══ ADSENSE PUB 4 ═══ */}
-                <AdBanner />
+                {/* ═══ BANNIÈRE PUB 4 ═══ */}
+                <AdsterraWide />
 
                 {/* ═══ ADSTERRA BANNIÈRE 5 ═══ */}
                 <AdsterraBanner />
@@ -548,13 +548,13 @@ export default function PtcPage() {
 
                 {/* ═══ BANNIÈRE PUB 6 - Après parrainage ═══ */}
                 <AdsterraBanner />
-                <div className="my-1" /><AdBanner />
+                <div className="my-1" /><AdsterraWide />
 
                 {/* ═══ ADSTERRA BANNIÈRE 7 ═══ */}
                 <AdsterraBanner />
 
-                {/* ═══ ADSENSE PUB 8 ═══ */}
-                <AdBanner />
+                {/* ═══ BANNIÈRE PUB 8 ═══ */}
+                <AdsterraWide />
 
                 {/* Retrait */}
                 {balance >= 500 && (

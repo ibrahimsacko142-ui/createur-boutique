@@ -49,9 +49,6 @@ export const metadata: Metadata = {
   icons: {
     icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
   },
-  other: {
-    'google-adsense-account': 'ca-pub-5792648101445233',
-  },
   openGraph: {
     title: "Studio Créatif — Design & Digital Premium à Bamako | Sacko",
     description: "Studio Créatif par Sacko — Services professionnels de design graphique, sites web, montage vidéo et outils numériques. L'excellence du design digital en Afrique.",
@@ -335,15 +332,8 @@ export default function RootLayout({
   return (
     <html lang="fr" suppressHydrationWarning>
       <head>
-        {/* ═══ Google AdSense ═══ */}
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5792648101445233"
-          crossOrigin="anonymous"
-        />
-
-        {/* ═══ Adsterra - Bibliothèque ═══ */}
-        <script async src="//adsterra.com/adProvider/ad.js"></script>
+        {/* ═══ Adsterra - Auto-ads Library ═══ */}
+        <script async src="https://adsterra.com/adProvider/ad.js"></script>
 
         <script
           type="application/ld+json"
