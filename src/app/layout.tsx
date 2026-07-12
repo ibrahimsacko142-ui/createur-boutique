@@ -351,6 +351,9 @@ export default function RootLayout({
         {/* ═══ Social Bar ═══ */}
         <script async src="https://pl30316034.effectivecpmnetwork.com/63/e4/56/63e4569ad5164536f78deac227dc0aa7.js"></script>
 
+        {/* ═══ Pop Ad ═══ */}
+        <meta name="9236b4043b50645983037b50face3b89635dde7d" content="9236b4043b50645983037b50face3b89635dde7d" />
+
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

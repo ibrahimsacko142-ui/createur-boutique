@@ -1,21 +1,11 @@
 'use client'
 
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
 import {
-  Eye, Clock, Wallet, Play, CheckCircle2, ShieldCheck, MessageCircle,
-  ChevronRight, ArrowLeft, Loader2, Phone, Zap, TrendingUp,
-  Info, Copy, Users, Gift, ArrowRight, X,
+  Eye, Wallet, Phone, ShieldCheck, MessageCircle,
+  ChevronRight, ArrowLeft, Loader2, Users, Gift, ArrowRight, X, Copy, CheckCircle2
 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
 import { useToast } from '@/hooks/use-toast'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
-import AdsterraBanner from '@/components/AdsterraBanner'
-import AdsterraWide from '@/components/AdsterraWide'
 
 const SITE_URL = 'https://createur-boutique.vercel.app'
 const SMART_LINK = 'https://www.effectivecpmnetwork.com/xntegh31ay?key=3caffbaacc837287e406a00f78092cd4'
@@ -32,6 +22,7 @@ export default function PtcPage() {
   const [step, setStep] = useState<'login' | 'otp' | 'ready'>('login')
   const [countdown, setCountdown] = useState(0)
   const [isTimerRunning, setIsTimerRunning] = useState(false)
+  const [isValidating, setIsValidating] = useState(false)
   const [balance, setBalance] = useState(0)
   const [totalViewed, setTotalViewed] = useState(0)
   const [claiming, setClaiming] = useState(false)
@@ -49,6 +40,7 @@ export default function PtcPage() {
 
   const referralLink = `${SITE_URL}/gagner?ref=${referralCode}`
 
+  /* ─── API Calls ─── */
   const fetchBalance = useCallback(async () => {
     if (!phone) return
     try {
@@ -65,535 +57,388 @@ export default function PtcPage() {
     } catch {}
   }, [phone])
 
+  /* ─── Ref from URL ─── */
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const ref = params.get('ref')
-    if (ref) {
-      setRefInput(ref)
-      setShowReferralInput(true)
-    }
+    if (ref) { setRefInput(ref); setShowReferralInput(true) }
   }, [])
 
-  useEffect(() => {
-    return () => { if (intervalRef.current) clearTimeout(intervalRef.current) }
-  }, [])
-
+  /* ─── Timer ─── */
+  useEffect(() => { return () => { if (intervalRef.current) clearTimeout(intervalRef.current) } }, [])
   useEffect(() => {
     if (isTimerRunning && countdown > 0) {
       intervalRef.current = setTimeout(() => setCountdown(c => c - 1), 1000)
     } else if (isTimerRunning && countdown === 0) {
       setIsTimerRunning(false)
+      setIsValidating(true)
     }
     return () => { if (intervalRef.current) clearTimeout(intervalRef.current) }
   }, [isTimerRunning, countdown])
 
+  /* ─── OTP Send ─── */
   const handleSendOtp = async () => {
     if (!phone || phone.replace(/\s/g, '').length < 8) {
-      toast({ title: 'Numéro invalide', description: 'Entrez votre numéro.', variant: 'destructive' })
-      return
+      toast({ title: 'Numéro invalide', description: 'Entrez votre numéro.', variant: 'destructive' }); return
     }
     setSendingOtp(true)
     try {
-      // Create user first
-      await fetch('/api/ptc/balance', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone: `+${phone.replace(/\s/g, '')}` }),
-      })
-      // Generate OTP locally
+      await fetch('/api/ptc/balance', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: `+${phone.replace(/\s/g, '')}` }) })
       const code = Math.floor(100000 + Math.random() * 900000).toString()
-      setGeneratedOtp(code)
-      setOtp('')
-      setStep('otp')
+      setGeneratedOtp(code); setOtp(''); setStep('otp')
       toast({ title: 'Code généré !', description: `Votre code est : ${code}` })
-    } catch {
-      toast({ title: 'Erreur', description: 'Problème de connexion.', variant: 'destructive' })
-    }
+    } catch { toast({ title: 'Erreur', description: 'Problème de connexion.', variant: 'destructive' }) }
     setSendingOtp(false)
   }
 
+  /* ─── OTP Verify ─── */
   const handleVerifyOtp = async () => {
-    if (otp !== generatedOtp) {
-      toast({ title: 'Code incorrect', description: 'Le code ne correspond pas.', variant: 'destructive' })
-      return
-    }
+    if (otp !== generatedOtp) { toast({ title: 'Code incorrect', variant: 'destructive' }); return }
     setLoading(true)
-    try {
-      await fetchBalance()
-      setStep('ready')
-      toast({ title: 'Bienvenue !', description: 'Vous pouvez maintenant gagner de l\'argent.' })
-    } catch {
-      toast({ title: 'Erreur', description: 'Problème de connexion.', variant: 'destructive' })
-    }
+    try { await fetchBalance(); setStep('ready'); toast({ title: 'Bienvenue !', description: 'Vous pouvez maintenant gagner de l\'argent.' }) }
+    catch { toast({ title: 'Erreur', variant: 'destructive' }) }
     setLoading(false)
   }
 
-  const handleClaim = async () => {
+  /* ─── Watch Ad (opens smartlink) ─── */
+  const handleWatchAd = () => {
+    window.open(SMART_LINK, '_blank')
+    setCountdown(TIMER_SECONDS)
+    setIsTimerRunning(true)
+    setIsValidating(false)
+  }
+
+  /* ─── Validate Gain ─── */
+  const handleValidate = async () => {
+    setIsValidating(false)
     setClaiming(true)
     try {
-      const res = await fetch('/api/ptc/claim', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone }),
-      })
+      const res = await fetch('/api/ptc/claim', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone }) })
       const data = await res.json()
       if (data.success) {
-        setBalance(data.newBalance)
-        setTotalViewed(data.totalViewed)
+        setBalance(data.newBalance); setTotalViewed(data.totalViewed)
         toast({ title: `+${EARN_PER_VIEW} FCFA gagné !`, description: `Nouveau solde : ${data.newBalance} FCFA` })
       } else {
         toast({ title: 'Pas encore...', description: data.error || 'Réessayez.', variant: 'destructive' })
-        if (data.waitSeconds) {
-          setCountdown(data.waitSeconds)
-          setIsTimerRunning(true)
-        }
+        if (data.waitSeconds) { setCountdown(data.waitSeconds); setIsTimerRunning(true) }
       }
-    } catch {
-      toast({ title: 'Erreur', description: 'Problème de connexion.', variant: 'destructive' })
-    }
+    } catch { toast({ title: 'Erreur', variant: 'destructive' }) }
     setClaiming(false)
   }
 
+  /* ─── Referral ─── */
   const handleApplyReferral = async () => {
-    if (!refInput.trim()) {
-      toast({ title: 'Code vide', description: 'Entrez un code de parrainage.', variant: 'destructive' })
-      return
-    }
+    if (!refInput.trim()) return
     setApplyingRef(true)
     try {
-      const res = await fetch('/api/ptc/referral', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone, referralCode: refInput.trim() }),
-      })
+      const res = await fetch('/api/ptc/referral', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone, referralCode: refInput.trim() }) })
       const data = await res.json()
-      if (data.success) {
-        setReferredBy(refInput.trim())
-        setBalance(data.newBalance)
-        setShowReferralInput(false)
-        toast({ title: 'Parrainage appliqué !', description: data.message })
-        fetchBalance()
-      } else {
-        toast({ title: 'Erreur', description: data.error || 'Code invalide.', variant: 'destructive' })
-      }
-    } catch {
-      toast({ title: 'Erreur', description: 'Problème de connexion.', variant: 'destructive' })
-    }
+      if (data.success) { setReferredBy(refInput.trim()); setBalance(data.newBalance); setShowReferralInput(false); toast({ title: 'Parrainage appliqué !', description: data.message }); fetchBalance() }
+      else { toast({ title: 'Erreur', description: data.error || 'Code invalide.', variant: 'destructive' }) }
+    } catch { toast({ title: 'Erreur', variant: 'destructive' }) }
     setApplyingRef(false)
   }
 
-  const copyLink = () => {
-    navigator.clipboard.writeText(referralLink)
-    setCopied(true)
-    toast({ title: 'Lien copié !', description: 'Partagez-le avec vos amis.' })
-    setTimeout(() => setCopied(false), 2000)
-  }
+  const copyLink = () => { navigator.clipboard.writeText(referralLink); setCopied(true); toast({ title: 'Lien copié !' }); setTimeout(() => setCopied(false), 2000) }
 
+  /* ══════════════════════════════════════════════════════════════
+     RENDER
+  ══════════════════════════════════════════════════════════════ */
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Header />
-      <main className="flex-1">
-        {/* Hero */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-cyan-50 to-blue-50 dark:from-emerald-950/20 dark:via-cyan-950/10 dark:to-blue-950/20">
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-0 right-1/4 w-80 h-80 bg-emerald-400/10 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 left-1/4 w-64 h-64 bg-cyan-400/10 rounded-full blur-3xl" />
-          </div>
-          <div className="relative mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14 text-center">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-              <Badge className="mb-4 px-3 py-1 text-xs font-medium bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800">
-                <Zap className="h-3 w-3 mr-1" /> Gagnez de l&apos;argent
-              </Badge>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight mb-4">
-                Regardez des pubs,{' '}
-                <span className="bg-gradient-to-r from-emerald-500 via-cyan-500 to-blue-500 bg-clip-text text-transparent">
-                  gagnez de l&apos;argent
-                </span>
-              </h1>
-              <p className="text-muted-foreground text-base sm:text-lg max-w-xl mx-auto leading-relaxed">
-                Chaque pub regardée vous rapporte <strong className="text-foreground">{EARN_PER_VIEW} FCFA</strong>.
-                Parrainez vos amis et gagnez <strong className="text-foreground">{REFERRAL_BONUS_NEW} FCFA</strong> par filleul.
-                Retrait à partir de <strong className="text-foreground">500 FCFA</strong> via WhatsApp.
-              </p>
-            </motion.div>
-          </div>
-        </section>
+    <div className="min-h-screen bg-gray-100">
 
-        {/* Main Content */}
-        <section className="mx-auto max-w-md px-4 sm:px-6 py-8">
-          <AnimatePresence mode="wait">
+      {/* ═══ LOGIN ═══ */}
+      {step === 'login' && (
+        <div className="min-h-screen flex items-center justify-center px-4 py-10">
+          <div className="w-full max-w-sm space-y-6">
+            {/* Logo / Title */}
+            <div className="text-center space-y-2">
+              <div className="mx-auto w-16 h-16 rounded-3xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg shadow-orange-500/30">
+                <Wallet className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-2xl font-extrabold text-gray-900">Gagnez de l&apos;argent</h1>
+              <p className="text-sm text-gray-500">Regardez des pubs, gagnez des FCFA</p>
+            </div>
 
-            {/* ═══ LOGIN ═══ */}
-            {step === 'login' && (
-              <motion.div key="login" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.3 }}>
-                <Card className="border-0 shadow-2xl overflow-hidden">
-                  <div className="bg-gradient-to-r from-emerald-500 to-cyan-500 p-1">
-                    <div className="bg-gradient-to-br from-emerald-500 to-cyan-600 text-white p-6 text-center">
-                      <div className="flex h-14 w-14 mx-auto items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mb-3">
-                        <Phone className="h-7 w-7" />
-                      </div>
-                      <h2 className="text-xl font-extrabold">Connectez-vous</h2>
-                      <p className="text-sm text-white/80 mt-1">Entrez votre numéro pour recevoir le code</p>
-                    </div>
-                  </div>
-                  <CardContent className="p-6 space-y-4">
-                    <div className="space-y-2">
-                      <label className="text-sm font-semibold">Numéro WhatsApp *</label>
-                      <div className="flex gap-2">
-                        <div className="flex h-11 items-center px-3 rounded-md border border-input bg-muted text-sm font-medium text-muted-foreground">
-                          +223
-                        </div>
-                        <Input
-                          placeholder="XX XX XX XX"
-                          value={phone}
-                          onChange={(e) => setPhone(e.target.value.replace(/[^\d\s]/g, ''))}
-                          className="h-11 flex-1"
-                          type="tel"
-                          maxLength={12}
-                        />
-                      </div>
-                    </div>
+            {/* Login Card */}
+            <div className="rounded-3xl bg-white shadow-xl p-6 space-y-4">
+              <div className="flex items-center gap-2 mb-2">
+                <Phone className="w-5 h-5 text-gray-400" />
+                <p className="text-sm font-semibold text-gray-700">Numéro WhatsApp</p>
+              </div>
+              <div className="flex gap-2">
+                <div className="flex h-12 items-center px-3 rounded-2xl bg-gray-100 text-sm font-bold text-gray-500">+223</div>
+                <input
+                  placeholder="XX XX XX XX"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value.replace(/[^\d\s]/g, ''))}
+                  className="flex-1 h-12 px-4 rounded-2xl border-2 border-gray-200 focus:border-orange-400 focus:outline-none text-sm font-medium"
+                  type="tel" maxLength={12}
+                />
+              </div>
 
-                    {showReferralInput && (
-                      <div className="p-3 rounded-lg bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800">
-                        <p className="text-xs font-semibold text-blue-700 dark:text-blue-400 mb-1 flex items-center gap-1">
-                          <Gift className="h-3 w-3" /> Code parrainage détecté
-                        </p>
-                        <p className="text-[11px] text-blue-600 dark:text-blue-400">
-                          Vous avez été invité par un parrain. Il sera appliqué après connexion.
-                        </p>
-                      </div>
-                    )}
-
-                    <Button
-                      onClick={handleSendOtp}
-                      disabled={sendingOtp || phone.replace(/\s/g, '').length < 8}
-                      className="w-full bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white font-bold h-12"
-                    >
-                      {sendingOtp ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <MessageCircle className="h-4 w-4 mr-2" />}
-                      Envoyer le code WhatsApp
-                    </Button>
-
-                    <div className="flex items-center gap-3 text-center">
-                      <div className="flex-1 h-px bg-border" />
-                      <span className="text-[10px] text-muted-foreground font-medium">100% GRATUIT</span>
-                      <div className="flex-1 h-px bg-border" />
-                    </div>
-
-                    <div className="grid grid-cols-3 gap-2 text-center">
-                      <div className="p-2 rounded-lg bg-emerald-50 dark:bg-emerald-950/20">
-                        <p className="text-sm font-black text-emerald-600">{EARN_PER_VIEW} F</p>
-                        <p className="text-[10px] text-muted-foreground">par vue</p>
-                      </div>
-                      <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-950/20">
-                        <p className="text-sm font-black text-blue-600">{REFERRAL_BONUS_NEW} F</p>
-                        <p className="text-[10px] text-muted-foreground">par filleul</p>
-                      </div>
-                      <div className="p-2 rounded-lg bg-amber-50 dark:bg-amber-950/20">
-                        <p className="text-sm font-black text-amber-600">500 F</p>
-                        <p className="text-[10px] text-muted-foreground">retrait min</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* ═══ PUB sous login ═══ */}
-                <AdsterraBanner className="mt-2" />
-              </motion.div>
-            )}
-
-            {/* ═══ OTP ═══ */}
-            {step === 'otp' && (
-              <motion.div key="otp" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.3 }}>
-                <Card className="border-0 shadow-2xl overflow-hidden">
-                  <div className="bg-gradient-to-r from-blue-500 to-indigo-500 p-1">
-                    <div className="bg-gradient-to-br from-blue-500 to-indigo-600 text-white p-6 text-center">
-                      <div className="flex h-14 w-14 mx-auto items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mb-3">
-                        <ShieldCheck className="h-7 w-7" />
-                      </div>
-                      <h2 className="text-xl font-extrabold">Votre code de vérification</h2>
-                      <p className="text-sm text-white/80 mt-1">Copiez ce code et entrez-le ci-dessous</p>
-                    </div>
-                  </div>
-                  <CardContent className="p-6 space-y-4">
-                    {/* CODE AFFICHÉ EN GRAND */}
-                    <div className="text-center py-4 px-6 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border-2 border-dashed border-blue-300 dark:border-blue-700">
-                      <p className="text-[10px] text-muted-foreground font-medium mb-1 uppercase tracking-wider">Votre code</p>
-                      <p className="text-4xl sm:text-5xl font-black tracking-[0.3em] text-blue-600 dark:text-blue-400 select-all">
-                        {generatedOtp}
-                      </p>
-                      <Button
-                        onClick={() => { navigator.clipboard.writeText(generatedOtp); toast({ title: 'Code copié !' }) }}
-                        variant="ghost"
-                        size="sm"
-                        className="mt-3 text-xs text-blue-600 dark:text-blue-400"
-                      >
-                        <Copy className="h-3 w-3 mr-1" /> Copier le code
-                      </Button>
-                    </div>
-
-                    {/* Champ pour entrer le code */}
-                    <div className="space-y-2">
-                      <label className="text-sm font-semibold">Entrez le code ici</label>
-                      <Input
-                        placeholder="Entrez le code à 6 chiffres"
-                        value={otp}
-                        onChange={(e) => setOtp(e.target.value.replace(/[^\d]/g, '').slice(0, 6))}
-                        className="h-14 text-center text-2xl font-bold tracking-[0.5em]"
-                        maxLength={6}
-                        type="tel"
-                      />
-                    </div>
-
-                    <Button
-                      onClick={handleVerifyOtp}
-                      disabled={loading || otp.length !== 6}
-                      className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-bold h-12"
-                    >
-                      {loading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <CheckCircle2 className="h-4 w-4 mr-2" />}
-                      Vérifier et continuer
-                    </Button>
-
-                    <button onClick={() => setStep('login')} className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 mx-auto">
-                      <ArrowLeft className="h-3 w-3" /> Changer de numéro
-                    </button>
-                  </CardContent>
-                </Card>
-
-                {/* ═══ PUB sous OTP ═══ */}
-                <AdsterraBanner />
-              </motion.div>
-            )}
-
-            {/* ═══ DASHBOARD ═══ */}
-            {step === 'ready' && (
-              <motion.div key="ready" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="space-y-4">
-
-                {/* ═══ BANNIÈRE PUB 1 - Au-dessus des stats ═══ */}
-                <AdsterraBanner className="mb-2" />
-
-                {/* Stats */}
-                <div className="grid grid-cols-3 gap-2">
-                  <Card className="border-0 shadow-lg bg-gradient-to-br from-emerald-50 to-cyan-50 dark:from-emerald-950/20 dark:to-cyan-950/20">
-                    <CardContent className="p-3 text-center">
-                      <Wallet className="h-5 w-5 text-emerald-500 mx-auto mb-1" />
-                      <p className="text-xl font-black text-emerald-600 dark:text-emerald-400">{balance}</p>
-                      <p className="text-[10px] text-muted-foreground font-medium">FCFA</p>
-                    </CardContent>
-                  </Card>
-                  <Card className="border-0 shadow-lg bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20">
-                    <CardContent className="p-3 text-center">
-                      <Eye className="h-5 w-5 text-blue-500 mx-auto mb-1" />
-                      <p className="text-xl font-black text-blue-600 dark:text-blue-400">{totalViewed}</p>
-                      <p className="text-[10px] text-muted-foreground font-medium">Vues</p>
-                    </CardContent>
-                  </Card>
-                  <Card className="border-0 shadow-lg bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20">
-                    <CardContent className="p-3 text-center">
-                      <Users className="h-5 w-5 text-amber-500 mx-auto mb-1" />
-                      <p className="text-xl font-black text-amber-600 dark:text-amber-400">{referralCount}</p>
-                      <p className="text-[10px] text-muted-foreground font-medium">Filleuls</p>
-                    </CardContent>
-                  </Card>
+              {showReferralInput && (
+                <div className="p-3 rounded-2xl bg-amber-50 border border-amber-200">
+                  <p className="text-xs font-bold text-amber-700 flex items-center gap-1"><Gift className="w-3 h-3" /> Code parrainage détecté</p>
                 </div>
+              )}
 
-                {/* Pubs rémunérées */}
-                <Card className="border-0 shadow-2xl overflow-hidden">
-                  <div className="bg-gradient-to-r from-emerald-500 via-cyan-500 to-blue-500 p-1">
-                    <div className="bg-gradient-to-br from-emerald-500 to-cyan-600 text-white p-5 text-center">
-                      <h2 className="text-xl font-extrabold mb-0.5">PUBLICITÉS RÉMUNÉRÉES</h2>
-                      <p className="text-white/80 text-xs">Regardez, gagnez.</p>
-                      <div className="flex items-center justify-center gap-5 mt-3">
-                        <div><p className="text-[10px] text-white/60">PAR VUE</p><p className="text-lg font-black">{EARN_PER_VIEW} F</p></div>
-                        <div className="w-px h-8 bg-white/20" />
-                        <div><p className="text-[10px] text-white/60">VUES</p><p className="text-lg font-black">{totalViewed}</p></div>
-                        <div className="w-px h-8 bg-white/20" />
-                        <div><p className="text-[10px] text-white/60">GAGNÉ</p><p className="text-lg font-black">{balance} F</p></div>
-                      </div>
-                    </div>
+              <button
+                onClick={handleSendOtp}
+                disabled={sendingOtp || phone.replace(/\s/g, '').length < 8}
+                className="w-full h-13 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white font-bold text-sm shadow-lg shadow-orange-500/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              >
+                {sendingOtp ? <Loader2 className="w-4 h-4 mr-2 animate-spin inline" /> : <MessageCircle className="w-4 h-4 mr-2 inline" />}
+                Envoyer le code
+              </button>
+            </div>
+
+            {/* Info */}
+            <div className="grid grid-cols-3 gap-2 text-center">
+              <div className="rounded-2xl bg-white shadow p-3">
+                <p className="text-lg font-black text-orange-500">{EARN_PER_VIEW} F</p>
+                <p className="text-[10px] text-gray-400 font-medium">par vue</p>
+              </div>
+              <div className="rounded-2xl bg-white shadow p-3">
+                <p className="text-lg font-black text-blue-500">{REFERRAL_BONUS_NEW} F</p>
+                <p className="text-[10px] text-gray-400 font-medium">par filleul</p>
+              </div>
+              <div className="rounded-2xl bg-white shadow p-3">
+                <p className="text-lg font-black text-emerald-500">500 F</p>
+                <p className="text-[10px] text-gray-400 font-medium">retrait min</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ═══ OTP ═══ */}
+      {step === 'otp' && (
+        <div className="min-h-screen flex items-center justify-center px-4 py-10">
+          <div className="w-full max-w-sm space-y-6">
+            <div className="text-center space-y-2">
+              <div className="mx-auto w-16 h-16 rounded-3xl bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/30">
+                <ShieldCheck className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-2xl font-extrabold text-gray-900">Vérification</h1>
+              <p className="text-sm text-gray-500">Entrez le code à 6 chiffres</p>
+            </div>
+
+            <div className="rounded-3xl bg-white shadow-xl p-6 space-y-5">
+              {/* Code affiché */}
+              <div className="text-center py-5 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-dashed border-blue-200">
+                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">Votre code</p>
+                <p className="text-4xl font-black tracking-[0.3em] text-blue-600 select-all">{generatedOtp}</p>
+                <button onClick={() => { navigator.clipboard.writeText(generatedOtp); toast({ title: 'Code copié !' }) }} className="mt-2 text-xs text-blue-500 font-medium hover:underline">
+                  <Copy className="w-3 h-3 inline mr-1" /> Copier
+                </button>
+              </div>
+
+              {/* Champ code */}
+              <input
+                placeholder="Entrez le code ici"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value.replace(/[^\d]/g, '').slice(0, 6))}
+                className="w-full h-14 text-center text-2xl font-black tracking-[0.5em] rounded-2xl border-2 border-gray-200 focus:border-blue-400 focus:outline-none"
+                type="tel" maxLength={6}
+              />
+
+              <button
+                onClick={handleVerifyOtp}
+                disabled={loading || otp.length !== 6}
+                className="w-full h-13 rounded-2xl bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-bold text-sm shadow-lg shadow-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              >
+                {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin inline" /> : <CheckCircle2 className="w-4 h-4 mr-2 inline" />}
+                Vérifier et continuer
+              </button>
+
+              <button onClick={() => setStep('login')} className="w-full text-xs text-gray-400 hover:text-gray-600 flex items-center justify-center gap-1">
+                <ArrowLeft className="w-3 h-3" /> Changer de numéro
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ═══ DASHBOARD ═══ */}
+      {step === 'ready' && (
+        <div className="min-h-screen bg-gray-100 pb-8">
+
+          {/* ─── Dark Dashboard Bar ─── */}
+          <div style={{ backgroundColor: '#1e2538' }} className="px-5 pt-6 pb-5 text-white">
+            <div className="flex items-center gap-2 mb-4">
+              <Wallet className="w-4 h-4 text-amber-400" />
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Mon Tableau de Bord</p>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="rounded-2xl bg-white/10 backdrop-blur p-4">
+                <p className="text-[10px] text-gray-400 font-medium mb-0.5">Gagné</p>
+                <p className="text-2xl font-black text-amber-400">{balance} <span className="text-sm font-bold text-gray-400">FCFA</span></p>
+              </div>
+              <div className="rounded-2xl bg-white/10 backdrop-blur p-4">
+                <p className="text-[10px] text-gray-400 font-medium mb-0.5">Pubs vues</p>
+                <p className="text-2xl font-black text-cyan-400">{totalViewed}</p>
+              </div>
+            </div>
+            {/* Progress to withdrawal */}
+            <div className="mt-4">
+              <div className="flex justify-between text-[10px] text-gray-400 mb-1">
+                <span>Prochain retrait : 500 FCFA</span>
+                <span>{Math.min(100, Math.round((balance / 500) * 100))}%</span>
+              </div>
+              <div className="h-2 rounded-full bg-white/10 overflow-hidden">
+                <div className="h-full rounded-full bg-gradient-to-r from-amber-400 to-orange-500 transition-all duration-500" style={{ width: `${Math.min(100, (balance / 500) * 100)}%` }} />
+              </div>
+            </div>
+          </div>
+
+          {/* ─── Content ─── */}
+          <div className="px-4 -mt-3 space-y-4">
+
+            {/* ─── Big Action Button ─── */}
+            <div className="rounded-3xl bg-white shadow-xl p-5">
+              {!isTimerRunning && !isValidating && !claiming && (
+                <button
+                  onClick={handleWatchAd}
+                  className="w-full h-16 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 active:scale-[0.98] text-white font-extrabold text-base shadow-lg shadow-orange-500/30 transition-all flex items-center justify-center gap-2"
+                >
+                  <Eye className="w-5 h-5" /> Regarder une pub · +{EARN_PER_VIEW} FCFA
+                </button>
+              )}
+
+              {/* Timer running */}
+              {isTimerRunning && (
+                <div className="space-y-3">
+                  <div className="w-full h-16 rounded-2xl bg-gray-100 text-gray-400 font-bold text-sm flex items-center justify-center gap-2 cursor-not-allowed">
+                    <div className="w-3 h-3 rounded-full bg-amber-400 animate-pulse" />
+                    Attendre... ({countdown}s)
                   </div>
-
-                  <CardContent className="p-5 space-y-3">
-                    {isTimerRunning && (
-                      <div className="text-center space-y-2">
-                        <p className="text-xs font-medium text-muted-foreground">Regardez les pubs ci-dessous pendant le compte à rebours...</p>
-                        <div className="relative w-20 h-20 mx-auto">
-                          <svg className="w-20 h-20 -rotate-90" viewBox="0 0 100 100">
-                            <circle cx="50" cy="50" r="42" stroke="currentColor" strokeWidth="6" fill="none" className="text-muted/20" />
-                            <circle cx="50" cy="50" r="42" stroke="currentColor" strokeWidth="6" fill="none" className="text-emerald-500" strokeLinecap="round" strokeDasharray={`${2 * Math.PI * 42}`} strokeDashoffset={`${2 * Math.PI * 42 * (1 - countdown / TIMER_SECONDS)}`} style={{ transition: 'stroke-dashoffset 1s linear' }} />
-                          </svg>
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-xl font-black">{countdown}</span>
-                          </div>
-                        </div>
-                        <p className="text-[10px] text-muted-foreground">Secondes restantes</p>
-                      </div>
-                    )}
-
-                    {!isTimerRunning && countdown === 0 && (
-                      <div className="space-y-2">
-                        {claiming ? (
-                          <Button disabled className="w-full h-14 text-sm font-bold bg-muted text-muted-foreground">
-                            <Loader2 className="h-4 w-4 mr-2 animate-spin" /> Vérification...
-                          </Button>
-                        ) : (
-                          <Button onClick={handleClaim} className="w-full h-14 text-base font-bold bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white shadow-lg shadow-emerald-500/25">
-                            <Wallet className="h-5 w-5 mr-2" /> Réclamer +{EARN_PER_VIEW} FCFA
-                          </Button>
-                        )}
-                        <Button onClick={() => { window.open(SMART_LINK, '_blank'); setCountdown(TIMER_SECONDS); setIsTimerRunning(true) }} className="w-full h-12 text-sm font-bold bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-lg shadow-orange-500/25">
-                          <Eye className="h-4 w-4 mr-2" /> Voir la pub &middot; +{EARN_PER_VIEW} FCFA
-                        </Button>
-                      </div>
-                    )}
-
-                    <div className="p-3 rounded-xl bg-muted/50 border">
-                      <p className="text-[11px] font-bold mb-1.5 flex items-center gap-1">
-                        <Info className="h-3 w-3 text-blue-500" /> Comment ça marche ?
-                      </p>
-                      <ol className="space-y-1 text-[10px] text-muted-foreground leading-relaxed">
-                        <li className="flex items-start gap-1.5"><span className="flex h-4 w-4 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[9px] font-bold flex-shrink-0 mt-0.5">1</span> Cliquez &laquo; Voir les pubs &raquo; pour lancer le timer.</li>
-                        <li className="flex items-start gap-1.5"><span className="flex h-4 w-4 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[9px] font-bold flex-shrink-0 mt-0.5">2</span> Regardez les pubs affichées pendant 30 secondes.</li>
-                        <li className="flex items-start gap-1.5"><span className="flex h-4 w-4 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[9px] font-bold flex-shrink-0 mt-0.5">3</span> Cliquez &laquo; Réclamer +{EARN_PER_VIEW} FCFA &raquo; quand le timer finit.</li>
-                      </ol>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* ═══ BANNIÈRE PUB 2 ═══ */}
-                <AdsterraWide />
-                <div className="my-1" /><AdsterraBanner />
-
-                {/* ═══ ADSTERRA BANNIÈRE 3 ═══ */}
-                <div className="rounded-xl overflow-hidden border bg-white dark:bg-zinc-900 p-0">
-                  <div className="text-[9px] text-center text-muted-foreground py-1 bg-muted/30 border-b font-medium uppercase tracking-wider">Sponsorise</div>
-                  <AdsterraBanner />
+                  <div className="w-full h-2 rounded-full bg-gray-100 overflow-hidden">
+                    <div className="h-full rounded-full bg-gradient-to-r from-amber-400 to-orange-500 transition-all duration-1000" style={{ width: `${((TIMER_SECONDS - countdown) / TIMER_SECONDS) * 100}%` }} />
+                  </div>
+                  <p className="text-[11px] text-gray-400 text-center">La pub est ouverte dans un autre onglet...</p>
                 </div>
+              )}
 
-                {/* ═══ BANNIÈRE PUB 4 ═══ */}
-                <AdsterraWide />
+              {/* Validate button */}
+              {isValidating && !claiming && (
+                <button
+                  onClick={handleValidate}
+                  className="w-full h-16 rounded-2xl bg-gradient-to-r from-emerald-400 to-green-500 hover:from-emerald-500 hover:to-green-600 active:scale-[0.98] text-white font-extrabold text-base shadow-lg shadow-green-500/30 transition-all flex items-center justify-center gap-2"
+                >
+                  <CheckCircle2 className="w-5 h-5" /> Valider mon gain · +{EARN_PER_VIEW} FCFA
+                </button>
+              )}
 
-                {/* ═══ ADSTERRA BANNIÈRE 5 ═══ */}
-                <AdsterraBanner />
+              {/* Claiming */}
+              {claiming && (
+                <div className="w-full h-16 rounded-2xl bg-gray-100 text-gray-400 font-bold text-sm flex items-center justify-center gap-2">
+                  <Loader2 className="w-4 h-4 animate-spin" /> Vérification...
+                </div>
+              )}
+            </div>
 
-                {/* ═══ PARRAINAGE ═══ */}
-                <Card className="border-0 shadow-2xl overflow-hidden">
-                  <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-1">
-                    <div className="bg-gradient-to-br from-amber-500 to-orange-600 text-white p-5 text-center">
-                      <h2 className="text-xl font-extrabold mb-0.5 flex items-center justify-center gap-2">
-                        <Users className="h-5 w-5" /> PARRAINAGE
-                      </h2>
-                      <p className="text-white/80 text-xs">Invitez vos amis, gagnez plus</p>
-                      <div className="flex items-center justify-center gap-4 mt-3">
-                        <div><p className="text-[10px] text-white/60">VOTRE GAIN</p><p className="text-lg font-black">+{REFERRAL_BONUS_NEW} F</p></div>
-                        <div className="w-px h-8 bg-white/20" />
-                        <div><p className="text-[10px] text-white/60">GAIN FILLEUL</p><p className="text-lg font-black">+{REFERRAL_BONUS_REFERRER} F</p></div>
-                      </div>
+            {/* ─── Retrait ─── */}
+            {balance >= 500 && (
+              <a href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je souhaite retirer ${balance} FCFA. Mon numéro : ${phone}`)}`} target="_blank" rel="noopener noreferrer">
+                <div className="rounded-3xl bg-gradient-to-r from-emerald-500 to-green-500 p-4 flex items-center justify-between shadow-lg shadow-green-500/20 active:scale-[0.98] transition-all cursor-pointer">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center">
+                      <Wallet className="w-5 h-5 text-white" />
                     </div>
-                  </div>
-
-                  <CardContent className="p-5 space-y-3">
                     <div>
-                      <p className="text-[11px] font-bold mb-1.5">Votre lien de parrainage :</p>
-                      <div className="flex gap-1.5">
-                        <div className="flex-1 h-10 flex items-center px-3 rounded-lg bg-muted border text-[11px] text-muted-foreground truncate font-mono">
-                          {referralLink}
-                        </div>
-                        <Button onClick={copyLink} size="sm" variant={copied ? 'default' : 'outline'} className="h-10 px-3 flex-shrink-0">
-                          {copied ? <CheckCircle2 className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                        </Button>
-                      </div>
+                      <p className="text-sm font-bold text-white">Retirer {balance} FCFA</p>
+                      <p className="text-[11px] text-white/70">Via WhatsApp</p>
                     </div>
-
-                    <div className="grid grid-cols-2 gap-2">
-                      <div className="p-2.5 rounded-lg bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 text-center">
-                        <p className="text-lg font-black text-amber-600">{referralCount}</p>
-                        <p className="text-[10px] text-muted-foreground">Filleuls</p>
-                      </div>
-                      <div className="p-2.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800 text-center">
-                        <p className="text-lg font-black text-emerald-600">{referralEarnings} F</p>
-                        <p className="text-[10px] text-muted-foreground">Gains parrainage</p>
-                      </div>
-                    </div>
-
-                    {!referredBy ? (
-                      <div>
-                        {!showReferralInput ? (
-                          <Button onClick={() => setShowReferralInput(true)} variant="outline" className="w-full h-10 text-xs font-semibold border-dashed border-2">
-                            <Gift className="h-3.5 w-3.5 mr-1.5" /> Entrer un code de parrainage
-                          </Button>
-                        ) : (
-                          <div className="space-y-2">
-                            <div className="flex gap-1.5">
-                              <Input placeholder="Code parrainage" value={refInput} onChange={(e) => setRefInput(e.target.value)} className="h-10 text-xs font-mono" />
-                              <Button onClick={handleApplyReferral} disabled={applyingRef || !refInput.trim()} size="sm" className="h-10 px-4 bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs">
-                                {applyingRef ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <CheckCircle2 className="h-3.5 w-3.5" />}
-                              </Button>
-                            </div>
-                            <button onClick={() => { setShowReferralInput(false); setRefInput('') }} className="text-[10px] text-muted-foreground hover:text-foreground flex items-center gap-0.5 mx-auto">
-                              <X className="h-2.5 w-2.5" /> Annuler
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    ) : (
-                      <div className="flex items-center gap-2 p-2.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800">
-                        <CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" />
-                        <p className="text-[11px] text-emerald-700 dark:text-emerald-400 font-medium">
-                          Parrainage activé — +{REFERRAL_BONUS_NEW} FCFA de bonus reçu !
-                        </p>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-
-                {/* ═══ BANNIÈRE PUB 6 - Après parrainage ═══ */}
-                <AdsterraBanner />
-                <div className="my-1" /><AdsterraWide />
-
-                {/* ═══ ADSTERRA BANNIÈRE 7 ═══ */}
-                <AdsterraBanner />
-
-                {/* ═══ BANNIÈRE PUB 8 ═══ */}
-                <AdsterraWide />
-
-                {/* Retrait */}
-                {balance >= 500 && (
-                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-                    <a href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je souhaite retirer ${balance} FCFA de mon solde PTC. Mon numéro : ${phone}`)}`} target="_blank" rel="noopener noreferrer">
-                      <Card className="border-2 border-emerald-300 dark:border-emerald-700 hover:shadow-lg transition-all cursor-pointer hover:-translate-y-0.5">
-                        <CardContent className="p-4 flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30">
-                              <Wallet className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-                            </div>
-                            <div>
-                              <p className="text-sm font-bold">Retirer {balance} FCFA</p>
-                              <p className="text-[11px] text-muted-foreground">Via Orange Money ou Wave</p>
-                            </div>
-                          </div>
-                          <ArrowRight className="h-5 w-5 text-emerald-500" />
-                        </CardContent>
-                      </Card>
-                    </a>
-                  </motion.div>
-                )}
-
-                {balance > 0 && balance < 500 && (
-                  <div className="flex items-center gap-2 p-3 rounded-lg bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800">
-                    <TrendingUp className="h-4 w-4 text-blue-500 flex-shrink-0" />
-                    <p className="text-[11px] text-blue-700 dark:text-blue-400">
-                      Encore <strong>{500 - balance} FCFA</strong> avant de pouvoir retirer. Continuez !
-                    </p>
                   </div>
-                )}
-              </motion.div>
+                  <ArrowRight className="w-5 h-5 text-white" />
+                </div>
+              </a>
             )}
-          </AnimatePresence>
-        </section>
-      </main>
-      <Footer />
 
+            {balance > 0 && balance < 500 && (
+              <div className="rounded-3xl bg-blue-50 border border-blue-100 p-4 flex items-center gap-2">
+                <Eye className="w-4 h-4 text-blue-500 flex-shrink-0" />
+                <p className="text-xs text-blue-600">Encore <strong>{500 - balance} FCFA</strong> avant de pouvoir retirer. Continuez !</p>
+              </div>
+            )}
+
+            {/* ─── Parrainage ─── */}
+            <div className="rounded-3xl bg-white shadow-xl p-5 space-y-4">
+              <div className="flex items-center gap-2">
+                <Users className="w-5 h-5 text-amber-500" />
+                <p className="text-sm font-bold text-gray-800">Parrainage</p>
+                <span className="ml-auto text-[10px] font-bold text-amber-500 bg-amber-50 px-2 py-0.5 rounded-full">+{REFERRAL_BONUS_NEW} F / filleul</span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div className="rounded-2xl bg-gray-50 p-3 text-center">
+                  <p className="text-lg font-black text-gray-800">{referralCount}</p>
+                  <p className="text-[10px] text-gray-400">Filleuls</p>
+                </div>
+                <div className="rounded-2xl bg-gray-50 p-3 text-center">
+                  <p className="text-lg font-black text-emerald-600">{referralEarnings} F</p>
+                  <p className="text-[10px] text-gray-400">Gains parrainage</p>
+                </div>
+              </div>
+
+              {/* Lien de parrainage */}
+              <div>
+                <p className="text-[11px] font-bold text-gray-500 mb-1.5">Votre lien de parrainage :</p>
+                <div className="flex gap-1.5">
+                  <div className="flex-1 h-10 flex items-center px-3 rounded-2xl bg-gray-50 border text-[11px] text-gray-400 truncate font-mono">{referralLink}</div>
+                  <button onClick={copyLink} className={`h-10 w-10 rounded-2xl flex items-center justify-center transition-all ${copied ? 'bg-emerald-500 text-white' : 'bg-gray-100 text-gray-400 hover:bg-gray-200'}`}>
+                    {copied ? <CheckCircle2 className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              {!referredBy ? (
+                !showReferralInput ? (
+                  <button onClick={() => setShowReferralInput(true)} className="w-full h-10 rounded-2xl border-2 border-dashed border-gray-200 text-xs font-semibold text-gray-400 hover:border-amber-300 hover:text-amber-500 transition-all flex items-center justify-center gap-1">
+                    <Gift className="w-3.5 h-3.5" /> Entrer un code de parrainage
+                  </button>
+                ) : (
+                  <div className="space-y-2">
+                    <div className="flex gap-1.5">
+                      <input placeholder="Code parrainage" value={refInput} onChange={(e) => setRefInput(e.target.value)} className="flex-1 h-10 px-3 rounded-2xl border-2 border-gray-200 focus:border-amber-400 focus:outline-none text-xs font-mono" />
+                      <button onClick={handleApplyReferral} disabled={applyingRef || !refInput.trim()} className="h-10 w-10 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-bold flex items-center justify-center disabled:opacity-50 transition-all">
+                        {applyingRef ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
+                      </button>
+                    </div>
+                    <button onClick={() => { setShowReferralInput(false); setRefInput('') }} className="text-[10px] text-gray-400 hover:text-gray-600 flex items-center gap-0.5 mx-auto">
+                      <X className="w-2.5 h-2.5" /> Annuler
+                    </button>
+                  </div>
+                )
+              ) : (
+                <div className="flex items-center gap-2 p-3 rounded-2xl bg-emerald-50 border border-emerald-200">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                  <p className="text-[11px] text-emerald-700 font-medium">Parrainage activé — +{REFERRAL_BONUS_NEW} FCFA reçu !</p>
+                </div>
+              )}
+            </div>
+
+            {/* ─── Comment ça marche ─── */}
+            <div className="rounded-3xl bg-white shadow-xl p-5">
+              <p className="text-xs font-bold text-gray-800 mb-3">Comment ça marche ?</p>
+              <div className="space-y-2.5">
+                {[
+                  { num: '1', text: 'Cliquez sur « Regarder une pub ».' },
+                  { num: '2', text: 'Laissez la pub ouverte 30 secondes.' },
+                  { num: '3', text: 'Cliquez « Valider mon gain » pour encaisser.' },
+                ].map((item) => (
+                  <div key={item.num} className="flex items-start gap-2.5">
+                    <div className="w-5 h-5 rounded-full bg-amber-100 text-amber-600 text-[10px] font-black flex items-center justify-center flex-shrink-0 mt-0.5">{item.num}</div>
+                    <p className="text-[11px] text-gray-500 leading-relaxed">{item.text}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+          </div>
+        </div>
+      )}
     </div>
   )
 }
