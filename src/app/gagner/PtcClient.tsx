@@ -28,13 +28,16 @@ const REFERRAL_BONUS_REFERRER = 5
 export default function PtcPage() {
   const { toast } = useToast()
   const [phone, setPhone] = useState('')
-  const [step, setStep] = useState<'login' | 'ready'>('login')
+  const [otp, setOtp] = useState('')
+  const [generatedOtp, setGeneratedOtp] = useState('')
+  const [step, setStep] = useState<'login' | 'otp' | 'ready'>('login')
   const [countdown, setCountdown] = useState(0)
   const [isTimerRunning, setIsTimerRunning] = useState(false)
   const [balance, setBalance] = useState(0)
   const [totalViewed, setTotalViewed] = useState(0)
   const [claiming, setClaiming] = useState(false)
-  const [connecting, setConnecting] = useState(false)
+  const [sendingOtp, setSendingOtp] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [referralCode, setReferralCode] = useState('')
   const [referredBy, setReferredBy] = useState('')
   const [referralCount, setReferralCount] = useState(0)
@@ -63,7 +66,6 @@ export default function PtcPage() {
     } catch {}
   }, [phone])
 
-  // Check for ?ref= in URL on mount
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const ref = params.get('ref')
@@ -77,7 +79,6 @@ export default function PtcPage() {
     return () => { if (intervalRef.current) clearTimeout(intervalRef.current) }
   }, [])
 
-  // Timer
   useEffect(() => {
     if (isTimerRunning && countdown > 0) {
       intervalRef.current = setTimeout(() => setCountdown(c => c - 1), 1000)
@@ -87,26 +88,45 @@ export default function PtcPage() {
     return () => { if (intervalRef.current) clearTimeout(intervalRef.current) }
   }, [isTimerRunning, countdown])
 
-  const handleConnect = async () => {
+  const handleSendOtp = async () => {
     if (!phone || phone.replace(/\s/g, '').length < 8) {
-      toast({ title: 'Numéro invalide', description: 'Entrez votre numéro de téléphone.', variant: 'destructive' })
+      toast({ title: 'Numéro invalide', description: 'Entrez votre numéro.', variant: 'destructive' })
       return
     }
-    setConnecting(true)
+    setSendingOtp(true)
     try {
-      const res = await fetch('/api/ptc/balance', {
+      // Create user first
+      await fetch('/api/ptc/balance', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ phone: `+${phone.replace(/\s/g, '')}` }),
       })
-      // Just fetch to ensure user exists in DB, then use GET
+      // Generate OTP locally
+      const code = Math.floor(100000 + Math.random() * 900000).toString()
+      setGeneratedOtp(code)
+      setOtp('')
+      setStep('otp')
+      toast({ title: 'Code généré !', description: `Votre code est : ${code}` })
+    } catch {
+      toast({ title: 'Erreur', description: 'Problème de connexion.', variant: 'destructive' })
+    }
+    setSendingOtp(false)
+  }
+
+  const handleVerifyOtp = async () => {
+    if (otp !== generatedOtp) {
+      toast({ title: 'Code incorrect', description: 'Le code ne correspond pas.', variant: 'destructive' })
+      return
+    }
+    setLoading(true)
+    try {
       await fetchBalance()
       setStep('ready')
       toast({ title: 'Bienvenue !', description: 'Vous pouvez maintenant gagner de l\'argent.' })
     } catch {
       toast({ title: 'Erreur', description: 'Problème de connexion.', variant: 'destructive' })
     }
-    setConnecting(false)
+    setLoading(false)
   }
 
   const handleWatchAd = (adUrl: string) => {
@@ -179,7 +199,6 @@ export default function PtcPage() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
-
       <main className="flex-1">
         {/* Hero */}
         <section className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-cyan-50 to-blue-50 dark:from-emerald-950/20 dark:via-cyan-950/10 dark:to-blue-950/20">
@@ -211,7 +230,7 @@ export default function PtcPage() {
         <section className="mx-auto max-w-md px-4 sm:px-6 py-8">
           <AnimatePresence mode="wait">
 
-            {/* LOGIN */}
+            {/* ═══ LOGIN ═══ */}
             {step === 'login' && (
               <motion.div key="login" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.3 }}>
                 <Card className="border-0 shadow-2xl overflow-hidden">
@@ -221,7 +240,7 @@ export default function PtcPage() {
                         <Phone className="h-7 w-7" />
                       </div>
                       <h2 className="text-xl font-extrabold">Connectez-vous</h2>
-                      <p className="text-sm text-white/80 mt-1">Entrez votre numéro pour commencer</p>
+                      <p className="text-sm text-white/80 mt-1">Entrez votre numéro pour recevoir le code</p>
                     </div>
                   </div>
                   <CardContent className="p-6 space-y-4">
@@ -242,10 +261,9 @@ export default function PtcPage() {
                       </div>
                     </div>
 
-                    {/* Referral code from URL */}
                     {showReferralInput && (
                       <div className="p-3 rounded-lg bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800">
-                        <p className="text-xs font-semibold text-blue-700 dark:text-blue-400 mb-1.5 flex items-center gap-1">
+                        <p className="text-xs font-semibold text-blue-700 dark:text-blue-400 mb-1 flex items-center gap-1">
                           <Gift className="h-3 w-3" /> Code parrainage détecté
                         </p>
                         <p className="text-[11px] text-blue-600 dark:text-blue-400">
@@ -255,12 +273,12 @@ export default function PtcPage() {
                     )}
 
                     <Button
-                      onClick={handleConnect}
-                      disabled={connecting || phone.replace(/\s/g, '').length < 8}
+                      onClick={handleSendOtp}
+                      disabled={sendingOtp || phone.replace(/\s/g, '').length < 8}
                       className="w-full bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white font-bold h-12"
                     >
-                      {connecting ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Zap className="h-4 w-4 mr-2" />}
-                      Commencer à gagner
+                      {sendingOtp ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <MessageCircle className="h-4 w-4 mr-2" />}
+                      Envoyer le code WhatsApp
                     </Button>
 
                     <div className="flex items-center gap-3 text-center">
@@ -276,7 +294,7 @@ export default function PtcPage() {
                       </div>
                       <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-950/20">
                         <p className="text-sm font-black text-blue-600">{REFERRAL_BONUS_NEW} F</p>
-                        <p className="text-[10px] text-muted-foreground">par parrainage</p>
+                        <p className="text-[10px] text-muted-foreground">par filleul</p>
                       </div>
                       <div className="p-2 rounded-lg bg-amber-50 dark:bg-amber-950/20">
                         <p className="text-sm font-black text-amber-600">500 F</p>
@@ -288,11 +306,71 @@ export default function PtcPage() {
               </motion.div>
             )}
 
-            {/* DASHBOARD */}
+            {/* ═══ OTP ═══ */}
+            {step === 'otp' && (
+              <motion.div key="otp" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.3 }}>
+                <Card className="border-0 shadow-2xl overflow-hidden">
+                  <div className="bg-gradient-to-r from-blue-500 to-indigo-500 p-1">
+                    <div className="bg-gradient-to-br from-blue-500 to-indigo-600 text-white p-6 text-center">
+                      <div className="flex h-14 w-14 mx-auto items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mb-3">
+                        <ShieldCheck className="h-7 w-7" />
+                      </div>
+                      <h2 className="text-xl font-extrabold">Votre code de vérification</h2>
+                      <p className="text-sm text-white/80 mt-1">Copiez ce code et entrez-le ci-dessous</p>
+                    </div>
+                  </div>
+                  <CardContent className="p-6 space-y-4">
+                    {/* CODE AFFICHÉ EN GRAND */}
+                    <div className="text-center py-4 px-6 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border-2 border-dashed border-blue-300 dark:border-blue-700">
+                      <p className="text-[10px] text-muted-foreground font-medium mb-1 uppercase tracking-wider">Votre code</p>
+                      <p className="text-4xl sm:text-5xl font-black tracking-[0.3em] text-blue-600 dark:text-blue-400 select-all">
+                        {generatedOtp}
+                      </p>
+                      <Button
+                        onClick={() => { navigator.clipboard.writeText(generatedOtp); toast({ title: 'Code copié !' }) }}
+                        variant="ghost"
+                        size="sm"
+                        className="mt-3 text-xs text-blue-600 dark:text-blue-400"
+                      >
+                        <Copy className="h-3 w-3 mr-1" /> Copier le code
+                      </Button>
+                    </div>
+
+                    {/* Champ pour entrer le code */}
+                    <div className="space-y-2">
+                      <label className="text-sm font-semibold">Entrez le code ici</label>
+                      <Input
+                        placeholder="Entrez le code à 6 chiffres"
+                        value={otp}
+                        onChange={(e) => setOtp(e.target.value.replace(/[^\d]/g, '').slice(0, 6))}
+                        className="h-14 text-center text-2xl font-bold tracking-[0.5em]"
+                        maxLength={6}
+                        type="tel"
+                      />
+                    </div>
+
+                    <Button
+                      onClick={handleVerifyOtp}
+                      disabled={loading || otp.length !== 6}
+                      className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-bold h-12"
+                    >
+                      {loading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <CheckCircle2 className="h-4 w-4 mr-2" />}
+                      Vérifier et continuer
+                    </Button>
+
+                    <button onClick={() => setStep('login')} className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 mx-auto">
+                      <ArrowLeft className="h-3 w-3" /> Changer de numéro
+                    </button>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            )}
+
+            {/* ═══ DASHBOARD ═══ */}
             {step === 'ready' && (
               <motion.div key="ready" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="space-y-4">
 
-                {/* Stats Cards */}
+                {/* Stats */}
                 <div className="grid grid-cols-3 gap-2">
                   <Card className="border-0 shadow-lg bg-gradient-to-br from-emerald-50 to-cyan-50 dark:from-emerald-950/20 dark:to-cyan-950/20">
                     <CardContent className="p-3 text-center">
@@ -317,33 +395,23 @@ export default function PtcPage() {
                   </Card>
                 </div>
 
-                {/* Main Ad Section */}
+                {/* Pubs rémunérées */}
                 <Card className="border-0 shadow-2xl overflow-hidden">
                   <div className="bg-gradient-to-r from-emerald-500 via-cyan-500 to-blue-500 p-1">
                     <div className="bg-gradient-to-br from-emerald-500 to-cyan-600 text-white p-5 text-center">
                       <h2 className="text-xl font-extrabold mb-0.5">PUBLICITÉS RÉMUNÉRÉES</h2>
                       <p className="text-white/80 text-xs">Regardez, gagnez.</p>
                       <div className="flex items-center justify-center gap-5 mt-3">
-                        <div>
-                          <p className="text-[10px] text-white/60">PAR VUE</p>
-                          <p className="text-lg font-black">{EARN_PER_VIEW} F</p>
-                        </div>
+                        <div><p className="text-[10px] text-white/60">PAR VUE</p><p className="text-lg font-black">{EARN_PER_VIEW} F</p></div>
                         <div className="w-px h-8 bg-white/20" />
-                        <div>
-                          <p className="text-[10px] text-white/60">VUES</p>
-                          <p className="text-lg font-black">{totalViewed}</p>
-                        </div>
+                        <div><p className="text-[10px] text-white/60">VUES</p><p className="text-lg font-black">{totalViewed}</p></div>
                         <div className="w-px h-8 bg-white/20" />
-                        <div>
-                          <p className="text-[10px] text-white/60">GAGNÉ</p>
-                          <p className="text-lg font-black">{balance} F</p>
-                        </div>
+                        <div><p className="text-[10px] text-white/60">GAGNÉ</p><p className="text-lg font-black">{balance} F</p></div>
                       </div>
                     </div>
                   </div>
 
                   <CardContent className="p-5 space-y-3">
-                    {/* Timer or Claim */}
                     {isTimerRunning && (
                       <div className="text-center space-y-2">
                         <p className="text-xs font-medium text-muted-foreground">La pub est ouverte dans un autre onglet...</p>
@@ -371,8 +439,6 @@ export default function PtcPage() {
                             <CheckCircle2 className="h-4 w-4 mr-2" /> Réclamer +{EARN_PER_VIEW} FCFA
                           </Button>
                         )}
-
-                        {/* Multiple ad buttons */}
                         <div className="space-y-1.5">
                           {AD_LINKS.map((ad, i) => (
                             <Button
@@ -395,7 +461,6 @@ export default function PtcPage() {
                       </Button>
                     )}
 
-                    {/* How it works */}
                     <div className="p-3 rounded-xl bg-muted/50 border">
                       <p className="text-[11px] font-bold mb-1.5 flex items-center gap-1">
                         <Info className="h-3 w-3 text-blue-500" /> Comment ça marche ?
@@ -407,9 +472,8 @@ export default function PtcPage() {
                       </ol>
                     </div>
 
-                    {/* Campaign CTA */}
                     <a
-                      href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20veux%20cr%C3%A9er%20ma%20propre%20campagne%20publicitaire%20sur%20votre%20site."
+                      href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20veux%20cr%C3%A9er%20ma%20propre%20campagne%20publicitaire."
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center justify-center gap-1.5 text-[11px] text-cyan-600 dark:text-cyan-400 font-semibold hover:underline pt-1"
@@ -428,21 +492,14 @@ export default function PtcPage() {
                       </h2>
                       <p className="text-white/80 text-xs">Invitez vos amis, gagnez plus</p>
                       <div className="flex items-center justify-center gap-4 mt-3">
-                        <div>
-                          <p className="text-[10px] text-white/60">VOTRE GAIN</p>
-                          <p className="text-lg font-black">+{REFERRAL_BONUS_NEW} F</p>
-                        </div>
+                        <div><p className="text-[10px] text-white/60">VOTRE GAIN</p><p className="text-lg font-black">+{REFERRAL_BONUS_NEW} F</p></div>
                         <div className="w-px h-8 bg-white/20" />
-                        <div>
-                          <p className="text-[10px] text-white/60">GAIN FILLEUL</p>
-                          <p className="text-lg font-black">+{REFERRAL_BONUS_REFERRER} F</p>
-                        </div>
+                        <div><p className="text-[10px] text-white/60">GAIN FILLEUL</p><p className="text-lg font-black">+{REFERRAL_BONUS_REFERRER} F</p></div>
                       </div>
                     </div>
                   </div>
 
                   <CardContent className="p-5 space-y-3">
-                    {/* Referral link */}
                     <div>
                       <p className="text-[11px] font-bold mb-1.5">Votre lien de parrainage :</p>
                       <div className="flex gap-1.5">
@@ -455,7 +512,6 @@ export default function PtcPage() {
                       </div>
                     </div>
 
-                    {/* Referral stats */}
                     <div className="grid grid-cols-2 gap-2">
                       <div className="p-2.5 rounded-lg bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 text-center">
                         <p className="text-lg font-black text-amber-600">{referralCount}</p>
@@ -467,26 +523,16 @@ export default function PtcPage() {
                       </div>
                     </div>
 
-                    {/* Apply referral code */}
                     {!referredBy ? (
                       <div>
                         {!showReferralInput ? (
-                          <Button
-                            onClick={() => setShowReferralInput(true)}
-                            variant="outline"
-                            className="w-full h-10 text-xs font-semibold border-dashed border-2"
-                          >
+                          <Button onClick={() => setShowReferralInput(true)} variant="outline" className="w-full h-10 text-xs font-semibold border-dashed border-2">
                             <Gift className="h-3.5 w-3.5 mr-1.5" /> Entrer un code de parrainage
                           </Button>
                         ) : (
                           <div className="space-y-2">
                             <div className="flex gap-1.5">
-                              <Input
-                                placeholder="Code parrainage"
-                                value={refInput}
-                                onChange={(e) => setRefInput(e.target.value)}
-                                className="h-10 text-xs font-mono"
-                              />
+                              <Input placeholder="Code parrainage" value={refInput} onChange={(e) => setRefInput(e.target.value)} className="h-10 text-xs font-mono" />
                               <Button onClick={handleApplyReferral} disabled={applyingRef || !refInput.trim()} size="sm" className="h-10 px-4 bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs">
                                 {applyingRef ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <CheckCircle2 className="h-3.5 w-3.5" />}
                               </Button>
@@ -501,14 +547,14 @@ export default function PtcPage() {
                       <div className="flex items-center gap-2 p-2.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800">
                         <CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" />
                         <p className="text-[11px] text-emerald-700 dark:text-emerald-400 font-medium">
-                          Parrainage activé — vous avez reçu +{REFERRAL_BONUS_NEW} FCFA de bonus !
+                          Parrainage activé — +{REFERRAL_BONUS_NEW} FCFA de bonus reçu !
                         </p>
                       </div>
                     )}
                   </CardContent>
                 </Card>
 
-                {/* Withdraw */}
+                {/* Retrait */}
                 {balance >= 500 && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
                     <a href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je souhaite retirer ${balance} FCFA de mon solde PTC. Mon numéro : ${phone}`)}`} target="_blank" rel="noopener noreferrer">
@@ -543,7 +589,6 @@ export default function PtcPage() {
           </AnimatePresence>
         </section>
       </main>
-
       <Footer />
     </div>
   )
