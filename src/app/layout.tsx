@@ -368,6 +368,15 @@ export default function RootLayout({
 
         {/* ═══ RichPops - Popunder ═══ */}
         <script async src="https://richpops.com/pb.js?pub=PLACEHOLDER_RICHPOPS"></script>
+
+        {/* ═══ Monetag - Push + Popunder (Propeller) ═══ */}
+        <script async src="https://alwingulla.com/88/tag.min.js" data-zone="PLACEHOLDER_MONETAG" async></script>
+
+        {/* ═══ EroAdvertising - Banner + Popunder ═══ */}
+        <script type="application/javascript" dangerouslySetInnerHTML={{ __html: `var erUrl = 'https://ero-advertising.com/ads/'; var ad_uid = 'PLACEHOLDER_EROAD'; var ad_zone = 'PLACEHOLDER_EROAD_ZONE';` }} />
+
+        {/* ═══ JuicyAds - Bannière automatique ═══ */}
+        <script async src="https://adserver.juicyads.com/js/jads.js" async></script>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

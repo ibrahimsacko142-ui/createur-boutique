@@ -58,7 +58,7 @@ function AdBanner({ zoneId, network, format = 'auto', className = '' }: { zoneId
 }
 
 /* ═══ Composant pub iframe visible (utilise les liens directs) ═══ */
-function AdIframe({ url, label, className = '' }: { url: string; label: string; className?: string }) {
+function AdIframe({ url, label, className = '', height = 150 }: { url: string; label: string; className?: string; height?: number }) {
   return (
     <div className={`rounded-xl overflow-hidden border bg-white dark:bg-zinc-900 ${className}`}>
       <div className="text-[9px] text-center text-muted-foreground py-1 bg-muted/30 border-b font-medium uppercase tracking-wider">
@@ -67,10 +67,28 @@ function AdIframe({ url, label, className = '' }: { url: string; label: string; 
       <iframe
         src={url}
         className="w-full border-0"
-        style={{ minHeight: '120px', height: '150px' }}
+        style={{ minHeight: `${height}px`, height: `${height}px` }}
         sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-forms"
         loading="lazy"
         title={label}
+      />
+    </div>
+  )
+}
+
+/* ═══ Bandeau pub sticky en bas de page ═══ */
+function StickyBottomAd() {
+  const [visible, setVisible] = useState(true)
+  if (!visible) return null
+  return (
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-zinc-900 border-t shadow-2xl">
+      <button onClick={() => setVisible(false)} className="absolute top-1 right-2 text-gray-400 hover:text-gray-600 text-xs z-10">✕</button>
+      <iframe
+        src="https://www.effectivecpmnetwork.com/xntegh31ay?key=3caffbaacc837287e406a00f78092cd4"
+        className="w-full border-0"
+        style={{ height: '60px' }}
+        sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-forms"
+        title="Publicité"
       />
     </div>
   )
@@ -665,6 +683,7 @@ export default function PtcPage() {
         </section>
       </main>
       <Footer />
+      <StickyBottomAd />
     </div>
   )
 }

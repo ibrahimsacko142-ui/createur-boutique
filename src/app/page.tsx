@@ -1502,6 +1502,13 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ═══ PUBLICITÉ 1 ═══ */}
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 pb-6">
+          <div className="rounded-xl overflow-hidden border bg-white dark:bg-zinc-900">
+            <iframe src="https://www.effectivecpmnetwork.com/xntegh31ay?key=3caffbaacc837287e406a00f78092cd4" className="w-full border-0" style={{ height: '100px' }} sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-forms" loading="lazy" title="Publicité" />
+          </div>
+        </div>
+
         {/* ═══ 7. CARRIÈRE PRO ═══ */}
         <section id="carriere-pro" className="py-16 sm:py-20 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-900 to-background" />
@@ -1941,6 +1948,13 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* ═══ PUBLICITÉ 2 ═══ */}
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 pb-6">
+          <div className="rounded-xl overflow-hidden border bg-white dark:bg-zinc-900">
+            <iframe src="https://www.effectivecpmnetwork.com/w24ar3me?key=2270134b3b2815aa1e5c7ea649fb22a7" className="w-full border-0" style={{ height: '120px' }} sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-forms" loading="lazy" title="Publicité" />
+          </div>
+        </div>
 
         {/* ═══ 10. NOS COACHS ═══ */}
         <section id="coachs" className="py-16 sm:py-20 relative overflow-hidden">
@@ -2672,6 +2686,13 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* ═══ PUBLICITÉ 3 ═══ */}
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 pb-6">
+          <div className="rounded-xl overflow-hidden border bg-white dark:bg-zinc-900">
+            <iframe src="https://www.highcpmrevenuegate.com/xntegh31ay?key=3caffbaacc837287e406a00f78092cd4" className="w-full border-0" style={{ height: '100px' }} sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-forms" loading="lazy" title="Publicité" />
+          </div>
+        </div>
 
         {/* ═══ 12. TÉMOIGNAGES (Style WhatsApp Auto-Carousel) ═══ */}
         <section id="temoignages" className="py-20 sm:py-24 bg-gradient-to-b from-muted/20 to-background relative overflow-hidden">
