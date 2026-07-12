@@ -3,13 +3,13 @@ import { db } from '@/lib/db'
 
 /*
   POST /api/ptc/claim
-  Valide une vue de pub et crédite 10 FCFA à l'utilisateur.
+  Valide une vue de pub et crédite 1 FCFA à l'utilisateur.
   Sécurité : minimum 30 secondes entre chaque vue.
 
   Body : { phone: "223XXXXXXXX" }
 */
 
-const EARN_PER_VIEW = 10 // FCFA
+const EARN_PER_VIEW = 1 // FCFA
 const MIN_INTERVAL_MS = 30_000 // 30 secondes
 
 export async function POST(req: NextRequest) {

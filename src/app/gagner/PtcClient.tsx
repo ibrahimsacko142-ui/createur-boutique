@@ -2,15 +2,15 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import {
-  Eye, Wallet, Phone, ShieldCheck, MessageCircle,
-  ChevronRight, ArrowLeft, Loader2, Users, Gift, ArrowRight, X, Copy, CheckCircle2
+  Wallet, Phone, ShieldCheck, MessageCircle,
+  ArrowLeft, Loader2, Users, Gift, ArrowRight, X, Copy, CheckCircle2
 } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 
 const SITE_URL = 'https://createur-boutique.vercel.app'
 const SMART_LINK = 'https://www.effectivecpmnetwork.com/xntegh31ay?key=3caffbaacc837287e406a00f78092cd4'
 const TIMER_SECONDS = 30
-const EARN_PER_VIEW = 10
+const EARN_PER_VIEW = 1
 const REFERRAL_BONUS_NEW = 10
 const REFERRAL_BONUS_REFERRER = 5
 
@@ -100,7 +100,7 @@ export default function PtcPage() {
     setLoading(false)
   }
 
-  /* ─── Watch Ad (opens smartlink) ─── */
+  /* ─── Watch Ad (opens smartlink in NEW TAB) ─── */
   const handleWatchAd = () => {
     window.open(SMART_LINK, '_blank')
     setCountdown(TIMER_SECONDS)
@@ -151,7 +151,6 @@ export default function PtcPage() {
       {step === 'login' && (
         <div className="min-h-screen flex items-center justify-center px-4 py-10">
           <div className="w-full max-w-sm space-y-6">
-            {/* Logo / Title */}
             <div className="text-center space-y-2">
               <div className="mx-auto w-16 h-16 rounded-3xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg shadow-orange-500/30">
                 <Wallet className="w-8 h-8 text-white" />
@@ -160,7 +159,6 @@ export default function PtcPage() {
               <p className="text-sm text-gray-500">Regardez des pubs, gagnez des FCFA</p>
             </div>
 
-            {/* Login Card */}
             <div className="rounded-3xl bg-white shadow-xl p-6 space-y-4">
               <div className="flex items-center gap-2 mb-2">
                 <Phone className="w-5 h-5 text-gray-400" />
@@ -193,7 +191,6 @@ export default function PtcPage() {
               </button>
             </div>
 
-            {/* Info */}
             <div className="grid grid-cols-3 gap-2 text-center">
               <div className="rounded-2xl bg-white shadow p-3">
                 <p className="text-lg font-black text-orange-500">{EARN_PER_VIEW} F</p>
@@ -225,7 +222,6 @@ export default function PtcPage() {
             </div>
 
             <div className="rounded-3xl bg-white shadow-xl p-6 space-y-5">
-              {/* Code affiché */}
               <div className="text-center py-5 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-dashed border-blue-200">
                 <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">Votre code</p>
                 <p className="text-4xl font-black tracking-[0.3em] text-blue-600 select-all">{generatedOtp}</p>
@@ -234,7 +230,6 @@ export default function PtcPage() {
                 </button>
               </div>
 
-              {/* Champ code */}
               <input
                 placeholder="Entrez le code ici"
                 value={otp}
@@ -280,7 +275,6 @@ export default function PtcPage() {
                 <p className="text-2xl font-black text-cyan-400">{totalViewed}</p>
               </div>
             </div>
-            {/* Progress to withdrawal */}
             <div className="mt-4">
               <div className="flex justify-between text-[10px] text-gray-400 mb-1">
                 <span>Prochain retrait : 500 FCFA</span>
@@ -295,42 +289,44 @@ export default function PtcPage() {
           {/* ─── Content ─── */}
           <div className="px-4 -mt-3 space-y-4">
 
-            {/* ─── Big Action Button ─── */}
+            {/* ─── Big Action Card ─── */}
             <div className="rounded-3xl bg-white shadow-xl p-5">
+
+              {/* State: Ready to watch */}
               {!isTimerRunning && !isValidating && !claiming && (
                 <button
                   onClick={handleWatchAd}
                   className="w-full h-16 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 active:scale-[0.98] text-white font-extrabold text-base shadow-lg shadow-orange-500/30 transition-all flex items-center justify-center gap-2"
                 >
-                  <Eye className="w-5 h-5" /> Regarder une pub · +{EARN_PER_VIEW} FCFA
+                  ▶ Regarder une pub · +{EARN_PER_VIEW} FCFA
                 </button>
               )}
 
-              {/* Timer running */}
+              {/* State: Timer counting down */}
               {isTimerRunning && (
                 <div className="space-y-3">
                   <div className="w-full h-16 rounded-2xl bg-gray-100 text-gray-400 font-bold text-sm flex items-center justify-center gap-2 cursor-not-allowed">
                     <div className="w-3 h-3 rounded-full bg-amber-400 animate-pulse" />
-                    Attendre... ({countdown}s)
+                    {countdown}s restantes...
                   </div>
-                  <div className="w-full h-2 rounded-full bg-gray-100 overflow-hidden">
-                    <div className="h-full rounded-full bg-gradient-to-r from-amber-400 to-orange-500 transition-all duration-1000" style={{ width: `${((TIMER_SECONDS - countdown) / TIMER_SECONDS) * 100}%` }} />
+                  <div className="w-full h-2.5 rounded-full bg-gray-100 overflow-hidden">
+                    <div className="h-full rounded-full bg-gradient-to-r from-amber-400 to-orange-500 transition-all duration-1000 ease-linear" style={{ width: `${((TIMER_SECONDS - countdown) / TIMER_SECONDS) * 100}%` }} />
                   </div>
                   <p className="text-[11px] text-gray-400 text-center">La pub est ouverte dans un autre onglet...</p>
                 </div>
               )}
 
-              {/* Validate button */}
+              {/* State: Timer done, validate button */}
               {isValidating && !claiming && (
                 <button
                   onClick={handleValidate}
                   className="w-full h-16 rounded-2xl bg-gradient-to-r from-emerald-400 to-green-500 hover:from-emerald-500 hover:to-green-600 active:scale-[0.98] text-white font-extrabold text-base shadow-lg shadow-green-500/30 transition-all flex items-center justify-center gap-2"
                 >
-                  <CheckCircle2 className="w-5 h-5" /> Valider mon gain · +{EARN_PER_VIEW} FCFA
+                  <CheckCircle2 className="w-5 h-5" /> Valider mon gain
                 </button>
               )}
 
-              {/* Claiming */}
+              {/* State: Claiming in progress */}
               {claiming && (
                 <div className="w-full h-16 rounded-2xl bg-gray-100 text-gray-400 font-bold text-sm flex items-center justify-center gap-2">
                   <Loader2 className="w-4 h-4 animate-spin" /> Vérification...
@@ -358,7 +354,7 @@ export default function PtcPage() {
 
             {balance > 0 && balance < 500 && (
               <div className="rounded-3xl bg-blue-50 border border-blue-100 p-4 flex items-center gap-2">
-                <Eye className="w-4 h-4 text-blue-500 flex-shrink-0" />
+                <Users className="w-4 h-4 text-blue-500 flex-shrink-0" />
                 <p className="text-xs text-blue-600">Encore <strong>{500 - balance} FCFA</strong> avant de pouvoir retirer. Continuez !</p>
               </div>
             )}
@@ -382,7 +378,6 @@ export default function PtcPage() {
                 </div>
               </div>
 
-              {/* Lien de parrainage */}
               <div>
                 <p className="text-[11px] font-bold text-gray-500 mb-1.5">Votre lien de parrainage :</p>
                 <div className="flex gap-1.5">
@@ -424,9 +419,9 @@ export default function PtcPage() {
               <p className="text-xs font-bold text-gray-800 mb-3">Comment ça marche ?</p>
               <div className="space-y-2.5">
                 {[
-                  { num: '1', text: 'Cliquez sur « Regarder une pub ».' },
-                  { num: '2', text: 'Laissez la pub ouverte 30 secondes.' },
-                  { num: '3', text: 'Cliquez « Valider mon gain » pour encaisser.' },
+                  { num: '1', text: 'Cliquez sur « ▶ Regarder une pub » — la pub s\'ouvre dans un nouvel onglet.' },
+                  { num: '2', text: 'Attendez 30 secondes que le compte à rebours se termine.' },
+                  { num: '3', text: 'Cliquez « Valider mon gain » pour ajouter +1 FCFA à votre solde.' },
                 ].map((item) => (
                   <div key={item.num} className="flex items-start gap-2.5">
                     <div className="w-5 h-5 rounded-full bg-amber-100 text-amber-600 text-[10px] font-black flex items-center justify-center flex-shrink-0 mt-0.5">{item.num}</div>
