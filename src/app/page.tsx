@@ -869,7 +869,7 @@ export default function Home() {
                       <div className="h-3 w-3 rounded-full bg-red-400" />
                       <div className="h-3 w-3 rounded-full bg-amber-400" />
                       <div className="h-3 w-3 rounded-full bg-emerald-400" />
-                      <span className="text-[10px] text-slate-500 ml-2 font-mono">studio-creatif.ml</span>
+                      <span className="text-[10px] text-slate-500 ml-2 font-mono">createur-boutique.vercel.app</span>
                     </div>
                     <div className="space-y-3">
                       {[
