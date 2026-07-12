@@ -342,20 +342,6 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
 
-        {/* ═══ PropellerAds - Popunder ═══ */}
-        <script
-          async
-          src="https://pl30316030.effectivecpmnetwork.com/bf/f3/d4/bff3d45803026d7e91fca0ab68237c39.js"
-        />
-        {/* ═══ PropellerAds - Social Bar ═══ */}
-        <script
-          async
-          src="https://pl30316034.effectivecpmnetwork.com/63/e4/56/63e4569ad5164536f78deac227dc0aa7.js"
-        />
-
-        {/* ═══ Clickadu - Vérification propriétaire ═══ */}
-        <meta name="clckd" content="274413181898af1dc2b127bc5024a887" />
-
         {/* ═══ Adsterra - Bibliothèque ═══ */}
         <script async src="//adsterra.com/adProvider/ad.js"></script>
 

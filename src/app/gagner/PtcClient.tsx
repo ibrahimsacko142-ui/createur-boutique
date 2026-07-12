@@ -17,50 +17,7 @@ import Footer from '@/components/Footer'
 import AdsterraBanner from '@/components/AdsterraBanner'
 
 const SITE_URL = 'https://createur-boutique.vercel.app'
-const AD_LINKS = [
-  { name: 'Publicité 1', url: 'https://www.effectivecpmnetwork.com/xntegh31ay?key=3caffbaacc837287e406a00f78092cd4' },
-  { name: 'Publicité 2', url: 'https://www.effectivecpmnetwork.com/w24ar3me?key=2270134b3b2815aa1e5c7ea649fb22a7' },
-  { name: 'Publicité 3', url: 'https://www.effectivecpmnetwork.com/xntegh31ay?key=3caffbaacc837287e406a00f78092cd4' },
-  { name: 'Publicité 4', url: 'https://www.highcpmrevenuegate.com/xntegh31ay?key=3caffbaacc837287e406a00f78092cd4' },
-  { name: 'Publicité 5', url: 'https://a.magsrv.com/ad-provider.js' },
-]
-
-/* ═══ Composant pub iframe visible (utilise les liens directs) ═══ */
-function AdIframe({ url, label, className = '', height = 150 }: { url: string; label: string; className?: string; height?: number }) {
-  return (
-    <div className={`rounded-xl overflow-hidden border bg-white dark:bg-zinc-900 ${className}`}>
-      <div className="text-[9px] text-center text-muted-foreground py-1 bg-muted/30 border-b font-medium uppercase tracking-wider">
-        {label}
-      </div>
-      <iframe
-        src={url}
-        className="w-full border-0"
-        style={{ minHeight: `${height}px`, height: `${height}px` }}
-        sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-forms"
-        loading="lazy"
-        title={label}
-      />
-    </div>
-  )
-}
-
-/* ═══ Bandeau pub sticky en bas de page ═══ */
-function StickyBottomAd() {
-  const [visible, setVisible] = useState(true)
-  if (!visible) return null
-  return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-zinc-900 border-t shadow-2xl">
-      <button onClick={() => setVisible(false)} className="absolute top-1 right-2 text-gray-400 hover:text-gray-600 text-xs z-10">✕</button>
-      <iframe
-        src="https://www.effectivecpmnetwork.com/xntegh31ay?key=3caffbaacc837287e406a00f78092cd4"
-        className="w-full border-0"
-        style={{ height: '60px' }}
-        sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-forms"
-        title="Publicité"
-      />
-    </div>
-  )
-}
+import AdBanner from '@/components/AdBanner'
 const TIMER_SECONDS = 30
 const EARN_PER_VIEW = 1
 const REFERRAL_BONUS_NEW = 10
@@ -346,7 +303,7 @@ export default function PtcPage() {
                 </Card>
 
                 {/* ═══ PUB sous login ═══ */}
-                <AdIframe url="https://www.effectivecpmnetwork.com/xntegh31ay?key=3caffbaacc837287e406a00f78092cd4" label="Sponsorise" className="mt-2" />
+                <AdsterraBanner className="mt-2" />
               </motion.div>
             )}
 
@@ -409,7 +366,7 @@ export default function PtcPage() {
                 </Card>
 
                 {/* ═══ PUB sous OTP ═══ */}
-                <AdIframe url="https://www.highcpmrevenuegate.com/xntegh31ay?key=3caffbaacc837287e406a00f78092cd4" label="Annonce" className="mt-2" />
+                <AdBanner />
               </motion.div>
             )}
 
@@ -418,7 +375,7 @@ export default function PtcPage() {
               <motion.div key="ready" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="space-y-4">
 
                 {/* ═══ BANNIÈRE PUB 1 - Au-dessus des stats ═══ */}
-                <AdIframe url="https://www.effectivecpmnetwork.com/xntegh31ay?key=3caffbaacc837287e406a00f78092cd4" label="Sponsore" className="mb-2" />
+                <AdsterraBanner className="mb-2" />
 
                 {/* Stats */}
                 <div className="grid grid-cols-3 gap-2">
@@ -534,7 +491,7 @@ export default function PtcPage() {
                 </Card>
 
                 {/* ═══ BANNIÈRE PUB 2 - Grand format ═══ */}
-                <AdIframe url="https://www.effectivecpmnetwork.com/w24ar3me?key=2270134b3b2815aa1e5c7ea649fb22a7" label="Publicite" className="" />
+                <AdBanner />
 
                 {/* ═══ ADSTERRA BANNIÈRE ═══ */}
                 <div className="rounded-xl overflow-hidden border bg-white dark:bg-zinc-900 p-0">
@@ -614,7 +571,7 @@ export default function PtcPage() {
                 </Card>
 
                 {/* ═══ BANNIÈRE PUB 3 - Après parrainage ═══ */}
-                <AdIframe url="https://www.highcpmrevenuegate.com/xntegh31ay?key=3caffbaacc837287e406a00f78092cd4" label="Annonce" className="" />
+                <AdsterraBanner />
 
                 {/* Retrait */}
                 {balance >= 500 && (
@@ -652,7 +609,7 @@ export default function PtcPage() {
         </section>
       </main>
       <Footer />
-      <StickyBottomAd />
+
     </div>
   )
 }

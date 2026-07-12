@@ -1505,9 +1505,6 @@ export default function Home() {
 
         {/* ═══ PUBLICITÉ 1 ═══ */}
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 pb-6 space-y-4">
-          <div className="rounded-xl overflow-hidden border bg-white dark:bg-zinc-900">
-            <iframe src="https://www.effectivecpmnetwork.com/xntegh31ay?key=3caffbaacc837287e406a00f78092cd4" className="w-full border-0" style={{ height: '100px' }} sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-forms" loading="lazy" title="Publicité" />
-          </div>
           <AdsterraBanner />
         </div>
 
@@ -1953,9 +1950,7 @@ export default function Home() {
 
         {/* ═══ PUBLICITÉ 2 ═══ */}
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 pb-6">
-          <div className="rounded-xl overflow-hidden border bg-white dark:bg-zinc-900">
-            <iframe src="https://www.effectivecpmnetwork.com/w24ar3me?key=2270134b3b2815aa1e5c7ea649fb22a7" className="w-full border-0" style={{ height: '120px' }} sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-forms" loading="lazy" title="Publicité" />
-          </div>
+          <AdBanner />
         </div>
 
         {/* ═══ 10. NOS COACHS ═══ */}
@@ -2691,9 +2686,7 @@ export default function Home() {
 
         {/* ═══ PUBLICITÉ 3 ═══ */}
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 pb-6">
-          <div className="rounded-xl overflow-hidden border bg-white dark:bg-zinc-900">
-            <iframe src="https://www.highcpmrevenuegate.com/xntegh31ay?key=3caffbaacc837287e406a00f78092cd4" className="w-full border-0" style={{ height: '100px' }} sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-forms" loading="lazy" title="Publicité" />
-          </div>
+          <AdsterraBanner />
         </div>
 
         {/* ═══ 12. TÉMOIGNAGES (Style WhatsApp Auto-Carousel) ═══ */}

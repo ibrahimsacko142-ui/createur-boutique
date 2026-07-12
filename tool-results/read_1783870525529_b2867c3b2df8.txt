@@ -1,0 +1,2002 @@
+     1→'use client'
+     2→
+     3→import { useEffect, useState, useRef, useCallback } from 'react'
+     4→import { motion, AnimatePresence } from 'framer-motion'
+     5→import {
+     6→  ArrowRight,
+     7→  Star,
+     8→  ShoppingCart,
+     9→  CheckCircle2,
+    10→  Palette,
+    11→  Globe,
+    12→  MonitorPlay,
+    13→  BookOpen,
+    14→  Tv,
+    15→  PenTool,
+    16→  Sparkles,
+    17→  Eye,
+    18→  Zap,
+    19→  Heart,
+    20→  Target,
+    21→  Send,
+    22→  Mail,
+    23→  Phone,
+    24→  MapPin,
+    25→  Instagram,
+    26→  Facebook,
+    27→  X,
+    28→  Gift,
+    29→  Shield,
+    30→  Timer,
+    31→  Lock,
+    32→  MessageCircle,
+    33→  Trophy,
+    34→  Flame,
+    35→  Clock,
+    36→  FileCheck,
+    37→  FolderDown,
+    38→  GraduationCap,
+    39→  Building2,
+    40→  UserCheck,
+    41→  BadgeCheck,
+    42→  Wrench,
+    43→  TrendingUp,
+    44→  Code,
+    45→  Brain,
+    46→  Youtube,
+    47→  ChevronUp,
+    48→  ShieldCheck,
+    49→  ThumbsUp,
+    50→  Rocket,
+    51→  Layers,
+    52→  Award,
+    53→  Users,
+    54→  Scissors,
+    55→  ArrowDown,
+    56→  Search,
+    57→  Megaphone,
+    58→  Play,
+    59→  Pause,
+    60→  Cookie,
+    61→  Calculator,
+    62→  Share2,
+    63→  Wallet,
+    64→  Smartphone,
+    65→} from 'lucide-react'
+    66→import { Button } from '@/components/ui/button'
+    67→import { Card, CardContent } from '@/components/ui/card'
+    68→import { Badge } from '@/components/ui/badge'
+    69→import { Input } from '@/components/ui/input'
+    70→import { Textarea } from '@/components/ui/textarea'
+    71→import { Label } from '@/components/ui/label'
+    72→import { useToast } from '@/hooks/use-toast'
+    73→import Header from '@/components/Header'
+    74→import Footer from '@/components/Footer'
+    75→import AdsterraBanner from '@/components/AdsterraBanner'
+    76→import Preloader from '@/components/Preloader'
+    77→import ClientLogos from '@/components/ClientLogos'
+    78→import VideoShowcase from '@/components/VideoShowcase'
+    79→import BlogPreview from '@/components/BlogPreview'
+    80→import AdBanner from '@/components/AdBanner'
+    81→
+    82→
+    83→
+    84→
+    85→/* ─── Typing Text Hook ─── */
+    86→function useTypingText(phrases: string[], typingSpeed = 80, deletingSpeed = 40, pauseDuration = 2000) {
+    87→  const [displayed, setDisplayed] = useState('')
+    88→  const [phraseIndex, setPhraseIndex] = useState(0)
+    89→  const [isDeleting, setIsDeleting] = useState(false)
+    90→
+    91→  useEffect(() => {
+    92→    const currentPhrase = phrases[phraseIndex]
+    93→    let timeout: NodeJS.Timeout
+    94→
+    95→    if (!isDeleting && displayed === currentPhrase) {
+    96→      timeout = setTimeout(() => setIsDeleting(true), pauseDuration)
+    97→    } else if (isDeleting && displayed === '') {
+    98→      setIsDeleting(false)
+    99→      setPhraseIndex((prev) => (prev + 1) % phrases.length)
+   100→    } else {
+   101→      timeout = setTimeout(
+   102→        () => {
+   103→          setDisplayed(
+   104→            isDeleting
+   105→              ? currentPhrase.substring(0, displayed.length - 1)
+   106→              : currentPhrase.substring(0, displayed.length + 1)
+   107→          )
+   108→        },
+   109→        isDeleting ? deletingSpeed : typingSpeed
+   110→      )
+   111→    }
+   112→    return () => clearTimeout(timeout)
+   113→  }, [displayed, isDeleting, phraseIndex, phrases, typingSpeed, deletingSpeed, pauseDuration])
+   114→
+   115→  return displayed
+   116→}
+   117→
+   118→/* ─── useLocalStorage Hook ─── */
+   119→function useLocalStorage<T>(key: string, initialValue: T): [T, (v: T | ((prev: T) => T)) => void] {
+   120→  const [stored, setStored] = useState<T>(() => {
+   121→    if (typeof window === 'undefined') return initialValue
+   122→    try {
+   123→      const item = localStorage.getItem(key)
+   124→      return item ? JSON.parse(item) : initialValue
+   125→    } catch { return initialValue }
+   126→  })
+   127→  const setValue = useCallback((value: T | ((prev: T) => T)) => {
+   128→    setStored(prev => {
+   129→      const next = value instanceof Function ? value(prev) : value
+   130→      if (typeof window !== 'undefined') localStorage.setItem(key, JSON.stringify(next))
+   131→      return next
+   132→    })
+   133→  }, [key])
+   134→  return [stored, setValue]
+   135→}
+   136→
+   137→/* ─── useCountdown Hook ─── */
+   138→function useCountdown(targetDate: Date) {
+   139→  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 })
+   140→  useEffect(() => {
+   141→    const calc = () => {
+   142→      const diff = targetDate.getTime() - Date.now()
+   143→      if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 }
+   144→      return {
+   145→        days: Math.floor(diff / 86400000),
+   146→        hours: Math.floor((diff % 86400000) / 3600000),
+   147→        minutes: Math.floor((diff % 3600000) / 60000),
+   148→        seconds: Math.floor((diff % 60000) / 1000),
+   149→      }
+   150→    }
+   151→    setTimeLeft(calc())
+   152→    const interval = setInterval(() => setTimeLeft(calc()), 1000)
+   153→    return () => clearInterval(interval)
+   154→  }, [targetDate])
+   155→  return timeLeft
+   156→}
+   157→
+   158→/* ─── Animated Counter Component ─── */
+   159→function AnimatedStat({ end, suffix, children }: { end: number; suffix?: string; children: React.ReactNode }) {
+   160→  const [count, setCount] = useState(0)
+   161→  const [started, setStarted] = useState(false)
+   162→  const ref = useRef<HTMLDivElement>(null)
+   163→
+   164→  useEffect(() => {
+   165→    if (!started) return
+   166→    let start = 0
+   167→    let frameId: number
+   168→    const step = (timestamp: number) => {
+   169→      if (!start) start = timestamp
+   170→      const progress = Math.min((timestamp - start) / 1500, 1)
+   171→      setCount(Math.floor(progress * end))
+   172→      if (progress < 1) frameId = requestAnimationFrame(step)
+   173→    }
+   174→    frameId = requestAnimationFrame(step)
+   175→    return () => cancelAnimationFrame(frameId)
+   176→  }, [started, end])
+   177→
+   178→  useEffect(() => {
+   179→    const el = ref.current
+   180→    if (!el) return
+   181→    const observer = new IntersectionObserver(
+   182→      ([entry]) => { if (entry.isIntersecting) { setStarted(true); observer.disconnect() } },
+   183→      { threshold: 0.3 }
+   184→    )
+   185→    observer.observe(el)
+   186→    return () => observer.disconnect()
+   187→  }, [])
+   188→
+   189→  return (
+   190→    <div
+   191→      ref={ref}
+   192→      className="text-center"
+   193→    >
+   194→      {children}
+   195→      <div className="text-3xl sm:text-4xl font-extrabold text-white mb-1">{count}{suffix}</div>
+   196→    </div>
+   197→  )
+   198→}
+   199→
+   200→/* ─── Before / After Slider ─── */
+   201→function BeforeAfterSlider({ before, after }: { before: string; after: string }) {
+   202→  const containerRef = useRef<HTMLDivElement>(null)
+   203→  const [sliderPos, setSliderPos] = useState(50)
+   204→  const [isDragging, setIsDragging] = useState(false)
+   205→
+   206→  const updatePosition = (clientX: number) => {
+   207→    if (!containerRef.current) return
+   208→    const rect = containerRef.current.getBoundingClientRect()
+   209→    const x = clientX - rect.left
+   210→    const pct = Math.max(0, Math.min(100, (x / rect.width) * 100))
+   211→    setSliderPos(pct)
+   212→  }
+   213→
+   214→  const handlePointerDown = (e: React.PointerEvent) => {
+   215→    setIsDragging(true)
+   216→    ;(e.target as HTMLElement).setPointerCapture(e.pointerId)
+   217→    updatePosition(e.clientX)
+   218→  }
+   219→
+   220→  const handlePointerMove = (e: React.PointerEvent) => {
+   221→    if (!isDragging) return
+   222→    updatePosition(e.clientX)
+   223→  }
+   224→
+   225→  const handlePointerUp = () => {
+   226→    setIsDragging(false)
+   227→  }
+   228→
+   229→  return (
+   230→    <div className="space-y-2">
+   231→      <div
+   232→        ref={containerRef}
+   233→        className="relative h-56 sm:h-64 rounded-xl overflow-hidden cursor-col-resize select-none border-2 border-border shadow-lg"
+   234→        onPointerDown={handlePointerDown}
+   235→        onPointerMove={handlePointerMove}
+   236→        onPointerUp={handlePointerUp}
+   237→      >
+   238→        <img src={after} alt="Après" className="absolute inset-0 w-full h-full object-cover" draggable={false} />
+   239→        <div className="absolute inset-0" style={{ clipPath: `inset(0 ${100 - sliderPos}% 0 0)` }}>
+   240→          <img src={before} alt="Avant" className="w-full h-full object-cover" draggable={false} />
+   241→        </div>
+   242→        <span className="absolute top-3 left-3 z-20 bg-red-500/90 text-white text-[10px] font-bold px-2.5 py-1 rounded-full backdrop-blur-sm">AVANT</span>
+   243→        <span className="absolute top-3 right-3 z-20 bg-emerald-500/90 text-white text-[10px] font-bold px-2.5 py-1 rounded-full backdrop-blur-sm">APRÈS</span>
+   244→        <div className="absolute top-0 bottom-0 z-30 w-0.5 bg-white shadow-[0_0_8px_rgba(0,0,0,0.5)]" style={{ left: `${sliderPos}%` }}>
+   245→          <div className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white shadow-xl flex items-center justify-center border-2 border-white/80">
+   246→            <div className="flex items-center gap-0.5">
+   247→              <div className="w-0 h-0 border-t-[5px] border-b-[5px] border-r-[6px] border-t-transparent border-b-transparent border-r-gray-700" />
+   248→              <div className="w-0 h-0 border-t-[5px] border-b-[5px] border-l-[6px] border-t-transparent border-b-transparent border-l-gray-700" />
+   249→            </div>
+   250→          </div>
+   251→        </div>
+   252→        {!isDragging && (
+   253→          <div className="absolute inset-0 z-10 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity bg-black/20">
+   254→            <div className="bg-white/90 text-gray-800 text-xs font-semibold px-3 py-1.5 rounded-full shadow">
+   255→              Glissez pour comparer
+   256→            </div>
+   257→          </div>
+   258→        )}
+   259→      </div>
+   260→    </div>
+   261→  )
+   262→}
+   263→
+   264→/* ─── Static Data ─── */
+   265→
+   266→/* 4 Formations vedettes avec formules Découverte / Premium */
+   267→const featuredFormations = [
+   268→  {
+   269→    id: 'design-graphique',
+   270→    title: 'Design Graphique',
+   271→    subtitle: 'Maîtrisez Canva comme un pro',
+   272→    icon: Palette,
+   273→    color: 'from-pink-500 to-rose-500',
+   274→    colorLight: 'bg-pink-50 dark:bg-pink-950/20',
+   275→    borderLight: 'border-pink-200 dark:border-pink-800',
+   276→    duration: '6 semaines',
+   277→    lessons: '18 leçons',
+   278→    level: 'Débutant',
+   279→    coach: 'Sacko',
+   280→    decouverte: {
+   281→      price: 'Gratuit',
+   282→      priceNum: 0,
+   283→      features: ['Interface Canva : maîtrise complète', 'Templates de base et personnalisation', 'Typographie et couleurs', 'Support WhatsApp groupe'],
+   284→    },
+   285→    premium: {
+   286→      price: '15 000',
+   287→      priceNum: 15000,
+   288→      features: ['Tout le programme Découverte', 'Photoshop & Illustrator initiation', 'Création de logos professionnels', 'Branding complet & charte graphique', 'Projet portfolio personnalisé', 'Certificat de participation', 'Suivi individuel post-formation'],
+   289→      bonus: 'Canva Pro offert pendant 30 jours',
+   290→    },
+   291→  },
+   292→  {
+   293→    id: 'montage-video',
+   294→    title: 'Montage Vidéo',
+   295→    subtitle: 'Devenez créateur de contenu vidéo',
+   296→    icon: MonitorPlay,
+   297→    color: 'from-purple-500 to-violet-500',
+   298→    colorLight: 'bg-purple-50 dark:bg-purple-950/20',
+   299→    borderLight: 'border-purple-200 dark:border-purple-800',
+   300→    duration: '6 semaines',
+   301→    lessons: '18 leçons',
+   302→    level: 'Débutant',
+   303→    coach: 'Sacko',
+   304→    decouverte: {
+   305→      price: 'Gratuit',
+   306→      priceNum: 0,
+   307→      features: ['CapCut : interface et outils de base', 'Découpe et montage simple', 'Ajout de musique et textes', 'Export pour réseaux sociaux'],
+   308→    },
+   309→    premium: {
+   310→      price: '20 000',
+   311→      priceNum: 20000,
+   312→      features: ['Tout le programme Découverte', 'Premiere Pro & DaVinci Resolve', 'Effets visuels avancés', 'Motion design & transitions', 'Color grading professionnel', 'Certificat de participation', 'Suivi individuel post-formation'],
+   313→      bonus: 'CapCut Pro offert pendant 30 jours',
+   314→    },
+   315→  },
+   316→  {
+   317→    id: 'creation-web',
+   318→    title: 'Création Web',
+   319→    subtitle: 'Construisez votre site de A à Z',
+   320→    icon: Globe,
+   321→    color: 'from-cyan-500 to-blue-500',
+   322→    colorLight: 'bg-cyan-50 dark:bg-cyan-950/20',
+   323→    borderLight: 'border-cyan-200 dark:border-cyan-800',
+   324→    duration: '6 semaines',
+   325→    lessons: '18 leçons',
+   326→    level: 'Intermédiaire',
+   327→    coach: 'Sacko',
+   328→    decouverte: {
+   329→      price: 'Gratuit',
+   330→      priceNum: 0,
+   331→      features: ['HTML & CSS : les fondamentaux', 'Première page web responsive', 'Hébergement gratuit et mise en ligne', 'Support WhatsApp groupe'],
+   332→    },
+   333→    premium: {
+   334→      price: '25 000',
+   335→      priceNum: 25000,
+   336→      features: ['Tout le programme Découverte', 'JavaScript interactif', 'Site multi-pages complet', 'Formulaire de contact fonctionnel', 'SEO & référencement Google', 'Certificat de participation', 'Suivi individuel post-formation'],
+   337→      bonus: 'Hébergement 1 an offert',
+   338→    },
+   339→  },
+   340→  {
+   341→    id: 'marketing-digital',
+   342→    title: 'Marketing Digital',
+   343→    subtitle: 'Gérez les réseaux sociaux comme un expert',
+   344→    icon: Megaphone,
+   345→    color: 'from-emerald-500 to-teal-500',
+   346→    colorLight: 'bg-emerald-50 dark:bg-emerald-950/20',
+   347→    borderLight: 'border-emerald-200 dark:border-emerald-800',
+   348→    duration: '6 semaines',
+   349→    lessons: '18 leçons',
+   350→    level: 'Débutant',
+   351→    coach: 'Sacko',
+   352→    decouverte: {
+   353→      price: 'Gratuit',
+   354→      priceNum: 0,
+   355→      features: ['Stratégie réseaux sociaux', 'Créer du contenu engageant', 'Facebook & Instagram pour débutants', 'Support WhatsApp groupe'],
+   356→    },
+   357→    premium: {
+   358→      price: '20 000',
+   359→      priceNum: 20000,
+   360→      features: ['Tout le programme Découverte', 'Publicité Facebook & Instagram', 'TikTok & YouTube stratégie', 'Calendrier éditorial complet', 'Analyse des performances', 'Certificat de participation', 'Suivi individuel post-formation'],
+   361→      bonus: 'Pack 50 templates réseaux sociaux',
+   362→    },
+   363→  },
+   364→]
+   365→
+   366→/* Autres formations disponibles */
+   367→const otherFormations = [
+   368→  { text: 'Formation complète en Trading', icon: TrendingUp, level: 'Avancé' },
+   369→  { text: 'Formation en Intelligence Artificielle', icon: Brain, level: 'Avancé' },
+   370→  { text: 'Formation YouTube et monétisation', icon: Youtube, level: 'Intermédiaire' },
+   371→  { text: 'Formation complète en Programmation', icon: Code, level: 'Avancé' },
+   372→  { text: 'Formation E-commerce', icon: ShoppingCart, level: 'Intermédiaire' },
+   373→  { text: 'Formation en Hacking et Sécurité informatique', icon: ShieldCheck, level: 'Avancé' },
+   374→  { text: 'Formation Revendeur IPTV', icon: Tv, level: 'Débutant' },
+   375→]
+   376→
+   377→/* Coachs */
+   378→const coaches = [
+   379→  {
+   380→    name: 'Sacko',
+   381→    role: 'Fondateur & Coach Principal',
+   382→    speciality: 'Design Graphique, Branding, Direction Créative',
+   383→    bio: 'Freelance digital à Bamako avec 50+ projets livrés. Expert en design graphique et stratégie visuelle pour entrepreneurs africains.',
+   384→    gradient: 'from-amber-400 via-orange-500 to-red-500',
+   385→    initial: 'S',
+   386→    stats: [{ value: '50+', label: 'Projets' }, { value: '3 ans', label: 'Expérience' }, { value: '100%', label: 'Satisfaction' }],
+   387→  },
+   388→  {
+   389→    name: 'Camara Leh',
+   390→    role: 'Coach Développement Web',
+   391→    speciality: 'JavaScript, React, Next.js, Base de données',
+   392→    bio: "Développeur full-stack passionné. Spécialiste en création de sites web modernes et applications web performantes. Plus de 30 projets web livrés pour des entreprises au Mali et en Afrique de l'Ouest.",
+   393→    gradient: 'from-blue-400 via-cyan-500 to-teal-500',
+   394→    initial: 'CL',
+   395→    stats: [{ value: '30+', label: 'Sites web' }, { value: '2 ans', label: 'Expérience' }, { value: '15+', label: 'Clients' }],
+   396→  },
+   397→  {
+   398→    name: 'Kante',
+   399→    role: 'Coach Marketing Digital',
+   400→    speciality: 'Publicité Facebook/Instagram, TikTok, Stratégie de contenu',
+   401→    bio: 'Expert en marketing digital et community management. Gère la présence en ligne de 20+ entreprises. Spécialiste des publicités payantes sur Facebook, Instagram et TikTok avec un ROI mesurable.',
+   402→    gradient: 'from-emerald-400 via-green-500 to-lime-500',
+   403→    initial: 'K',
+   404→    stats: [{ value: '20+', label: 'Entreprises' }, { value: '2 ans', label: 'Expérience' }, { value: '500K+', label: 'Budget géré' }],
+   405→  },
+   406→]
+   407→
+   408→/* Livres / Ebooks à vendre */
+   409→type Book = {
+   410→  title: string
+   411→  author: string
+   412→  desc: string
+   413→  cover: string
+   414→  category: string
+   415→  excerpt: string
+   416→  keypoints: string[]
+   417→}
+   418→
+   419→const bookCategories = ['Tous', 'Programmation', 'Marketing & Business', 'Web & Digital', 'Sécurité & Réseaux']
+   420→
+   421→const books: Book[] = [
+   422→  {
+   423→    title: 'Travaux pratiques Word 2016',
+   424→    author: 'Christine Eberhardt',
+   425→    desc: 'Maîtrisez Word 2016 : mise en page, formatage, tableaux et publipostage.',
+   426→    cover: '/livres/word-2016.jpg',
+   427→    category: 'Web & Digital',
+   428→    excerpt: 'Ce guide pratique vous accompagne pas à pas dans la maîtrise de Microsoft Word 2016. Depuis la création de documents professionnels jusqu\'au publipostage avancé, chaque chapitre propose des exercices concrets. Vous apprendrez à structurer des rapports, insérer des images et tableaux, gérer les styles et en-têtes, et automatiser vos courriers.',
+   429→    keypoints: ['Mise en page et formatage professionnel', 'Tableaux, images et objets graphiques', 'Styles, en-têtes et pieds de page', 'Documents longs et sommaire automatique', 'Publipostage et fusion de courriers'],
+   430→  },
+   431→  {
+   432→    title: 'Programmer en Langage C',
+   433→    author: 'Claude Delannoy',
+   434→    desc: 'Les fondamentaux de la programmation C avec exercices corrigés.',
+   435→    cover: '/livres/langage-c.jpg',
+   436→    category: 'Programmation',
+   437→    excerpt: 'Ouvrage de référence avec plus de 50 000 exemplaires vendus. Ce livre couvre l\'ensemble du langage C : types de données, opérateurs, structures de contrôle, pointeurs, tableaux, fonctions et allocation dynamique. Chaque chapitre se termine par des exercices corrigés pour vérifier votre compréhension et renforcer vos compétences.',
+   438→    keypoints: ['Types, variables et opérateurs', 'Structures de contrôle et boucles', 'Pointeurs et allocation dynamique', 'Fonctions et portée des variables', 'Exercices corrigés à chaque chapitre'],
+   439→  },
+   440→  {
+   441→    title: 'E-marketing & E-commerce',
+   442→    author: 'Émilie Courts',
+   443→    desc: 'Doper ses ventes en ligne pas à pas : visibilité et stratégie web.',
+   444→    cover: '/livres/e-marketing-ecommerce.jpg',
+   445→    category: 'Marketing & Business',
+   446→    excerpt: 'Un guide actionnable pour booster votre présence en ligne et augmenter vos ventes. De la création de votre site e-commerce à l\'optimisation du référencement naturel, en passant par les réseaux sociaux et la publicité en ligne. Chaque étape est illustrée par des cas concrets et des conseils pratiques.',
+   447→    keypoints: ['Créer et optimiser son site e-commerce', 'Référencement naturel (SEO)', 'Publicité en ligne : Google Ads, Facebook Ads', 'Réseaux sociaux et engagement client', 'Analyse des performances et KPIs'],
+   448→  },
+   449→  {
+   450→    title: 'Le commerce électronique',
+   451→    author: 'Guy Hervier',
+   452→    desc: 'Vendre en ligne et optimiser ses achats sur internet.',
+   453→    cover: '/livres/commerce-electronique.jpg',
+   454→    category: 'Marketing & Business',
+   455→    excerpt: 'Comprenez les rouages du commerce en ligne : de la mise en place d\'une boutique web aux stratégies d\'achat optimisé. Ce livre aborde les aspects techniques, juridiques et marketing de la vente en ligne, avec un focus sur les bonnes pratiques pour maximiser ses conversions et fidéliser sa clientèle.',
+   456→    keypoints: ['Fonctionnement d\'une boutique en ligne', 'Panier d\'achat et paiement sécurisé', 'Logistique et livraison', 'Techniques de conversion et fidélisation', 'Aspects juridiques du e-commerce'],
+   457→  },
+   458→  {
+   459→    title: 'Manuel de Journalisme Web',
+   460→    author: 'Mark Briggs',
+   461→    desc: 'Blogs, réseaux sociaux, multimédia et journalisme numérique.',
+   462→    cover: '/livres/journalisme-web.jpg',
+   463→    category: 'Web & Digital',
+   464→    excerpt: 'L\'ouvrage de référence pour le journalisme à l\'ère numérique. Apprenez à utiliser les blogs, les réseaux sociaux et les outils multimédias pour produire un journalisme de qualité. Couvre le reporting numérique, la vérification des sources en ligne, le storytelling interactif et la monétisation de contenu.',
+   465→    keypoints: ['Reporting et écriture numérique', 'Blogs et plateformes de publication', 'Réseaux sociaux comme outils journalistiques', 'Contenu multimédia : vidéo, audio, infographies', 'Vérification des sources et éthique en ligne'],
+   466→  },
+   467→  {
+   468→    title: 'Vendre de façon rentable !',
+   469→    author: 'Pierre Maurin',
+   470→    desc: 'Stratégies de vente rentables pour PME et équipes commerciales.',
+   471→    cover: '/livres/vendre-rentable.jpg',
+   472→    category: 'Marketing & Business',
+   473→    excerpt: 'Un guide pragmatique pour les dirigeants de PME et leurs équipes commerciales. Découvrez les méthodes pour vendre plus et mieux : prospection efficace, argumentation de vente, gestion des objections, négociation et closing. Des outils concrets applicables immédiatement pour augmenter votre chiffre d\'affaires.',
+   474→    keypoints: ['Prospection et recherche de clients', 'Techniques d\'argumentation et de persuasion', 'Gestion des objections et négociation', 'Fidélisation et montée en gamme', 'Outils et tableaux de bord commerciaux'],
+   475→  },
+   476→  {
+   477→    title: 'Écrire des livres avec ChatGPT',
+   478→    author: 'Martín Arellano',
+   479→    desc: 'Utilisez l\'IA ChatGPT pour créer et rédiger vos livres.',
+   480→    cover: '/livres/ecrire-livres-chatgpt.jpg',
+   481→    category: 'Web & Digital',
+   482→    excerpt: 'Découvrez comment exploiter la puissance de ChatGPT pour écrire vos livres. De l\'idée initiale à la publication, ce guide vous montre comment utiliser l\'IA pour générer des idées, structurer votre plan, rédiger des chapitres, corriger et améliorer votre texte. Un livre essentiel pour les créateurs de contenu du 21e siècle.',
+   483→    keypoints: ['Générer des idées de livres avec l\'IA', 'Structurer un plan et un sommaire', 'Rédiger des chapitres efficacement', 'Correction, réécriture et polishing', 'Stratégies de publication et monétisation'],
+   484→  },
+   485→  {
+   486→    title: 'Développement système sous Linux',
+   487→    author: 'Christophe Blaess',
+   488→    desc: 'Programmation système : multitâche, mémoire, réseau sous Linux.',
+   489→    cover: '/livres/linux-systeme.jpg',
+   490→    category: 'Programmation',
+   491→    excerpt: 'Référence technique pour la programmation système sous Linux. Couvre en profondeur l\'ordonnancement multitâche, la gestion de la mémoire, les communications inter-processus (IPC), la programmation réseau et les signaux. Destiné aux développeurs qui veulent comprendre le fonctionnement interne du noyau Linux.',
+   492→    keypoints: ['Processus et ordonnancement', 'Gestion de la mémoire virtuelle', 'Communications inter-processus (IPC)', 'Programmation réseau et sockets', 'Signaux et gestion des interruptions'],
+   493→  },
+   494→  {
+   495→    title: 'Espionnage dans les réseaux TCP/IP',
+   496→    author: 'Zouheir Trabelsi',
+   497→    desc: 'Techniques de sniffing et contre-mesures de sécurité réseau.',
+   498→    cover: '/livres/espionnage-tcp-ip.jpg',
+   499→    category: 'Sécurité & Réseaux',
+   500→    excerpt: 'Plongez dans les techniques d\'espionnage réseau (sniffing) dans les environnements TCP/IP. Ce livre technique détaille les méthodes d\'interception de données, les outils utilisés par les attaquants, et surtout les contre-mesures et outils anti-sniffers pour protéger votre infrastructure réseau.',
+   501→    keypoints: ['Fonctionnement des protocoles TCP/IP', 'Techniques de sniffing et interception', 'Outils d\'analyse réseau (Wireshark, etc.)', 'Contre-mesures et détection d\'intrusion', 'Sécurisation des communications réseau'],
+   502→  },
+   503→  {
+   504→    title: 'WordPress pour les Nuls',
+   505→    author: 'Lisa Sabin-Wilson',
+   506→    desc: 'Créez votre site WordPress : nom de domaine, hébergement, personnalisation, extensions et multimédia.',
+   507→    cover: '/livres/wordpress-nuls.jpg',
+   508→    category: 'Web & Digital',
+   509→    excerpt: 'Le guide idéal pour créer votre premier site WordPress, même sans aucune compétence technique. Apprenez à choisir votre nom de domaine, configurer votre hébergement, installer WordPress, personnaliser votre thème, installer des extensions essentielles et publier du contenu multimédia.',
+   510→    keypoints: ['Choisir un nom de domaine et un hébergeur', 'Installation et configuration de WordPress', 'Personnalisation avec thèmes et widgets', 'Extensions indispensables (SEO, sécurité, contact)', 'Gestion du Tableau de bord et maintenance'],
+   511→  },
+   512→  {
+   513→    title: 'Programmer avec JavaScript en s\'amusant',
+   514→    author: 'Chris Minnick & Eva Holland',
+   515→    desc: '15 projets fun pour apprendre le JavaScript : jeux, pages web, animation de robot.',
+   516→    cover: '/livres/javascript-amusant.jpg',
+   517→    category: 'Programmation',
+   518→    excerpt: 'Apprenez le JavaScript en vous amusant ! Ce livre propose 15 projets conçus pour les débutants dès 11 ans. Créez des jeux, construisez des pages web interactives et animez un robot. Chaque projet introduit de nouveaux concepts de programmation de manière progressive et ludique.',
+   519→    keypoints: ['15 projets pratiques et ludiques', 'Créer des jeux en JavaScript', 'Construire des pages web interactives', 'Animer des éléments graphiques et robots', 'Accessible dès 11 ans — aucun prérequis'],
+   520→  },
+   521→  {
+   522→    title: 'Stratégie Marketing & Création Publicitaire',
+   523→    author: 'Henri Joannis & Virginie de Barnier',
+   524→    desc: 'De la stratégie marketing à la création publicitaire : magazines, TV, affiches, internet.',
+   525→    cover: '/livres/strategie-marketing-pub.jpg',
+   526→    category: 'Marketing & Business',
+   527→    excerpt: 'L\'ouvrage de référence en stratégie publicitaire couvrant tous les médias : magazines, TV/radio, affiches et internet. Apprenez à construire une stratégie marketing solide, définir un positionnement, créer des messages percutants et choisir les bons canaux de diffusion pour toucher votre cible.',
+   528→    keypoints: ['Élaboration d\'une stratégie marketing', 'Positionnement et segmentation', 'Création publicitaire multi-médias', 'TV, radio, affiches, magazines, internet', 'Mesure d\'efficacité et retour sur investissement'],
+   529→  },
+   530→]
+   531→
+   532→/* ═══════════════════════════════════════════════
+   533→   MAIN PAGE
+   534→   ═══════════════════════════════════════════════ */
+   535→export default function Home() {
+   536→  const [contactData, setContactData] = useState({ name: '', email: '', subject: '', message: '' })
+   537→  const [contactSending, setContactSending] = useState(false)
+   538→  const [contactSent, setContactSent] = useState(false)
+   539→  const [showBanner, setShowBanner] = useState(true)
+   540→  const [showBackToTop, setShowBackToTop] = useState(false)
+   541→  const [scrollProgress, setScrollProgress] = useState(0)
+   542→  const [showStickyCta, setShowStickyCta] = useState(false)
+   543→  const [portfolioFilter, setPortfolioFilter] = useState('Tous')
+   544→  const [quickOrder, setQuickOrder] = useState({ service: '', name: '', phone: '', description: '' })
+   545→  const [faqOpen, setFaqOpen] = useState<string | null>(null)
+   546→  const [leadMagnet, setLeadMagnet] = useState({ name: '', contact: '' })
+   547→  const [selectedBook, setSelectedBook] = useState<Book | null>(null)
+   548→  const [bookFilter, setBookFilter] = useState('Tous')
+   549→  const { toast } = useToast()
+   550→
+   551→  // New features
+   552→  const typedText = useTypingText([
+   553→    'démarquez-vous.',
+   554→    'propulsez votre marque.',
+   555→    'attirez vos clients.',
+   556→    'gagnez en visibilité.',
+   557→    'concrétisez vos idées.',
+   558→  ])
+   559→  const [cart, setCart] = useLocalStorage<string[]>('sc-cart', [])
+   560→  const [showCart, setShowCart] = useState(false)
+   561→  const [showCookieConsent, setShowCookieConsent] = useLocalStorage('sc-cookies', true)
+   562→  const [showWelcome, setShowWelcome] = useLocalStorage('sc-welcome', true)
+   563→  const [welcomeVisible, setWelcomeVisible] = useState(false)
+   564→  const [estimatorServices, setEstimatorServices] = useState<string[]>([])
+   565→  const [confettiActive, setConfettiActive] = useState(false)
+   566→  const [availabilitySlots, setAvailabilitySlots] = useState<Record<string, number>>({})
+   567→  const [showWaWidget, setShowWaWidget] = useState(false)
+   568→  const [testimIndex, setTestimIndex] = useState(0)
+   569→  const [testimPaused, setTestimPaused] = useState(false)
+   570→  const [shareToast, setShareToast] = useState(false)
+   571→  const [lastOrderId, setLastOrderId] = useState('')
+   572→  const [trackId, setTrackId] = useState('')
+   573→  const [trackResult, setTrackResult] = useState<{ id: string; service: string; status: string; statusLabel: string; createdAt: string; updatedAt: string } | null>(null)
+   574→  const [trackLoading, setTrackLoading] = useState(false)
+   575→  const [activeDotSection, setActiveDotSection] = useState('accueil')
+   576→
+   577→  // Portfolio lightbox
+   578→  const [lightboxImg, setLightboxImg] = useState<{ src: string; title: string; desc: string } | null>(null)
+   579→
+   580→  // Book search
+   581→  const [bookSearch, setBookSearch] = useState('')
+   582→
+   583→  // FAQ search
+   584→  const [faqSearch, setFaqSearch] = useState('')
+   585→
+   586→  // Service quiz
+   587→  const [quizOpen, setQuizOpen] = useState(false)
+   588→  const [quizStep, setQuizStep] = useState(0)
+   589→  const [quizAnswers, setQuizAnswers] = useState<string[]>([])
+   590→  const [quizResult, setQuizResult] = useState<{ service: string; icon: typeof Palette; reason: string } | null>(null)
+   591→
+   592→  // Coach detail modal
+   593→  const [selectedCoach, setSelectedCoach] = useState<typeof coaches[0] | null>(null)
+   594→
+   595→  // Promo countdown: end of current month
+   596→  const [promoEnd] = useState(() => {
+   597→    const now = new Date()
+   598→    return new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 0)
+   599→  })
+   600→  const countdown = useCountdown(promoEnd)
+   601→
+   602→  const toggleCart = useCallback((title: string) => {
+   603→    setCart(prev => prev.includes(title) ? prev.filter(t => t !== title) : [...prev, title])
+   604→  }, [setCart])
+   605→
+   606→  const isInCart = useCallback((title: string) => cart.includes(title), [cart])
+   607→
+   608→  // Auto-scroll testimonials
+   609→  useEffect(() => {
+   610→    if (testimPaused) return
+   611→    const interval = setInterval(() => {
+   612→      setTestimIndex(prev => (prev + 1) % 4)
+   613→    }, 5000)
+   614→    return () => clearInterval(interval)
+   615→  }, [testimPaused])
+   616→
+   617→  // Confetti trigger
+   618→  const triggerConfetti = useCallback(() => {
+   619→    setConfettiActive(true)
+   620→    setTimeout(() => setConfettiActive(false), 4000)
+   621→  }, [])
+   622→
+   623→
+   624→
+   625→
+   626→
+   627→
+   628→  useEffect(() => {
+   629→    const handleScroll = () => {
+   630→      setShowBackToTop(window.scrollY > 600)
+   631→      const totalHeight = document.body.scrollHeight - window.innerHeight
+   632→      setScrollProgress(totalHeight > 0 ? (window.scrollY / totalHeight) * 100 : 0)
+   633→      setShowStickyCta(window.scrollY > 500)
+   634→    }
+   635→    window.addEventListener('scroll', handleScroll, { passive: true })
+   636→    return () => window.removeEventListener('scroll', handleScroll)
+   637→  }, [])
+   638→
+   639→  // Welcome popup for first-time visitors
+   640→  useEffect(() => {
+   641→    if (showWelcome) {
+   642→      const timer = setTimeout(() => setWelcomeVisible(true), 15000) // show after 15s instead of 6s
+   643→      return () => clearTimeout(timer)
+   644→    }
+   645→  }, [showWelcome])
+   646→
+   647→  // Availability slots for service cards
+   648→  useEffect(() => {
+   649→    const slots: Record<string, number> = {}
+   650→    const cats = ['Design Graphique', 'Développement Web', 'Montage Vidéo', 'Formation', 'Marketing Digital']
+   651→    cats.forEach((cat, i) => { slots[cat] = [2, 1, 3, 2, 1][i] })
+   652→    setAvailabilitySlots(slots)
+   653→  }, [])
+   654→
+   655→  // Escape key handler for all modals
+   656→  useEffect(() => {
+   657→    const handleEsc = (e: KeyboardEvent) => {
+   658→      if (e.key === 'Escape') {
+   659→        setLightboxImg(null)
+   660→        setSelectedBook(null)
+   661→        setQuizOpen(false); setQuizStep(0); setQuizAnswers([]); setQuizResult(null)
+   662→        setShowCart(false)
+   663→        setSelectedCoach(null)
+   664→      }
+   665→    }
+   666→    window.addEventListener('keydown', handleEsc)
+   667→    return () => window.removeEventListener('keydown', handleEsc)
+   668→  }, [])
+   669→
+   670→  // Intersection observer for side nav dots
+   671→  useEffect(() => {
+   672→    const sectionIds = ['accueil', 'services', 'formations', 'coachs', 'boutique', 'portfolio', 'blog', 'contact']
+   673→    const observers: IntersectionObserver[] = []
+   674→    sectionIds.forEach(id => {
+   675→      const el = document.getElementById(id)
+   676→      if (!el) return
+   677→      const observer = new IntersectionObserver(
+   678→        (entries) => {
+   679→          entries.forEach(entry => {
+   680→            if (entry.isIntersecting) setActiveDotSection(id)
+   681→          })
+   682→        },
+   683→        { rootMargin: '-20% 0px -60% 0px', threshold: 0 }
+   684→      )
+   685→      observer.observe(el)
+   686→      observers.push(observer)
+   687→    })
+   688→    return () => observers.forEach(o => o.disconnect())
+   689→  }, [])
+   690→
+   691→
+   692→
+   693→
+   694→
+   695→  const handleSubmitContact = async (e: React.FormEvent) => {
+   696→    e.preventDefault()
+   697→    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+   698→    if (!contactData.name || !contactData.email || !contactData.message) {
+   699→      toast({ title: 'Champs requis', description: 'Veuillez remplir tous les champs obligatoires.', variant: 'destructive' })
+   700→      return
+   701→    }
+   702→    if (!emailRegex.test(contactData.email)) {
+   703→      toast({ title: 'Email invalide', description: 'Veuillez entrer une adresse email valide.', variant: 'destructive' })
+   704→      return
+   705→    }
+   706→    setContactSending(true)
+   707→    try {
+   708→      const res = await fetch('/api/contact', {
+   709→        method: 'POST',
+   710→        headers: { 'Content-Type': 'application/json' },
+   711→        body: JSON.stringify(contactData),
+   712→      })
+   713→      const data = await res.json()
+   714→      if (res.ok) {
+   715→        setContactSent(true)
+   716→        setContactData({ name: '', email: '', subject: '', message: '' })
+   717→        toast({ title: 'Message envoyé !', description: 'Je vous répondrai rapidement. Vérifiez aussi votre boîte email.', variant: 'default' })
+   718→        setTimeout(() => setContactSent(false), 6000)
+   719→      } else {
+   720→        toast({ title: 'Erreur', description: data.error || 'Impossible d\'envoyer le message. Essayez WhatsApp.', variant: 'destructive' })
+   721→      }
+   722→    } catch {
+   723→      toast({ title: 'Erreur réseau', description: 'Vérifiez votre connexion ou contactez-moi sur WhatsApp.', variant: 'destructive' })
+   724→    } finally {
+   725→      setContactSending(false)
+   726→    }
+   727→  }
+   728→
+   729→  return (
+   730→    <div className="min-h-screen flex flex-col bg-background pb-20 lg:pb-0 scroll-smooth">
+   731→      <Preloader />
+   732→      <Header />
+   733→
+   734→      <main className="flex-1">
+   735→
+   736→        {/* ═══ 1. BANNIÈRE PROMO ═══ */}
+   737→        <AnimatePresence>
+   738→          {showBanner && (
+   739→            <motion.div
+   740→              initial={{ height: 0, opacity: 0 }}
+   741→              animate={{ height: 'auto', opacity: 1 }}
+   742→              exit={{ height: 0, opacity: 0 }}
+   743→              className="overflow-hidden bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white"
+   744→            >
+   745→              <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-4">
+   746→                <p className="text-xs sm:text-sm font-medium text-center sm:text-left flex-1">
+   747→                  <Sparkles className="h-3.5 w-3.5 inline mr-1" />
+   748→                  Offre spéciale : Première commande à prix réduit — Design, sites web, montage vidéo et plus encore !
+   749→                </p>
+   750→                <div className="flex items-center gap-2 flex-shrink-0">
+   751→                  <a href="#services">
+   752→                    <Button size="sm" variant="secondary" className="h-7 text-xs bg-white text-amber-600 hover:bg-white/90 font-semibold px-3">
+   753→                      Voir les services
+   754→                    </Button>
+   755→                  </a>
+   756→
+   757→                  <button onClick={() => setShowBanner(false)} className="text-white/80 hover:text-white transition-colors" aria-label="Fermer">
+   758→                    <X className="h-4 w-4" />
+   759→                  </button>
+   760→                </div>
+   761→              </div>
+   762→            </motion.div>
+   763→          )}
+   764→        </AnimatePresence>
+   765→
+   766→        {/* ═══ 2. HERO ═══ */}
+   767→        <section id="accueil" className="relative overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-white dark:from-amber-950/20 dark:via-orange-950/10 dark:to-background">
+   768→          {/* Animated gradient orbs */}
+   769→          <div className="absolute top-0 -right-40 h-[500px] w-[500px] rounded-full bg-amber-200/40 dark:bg-amber-800/10 blur-3xl animate-pulse" />
+   770→          <div className="absolute -bottom-20 -left-40 h-[400px] w-[400px] rounded-full bg-orange-200/30 dark:bg-orange-800/10 blur-3xl" style={{ animationDelay: '1s', animationDuration: '4s' }} />
+   771→          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[300px] w-[300px] rounded-full bg-red-100/30 dark:bg-red-900/10 blur-3xl" style={{ animationDelay: '2s', animationDuration: '5s' }} />
+   772→          {/* Subtle grid pattern */}
+   773→          <div className="absolute inset-0 bg-[linear-gradient(rgba(245,158,11,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(245,158,11,0.03)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,black,transparent)]" />
+   774→
+   775→          {/* Floating shapes */}
+   776→          <div className="absolute top-20 right-20 w-16 h-16 rounded-xl bg-amber-300/20 dark:bg-amber-600/10 animate-float-slow hidden lg:block" />
+   777→          <div className="absolute bottom-32 right-40 w-10 h-10 rounded-full bg-orange-300/25 dark:bg-orange-600/10 animate-float-medium hidden lg:block" />
+   778→          <div className="absolute top-40 left-20 w-8 h-8 rounded-lg bg-red-300/20 dark:bg-red-600/10 rotate-45 animate-float-fast hidden lg:block" />
+   779→
+   780→          <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
+   781→            <div className="grid lg:grid-cols-2 gap-12 items-center">
+   782→              <div>
+   783→                <motion.div
+   784→                  initial={{ opacity: 0, y: 10 }}
+   785→                  animate={{ opacity: 1, y: 0 }}
+   786→                  transition={{ duration: 0.5 }}
+   787→                >
+   788→                <Badge variant="secondary" className="mb-4 px-3 py-1 text-xs font-medium bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800 shadow-sm">
+   789→                  <span className="relative flex h-2 w-2 mr-1.5"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" /><span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" /></span>
+   790→                  Disponible maintenant — Réponse en 5 min
+   791→                </Badge>
+   792→
+   793→                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
+   794→                  <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 bg-clip-text text-transparent">Logo, Site Web, Flyer</span>
+   795→                  {' '}pour votre business à Bamako
+   796→                </h1>
+   797→
+   798→                <p className="mt-6 text-lg text-muted-foreground leading-relaxed max-w-lg">
+   799→                  Vous avez une boutique, un restaurant, un projet ? Je crée votre image professionnelle en 24h. Paiement par Orange Money ou Wave.{' '}
+   800→                  <strong className="text-foreground">Premier logo offert</strong> — sans engagement.
+   801→                </p>
+   802→                </motion.div>
+   803→
+   804→                <motion.div
+   805→                  initial={{ opacity: 0, y: 10 }}
+   806→                  animate={{ opacity: 1, y: 0 }}
+   807→                  transition={{ duration: 0.5, delay: 0.2 }}
+   808→                  className="mt-8 flex flex-wrap gap-3"
+   809→                >
+   810→                  <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20souhaite%20discuter%20de%20mon%20projet." target="_blank" rel="noopener noreferrer">
+   811→                    <Button size="lg" className="bg-[#25d366] hover:bg-[#20bd5a] text-white font-bold shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/40 transition-all duration-200 hover:scale-105 active:scale-95 h-13 px-8 text-base">
+   812→                      <MessageCircle className="mr-2 h-5 w-5" /> Demander mon devis gratuit
+   813→                    </Button>
+   814→                  </a>
+   815→                  <a href="#portfolio">
+   816→                    <Button size="lg" variant="outline" className="font-semibold hover:bg-accent transition-transform duration-200 hover:scale-105 active:scale-95">
+   817→                      <Eye className="mr-2 h-4 w-4" /> Voir mes réalisations
+   818→                    </Button>
+   819→                  </a>
+   820→                </motion.div>
+   821→
+   822→                <motion.div
+   823→                  initial={{ opacity: 0, y: 10 }}
+   824→                  animate={{ opacity: 1, y: 0 }}
+   825→                  transition={{ duration: 0.5, delay: 0.3 }}
+   826→                  className="mt-10 flex flex-wrap gap-3"
+   827→                >
+   828→                  {['Logo 5 000 FCFA', 'Site Web 50 000 FCFA', 'Flyer 10 000 FCFA', 'Livraison 24h'].map((tag) => (
+   829→                    <span key={tag} className="inline-flex items-center gap-1.5 rounded-full bg-white/80 dark:bg-white/5 border px-3.5 py-1.5 text-xs font-medium text-amber-700 dark:text-amber-400 border-amber-200/80 dark:border-amber-800 shadow-sm backdrop-blur-sm hover:-translate-y-0.5 transition-transform cursor-default">
+   830→                      <CheckCircle2 className="h-3 w-3 text-emerald-500" /> {tag}
+   831→                    </span>
+   832→                  ))}
+   833→                </motion.div>
+   834→
+   835→                <motion.div
+   836→                  initial={{ opacity: 0, y: 10 }}
+   837→                  animate={{ opacity: 1, y: 0 }}
+   838→                  transition={{ duration: 0.5, delay: 0.4 }}
+   839→                  className="mt-8 flex items-center gap-4"
+   840→                >
+   841→                  <div className="flex -space-x-2">
+   842→                    {['from-amber-400 to-orange-500', 'from-emerald-400 to-teal-500', 'from-purple-400 to-pink-500', 'from-blue-400 to-cyan-500'].map((g, i) => (
+   843→                      <div key={i} className={`h-8 w-8 rounded-full border-2 border-white dark:border-slate-900 bg-gradient-to-br ${g}`} />
+   844→                    ))}
+   845→                  </div>
+   846→                  <div>
+   847→                    <p className="text-xs font-bold">+87 clients satisfaits au Mali</p>
+   848→                    <div className="flex items-center gap-0.5 mt-0.5">
+   849→                      {[1,2,3,4,5].map(i => (
+   850→                        <svg key={i} className="h-3 w-3 text-amber-400 fill-amber-400" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+   851→                      ))}
+   852→                      <span className="text-[10px] text-muted-foreground ml-1">4.9/5 sur Google</span>
+   853→                    </div>
+   854→                  </div>
+   855→                </motion.div>
+   856→              </div>
+   857→
+   858→              {/* Hero Visual - Services Preview Card */}
+   859→              <motion.div
+   860→                initial={{ opacity: 0, x: 30 }}
+   861→                animate={{ opacity: 1, x: 0 }}
+   862→                transition={{ duration: 0.6, delay: 0.2 }}
+   863→                className="hidden lg:block"
+   864→              >
+   865→                <div className="relative">
+   866→                  <div className="absolute -inset-4 bg-gradient-to-r from-amber-400/20 via-orange-400/20 to-red-400/20 rounded-3xl blur-2xl" />
+   867→                  <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/20 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6 sm:p-8">
+   868→                    {/* Mini dashboard preview */}
+   869→                    <div className="flex items-center gap-2 mb-5">
+   870→                      <div className="h-3 w-3 rounded-full bg-red-400" />
+   871→                      <div className="h-3 w-3 rounded-full bg-amber-400" />
+   872→                      <div className="h-3 w-3 rounded-full bg-emerald-400" />
+   873→                      <span className="text-[10px] text-slate-500 ml-2 font-mono">createur-boutique.vercel.app</span>
+   874→                    </div>
+   875→                    <div className="space-y-3">
+   876→                      {[
+   877→                        { icon: '🎨', label: 'Logo Pro', desc: 'Identité visuelle', color: 'from-pink-500 to-rose-500', status: 'Livré' },
+   878→                        { icon: '🌐', label: 'Site E-commerce', desc: 'Boutique en ligne', color: 'from-blue-500 to-indigo-500', status: 'En cours' },
+   879→                        { icon: '🎬', label: 'Pub TikTok', desc: 'Montage + effets', color: 'from-emerald-500 to-teal-500', status: 'Livré' },
+   880→                        { icon: '📱', label: 'Posts Instagram', desc: 'Pack 10 visuels', color: 'from-purple-500 to-violet-500', status: 'Livré' },
+   881→                      ].map((item, i) => (
+   882→                        <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5">
+   883→                          <div className={`flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${item.color} text-lg shadow-lg`}>{item.icon}</div>
+   884→                          <div className="flex-1 min-w-0">
+   885→                            <p className="text-xs font-bold text-white">{item.label}</p>
+   886→                            <p className="text-[10px] text-slate-400">{item.desc}</p>
+   887→                          </div>
+   888→                          <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${item.status === 'Livré' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}`}>{item.status}</span>
+   889→                        </div>
+   890→                      ))}
+   891→                    </div>
+   892→                    <div className="mt-5 pt-4 border-t border-white/10 flex items-center justify-between">
+   893→                      <div className="flex items-center gap-2">
+   894→                        <div className="h-8 w-8 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white text-xs font-bold">S</div>
+   895→                        <div>
+   896→                          <p className="text-[11px] font-bold text-white">Sacko</p>
+   897→                          <p className="text-[9px] text-slate-500">Design & Digital</p>
+   898→                        </div>
+   899→                      </div>
+   900→                      <span className="text-[10px] text-emerald-400 font-semibold flex items-center gap-1">
+   901→                        <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" /><span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" /></span>
+   902→                        En ligne
+   903→                      </span>
+   904→                    </div>
+   905→                  </div>
+   906→                  <div className="absolute -bottom-6 -left-6 bg-white/90 dark:bg-card/90 backdrop-blur-xl rounded-xl shadow-xl p-3 border hover:scale-105 transition-transform cursor-default">
+   907→                    <div className="flex items-center gap-3">
+   908→                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
+   909→                        <Award className="h-5 w-5 text-amber-500" />
+   910→                      </div>
+   911→                      <div>
+   912→                        <p className="text-xs font-bold">50+ Marques</p>
+   913→                        <p className="text-[10px] text-muted-foreground">Propulsées</p>
+   914→                      </div>
+   915→                    </div>
+   916→                  </div>
+   917→                  <div className="absolute -top-4 -right-4 bg-white/90 dark:bg-card/90 backdrop-blur-xl rounded-xl shadow-xl p-3 border hover:scale-105 transition-transform cursor-default">
+   918→                    <div className="flex items-center gap-2">
+   919→                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30">
+   920→                        <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+   921→                      </div>
+   922→                      <div>
+   923→                        <p className="text-xs font-bold">100% Sur-mesure</p>
+   924→                        <p className="text-[10px] text-muted-foreground">Chaque pixel pensé pour vous</p>
+   925→                      </div>
+   926→                    </div>
+   927→                  </div>
+   928→                </div>
+   929→              </motion.div>
+   930→            </div>
+   931→          </div>
+   932→        </section>
+   933→
+   934→        {/* Wave divider */}
+   935→        <div className="relative h-12 -mt-1 overflow-hidden">
+   936→          <svg className="absolute bottom-0 w-full" viewBox="0 0 1440 48" fill="none" preserveAspectRatio="none">
+   937→            <path d="M0 48L60 42C120 36 240 24 360 20C480 16 600 20 720 26C840 32 960 40 1080 40C1200 40 1320 32 1380 28L1440 24V48H1380C1320 48 1200 48 1080 48C960 48 840 48 720 48C600 48 480 48 360 48C240 48 120 48 60 48H0Z" className="fill-background" />
+   938→          </svg>
+   939→        </div>
+   940→
+   941→        {/* ═══ 3. QUICK SERVICE ACCESS BAR ═══ */}
+   942→        <section className="py-6 border-b bg-background">
+   943→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+   944→            <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide items-center">
+   945→              {[
+   946→                { label: 'Logo', icon: Palette, href: '#services' },
+   947→                { label: 'Site Web', icon: Globe, href: '#services' },
+   948→                { label: 'Vidéo', icon: MonitorPlay, href: '#services' },
+   949→                { label: 'Affiche', icon: PenTool, href: '#services' },
+   950→                { label: 'Formation', icon: GraduationCap, href: '#formations' },
+   951→                { label: 'CapCut Pro', icon: Scissors, href: '#services' },
+   952→              ].map((s) => (
+   953→                <a key={s.label} href={s.href} className="flex-shrink-0 flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl bg-muted/50 hover:bg-gradient-to-br hover:from-amber-50 hover:to-orange-50 dark:hover:from-amber-950/20 dark:hover:to-orange-950/20 hover:-translate-y-0.5 hover:shadow-md hover:shadow-amber-500/10 hover:border-amber-200 dark:hover:border-amber-800 border border-transparent transition-all duration-300 group">
+   954→                  <s.icon className="h-5 w-5 text-amber-500 group-hover:scale-110 transition-transform" />
+   955→                  <span className="text-xs font-medium">{s.label}</span>
+   956→                </a>
+   957→              ))}
+   958→              {/* Canva Pro — avec image cliquable */}
+   959→              <a
+   960→                href="https://www.canva.com/brand/join?token=nbyqrtelBOlUiCNiK170Ew&referrer=team-invite"
+   961→                target="_blank"
+   962→                rel="noopener noreferrer"
+   963→                className="flex-shrink-0 flex items-center gap-2 pl-3 pr-4 py-2 rounded-xl bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-cyan-950/30 dark:to-blue-950/30 hover:from-cyan-100 hover:to-blue-100 dark:hover:from-cyan-950/50 dark:hover:to-blue-950/50 hover:-translate-y-0.5 hover:shadow-md hover:shadow-cyan-500/15 border border-cyan-200 dark:border-cyan-800/50 transition-all duration-300 group"
+   964→              >
+   965→                <img
+   966→                  src="/canva-pro-real.png"
+   967→                  alt="Canva Pro"
+   968→                  className="h-9 w-9 rounded-lg object-cover group-hover:scale-110 transition-transform"
+   969→                />
+   970→                <div className="flex flex-col">
+   971→                  <span className="text-xs font-bold text-cyan-700 dark:text-cyan-300 leading-tight">Canva Pro</span>
+   972→                  <span className="text-[9px] text-cyan-500 dark:text-cyan-400 font-medium">Gratuit</span>
+   973→                </div>
+   974→              </a>
+   975→            </div>
+   976→          </div>
+   977→        </section>
+   978→
+   979→        {/* ═══ 4. STATISTIQUES ═══ */}
+   980→        <section className="py-12 sm:py-16 bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 relative overflow-hidden">
+   981→          <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+   982→            <div className="text-center mb-10">
+   983→              <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">Ce que je fais, en chiffres</h2>
+   984→              <p className="mt-2 text-white/80 text-sm">Transparent, impactant, à taille humaine</p>
+   985→            </div>
+   986→            <div className="grid grid-cols-3 gap-6 sm:gap-12">
+   987→              <AnimatedStat end={50} suffix="+">
+   988→                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mx-auto mb-3">
+   989→                  <Award className="h-6 w-6 text-white" />
+   990→                </div>
+   991→                <p className="text-sm font-semibold text-white/90">Marques propulsées</p>
+   992→                <p className="text-xs text-white/60 mt-1 leading-relaxed hidden sm:block">Logos, affiches et identités créées avec soin</p>
+   993→              </AnimatedStat>
+   994→              <div className="text-center">
+   995→                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mx-auto mb-3">
+   996→                  <Palette className="h-6 w-6 text-white" />
+   997→                </div>
+   998→                <div className="text-3xl sm:text-4xl font-extrabold text-white mb-1">100%</div>
+   999→                <p className="text-sm font-semibold text-white/90">Sur-mesure</p>
+  1000→                <p className="text-xs text-white/60 mt-1 leading-relaxed hidden sm:block">Aucun template pré-fait, chaque pixel est pensé pour vous</p>
+  1001→              </div>
+  1002→              <AnimatedStat end={100} suffix="%">
+  1003→                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm mx-auto mb-3">
+  1004→                  <ThumbsUp className="h-6 w-6 text-white" />
+  1005→                </div>
+  1006→                <p className="text-sm font-semibold text-white/90">Satisfaction client</p>
+  1007→                <p className="text-xs text-white/60 mt-1 leading-relaxed hidden sm:block">Une collaboration basée sur l'écoute et le résultat</p>
+  1008→              </AnimatedStat>
+  1009→            </div>
+  1010→          </div>
+  1011→        </section>
+  1012→
+  1013→        {/* ═══ 5. BARRE DE CONFIANCE ═══ */}
+  1014→        <section className="py-6 border-b bg-background">
+  1015→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  1016→            <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10">
+  1017→              {[
+  1018→                { icon: ShieldCheck, label: 'Qualité Garantie' },
+  1019→                { icon: Zap, label: 'Livraison Rapide' },
+  1020→                { icon: CheckCircle2, label: 'Satisfaction Garantie' },
+  1021→                { icon: Gift, label: '100% Gratuit' },
+  1022→                { icon: MessageCircle, label: 'Support WhatsApp' },
+  1023→              ].map((item) => (
+  1024→                <div key={item.label} className="flex items-center gap-2 text-muted-foreground">
+  1025→                  <item.icon className="h-4 w-4 text-amber-500" />
+  1026→                  <span className="text-xs font-medium whitespace-nowrap">{item.label}</span>
+  1027→                </div>
+  1028→              ))}
+  1029→            </div>
+  1030→          </div>
+  1031→        </section>
+  1032→
+  1033→        {/* ═══ TRUST TICKER ═══ */}
+  1034→        <div className="py-4 bg-amber-50 dark:bg-amber-950/10 border-y border-amber-200/50 dark:border-amber-800/30 overflow-hidden">
+  1035→          <div className="flex animate-marquee whitespace-nowrap">
+  1036→            {[...Array(2)].map((_, setIdx) => (
+  1037→              <div key={setIdx} className="flex items-center gap-8 mx-4">
+  1038→                {[
+  1039→                  { icon: '⭐', text: '50+ Marques créées' },
+  1040→                  { icon: '🎨', text: '100% Sur-mesure' },
+  1041→                  { icon: '⚡', text: 'Livraison en 24-48h' },
+  1042→                  { icon: '💰', text: 'Offre Découverte Gratuite' },
+  1043→                  { icon: '📱', text: 'Support WhatsApp 7j/7' },
+  1044→                  { icon: '🔒', text: 'Paiement Sécurisé' },
+  1045→                  { icon: '🏆', text: '5/5 Satisfaction Client' },
+  1046→                  { icon: '🇲🇱', text: 'Expert Bamako, Mali' },
+  1047→                ].map((item, i) => (
+  1048→                  <span key={`${setIdx}-${i}`} className="inline-flex items-center gap-2 text-sm font-medium text-amber-700 dark:text-amber-400 flex-shrink-0">
+  1049→                    <span>{item.icon}</span>
+  1050→                    <span>{item.text}</span>
+  1051→                    <span className="text-amber-300 dark:text-amber-700">•</span>
+  1052→                  </span>
+  1053→                ))}
+  1054→              </div>
+  1055→            ))}
+  1056→          </div>
+  1057→        </div>
+  1058→
+  1059→        {/* ═══ 5.5 COMMENT ÇA MARCHE ═══ */}
+  1060→        <section className="py-16 sm:py-20 bg-gradient-to-b from-background to-muted/20">
+  1061→          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+  1062→            <div className="text-center mb-12">
+  1063→              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+  1064→                <Zap className="h-3 w-3 mr-1" /> Processus
+  1065→              </Badge>
+  1066→              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Comment ça marche ?</h2>
+  1067→              <p className="mt-3 text-muted-foreground max-w-xl mx-auto leading-relaxed">
+  1068→                4 étapes simples pour concrétiser votre projet. De votre première idée à la livraison finale, je vous accompagne à chaque étape.
+  1069→              </p>
+  1070→            </div>
+  1071→
+  1072→            <div className="relative">
+  1073→              {/* Ligne de connexion verticale (desktop) / horizontale (mobile) */}
+  1074→              <div className="hidden sm:block absolute top-16 left-[calc(12.5%+20px)] right-[calc(12.5%+20px)] h-0.5 bg-gradient-to-r from-amber-300 via-orange-400 to-red-400 opacity-40" />
+  1075→
+  1076→              <div className="grid sm:grid-cols-4 gap-6 sm:gap-4">
+  1077→                {[
+  1078→                  {
+  1079→                    step: '01',
+  1080→                    icon: MessageCircle,
+  1081→                    title: 'Contactez-moi',
+  1082→                    desc: "Envoyez-moi un message sur WhatsApp ou remplissez le formulaire. Décrivez votre projet en quelques mots.",
+  1083→                    color: 'from-amber-400 to-amber-500',
+  1084→                    bg: 'bg-amber-50 dark:bg-amber-950/20',
+  1085→                    border: 'border-amber-200 dark:border-amber-800',
+  1086→                  },
+  1087→                  {
+  1088→                    step: '02',
+  1089→                    icon: Search,
+  1090→                    title: 'Brief & Devis',
+  1091→                    desc: "Je vous pose les bonnes questions pour comprendre vos besoins. Vous recevez une proposition claire avec délai et prix.",
+  1092→                    color: 'from-orange-400 to-orange-500',
+  1093→                    bg: 'bg-orange-50 dark:bg-orange-950/20',
+  1094→                    border: 'border-orange-200 dark:border-orange-800',
+  1095→                  },
+  1096→                  {
+  1097→                    step: '03',
+  1098→                    icon: PenTool,
+  1099→                    title: 'Création',
+  1100→                    desc: "Je conçois votre projet avec soin. Vous recevez des aperçus et pouvez demander des ajustements.",
+  1101→                    color: 'from-red-400 to-red-500',
+  1102→                    bg: 'bg-red-50 dark:bg-red-950/20',
+  1103→                    border: 'border-red-200 dark:border-red-800',
+  1104→                  },
+  1105→                  {
+  1106→                    step: '04',
+  1107→                    icon: Rocket,
+  1108→                    title: 'Livraison',
+  1109→                    desc: "Fichiers sources livrés en haute qualité. Suivi après livraison pour s'assurer que tout est parfait.",
+  1110→                    color: 'from-emerald-400 to-emerald-500',
+  1111→                    bg: 'bg-emerald-50 dark:bg-emerald-950/20',
+  1112→                    border: 'border-emerald-200 dark:border-emerald-800',
+  1113→                  },
+  1114→                ].map((s, i) => (
+  1115→                  <div key={s.step} className={`relative text-center p-5 rounded-2xl border ${s.border} ${s.bg} transition-all duration-300 hover:-translate-y-1 hover:shadow-lg`}>
+  1116→                    <div className={`inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${s.color} text-white shadow-lg mb-3`}>
+  1117→                      <s.icon className="h-5 w-5" />
+  1118→                    </div>
+  1119→                    <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Étape {s.step}</div>
+  1120→                    <h3 className="text-sm font-extrabold mb-2">{s.title}</h3>
+  1121→                    <p className="text-xs text-muted-foreground leading-relaxed">{s.desc}</p>
+  1122→                    {i < 3 && (
+  1123→                      <ArrowDown className="h-5 w-5 text-amber-400 mx-auto mt-3 sm:hidden" />
+  1124→                    )}
+  1125→                  </div>
+  1126→                ))}
+  1127→              </div>
+  1128→            </div>
+  1129→          </div>
+  1130→        </section>
+  1131→
+  1132→        {/* ═══ AD BANNER — After Hero ═══ */}
+  1133→        <div className="py-4 bg-muted/10">
+  1134→          <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+  1135→            <AdBanner />
+  1136→          </div>
+  1137→        </div>
+  1138→
+  1139→        {/* ═══ OUTILS MAÎTRISÉS ═══ */}
+  1140→        <div className="py-8 bg-muted/30 border-y overflow-hidden">
+  1141→          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-6">
+  1142→            <p className="text-center text-xs font-bold uppercase tracking-widest text-muted-foreground">
+  1143→              <Wrench className="h-3.5 w-3.5 inline mr-1.5" /> Outils & Technologies que nous maîtrisons
+  1144→            </p>
+  1145→          </div>
+  1146→          <div className="flex animate-marquee whitespace-nowrap">
+  1147→            {[...Array(2)].map((_, setIdx) => (
+  1148→              <div key={setIdx} className="flex items-center gap-10 mx-5">
+  1149→                {[
+  1150→                  { name: 'Canva Pro', emoji: '🎨' },
+  1151→                  { name: 'CapCut Pro', emoji: '🎬' },
+  1152→                  { name: 'PicsArt Pro', emoji: '📸' },
+  1153→                  { name: 'Photoshop', emoji: '🖌️' },
+  1154→                  { name: 'Illustrator', emoji: '✏️' },
+  1155→                  { name: 'Premiere Pro', emoji: '🎞️' },
+  1156→                  { name: 'DaVinci Resolve', emoji: '🪄' },
+  1157→                  { name: 'Figma', emoji: '🎯' },
+  1158→                  { name: 'HTML/CSS', emoji: '🌐' },
+  1159→                  { name: 'JavaScript', emoji: '⚡' },
+  1160→                  { name: 'React/Next.js', emoji: '⚛️' },
+  1161→                  { name: 'WordPress', emoji: '📝' },
+  1162→                  { name: 'Meta Business', emoji: '📊' },
+  1163→                  { name: 'TikTok Ads', emoji: '🎵' },
+  1164→                ].map((tool, i) => (
+  1165→                  <span key={`${setIdx}-${i}`} className="inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors flex-shrink-0">
+  1166→                    <span className="text-xl">{tool.emoji}</span>
+  1167→                    <span>{tool.name}</span>
+  1168→                  </span>
+  1169→                ))}
+  1170→              </div>
+  1171→            ))}
+  1172→          </div>
+  1173→        </div>
+  1174→
+  1175→        {/* ═══ NOS CLIENTS ═══ */}
+  1176→        <ClientLogos />
+  1177→
+  1178→        {/* ═══ POURQUOI NOUS CHOISIR ═══ */}
+  1179→        <section className="py-16 sm:py-20">
+  1180→          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+  1181→            <motion.div
+  1182→              initial={{ opacity: 0, y: 30 }}
+  1183→              whileInView={{ opacity: 1, y: 0 }}
+  1184→              viewport={{ once: true, margin: '-50px' }}
+  1185→              transition={{ duration: 0.6 }}
+  1186→            >
+  1187→              <div className="text-center mb-12">
+  1188→                <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+  1189→                  <Sparkles className="h-3 w-3 mr-1" /> Avantages
+  1190→                </Badge>
+  1191→                <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Pourquoi <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">nous choisir</span> ?</h2>
+  1192→                <p className="mt-3 text-muted-foreground max-w-xl mx-auto leading-relaxed">
+  1193→                  Ce qui nous distingue des autres freelances et agences à Bamako.
+  1194→                </p>
+  1195→              </div>
+  1196→
+  1197→              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  1198→                {[
+  1199→                  { icon: Zap, title: 'Réactivité Extraordinaire', desc: "Réponse en moins de 30 minutes sur WhatsApp. Pas de formulaire sans suivi, pas d'attente de 48h. Je suis disponible 7j/7.", color: 'from-amber-400 to-orange-500' },
+  1200→                  { icon: Target, title: '100% Personnalisé', desc: "Aucun template pré-fait. Chaque projet est conçu de zéro selon votre identité, vos couleurs et votre vision. Votre marque est unique.", color: 'from-emerald-400 to-teal-500' },
+  1201→                  { icon: ThumbsUp, title: 'Satisfaction Garantie', desc: 'Révisions illimitées sur les offres Premium. Je ne livre que lorsque vous êtes 100% satisfait du résultat final.', color: 'from-blue-400 to-indigo-500' },
+  1202→                  { icon: Lock, title: 'Paiement via WhatsApp', desc: 'Commandez et payez directement via WhatsApp avec Orange Money, MTN MoMo ou autre. Simple, rapide et sécurisé. Confirmation instantanée pour Sacko.', color: 'from-purple-400 to-violet-500' },
+  1203→                  { icon: Users, title: '3 Experts Unis', desc: 'Sacko pour le design, Camara Leh pour le web, Kante pour le marketing. Trois coachs complémentaires pour couvrir tous vos besoins.', color: 'from-cyan-400 to-blue-500' },
+  1204→                  { icon: Heart, title: 'Passion Africaine', desc: 'Nous comprenons le marché malien et africain. Nos créations sont pensées pour plaire à votre clientele locale et vous démarquer.', color: 'from-rose-400 to-pink-500' },
+  1205→                ].map((item, i) => (
+  1206→                  <motion.div
+  1207→                    key={item.title}
+  1208→                    initial={{ opacity: 0, y: 20 }}
+  1209→                    whileInView={{ opacity: 1, y: 0 }}
+  1210→                    viewport={{ once: true }}
+  1211→                    transition={{ duration: 0.4, delay: i * 0.08 }}
+  1212→                    className="group p-6 rounded-2xl border border-border hover:border-amber-200 dark:hover:border-amber-800 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+  1213→                  >
+  1214→                    <div className={`inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${item.color} text-white shadow-lg mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
+  1215→                      <item.icon className="h-6 w-6" />
+  1216→                    </div>
+  1217→                    <h3 className="text-base font-extrabold mb-2">{item.title}</h3>
+  1218→                    <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
+  1219→                  </motion.div>
+  1220→                ))}
+  1221→              </div>
+  1222→            </motion.div>
+  1223→          </div>
+  1224→        </section>
+  1225→
+  1226→        {/* ═══ COMPARISON TABLE ═══ */}
+  1227→        <section className="py-16 sm:py-20 bg-gradient-to-b from-background to-muted/20">
+  1228→          <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+  1229→            <div className="text-center mb-10">
+  1230→              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+  1231→                <Sparkles className="h-3 w-3 mr-1" /> Comparaison
+  1232→              </Badge>
+  1233→              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Découverte vs Premium</h2>
+  1234→              <p className="mt-3 text-muted-foreground max-w-xl mx-auto">
+  1235→                Un aperçu clair de ce que chaque formule inclut. Testez gratuitement, puis passez au niveau supérieur.
+  1236→              </p>
+  1237→            </div>
+  1238→            <div className="overflow-x-auto">
+  1239→              <table className="w-full border-collapse">
+  1240→                <thead>
+  1241→                  <tr className="border-b-2 border-border">
+  1242→                    <th className="text-left p-4 text-sm font-bold">Fonctionnalité</th>
+  1243→                    <th className="p-4 text-sm font-bold text-center">
+  1244→                      <span className="inline-flex items-center gap-1.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 px-3 py-1.5 rounded-full text-xs font-bold">
+  1245→                        <CheckCircle2 className="h-3.5 w-3.5" /> Découverte
+  1246→                      </span>
+  1247→                    </th>
+  1248→                    <th className="p-4 text-sm font-bold text-center">
+  1249→                      <span className="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-md shadow-amber-500/20">
+  1250→                        <Star className="h-3.5 w-3.5 fill-current" /> Premium
+  1251→                      </span>
+  1252→                    </th>
+  1253→                  </tr>
+  1254→                </thead>
+  1255→                <tbody>
+  1256→                  {[
+  1257→                    { feature: 'Prix', decouverte: 'Gratuit', premium: 'Sur devis' },
+  1258→                    { feature: 'Nombre de révisions', decouverte: '1 révision', premium: 'Illimité' },
+  1259→                    { feature: 'Fichiers sources', decouverte: false, premium: true },
+  1260→                    { feature: 'Charte graphique', decouverte: false, premium: true },
+  1261→                    { feature: 'Support personnalisé', decouverte: 'Groupe WhatsApp', premium: 'Individuel' },
+  1262→                    { feature: 'Certificat', decouverte: false, premium: true },
+  1263→                    { feature: 'Suivi post-livraison', decouverte: false, premium: true },
+  1264→                    { feature: 'Bonus (Canva Pro, etc.)', decouverte: false, premium: true },
+  1265→                    { feature: 'Délai de livraison', decouverte: 'Standard', premium: 'Prioritaire' },
+  1266→                  ].map((row, i) => (
+  1267→                    <tr key={i} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
+  1268→                      <td className="p-4 text-sm font-medium">{row.feature}</td>
+  1269→                      <td className="p-4 text-center">
+  1270→                        {typeof row.decouverte === 'boolean' ? (
+  1271→                          row.decouverte ? <CheckCircle2 className="h-5 w-5 text-emerald-500 mx-auto" /> : <span className="text-muted-foreground text-xs">—</span>
+  1272→                        ) : (
+  1273→                          <span className="text-sm text-emerald-600 dark:text-emerald-400 font-semibold">{row.decouverte}</span>
+  1274→                        )}
+  1275→                      </td>
+  1276→                      <td className="p-4 text-center bg-amber-50/50 dark:bg-amber-950/10">
+  1277→                        {typeof row.premium === 'boolean' ? (
+  1278→                          row.premium ? <CheckCircle2 className="h-5 w-5 text-amber-500 mx-auto" /> : <span className="text-muted-foreground text-xs">—</span>
+  1279→                        ) : (
+  1280→                          <span className="text-sm text-amber-600 dark:text-amber-400 font-bold">{row.premium}</span>
+  1281→                        )}
+  1282→                      </td>
+  1283→                    </tr>
+  1284→                  ))}
+  1285→                </tbody>
+  1286→              </table>
+  1287→            </div>
+  1288→          </div>
+  1289→        </section>
+  1290→
+  1291→        {/* ═══ ESTIMATEUR DE PRIX ═══ */}
+  1292→        <section className="py-16 sm:py-20">
+  1293→          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+  1294→            <div className="text-center mb-10">
+  1295→              <Badge variant="secondary" className="mb-3 bg-violet-100 text-violet-700 border-violet-200">
+  1296→                <Calculator className="h-3 w-3 mr-1" /> Estimateur
+  1297→              </Badge>
+  1298→              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Estimez votre <span className="bg-gradient-to-r from-violet-500 to-purple-500 bg-clip-text text-transparent">budget</span></h2>
+  1299→              <p className="mt-3 text-muted-foreground max-w-lg mx-auto">
+  1300→                Sélectionnez les services qui vous intéressent et obtenez une estimation instantanée.
+  1301→              </p>
+  1302→            </div>
+  1303→            <Card className="border-2 border-violet-200 dark:border-violet-800 overflow-hidden">
+  1304→              <CardContent className="p-6 space-y-4">
+  1305→                <div className="grid sm:grid-cols-2 gap-3">
+  1306→                  {[
+  1307→                    { id: 'logo', label: 'Logo Professionnel', icon: Palette, priceRange: [0, 15000] },
+  1308→                    { id: 'site', label: 'Site Web', icon: Globe, priceRange: [0, 50000] },
+  1309→                    { id: 'video', label: 'Montage Vidéo', icon: MonitorPlay, priceRange: [0, 20000] },
+  1310→                    { id: 'marketing', label: 'Marketing Digital', icon: Megaphone, priceRange: [0, 25000] },
+  1311→                    { id: 'cv', label: 'Pack Carrière Pro', icon: FileCheck, priceRange: [700, 3500] },
+  1312→                    { id: 'formation', label: 'Formation Premium', icon: GraduationCap, priceRange: [15000, 25000] },
+  1313→                  ].map((s) => {
+  1314→                    const selected = estimatorServices.includes(s.id)
+  1315→                    return (
+  1316→                      <button
+  1317→                        key={s.id}
+  1318→                        onClick={() => setEstimatorServices(prev => selected ? prev.filter(x => x !== s.id) : [...prev, s.id])}
+  1319→                        className={`flex items-center gap-3 p-4 rounded-xl border-2 transition-all duration-200 text-left ${
+  1320→                          selected
+  1321→                            ? 'border-violet-500 bg-violet-50 dark:bg-violet-950/20 shadow-md shadow-violet-500/10'
+  1322→                            : 'border-border hover:border-violet-300 dark:hover:border-violet-700 hover:bg-muted/50'
+  1323→                        }`}
+  1324→                      >
+  1325→                        <div className={`flex h-10 w-10 items-center justify-center rounded-lg flex-shrink-0 transition-colors ${
+  1326→                          selected ? 'bg-violet-500 text-white' : 'bg-muted text-muted-foreground'
+  1327→                        }`}>
+  1328→                          <s.icon className="h-5 w-5" />
+  1329→                        </div>
+  1330→                        <div className="flex-1 min-w-0">
+  1331→                          <p className="text-sm font-semibold">{s.label}</p>
+  1332→                          <p className="text-[11px] text-muted-foreground">{s.priceRange[0] === 0 ? 'Gratuit –' : ''} {s.priceRange[1].toLocaleString('fr-FR')} FCFA</p>
+  1333→                        </div>
+  1334→                        <div className={`h-5 w-5 rounded-full border-2 flex items-center justify-center transition-all flex-shrink-0 ${
+  1335→                          selected ? 'border-violet-500 bg-violet-500' : 'border-muted-foreground/30'
+  1336→                        }`}>
+  1337→                          {selected && <CheckCircle2 className="h-3.5 w-3.5 text-white" />}
+  1338→                        </div>
+  1339→                      </button>
+  1340→                    )
+  1341→                  })}
+  1342→                </div>
+  1343→                {estimatorServices.length > 0 && (
+  1344→                  <motion.div
+  1345→                    initial={{ opacity: 0, y: 10 }}
+  1346→                    animate={{ opacity: 1, y: 0 }}
+  1347→                    className="bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-950/20 dark:to-purple-950/20 rounded-xl p-5 border border-violet-200 dark:border-violet-800"
+  1348→                  >
+  1349→                    <div className="flex items-center justify-between mb-3">
+  1350→                      <span className="text-sm font-bold">{estimatorServices.length} service{estimatorServices.length > 1 ? 's' : ''} sélectionné{estimatorServices.length > 1 ? 's' : ''}</span>
+  1351→                      <span className="text-xs text-muted-foreground">Estimation</span>
+  1352→                    </div>
+  1353→                    <div className="flex items-baseline gap-2 mb-4">
+  1354→                      <span className="text-3xl font-extrabold text-violet-600 dark:text-violet-400">
+  1355→                        {(() => {
+  1356→                          const services = [
+  1357→                            { id: 'logo', priceRange: [0, 15000] },
+  1358→                            { id: 'site', priceRange: [0, 50000] },
+  1359→                            { id: 'video', priceRange: [0, 20000] },
+  1360→                            { id: 'marketing', priceRange: [0, 25000] },
+  1361→                            { id: 'cv', priceRange: [700, 3500] },
+  1362→                            { id: 'formation', priceRange: [15000, 25000] },
+  1363→                          ]
+  1364→                          const min = estimatorServices.reduce((sum, id) => sum + (services.find(s => s.id === id)?.priceRange[0] || 0), 0)
+  1365→                          const max = estimatorServices.reduce((sum, id) => sum + (services.find(s => s.id === id)?.priceRange[1] || 0), 0)
+  1366→                          return min === 0 ? `0 – ${max.toLocaleString('fr-FR')}` : `${min.toLocaleString('fr-FR')} – ${max.toLocaleString('fr-FR')}`
+  1367→                        })()}
+  1368→                      </span>
+  1369→                      <span className="text-sm text-muted-foreground font-medium">FCFA</span>
+  1370→                    </div>
+  1371→                    <a
+  1372→                      href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! J'ai utilisé votre estimateur et je suis intéressé(e) par : ${estimatorServices.join(', ')}. Pouvez-vous me faire un devis précis ?`)}`}
+  1373→                      target="_blank" rel="noopener noreferrer"
+  1374→                    >
+  1375→                      <Button className="w-full bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600 text-white font-bold shadow-lg shadow-violet-500/20">
+  1376→                        <MessageCircle className="h-4 w-4 mr-2" /> Obtenir un devis précis sur WhatsApp
+  1377→                      </Button>
+  1378→                    </a>
+  1379→                  </motion.div>
+  1380→                )}
+  1381→              </CardContent>
+  1382→            </Card>
+  1383→          </div>
+  1384→        </section>
+  1385→
+  1386→        {/* ═══ 6. SERVICES & TARIFS ═══ */}
+  1387→        <section id="services" className="py-20 sm:py-24">
+  1388→          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+  1389→            <div className="text-center mb-12">
+  1390→              <Badge variant="secondary" className="mb-3 bg-amber-100 text-amber-700 border-amber-200">
+  1391→                <Sparkles className="h-3 w-3 mr-1" /> Tarifs
+  1392→              </Badge>
+  1393→              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Mes Services</h2>
+  1394→              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+  1395→                Chaque service existe en deux formules : testez gratuitement avec l&apos;Offre Découverte, puis passez au Premium pour un résultat professionnel complet.
+  1396→              </p>
+  1397→              <div className="flex items-center justify-center gap-6 mt-5 text-xs">
+  1398→                <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-emerald-500" /> Découverte = Gratuit</span>
+  1399→                <span className="flex items-center gap-1.5"><MessageCircle className="h-3.5 w-3.5 text-emerald-500" /> Premium = Via WhatsApp</span>
+  1400→              </div>
+  1401→            </div>
+  1402→
+  1403→            <div className="space-y-8">
+  1404→              {[
+  1405→                {
+  1406→                  cat: 'Design Graphique', icon: Palette, color: 'from-pink-500 to-rose-500', borderColor: 'border-pink-200 dark:border-pink-800',
+  1407→                  decouverte: { title: 'Offre Découverte — Gratuit', desc: "Un logo simple pour démarrer. Texte stylisé + icône basique, 2 propositions au choix, 1 révision incluse. Idéal pour tester mon style avant de vous engager." },
+  1408→                  premium: { title: 'Offre Premium', desc: "Logo professionnel vectorisé, décliné en couleur et noir/blanc, charte graphique complète (couleurs, typographies), fichiers sources livrés (AI, PSD, PNG haute résolution), révisions illimitées jusqu'à satisfaction." },
+  1409→                },
+  1410→                {
+  1411→                  cat: 'Développement Web', icon: Globe, color: 'from-blue-500 to-indigo-500', borderColor: 'border-blue-200 dark:border-blue-800',
+  1412→                  decouverte: { title: 'Offre Découverte — Gratuite', desc: 'Une landing page 1 page, responsive (mobile/ordinateur), pour présenter votre activité en ligne rapidement.' },
+  1413→                  premium: { title: 'Offre Premium', desc: 'Site multi-pages sur mesure, formulaire de contact fonctionnel, déploiement et hébergement inclus, nom de domaine personnalisé, maintenance mensuelle disponible en option.' },
+  1414→                },
+  1415→                {
+  1416→                  cat: 'Montage Vidéo', icon: MonitorPlay, color: 'from-purple-500 to-violet-500', borderColor: 'border-purple-200 dark:border-purple-800',
+  1417→                  decouverte: { title: 'Offre Découverte — Gratuite', desc: "Montage court (moins d'une minute), coupe simple sans effets avancés. Parfait pour un aperçu rapide." },
+  1418→                  premium: { title: 'Offre Premium', desc: 'Montage complet avec effets visuels, sous-titres, musique libre de droits, export optimisé pour réseaux sociaux ou YouTube.' },
+  1419→                },
+  1420→                {
+  1421→                  cat: 'Formation', icon: GraduationCap, color: 'from-emerald-500 to-teal-500', borderColor: 'border-emerald-200 dark:border-emerald-800',
+  1422→                  decouverte: { title: 'Offre Découverte — Gratuite', desc: "Session d'initiation de 30 minutes pour découvrir mes outils et méthodes." },
+  1423→                  premium: { title: 'Offre Premium', desc: 'Parcours de formation complet avec suivi personnalisé, support après formation, et certificat de participation.' },
+  1424→                },
+  1425→                {
+  1426→                  cat: 'Marketing Digital', icon: Megaphone, color: 'from-cyan-500 to-blue-500', borderColor: 'border-cyan-200 dark:border-cyan-800',
+  1427→                  decouverte: { title: 'Offre Découverte — Gratuite', desc: "Une affiche ou post réseau social simple pour promouvoir votre activité. Format prêt à publier, 1 révision incluse." },
+  1428→                  premium: { title: 'Offre Premium', desc: "Stratégie complète : affiches, posts, stories, bannières publicitaires pour Facebook/Instagram/TikTok. Charte visuelle réseaux sociaux, calendrier éditorial de 7 jours." },
+  1429→                },
+  1430→              ].map((section) => (
+  1431→                <Card key={section.cat} className={`border ${section.borderColor} overflow-hidden transition-all duration-500 hover:shadow-2xl hover:-translate-y-1.5 hover:scale-[1.01]`}>
+  1432→                  <div className={`h-1.5 bg-gradient-to-r ${section.color}`} />
+  1433→                  <CardContent className="p-5 sm:p-7">
+  1434→                    <div className="flex items-center gap-3 mb-5">
+  1435→                      <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${section.color} text-white shadow-lg`}>
+  1436→                        <section.icon className="h-5 w-5" />
+  1437→                      </div>
+  1438→                      <h3 className="text-lg font-extrabold">{section.cat}</h3>
+  1439→                    </div>
+  1440→                    <div className="flex items-center justify-between mb-4">
+  1441→                      <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+  1442→                        <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" /><span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" /></span>
+  1443→                        Disponible
+  1444→                      </div>
+  1445→                      <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/20 px-2 py-0.5 rounded-full border border-amber-200 dark:border-amber-800">
+  1446→                        {availabilitySlots[section.cat] || 2}/5 places
+  1447→                      </span>
+  1448→                    </div>
+  1449→                    <div className="grid sm:grid-cols-2 gap-4">
+  1450→                      <div className="rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-950/20 p-4 sm:p-5">
+  1451→                        <div className="flex items-center gap-2 mb-2">
+  1452→                          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-white text-xs font-bold">✓</span>
+  1453→                          <h4 className="text-sm font-bold text-emerald-700 dark:text-emerald-400">{section.decouverte.title}</h4>
+  1454→                        </div>
+  1455→                        <p className="text-xs text-muted-foreground leading-relaxed mb-4">{section.decouverte.desc}</p>
+  1456→                        <a
+  1457→                          href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je veux l'Offre Découverte : ${section.cat}. C'est gratuit, je veux tester !`)}`}
+  1458→                          target="_blank" rel="noopener noreferrer"
+  1459→                        >
+  1460→                          <Button variant="outline" className="w-full border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 font-semibold text-xs h-10">
+  1461→                            <Gift className="h-3.5 w-3.5 mr-1.5" /> Essayer gratuitement
+  1462→                          </Button>
+  1463→                        </a>
+  1464→                      </div>
+  1465→                      <div className="rounded-xl border border-amber-200 dark:border-amber-800 bg-amber-50/50 dark:bg-amber-950/20 p-4 sm:p-5">
+  1466→                        <div className="flex items-center gap-2 mb-2">
+  1467→                          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-amber-500 to-orange-500 text-white text-xs font-bold">★</span>
+  1468→                          <h4 className="text-sm font-bold text-amber-700 dark:text-amber-400">{section.premium.title}</h4>
+  1469→                        </div>
+  1470→                        <p className="text-xs text-muted-foreground leading-relaxed mb-4">{section.premium.desc}</p>
+  1471→                        <a
+  1472→                        href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je suis intéressé(e) par l'Offre Premium : ${section.cat}. Pouvez-vous me donner un devis ?`)}`}
+  1473→                        target="_blank" rel="noopener noreferrer"
+  1474→                      >
+  1475→                        <Button className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-10 shadow-md shadow-amber-500/20">
+  1476→                          <MessageCircle className="h-3.5 w-3.5 mr-1.5" /> Commander via WhatsApp
+  1477→                        </Button>
+  1478→                      </a>
+  1479→                    </div>
+  1480→                    </div>
+  1481→                  </CardContent>
+  1482→                </Card>
+  1483→              ))}
+  1484→
+  1485→              {/* Bonus Luxe */}
+  1486→              <Card className="border-0 shadow-lg overflow-hidden">
+  1487→                <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white p-5 sm:p-7">
+  1488→                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+  1489→                    <a href="https://www.canva.com/brand/join?token=nbyqrtelBOlUiCNiK170Ew&referrer=team-invite" target="_blank" rel="noopener noreferrer" className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm shadow-lg flex-shrink-0 hover:bg-white/30 transition-colors">
+  1490→                      <img src="/canva-pro-real.png" alt="Canva Pro" className="h-8 w-8 rounded-lg object-cover" />
+  1491→                    </a>
+  1492→                    <div className="flex-1">
+  1493→                      <div className="flex items-center gap-2 mb-1">
+  1494→                        <h3 className="font-bold text-base">Bonus : Accès Premium Offert</h3>
+  1495→                        <Badge className="bg-white/20 text-white border-0 text-[10px]">NOUVEAU</Badge>
+  1496→                      </div>
+  1497→                      <p className="text-sm text-white/90 leading-relaxed">Chaque formation inclut un <a href="https://www.canva.com/brand/join?token=nbyqrtelBOlUiCNiK170Ew&referrer=team-invite" target="_blank" rel="noopener noreferrer" className="font-bold underline underline-offset-2 hover:text-amber-300 transition-colors">accès gratuit à Canva Pro</a>, CapCut Pro ou PicsArt Pro. C&apos;est mon cadeau pour vous accompagner dans la pratique.</p>
+  1498→                    </div>
+  1499→                  </div>
+  1500→                </div>
+  1501→              </Card>
+  1502→            </div>
+  1503→          </div>
+  1504→        </section>
+  1505→
+  1506→        {/* ═══ PUBLICITÉ 1 ═══ */}
+  1507→        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 pb-6 space-y-4">
+  1508→          <div className="rounded-xl overflow-hidden border bg-white dark:bg-zinc-900">
+  1509→            <iframe src="https://www.effectivecpmnetwork.com/xntegh31ay?key=3caffbaacc837287e406a00f78092cd4" className="w-full border-0" style={{ height: '100px' }} sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-forms" loading="lazy" title="Publicité" />
+  1510→          </div>
+  1511→          <AdsterraBanner />
+  1512→        </div>
+  1513→
+  1514→        {/* ═══ 7. CARRIÈRE PRO ═══ */}
+  1515→        <section id="carriere-pro" className="py-16 sm:py-20 relative overflow-hidden">
+  1516→          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-900 to-background" />
+  1517→          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(59,130,246,0.08),transparent_50%),radial-gradient(circle_at_70%_70%,rgba(245,158,11,0.06),transparent_50%)]" />
+  1518→          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-white">
+  1519→            <div className="text-center mb-12">
+  1520→              <Badge className="mb-3 bg-blue-500/20 text-blue-300 border-blue-500/30 hover:bg-blue-500/30">
+  1521→                <GraduationCap className="h-3 w-3 mr-1" /> Carrière Pro
+  1522→              </Badge>
+  1523→              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Offre à la <span className="text-blue-400">Carte</span></h2>
+  1524→              <p className="mt-3 text-slate-400 max-w-xl mx-auto">
+  1525→                5 services clés pour booster votre employabilité. Chaque prestation est livrée sous 24h.
+  1526→              </p>
+  1527→            </div>
+  1528→
+  1529→            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
+  1530→              {[
+  1531→                { icon: PenTool, name: 'Plume Pro', sub: 'Lettre de motivation', price: '800', hook: 'La lettre qui donne envie de lire votre CV.', color: 'from-blue-500 to-cyan-500' },
+  1532→                { icon: FileCheck, name: 'Relooking CV', sub: 'Refonte de CV', price: '700', hook: 'Votre parcours, une nouvelle vitrine.', color: 'from-emerald-500 to-teal-500' },
+  1533→                { icon: Building2, name: 'Impact LinkedIn', sub: 'Profil LinkedIn', price: '2 000', hook: 'Le profil que les recruteurs remarquent en premier.', color: 'from-indigo-500 to-purple-500' },
+  1534→                { icon: Target, name: 'Objectif Entretien', sub: 'Préparation entretien', price: '500', hook: "Les questions pièges de votre secteur, décortiquées.", color: 'from-amber-500 to-orange-500' },
+  1535→                { icon: BadgeCheck, name: 'Réseautage Pro', sub: 'Carte de visite', price: '1 500', hook: 'Un premier contact, une impression durable.', color: 'from-rose-500 to-pink-500' },
+  1536→              ].map((s) => (
+  1537→                <Card key={s.name} className="h-full backdrop-blur-xl bg-white/[0.04] border border-white/[0.08] hover:border-blue-400/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-500/5 group">
+  1538→                  <CardContent className="p-6 relative">
+  1539→                    <div className={`absolute inset-0 rounded-xl bg-gradient-to-br ${s.color} opacity-0 group-hover:opacity-[0.04] transition-opacity duration-500`} />
+  1540→                    <div className="relative">
+  1541→                      <div className="flex items-start justify-between mb-4">
+  1542→                        <div className={`flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br ${s.color} text-white shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+  1543→                          <s.icon className="h-5 w-5" />
+  1544→                        </div>
+  1545→                        <span className="text-xl font-extrabold text-white">{s.price} <span className="text-xs font-normal text-slate-400">FCFA</span></span>
+  1546→                      </div>
+  1547→                      <h3 className="text-lg font-bold text-white">{s.name}</h3>
+  1548→                      <p className="text-xs text-slate-500 mb-2">{s.sub}</p>
+  1549→                      <p className="text-sm text-slate-300 leading-relaxed mb-4">{s.hook}</p>
+  1550→                      <a
+  1551→                        href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je souhaite commander : ${s.name} (${s.sub}) — ${s.price} FCFA.`)}`}
+  1552→                        target="_blank" rel="noopener noreferrer"
+  1553→                      >
+  1554→                        <Button size="sm" className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-9">
+  1555→                          <MessageCircle className="h-3.5 w-3.5 mr-1.5" /> Commander {s.price} F
+  1556→                        </Button>
+  1557→                      </a>
+  1558→                    </div>
+  1559→                  </CardContent>
+  1560→                </Card>
+  1561→              ))}
+  1562→            </div>
+  1563→
+  1564→            {/* Pack Lancement Carrière */}
+  1565→            <Card className="border-2 border-amber-400/40 bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-red-500/10 overflow-hidden relative">
+  1566→              <div className="absolute top-0 right-0 w-40 h-40 bg-amber-500/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+  1567→              <CardContent className="p-6 sm:p-8 relative z-10">
+  1568→                <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-10">
+  1569→                  <div className="flex-1 text-center lg:text-left">
+  1570→                    <Badge className="mb-3 bg-amber-500/20 text-amber-300 border-amber-500/30">
+  1571→                      <Trophy className="h-3 w-3 mr-1" /> Pack Lancement Carrière
+  1572→                    </Badge>
+  1573→                    <h3 className="text-2xl sm:text-3xl font-extrabold text-white mb-3">CV Premium + Lettre + LinkedIn + Guide entretien</h3>
+  1574→                    <p className="text-slate-300 leading-relaxed mb-2">
+  1575→                      <span className="bg-amber-500/20 text-amber-300 text-xs font-bold px-2 py-0.5 rounded mr-1">Guide entretien offert</span>
+  1576→                      Tout ce qu&apos;il faut pour candidater sans stress — et sans mauvaise surprise.
+  1577→                    </p>
+  1578→                    <div className="flex items-baseline gap-3 mt-4">
+  1579→                      <span className="text-xl text-slate-500 line-through">4 800 FCFA</span>
+  1580→                      <span className="text-3xl font-extrabold text-white">3 500 FCFA</span>
+  1581→                    </div>
+  1582→                  </div>
+  1583→                  <div className="flex flex-col items-center gap-3 flex-shrink-0">
+  1584→                    <a href="https://wa.me/22397787244?text=Bonjour%20!%20Je%20veux%20le%20Pack%20Lancement%20Carri%C3%A8re%20%C3%A0%203%20500%20FCFA." target="_blank" rel="noopener noreferrer">
+  1585→                      <Button size="lg" className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-xl shadow-amber-500/25 px-6 whitespace-nowrap">
+  1586→                        <MessageCircle className="h-5 w-5 mr-2" /> Commander le Pack 3 500 F
+  1587→                      </Button>
+  1588→                    </a>
+  1589→                    <span className="text-[10px] text-slate-500">Économie de 1 300 FCFA</span>
+  1590→                  </div>
+  1591→                </div>
+  1592→              </CardContent>
+  1593→            </Card>
+  1594→
+  1595→            {/* Raréité */}
+  1596→            <div className="mt-6 text-center">
+  1597→              <p className="text-sm text-slate-400">
+  1598→                Qualité avant quantité : <span className="text-white font-bold">5 commandes/jour maximum</span>. Places restantes aujourd&apos;hui : <span className="inline-flex items-center gap-1.5 text-amber-400 font-bold"><span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />2/5</span>
+  1599→              </p>
+  1600→            </div>
+  1601→          </div>
+  1602→        </section>
+  1603→
+  1604→        {/* ═══ 8. 4 DOMAINES POUR GAGNER DE L'ARGENT (ENRICHED) ═══ */}
+  1605→        <section id="gagner-argent" className="py-20 sm:py-28">
+  1606→          <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+  1607→            <div className="text-center mb-14">
+  1608→              <Badge variant="secondary" className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200">
+  1609→                <TrendingUp className="h-3 w-3 mr-1" /> Revenus
+  1610→              </Badge>
+  1611→              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">4 Domaines pour <span className="text-emerald-600 dark:text-emerald-400">Gagner de l&apos;Argent</span></h2>
+  1612→              <p className="mt-4 text-muted-foreground max-w-lg mx-auto leading-relaxed">
+  1613→                <strong className="text-foreground">4 compétences concrètes</strong> qui génèrent des revenus réels au Mali — avec des tarifs basés sur ce que le marché paie.
+  1614→              </p>
+  1615→            </div>
+  1616→
+  1617→            <div className="grid sm:grid-cols-2 gap-5">
+  1618→              {[
+  1619→                {
+  1620→                  icon: Target,
+  1621→                  title: 'Contenu Réseaux Sociaux',
+  1622→                  price: '3 000+ FCFA/mois',
+  1623→                  color: 'from-pink-500 to-rose-500',
+  1624→                  desc: 'Crée des visuels pros pour les boutiques de Bamako. Stories, reels, affiches — les entreprises payent mensuel.',
+  1625→                  revenus: '30 000 – 150 000 FCFA/mois',
+  1626→                },
+  1627→                {
+  1628→                  icon: MessageCircle,
+  1629→                  title: 'Chatbots WhatsApp',
+  1630→                  price: '10 000+ FCFA/mois',
+  1631→                  color: 'from-green-500 to-emerald-500',
+  1632→                  desc: "WhatsApp = N°1 au Mali. Automatise les réponses 24h/24 et vends des abonnements de maintenance aux entrepreneurs.",
+  1633→                  revenus: '50 000 – 200 000 FCFA/mois',
+  1634→                },
+  1635→                {
+  1636→                  icon: Globe,
+  1637→                  title: 'Sites Web & Landing Pages',
+  1638→                  price: '30 000 – 150 000 FCFA/projet',
+  1639→                  color: 'from-blue-500 to-indigo-500',
+  1640→                  desc: 'Chaque boutique à Bamako mérite un site. Livraison en 1-3 jours, hébergement inclus. 2-5 projets par mois possible.',
+  1641→                  revenus: '60 000 – 500 000 FCFA/mois',
+  1642→                },
+  1643→                {
+  1644→                  icon: UserCheck,
+  1645→                  title: 'Freelance Digital',
+  1646→                  price: '5 000 FCFA/session coaching',
+  1647→                  color: 'from-amber-500 to-orange-500',
+  1648→                  desc: "Trouve tes premiers clients sur WhatsApp, fixe tes tarifs, construis une réputation. De 0 à 100 000 FCFA/mois possible.",
+  1649→                  revenus: '50 000 – 300 000 FCFA/mois',
+  1650→                },
+  1651→              ].map((d) => (
+  1652→                <Card key={d.title} className="overflow-hidden border-0 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+  1653→                  <div className={`h-1 bg-gradient-to-r ${d.color}`} />
+  1654→                  <CardContent className="p-5 relative">
+  1655→                    <div className={`absolute inset-x-0 top-0 h-32 bg-gradient-to-br ${d.color} opacity-0 group-hover:opacity-[0.03] transition-opacity duration-500 rounded-t-none`} />
+  1656→                    <div className="relative">
+  1657→                      <div className="flex items-center gap-3 mb-3">
+  1658→                        <div className={`flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${d.color} text-white shadow-md flex-shrink-0 group-hover:scale-110 transition-transform duration-300`}>
+  1659→                          <d.icon className="h-5 w-5" />
+  1660→                        </div>
+  1661→                        <div className="min-w-0">
+  1662→                          <h3 className="font-bold text-sm leading-tight">{d.title}</h3>
+  1663→                          <p className="text-sm font-extrabold text-emerald-600 dark:text-emerald-400">{d.price}</p>
+  1664→                        </div>
+  1665→                      </div>
+  1666→                      <p className="text-xs text-muted-foreground leading-relaxed mb-4">{d.desc}</p>
+  1667→                      <div className="flex items-center justify-between pt-3 border-t">
+  1668→                        <span className="text-[11px] text-muted-foreground">Revenus : <strong className="text-amber-600 dark:text-amber-400">{d.revenus}</strong></span>
+  1669→                        <a
+  1670→                          href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je suis intéressé(e) par : ${d.title}. J'aimerais en savoir plus.`)}`}
+  1671→                          target="_blank" rel="noopener noreferrer"
+  1672→                          className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-600 hover:text-amber-700 dark:text-amber-400 transition-colors"
+  1673→                        >
+  1674→                          Détails <ArrowRight className="h-3 w-3" />
+  1675→                        </a>
+  1676→                      </div>
+  1677→                    </div>
+  1678→                  </CardContent>
+  1679→                </Card>
+  1680→              ))}
+  1681→            </div>
+  1682→
+  1683→            <div className="mt-10 text-center">
+  1684→              <p className="text-sm text-muted-foreground">
+  1685→                Je t&apos;accompagne dans <strong className="text-foreground">chacun de ces domaines</strong> avec mes formations et mon coaching.
+  1686→                <a href="#formations" className="text-amber-600 font-semibold hover:underline ml-1">Voir les formations</a>.
+  1687→              </p>
+  1688→            </div>
+  1689→          </div>
+  1690→        </section>
+  1691→
+  1692→        {/* ═══ AD BANNER — Between Services & Formations ═══ */}
+  1693→        <div className="py-4">
+  1694→          <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+  1695→            <AdBanner />
+  1696→          </div>
+  1697→        </div>
+  1698→
+  1699→        {/* ═══ 9. FORMATIONS VEDETTES ═══ */}
+  1700→        <section id="formations" className="py-16 sm:py-20 text-white" style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)' }}>
+  1701→          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  1702→            {/* Decorative glow */}
+  1703→            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+  1704→
+  1705→            <div className="relative text-center mb-12">
+  1706→              <Badge className="mb-3 bg-amber-500/20 text-amber-300 border-amber-500/30 hover:bg-amber-500/30">
+  1707→                <GraduationCap className="h-3 w-3 mr-1" /> Formations
+  1708→              </Badge>
+  1709→              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Formations pour <span className="text-amber-400">maîtriser le digital</span></h2>
+  1710→              <p className="mt-4 text-slate-300 max-w-2xl mx-auto leading-relaxed">
+  1711→                J&apos;ai créé ces formations pour partager ce que je sais, de manière simple et pratique. Commencez gratuitement, puis passez au Premium si vous voulez aller plus loin avec un suivi personnalisé.
+  1712→              </p>
+  1713→              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 mt-5">
+  1714→                <div className="flex items-center gap-6 text-xs">
+  1715→                  <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-emerald-500" /> Découverte = Gratuit</span>
+  1716→                  <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-amber-500" /> Premium = Prix fixe clair</span>
+  1717→                </div>
+  1718→              </div>
+  1719→              {/* Groupe WhatsApp */}
+  1720→              <a
+  1721→                href="https://chat.whatsapp.com/Khpz5MVeokK9X9X5i3INX2"
+  1722→                target="_blank"
+  1723→                rel="noopener noreferrer"
+  1724→                className="inline-flex items-center gap-2 mt-5 bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 rounded-full px-5 py-2 text-emerald-400 text-xs font-semibold transition-colors"
+  1725→              >
+  1726→                <Users className="h-3.5 w-3.5" /> Rejoindre le groupe WhatsApp des formations — échangez avec les autres apprenants
+  1727→              </a>
+  1728→            </div>
+  1729→
+  1730→            {/* ═══ PACK FORMATION COMPLÈTE — Mis en avant ═══ */}
+  1731→            <motion.div
+  1732→              initial={{ opacity: 0, y: 30 }}
+  1733→              whileInView={{ opacity: 1, y: 0 }}
+  1734→              viewport={{ once: true, margin: '-50px' }}
+  1735→              transition={{ duration: 0.6 }}
+  1736→              className="relative mt-10 rounded-3xl overflow-hidden"
+  1737→            >
+  1738→              {/* Animated border glow */}
+  1739→              <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 p-[2px]">
+  1740→                <div className="absolute inset-0 rounded-3xl bg-slate-900" />
+  1741→              </div>
+  1742→              {/* Glow behind card */}
+  1743→              <div className="absolute -inset-1 bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-red-500/20 rounded-3xl blur-xl -z-10" />
+  1744→
+  1745→              <div className="relative p-6 sm:p-8 lg:p-10">
+  1746→                {/* Top banner */}
+  1747→                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+  1748→                  <div className="flex items-center gap-3">
+  1749→                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 text-white shadow-lg shadow-amber-500/30">
+  1750→                      <GraduationCap className="h-7 w-7" />
+  1751→                    </div>
+  1752→                    <div>
+  1753→                      <div className="flex items-center gap-2 flex-wrap">
+  1754→                        <h3 className="text-xl sm:text-2xl font-extrabold text-white">Pack Formation Complète</h3>
+  1755→                        <span className="inline-flex items-center gap-1 bg-gradient-to-r from-red-500 to-pink-500 text-white text-[9px] font-bold px-2.5 py-1 rounded-full shadow animate-pulse">
+  1756→                          <Flame className="h-2.5 w-2.5" /> OFFRE LIMITÉE
+  1757→                        </span>
+  1758→                      </div>
+  1759→                      <p className="text-sm text-slate-400 mt-0.5">Toutes les 4 formations Premium en un seul pack</p>
+  1760→                    </div>
+  1761→                  </div>
+  1762→                  <div className="text-right flex-shrink-0">
+  1763→                    <p className="text-sm text-slate-500 line-through">80 000 FCFA</p>
+  1764→                    <div className="flex items-baseline gap-1 justify-end">
+  1765→                      <span className="text-3xl sm:text-4xl font-black bg-gradient-to-r from-amber-400 via-orange-400 to-amber-400 bg-clip-text text-transparent">3 000</span>
+  1766→                      <span className="text-sm text-slate-400 font-semibold">FCFA</span>
+  1767→                    </div>
+  1768→                    <p className="text-[10px] text-emerald-400 font-bold mt-0.5">Économisez 77 000 FCFA</p>
+  1769→                  </div>
+  1770→                </div>
+  1771→
+  1772→                {/* 4 formations included */}
+  1773→                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+  1774→                  {[
+  1775→                    { title: 'Design Graphique', desc: 'Photoshop, Illustrator, branding', icon: Palette, color: 'from-pink-500 to-rose-500' },
+  1776→                    { title: 'Montage Vidéo', desc: 'Premiere, DaVinci, motion design', icon: MonitorPlay, color: 'from-purple-500 to-violet-500' },
+  1777→                    { title: 'Création Web', desc: 'JavaScript, sites multi-pages, SEO', icon: Code, color: 'from-blue-500 to-cyan-500' },
+  1778→                    { title: 'Marketing Digital', desc: 'Facebook/TikTok Ads, calendrier éditorial', icon: Megaphone, color: 'from-emerald-500 to-teal-500' },
+  1779→                  ].map((f, i) => (
+  1780→                    <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors">
+  1781→                      <div className={`flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br ${f.color} text-white flex-shrink-0`}>
+  1782→                        <f.icon className="h-4 w-4" />
+  1783→                      </div>
+  1784→                      <div className="min-w-0">
+  1785→                        <p className="text-xs font-bold text-white truncate">{f.title}</p>
+  1786→                        <p className="text-[10px] text-slate-500 truncate">{f.desc}</p>
+  1787→                      </div>
+  1788→                    </div>
+  1789→                  ))}
+  1790→                </div>
+  1791→
+  1792→                {/* All bonuses + features */}
+  1793→                <div className="grid sm:grid-cols-2 gap-x-8 gap-y-2 mb-6">
+  1794→                  {[
+  1795→                    'Canva Pro offert pendant 30 jours',
+  1796→                    'CapCut Pro offert pendant 30 jours',
+  1797→                    'Hébergement web offert 1 an',
+  1798→                    'Pack 50 templates exclusifs',
+  1799→                    'Certificat de participation pour chaque formation',
+  1800→                    'Suivi individuel post-formation',
+  1801→                  ].map((item, i) => (
+  1802→                    <div key={i} className="flex items-center gap-2 text-xs text-slate-300">
+  1803→                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 flex-shrink-0" />
+  1804→                      {item}
+  1805→                    </div>
+  1806→                  ))}
+  1807→                </div>
+  1808→
+  1809→                {/* CTA */}
+  1810→                <a
+  1811→                  href={`https://wa.me/22397787244?text=${encodeURIComponent('Bonjour Sacko ! Je suis intéressé(e) par le Pack Formation Complète à 3 000 FCFA (au lieu de 80 000). Les 4 formations Premium + tous les bonus. Comment procéder ?')}`}
+  1812→                  target="_blank"
+  1813→                  rel="noopener noreferrer"
+  1814→                  className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 hover:from-amber-600 hover:via-orange-600 hover:to-red-600 text-white font-bold text-sm shadow-xl shadow-amber-500/25 hover:shadow-amber-500/40 transition-all hover:scale-[1.02] active:scale-[0.98]"
+  1815→                >
+  1816→                  <Zap className="h-4 w-4" /> Obtenir le Pack Complet — 3 000 FCFA
+  1817→                  <ArrowRight className="h-4 w-4" />
+  1818→                </a>
+  1819→                <p className="text-center text-[10px] text-slate-500 mt-2.5">Paiement Orange Money / Moov Money — Accès immédiat après confirmation</p>
+  1820→              </div>
+  1821→            </motion.div>
+  1822→
+  1823→            {/* 4 Featured formation cards */}
+  1824→            <div className="space-y-6">
+  1825→              {featuredFormations.map((form, idx) => (
+  1826→                <motion.div
+  1827→                  key={form.id}
+  1828→                  initial={{ opacity: 0, y: 30 }}
+  1829→                  whileInView={{ opacity: 1, y: 0 }}
+  1830→                  viewport={{ once: true, margin: '-50px' }}
+  1831→                  transition={{ duration: 0.5, delay: idx * 0.1 }}
+  1832→                  className="relative rounded-2xl bg-slate-800/60 border border-white/10 overflow-hidden hover:border-white/20 transition-all duration-300"
+  1833→                >
+  1834→                  {/* Formation header */}
+  1835→                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-5 sm:p-6 border-b border-white/5">
+  1836→                    <div className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${form.color} text-white shadow-lg flex-shrink-0`}>
+  1837→                      <form.icon className="h-6 w-6" />
+  1838→                    </div>
+  1839→                    <div className="flex-1 min-w-0">
+  1840→                      <div className="flex items-center gap-2 flex-wrap">
+  1841→                        <h3 className="text-lg font-extrabold text-white">{form.title}</h3>
+  1842→                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+  1843→                          form.level === 'Débutant' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' :
+  1844→                          'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+  1845→                        }`}>{form.level}</span>
+  1846→                      </div>
+  1847→                      <p className="text-sm text-slate-400 mt-0.5">{form.subtitle}</p>
+  1848→                      <div className="flex items-center gap-4 text-[11px] text-slate-500 mt-1.5">
+  1849→                        <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{form.duration}</span>
+  1850→                        <span className="flex items-center gap-1"><BookOpen className="h-3 w-3" />{form.lessons}</span>
+  1851→                        <span className="flex items-center gap-1"><Users className="h-3 w-3" />Coach {form.coach}</span>
+  1852→                      </div>
+  1853→                    </div>
+  1854→                  </div>
+  1855→
+  1856→                  {/* Découverte / Premium grid */}
+  1857→                  <div className="grid sm:grid-cols-2">
+  1858→                    {/* Découverte */}
+  1859→                    <div className="p-5 sm:p-6 border-r border-white/5">
+  1860→                      <div className="flex items-center gap-2 mb-4">
+  1861→                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-white text-xs font-bold">✓</span>
+  1862→                        <h4 className="text-sm font-bold text-emerald-400">Offre Découverte — Gratuit</h4>
+  1863→                      </div>
+  1864→                      <ul className="space-y-2 mb-5">
+  1865→                        {form.decouverte.features.map((f, fi) => (
+  1866→                          <li key={fi} className="flex items-start gap-2 text-xs text-slate-300 leading-relaxed">
+  1867→                            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 mt-0.5 flex-shrink-0" />
+  1868→                            {f}
+  1869→                          </li>
+  1870→                        ))}
+  1871→                      </ul>
+  1872→                      <a
+  1873→                        href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour ! Je veux rejoindre la formation ${form.title} — Offre Découverte (Gratuit).`)}`}
+  1874→                        target="_blank" rel="noopener noreferrer"
+  1875→                      >
+  1876→                        <Button variant="outline" className="w-full border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10 hover:border-emerald-500/50 font-semibold text-xs h-10">
+  1877→                          <Gift className="h-3.5 w-3.5 mr-1.5" /> Commencer gratuitement
+  1878→                        </Button>
+  1879→                      </a>
+  1880→                    </div>
+  1881→
+  1882→                    {/* Premium */}
+  1883→                    <div className="p-5 sm:p-6 relative">
+  1884→                      {/* Popular badge */}
+  1885→                      <div className="absolute top-3 right-3">
+  1886→                        <span className="inline-flex items-center gap-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[9px] font-bold px-2.5 py-1 rounded-full shadow-lg shadow-amber-500/20">
+  1887→                          <Star className="h-2.5 w-2.5 fill-current" /> RECOMMANDÉ
+  1888→                        </span>
+  1889→                      </div>
+  1890→                      <div className="flex items-center gap-2 mb-1">
+  1891→                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-amber-500 to-orange-500 text-white text-xs font-bold">★</span>
+  1892→                        <h4 className="text-sm font-bold text-amber-400">Offre Premium</h4>
+  1893→                      </div>
+  1894→                      <div className="flex items-baseline gap-1 mb-4">
+  1895→                        <span className="text-2xl font-extrabold text-white">{form.premium.price}</span>
+  1896→                        <span className="text-sm text-slate-500">FCFA</span>
+  1897→                      </div>
+  1898→                      <ul className="space-y-2 mb-4">
+  1899→                        {form.premium.features.map((f, fi) => (
+  1900→                          <li key={fi} className="flex items-start gap-2 text-xs text-slate-300 leading-relaxed">
+  1901→                            <CheckCircle2 className="h-3.5 w-3.5 text-amber-500 mt-0.5 flex-shrink-0" />
+  1902→                            {f}
+  1903→                          </li>
+  1904→                        ))}
+  1905→                      </ul>
+  1906→                      {form.premium.bonus && (
+  1907→                        <div className="flex items-center gap-2 mb-4 px-3 py-2 rounded-lg bg-amber-500/10 border border-amber-500/20">
+  1908→                          <Gift className="h-3.5 w-3.5 text-amber-400 flex-shrink-0" />
+  1909→                          <span className="text-[11px] text-amber-300 font-medium">{form.premium.bonus}</span>
+  1910→                        </div>
+  1911→                      )}
+  1912→                      <a
+  1913→                        href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je suis intéressé(e) par la formation Premium ${form.title} (${form.premium.price} FCFA). Comment y accéder ?`)}`}
+  1914→                        target="_blank" rel="noopener noreferrer"
+  1915→                      >
+  1916→                        <Button className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs h-10 shadow-lg shadow-amber-500/20">
+  1917→                          <MessageCircle className="h-3.5 w-3.5 mr-1.5" /> S'inscrire {form.premium.price} F
+  1918→                        </Button>
+  1919→                      </a>
+  1920→                    </div>
+  1921→                  </div>
+  1922→                </motion.div>
+  1923→              ))}
+  1924→            </div>
+  1925→
+  1926→            {/* Autres formations disponibles */}
+  1927→            <div className="mt-12">
+  1928→              <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-4">Autres formations disponibles</p>
+  1929→              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+  1930→                {otherFormations.map((form, i) => (
+  1931→                  <a
+  1932→                    key={i}
+  1933→                    href={`https://wa.me/22397787244?text=${encodeURIComponent(`Bonjour Sacko ! Je suis intéressé(e) par : ${form.text}. Pouvez-vous me donner plus de détails ?`)}`}
+  1934→                    target="_blank" rel="noopener noreferrer"
+  1935→                    className="group flex items-center gap-3 p-3 rounded-xl bg-slate-800/60 border border-white/10 hover:bg-slate-700/60 hover:border-amber-400/30 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-amber-500/5 transition-all duration-300 cursor-pointer"
+  1936→                  >
+  1937→                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/5 flex-shrink-0">
+  1938→                      <form.icon className="h-4 w-4 text-slate-400 group-hover:text-amber-400 transition-colors" />
+  1939→                    </div>
+  1940→                    <p className="text-xs font-medium text-slate-300 group-hover:text-white transition-colors flex-1">{form.text}</p>
+  1941→                    <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full flex-shrink-0 ${
+  1942→                      form.level === 'Débutant' ? 'bg-emerald-500/20 text-emerald-400' :
+  1943→                      form.level === 'Intermédiaire' ? 'bg-amber-500/20 text-amber-400' :
+  1944→                      'bg-violet-500/20 text-violet-400'
+  1945→                    }`}>{form.level}</span>
+  1946→                    <ArrowRight className="h-3.5 w-3.5 text-white/20 group-hover:text-amber-400 group-hover:translate-x-0.5 transition-all" />
+  1947→                  </a>
+  1948→                ))}
+  1949→              </div>
+  1950→            </div>
+  1951→          </div>
+  1952→        </section>
+  1953→
+  1954→        {/* ═══ PUBLICITÉ 2 ═══ */}
+  1955→        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 pb-6">
+  1956→          <div className="rounded-xl overflow-hidden border bg-white dark:bg-zinc-900">
+  1957→            <iframe src="https://www.effectivecpmnetwork.com/w24ar3me?key=2270134b3b2815aa1e5c7ea649fb22a7" className="w-full border-0" style={{ height: '120px' }} sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-forms" loading="lazy" title="Publicité" />
+  1958→          </div>
+  1959→        </div>
+  1960→
+  1961→        {/* ═══ 10. NOS COACHS ═══ */}
+  1962→        <section id="coachs" className="py-16 sm:py-20 relative overflow-hidden">
+  1963→          {/* Animated background */}
+  1964→          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950" />
+  1965→          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(245,158,11,0.08),transparent_50%),radial-gradient(circle_at_80%_50%,rgba(6,182,212,0.06),transparent_50%),radial-gradient(circle_at_50%_80%,rgba(16,185,129,0.05),transparent_50%)]" />
+  1966→          <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+  1967→            <div className="text-center mb-12">
+  1968→              <Badge className="mb-3 bg-amber-500/20 text-amber-300 border-amber-500/30 hover:bg-amber-500/30">
+  1969→                <Users className="h-3 w-3 mr-1" /> Notre Équipe
+  1970→              </Badge>
+  1971→              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">3 Coachs <span className="text-amber-400">experts</span> à votre service</h2>
+  1972→              {/* Animated underline */}
+  1973→              <div className="mt-4 mx-auto h-1 w-24 rounded-full bg-gradient-to-r from-amber-400 via-orange-500 to-red-500" />
+  1974→              <p className="mt-4 text-slate-400 max-w-2xl mx-auto leading-relaxed">
+  1975→                Pas de théorie abstraite : chaque coach pratique activement dans son domaine à Bamako. Vous apprenez de personnes qui vivent de leur compétence au quotidien.
+  1976→              </p>
+  1977→            </div>
+  1978→
+  1979→            <div className="grid sm:grid-cols-3 gap-6">
+  1980→              {coaches.map((coach, i) => (
+  1981→                <motion.div
+  1982→                  key={coach.name}
+  1983→                  initial={{ opacity: 0, y: 30 }}
+  1984→                  whileInView={{ opacity: 1, y: 0 }}
+  1985→                  viewport={{ once: true }}
+  1986→                  transition={{ duration: 0.5, delay: i * 0.15 }}
+  1987→                  onClick={() => setSelectedCoach(coach)}
+  1988→                  className="group relative rounded-2xl backdrop-blur-xl bg-white/[0.04] border border-white/[0.08] hover:border-amber-400/30 p-6 sm:p-8 text-center transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl hover:shadow-amber-500/10 cursor-pointer"
+  1989→                >
+  1990→                  {/* Glow effect */}
+  1991→                  <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${coach.gradient} opacity-0 group-hover:opacity-[0.06] transition-opacity duration-500`} />
+  1992→                  <div className="relative">
+  1993→                    {/* Avatar */}
+  1994→                    <div className="relative mx-auto mb-5">
+  1995→                      <div className={`h-24 w-24 rounded-full bg-gradient-to-br ${coach.gradient} flex items-center justify-center text-white text-3xl font-extrabold shadow-2xl mx-auto ring-4 ring-slate-800/50 group-hover:scale-110 transition-transform duration-500`}>
+  1996→                        {coach.initial}
+  1997→                      </div>
+  1998→                      {i === 0 && (
+  1999→                        <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[8px] font-bold px-3 py-1 rounded-full shadow-lg shadow-amber-500/30 whitespace-nowrap">
+  2000→                          FONDATEUR
+
+[showing lines 1-2000 of 4377; use offset=2001 with limit to continue reading]
